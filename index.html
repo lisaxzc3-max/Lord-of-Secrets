@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v2</title>
+<title>Повелитель Тайн v2.1</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -15,15 +15,14 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
 .bar{height:8px;background:#2a2a33;border-radius:8px;margin:4px 0;overflow:hidden}
 .bar i{display:block;height:100%}
 .hp i{background:#e63946}
-.xp i{background:#f4a261}
 .money{text-align:right;font-size:12px}
 .card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
-.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px;cursor:pointer}
-.btn:active{opacity:.6}
+.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:8px 0}
-.nav a{font-size:11px;color:#e9d8a6;text-decoration:none;text-align:center}
+.nav a{font-size:11px;color:#e9d8a6;text-decoration:none}
 .hidden{display:none}
+small{opacity:.6;font-size:10px;word-break:break-all}
 </style>
 </head>
 <body>
@@ -33,20 +32,19 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
     <div class="bars">
       <div style="font-size:13px"><b id="nick">Загрузка...</b> · Ур.<span id="lvl">-</span></div>
       <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
-      <div style="font-size:10px"><span id="hp">-</span> · 🧪 <span id="potion">-</span>%</div>
+      <div style="font-size:10px"><span id="hp">-</span> · 🧪 <span id="potion">-</span>% · UID <span id="uid">-</span></div>
     </div>
     <div class="money">💷 <b id="pounds">-</b><br>⭐ <span id="exp">-</span></div>
   </div>
-
   <div class="card" id="mainCard">
     <h3>◈ Дела дня</h3>
-    <div style="font-size:12px;margin-top:8px" id="profileText">Подключение к боту...</div>
+    <div style="font-size:11px;margin-top:8px;white-space:pre-wrap" id="profileText">Подключение...</div>
     <div style="margin-top:10px" class="grid">
       <div class="btn" onclick="doExplore()">🌊 Озеро · Исследовать</div>
       <div class="btn" onclick="loadProfile()">🔄 Обновить</div>
     </div>
+    <small id="debug"></small>
   </div>
-
   <div class="card hidden" id="battleCard">
     <h3 id="battleTitle">⚔ Бой</h3>
     <div id="battleText" style="font-size:12px;white-space:pre-wrap"></div>
@@ -55,45 +53,50 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
       <div class="btn" onclick="doBattle('flee')">🏃 Сбежать</div>
     </div>
   </div>
-
   <div class="card hidden" id="eventCard">
     <h3 id="eventTitle">Событие</h3>
     <div id="eventText" style="font-size:12px"></div>
     <div id="eventBtns" style="margin-top:10px"></div>
   </div>
 </div>
-
 <div class="nav">
-  <a onclick="loadProfile()">◈ Зал</a>
-  <a onclick="doExplore()">🌊 Озеро</a>
-  <a onclick="loadProfile()">⬢ Сумка</a>
-  <a>⌖ Лавка</a>
+  <a onclick="loadProfile()">◈ Зал</a><a onclick="doExplore()">🌊 Озеро</a><a>⬢ Сумка</a><a>⌖ Лавка</a>
 </div>
-
 <script>
-const tg = window.Telegram.WebApp;
-tg.ready(); tg.expand();
-const uid = tg.initDataUnsafe?.user?.id || 7320193489;
-const HANDSHAKE = "https://api.telebot-creator.ru/webhook/10203062/api_handshake";
-
-let PROFILE_URL = "";
-let ACTION_URL = "";
+const tg=Telegram.WebApp; tg.ready(); tg.expand();
+let uid = tg.initDataUnsafe?.user?.id;
+document.getElementById('uid').innerText = uid || "нет";
+let initData = tg.initData || "";
+const HANDSHAKE = "https://tbc.telebot-creator.ru/webhook/10203062/api_handshake";
+let PROFILE_URL="",ACTION_URL="";
+function log(s){ document.getElementById('debug').innerText += "\n"+s; }
 
 async function handshake(){
+  const body = JSON.stringify({user_id: ""+(uid||"7320193489"), initData: initData});
+  log("handshake → "+HANDSHAKE);
   try{
-    const r = await fetch(HANDSHAKE, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({user_id: ""+uid})});
-    const j = await r.json();
-    if(j.ok){ PROFILE_URL=j.profile_url; ACTION_URL=j.action_url; return true;}
-  }catch(e){}
+    const r = await fetch(HANDSHAKE, {method:"POST", headers:{"Content-Type":"application/json"}, body: body});
+    const t = await r.text();
+    log("handshake raw: "+t.slice(0,400));
+    const j = JSON.parse(t);
+    if(j.ok){ PROFILE_URL=j.profile_url; ACTION_URL=j.action_url; log("urls ok"); return true;}
+    else log("handshake fail "+JSON.stringify(j));
+  }catch(e){ log("handshake err "+e); }
+  // ФОЛБЕК - пробуем прямой webhook без handshake (для теста)
+  PROFILE_URL = "https://tbc.telebot-creator.ru/webhook/10203062/api_profile?user_id="+(uid||"7320193489");
+  log("fallback profile "+PROFILE_URL);
   return false;
 }
 
 async function loadProfile(){
   if(!PROFILE_URL) await handshake();
+  document.getElementById('profileText').innerText="Запрос профиля...";
   try{
     const r = await fetch(PROFILE_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({})});
-    const d = await r.json();
-    if(!d.ok) throw 0;
+    const t = await r.text();
+    log("profile raw: "+t.slice(0,500));
+    const d = JSON.parse(t);
+    if(!d.ok) throw d.error||"not ok";
     document.getElementById('nick').innerText=d.nickname;
     document.getElementById('lvl').innerText=d.level;
     document.getElementById('hp').innerText=d.hp+"/"+d.max_hp;
@@ -101,53 +104,44 @@ async function loadProfile(){
     document.getElementById('pounds').innerText=d.pounds;
     document.getElementById('exp').innerText=d.exp;
     document.getElementById('potion').innerText=d.potion;
-    document.getElementById('profileText').innerHTML=`Путь: ${d.path}<br>❤️ ${d.hp}/${d.max_hp} · 🌀 ${d.madness}% · ✨ ${d.bomzh_left?Math.floor(d.bomzh_left/60)+"м":"-"}<br><small>UID ${d.uid}</small>`;
-  }catch(e){ document.getElementById('profileText').innerText="Ошибка профиля. Открой мини-апп из бота @ltmgame_bot"; }
+    document.getElementById('profileText').innerHTML=`Путь: ${d.path}<br>❤️ ${d.hp}/${d.max_hp} · 🌀 ${d.madness}%<br>✨ Мыслитель ${d.bomzh_left?Math.floor(d.bomzh_left/60)+"м":"-"} · 🤢 ${d.rot_left?Math.floor(d.rot_left/60)+"м":"-"}`;
+  }catch(e){
+    document.getElementById('profileText').innerText="Ошибка профиля: "+e+"\nОткрой из @ltmgame_bot → Открыть игру\ndebug внизу";
+    log("profile err "+e);
+  }
 }
-
 async function doExplore(){
   if(!ACTION_URL) await handshake();
-  document.getElementById('eventCard').classList.add('hidden');
-  document.getElementById('battleCard').classList.add('hidden');
-  const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"explore_lake"})});
-  const d = await r.json();
-  if(d.type==="event"){
-    document.getElementById('eventCard').classList.remove('hidden');
-    document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Принцесса Топей":"📦 Сундук на дне";
-    document.getElementById('eventText').innerText=d.text;
-    const box=document.getElementById('eventBtns'); box.innerHTML="";
-    d.actions.forEach(a=>{
-      const b=document.createElement('div'); b.className='btn'; b.innerText=a.label;
-      b.onclick=()=>doEvent(a.id); box.appendChild(b);
-    });
-  } else if(d.type==="battle"){
-    showBattle(d);
-  } else if(d.error==="cooldown"){ alert("Подожди "+d.left+" сек"); }
-  else { alert(JSON.stringify(d)); }
+  try{
+    const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"explore_lake"})});
+    const t=await r.text(); log("explore raw "+t.slice(0,500)); const d=JSON.parse(t);
+    if(d.type==="event"){
+      document.getElementById('eventCard').classList.remove('hidden');
+      document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Принцесса":"📦 Сундук";
+      document.getElementById('eventText').innerText=d.text;
+      const box=document.getElementById('eventBtns'); box.innerHTML="";
+      d.actions.forEach(a=>{ const b=document.createElement('div'); b.className='btn'; b.innerText=a.label; b.onclick=()=>doEvent(a.id); box.appendChild(b);});
+    } else if(d.type==="battle"){ showBattle(d); } else alert(JSON.stringify(d));
+  }catch(e){ alert(e); log("explore err "+e); }
   loadProfile();
 }
-
 async function doEvent(id){
-  const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"event_choice", move:id})});
-  const d = await r.json();
-  alert(d.text); document.getElementById('eventCard').classList.add('hidden'); loadProfile();
+  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"event_choice",move:id})});
+  const d=await r.json(); alert(d.text); document.getElementById('eventCard').classList.add('hidden'); loadProfile();
 }
-
 function showBattle(d){
   document.getElementById('battleCard').classList.remove('hidden');
   document.getElementById('battleTitle').innerText="⚔ "+d.enemy;
-  document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max} · ${d.enemy_dmg} урон` + (d.rot_active?"\n🤢 -25 HP вирус":"");
+  document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max}`;
 }
-
 async function doBattle(move){
-  const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"battle", move:move})});
-  const d = await r.json();
-  if(d.type==="victory"){ alert("Победа! "+d.enemy+" · +"+d.exp_add+" опыта"); document.getElementById('battleCard').classList.add('hidden');}
-  else if(d.type==="defeat"){ alert("Поражение..."); document.getElementById('battleCard').classList.add('hidden');}
-  else if(d.type==="battle"){ showBattle(d); }
+  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"battle",move:move})});
+  const d=await r.json();
+  if(d.type==="victory") alert("Победа +"+d.exp_add);
+  else if(d.type==="defeat") alert("Поражение");
+  else if(d.type==="battle") showBattle(d);
   loadProfile();
 }
-
 handshake().then(loadProfile);
 </script>
 </body>
