@@ -3,22 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн</title>
+<title>Повелитель Тайн v5 — Полная</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
 body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
-.wrap{max-width:420px;margin:0 auto;padding:12px;padding-bottom:70px}
-.top{display:flex;align-items:center;gap:10px;background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:10px}
-.avatar{width:48px;height:48px;border-radius:12px;background:#c9a86a;display:flex;align-items:center;justify-content:center;font-size:22px;color:#000}
+.wrap{max-width:440px;margin:0 auto;padding:10px;padding-bottom:70px}
+.top{display:flex;gap:10px;background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:10px;align-items:center}
+.avatar{width:44px;height:44px;border-radius:12px;background:#c9a86a;color:#000;display:flex;align-items:center;justify-content:center;font-size:20px}
 .bars{flex:1}
 .bar{height:8px;background:#2a2a33;border-radius:8px;margin:4px 0;overflow:hidden}
 .bar i{display:block;height:100%;background:#e63946}
-.money{text-align:right;font-size:12px}
-.card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
-.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:8px 0}
-.nav a{font-size:11px;color:#e9d8a6;text-decoration:none}
+.money{text-align:right;font-size:11px;line-height:1.2}
+.card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:12px;margin:8px 0}
+.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:10px;padding:10px;text-align:center;font-size:13px;cursor:pointer;margin:4px 0}
+.btn:active{opacity:.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tab{padding:8px;text-align:center;border-radius:8px;background:#1c1c24;border:1px solid #333;font-size:12px;cursor:pointer}
+.tab.active{background:#c9a86a;color:#000}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:6px 0}
+.nav a{font-size:11px;color:#e9d8a6;text-decoration:none;text-align:center}
+.hidden{display:none}
+small{opacity:.6;font-size:10px;white-space:pre-wrap;word-break:break-all}
+h3{font-size:14px;margin-bottom:6px}
+.item{border:1px solid #333;border-radius:8px;padding:8px;margin:4px 0;background:#1e1e28;font-size:12px}
 </style>
 </head>
 <body>
@@ -26,40 +34,147 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
   <div class="top">
     <div class="avatar">𓂀</div>
     <div class="bars">
-      <div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span></div>
+      <div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span> · 💷 <span id="pounds">-</span></div>
       <div class="bar"><i id="hpbar" style="width:0%"></i></div>
-      <div style="font-size:10px">❤️ <span id="hp">-</span> · 💷 <span id="pounds">-</span> · 🧪 <span id="potion">-</span>%</div>
+      <div style="font-size:10px">❤️ <span id="hp">-</span> · 🧪 <span id="potion">-</span>% · 🌀 <span id="mad">-</span>% · UID <span id="uid">-</span></div>
     </div>
-    <div class="money">⭐ <span id="exp">-</span></div>
+    <div class="money">⭐ <span id="exp">-</span><br><span id="path" style="font-size:10px">-</span><br><span id="pts" style="color:#f4d35e"></span></div>
   </div>
-  <div class="card">
-    <h3>◈ Дела дня</h3>
-    <div id="info" style="font-size:12px;white-space:pre-wrap">Загрузка из бота...</div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="btn" onclick="location.reload()">🔄 Обновить</div>
-      <div class="btn" onclick="Telegram.WebApp.close()">✕ Закрыть</div>
+
+  <div style="display:flex;gap:6px;margin:8px 0;flex-wrap:wrap">
+    <div class="tab active" id="t-hall" onclick="showTab('hall')">◈ Зал</div>
+    <div class="tab" id="t-city" onclick="showTab('city')">⌖ Город</div>
+    <div class="tab" id="t-travel" onclick="showTab('travel')">🧭 Путь</div>
+    <div class="tab" id="t-bag" onclick="showTab('bag')">🎒 Сумка</div>
+    <div class="tab" id="t-quests" onclick="showTab('quests')">📜 Квесты</div>
+  </div>
+
+  <div id="hall" class="card">
+    <h3>◈ Профиль</h3>
+    <div id="hallInfo" style="font-size:12px;white-space:pre-wrap">Загрузка...</div>
+    <div id="statsBox" style="font-size:12px;margin-top:8px"></div>
+    <div class="grid2"><div class="btn" onclick="loadProfile()">🔄 Обновить</div><div class="btn" onclick="Telegram.WebApp.close()">✕ Закрыть</div></div>
+    <small id="debug"></small>
+  </div>
+
+  <div id="city" class="card hidden">
+    <h3>⌖ Тинген</h3>
+    <div class="grid2">
+      <div class="btn" onclick="openLoc('market')">🍎 Рынок<br><small>Торговец</small></div>
+      <div class="btn" onclick="openLoc('dragon_tavern')">🐉 Таверна<br><small>Бармен</small></div>
+      <div class="btn" onclick="openLoc('fortune_club')">🔮 Клуб<br><small>Гадалка</small></div>
+      <div class="btn" onclick="openLoc('station')">🚂 Вокзал<br><small>Бомж</small></div>
+      <div class="btn" onclick="openLoc('houses')">🏠 Дома<br><small>Подвал</small></div>
+      <div class="btn" onclick="openLoc('cemetery')">⚰️ Кладбище</div>
     </div>
-    <div style="font-size:10px;opacity:.6;margin-top:8px">Открыто из @ltmgame_bot · UID <span id="uid">-</span></div>
+    <div id="locInfo" style="font-size:12px;margin-top:8px;white-space:pre-wrap"></div>
+    <div id="locBtns"></div>
+  </div>
+
+  <div id="travel" class="card hidden">
+    <h3>🧭 Путешествие</h3>
+    <div class="grid2">
+      <div class="btn" onclick="openTravel('lake')">🌊 Озеро</div>
+      <div class="btn" onclick="openTravel('podval')">🕳 Подвал</div>
+    </div>
+    <div id="travelInfo" style="font-size:12px;margin-top:8px;white-space:pre-wrap"></div>
+    <div id="travelBtns"></div>
+  </div>
+
+  <div id="bag" class="card hidden">
+    <h3>🎒 Инвентарь <span id="bagCnt" style="font-size:11px;opacity:.7"></span></h3>
+    <div id="invList"></div>
+    <h3 style="margin-top:10px">⬢ Надето</h3>
+    <div id="eqList" style="font-size:12px"></div>
+  </div>
+
+  <div id="quests" class="card hidden">
+    <h3>📜 Квесты</h3>
+    <div id="questsList" style="font-size:12px;white-space:pre-wrap">—</div>
+    <div class="btn" onclick="loadQuests()">🔄 Обновить</div>
+  </div>
+
+  <div id="eventCard" class="card hidden">
+    <h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:12px;white-space:pre-wrap"></div><div id="eventBtns"></div>
+  </div>
+  <div id="battleCard" class="card hidden">
+    <h3 id="battleTitle">⚔ Бой</h3><div id="battleText" style="font-size:12px;white-space:pre-wrap"></div>
+    <div class="grid2" style="margin-top:8px"><div class="btn" onclick="doBattle('basic')">⚔ Базовая</div><div class="btn" onclick="doBattle('flee')">🏃 Сбежать</div></div>
   </div>
 </div>
+
+<div class="nav">
+  <a onclick="showTab('hall')">◈ Зал</a><a onclick="showTab('city')">⌖ Город</a><a onclick="showTab('travel')">🧭 Путь</a><a onclick="showTab('bag')">🎒 Сумка</a><a onclick="showTab('quests')">📜 Квесты</a>
+</div>
+
 <script>
 const tg=Telegram.WebApp; tg.ready(); tg.expand();
-const p=new URLSearchParams(location.search);
-const uid=p.get("u")||tg.initDataUnsafe?.user?.id||"-";
+const qs=new URLSearchParams(location.search);
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
 document.getElementById('uid').innerText=uid;
-function q(k,d){return p.get(k)||d}
-const nick=decodeURIComponent(q("nick","Путник"));
-document.getElementById('nick').innerText=nick;
-document.getElementById('lvl').innerText=q("lvl","1");
-document.getElementById('hp').innerText=q("hp","-")+"/"+q("max_hp","-");
-document.getElementById('pounds').innerText=q("p","0");
-document.getElementById('exp').innerText=q("exp","0");
-document.getElementById('potion').innerText=q("potion","0");
-let hp=parseInt(q("hp","50")), mx=parseInt(q("max_hp","50"));
-if(mx>0) document.getElementById('hpbar').style.width=(hp/mx*100)+"%";
-let path=decodeURIComponent(q("path","—"));
-if(!p.get("nick")) document.getElementById('info').innerText="Открой мини-апп из бота:\n t.me/ltmgame_bot → ◈ Зал → 🗺 Открыть Тинген\nТогда увидишь живой профиль.";
-else document.getElementById('info').innerText=`Путь: ${path}\n❤️ ${hp}/${mx} · Ур.${q("lvl","1")} · 💷 ${q("p","0")}\n🧪 ${q("potion","0")}% · 🌀 ${q("madness","0")}%`;
-</script>
-</body>
-</html>
+let p_enc=qs.get("p_enc")||qs.get("p")||"", a_enc=qs.get("a_enc")||qs.get("a")||"";
+let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
+let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
+function log(s){ document.getElementById('debug').innerText+="\n"+s; }
+function showTab(id){
+ document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+ document.getElementById('t-'+id).classList.add('active');
+ ['hall','city','travel','bag','quests'].forEach(x=>document.getElementById(x).classList.add('hidden'));
+ document.getElementById(id).classList.remove('hidden');
+ if(id==='bag') renderBag();
+ if(id==='quests') loadQuests();
+}
+let G={inv:[],eq:{},pts:0};
+
+async function loadProfile(){
+ if(!PROFILE_URL){ document.getElementById('hallInfo').innerText="Открой из @ltmgame_bot → ◈ Зал → 🗺 Открыть Тинген"; return; }
+ try{
+  const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
+  const t=await r.text(); log("pr "+t.slice(0,250));
+  const d=JSON.parse(t); if(!d.ok) throw d.error;
+  document.getElementById('nick').innerText=d.nickname;
+  document.getElementById('lvl').innerText=d.level;
+  document.getElementById('hp').innerText=d.hp+"/"+d.max_hp;
+  document.getElementById('hpbar').style.width=(d.hp/d.max_hp*100)+"%";
+  document.getElementById('pounds').innerText=d.pounds;
+  document.getElementById('exp').innerText=d.exp;
+  document.getElementById('potion').innerText=d.potion;
+  document.getElementById('mad').innerText=d.madness;
+  document.getElementById('path').innerText=d.path;
+  document.getElementById('pts').innerText=d.stat_points>0?"✦ "+d.stat_points:"";
+  document.getElementById('hallInfo').innerText=`Путь: ${d.path}\n❤️ ${d.hp}/${d.max_hp} · Ур.${d.level} · 💷 ${d.pounds} · ⭐ ${d.exp}\n🧪 ${d.potion}% · 🌀 ${d.madness}% · ✨${d.bomzh_left}с 🤢${d.rot_left}с`;
+  // stats
+  let s=`💪 ${d.str} · 🏃 ${d.agi} · 🧠 ${d.int} · 🔮 ${d.spi} · ❤️ ${d.con}`;
+  if(d.stat_points>0) s+=`\n`+['str','agi','int','spi','con'].map(k=>`<span class="btn" style="padding:6px;font-size:11px" onclick="addStat('${k}')">+1 ${k}</span>`).join(' ');
+  document.getElementById('statsBox').innerHTML=s;
+  G.inv=d.inventory||[]; G.eq=d.equipped||{}; G.pts=d.stat_points||0;
+  renderBag();
+ }catch(e){ document.getElementById('hallInfo').innerText="Ошибка: "+e; log("pr err "+e); }
+}
+async function api(payload){
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+ const t=await r.text(); log(payload.action+" -> "+t.slice(0,300)); return JSON.parse(t);
+}
+function renderBag(){
+ document.getElementById('bagCnt').innerText=G.inv.length+"/50";
+ let h=""; if(G.inv.length===0) h="<small>Пусто</small>"; else G.inv.forEach((it,i)=>{
+  let name=it.name||it; let slot=it.slot||""; h+=`<div class="item"><b>${name}</b> <small>${slot} ${it.rarity||""}</small><br><div class="btn" onclick="doEquip(${i})">⬢ Надеть</div></div>`;
+ });
+ document.getElementById('invList').innerHTML=h;
+ let e=""; const slots=["head","face","body","weapon","legs","necklace","ring"];
+ slots.forEach(s=>{
+  let it=G.eq[s]; if(it) e+=`<div class="item"><b>${it.name}</b> <small>${s}</small> <div class="btn" onclick="doUnequip('${s}')">Снять</div></div>`; else e+=`<div class="item" style="opacity:.5">${s} — пусто</div>`;
+ });
+ document.getElementById('eqList').innerHTML=e;
+}
+async function doEquip(i){ const d=await api({action:"equip",idx:""+i}); alert(d.text||d.error); loadProfile(); }
+async function doUnequip(s){ const d=await api({action:"unequip",slot:s}); alert(d.text||d.error); loadProfile(); }
+async function addStat(s){ const d=await api({action:"addstat",stat:s}); alert(d.text||d.error); loadProfile(); }
+
+function openLoc(id){
+ const names={market:"🍎 Рынок — специи",dragon_tavern:"🐉 Таверна — Бармен ждёт Глаз Жабы",fortune_club:"🔮 Клуб — Гадалка",station:"🚂 Вокзал — Бомж 4 вопроса",houses:"🏠 Дома — Подвал",cemetery:"⚰️ Кладбище — тихо"}
+ document.getElementById('locInfo').innerText=names[id]||id;
+ const b=document.getElementById('locBtns'); b.innerHTML="";
+ if(id==='market') b.innerHTML=`<div class="btn" onclick="api({action:'trader_offer'}).then(d=>alert(d.text||JSON.stringify(d)))">🧺 Торговец</div>`;
+ if(id==='station') b.innerHTML=`<div class="btn" onclick="api({action:'npc',npc:'bomzh'}).then(d=>alert(d.text||JSON.stringify(d)))">🧙 Бомж</div>`;
+ if(id==='houses') 
