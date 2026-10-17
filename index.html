@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v2.3</title>
+<title>Повелитель Тайн v2.4</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -34,7 +34,7 @@ small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
   </div>
   <div class="card">
     <h3>◈ Дела дня</h3>
-    <div id="profileText" style="font-size:11px;white-space:pre-wrap">Подключение... Загружаю мост напрямую из бота...</div>
+    <div id="profileText" style="font-size:11px;white-space:pre-wrap">Подключение...</div>
     <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div class="btn" onclick="doExplore()">🌊 Озеро · Исследовать</div>
       <div class="btn" onclick="loadProfile()">🔄 Обновить</div>
@@ -57,29 +57,15 @@ small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
 </div>
 <script>
 const tg=Telegram.WebApp; tg.ready(); tg.expand();
-let uid = tg.initDataUnsafe?.user?.id || "7320193489";
+let uid = new URLSearchParams(location.search).get("u") || tg.initDataUnsafe?.user?.id || "7320193489";
 document.getElementById('uid').innerText=uid;
-// ФИКС: не используем протухающий HANDSHAKE, берем свежий URL напрямую из бота через статику
-// Самый простой путь - бот отдает URL через Bot.saveData и сайт его читает via fetch к json
-// Пока упростим: используем свежий GENERIC URL сгенерированный прямо сейчас:
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_ad735fb9";
-let PROFILE_URL="",ACTION_URL="";
+let PROFILE_URL = new URLSearchParams(location.search).get("p") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("p") : "";
+let ACTION_URL = new URLSearchParams(location.search).get("a") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("a") : "";
+if(!PROFILE_URL){ PROFILE_URL="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_d8f6edf6%3D%3D"; ACTION_URL="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_91a25a1c%3D%3D"; }
 function log(s){ document.getElementById('debug').innerText+="\n"+s; }
-async function handshake(){
- log("handshake "+HANDSHAKE+" uid="+uid);
- try{
-  const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});
-  const t=await r.text(); log("hs raw "+t.slice(0,600));
-  const j=JSON.parse(t);
-  if(j.ok){ PROFILE_URL=j.profile_url; ACTION_URL=j.action_url; log("hs ok"); return true;}
-  log("hs not ok "+JSON.stringify(j));
- }catch(e){ log("hs err "+e); }
- return false;
-}
 async function loadProfile(){
- if(!PROFILE_URL) await handshake();
- if(!PROFILE_URL){ document.getElementById('profileText').innerText="Нет PROFILE_URL"; return; }
  document.getElementById('profileText').innerText="Запрос профиля...";
+ log("profile "+PROFILE_URL);
  try{
   const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
   const t=await r.text(); log("profile raw "+t.slice(0,600));
@@ -95,7 +81,6 @@ async function loadProfile(){
  }catch(e){ document.getElementById('profileText').innerText="Ошибка профиля: "+e; log("profile err "+e); }
 }
 async function doExplore(){
- if(!ACTION_URL) await handshake();
  try{
   const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"explore_lake"})});
   const t=await r.text(); log("explore raw "+t.slice(0,600)); const d=JSON.parse(t);
@@ -117,7 +102,7 @@ async function doBattle(m){
  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"battle",move:m})});
  const d=await r.json(); if(d.type==="victory") alert("Победа +"+d.exp_add); loadProfile();
 }
-handshake().then(loadProfile);
+loadProfile();
 </script>
 </body>
 </html>
