@@ -62,7 +62,7 @@ if(!uid) uid="7320193489";
 document.getElementById('uid').innerText=uid;
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_40765ee9";
 let PROFILE_URL="",ACTION_URL="";
-function log(s){ document.getElementById('debug').innerText+="\n"+s; console.log(s); }
+function log(s){ document.getElementById('debug').innerText+="\n"+s; }
 async function handshake(){
  log("handshake "+HANDSHAKE+" uid="+uid);
  try{
@@ -76,7 +76,7 @@ async function handshake(){
 }
 async function loadProfile(){
  if(!PROFILE_URL) await handshake();
- if(!PROFILE_URL){ document.getElementById('profileText').innerText="Нет PROFILE_URL - handshake заблокирован (CORS). Открой именно из @ltmgame_bot → Открыть игру"; return; }
+ if(!PROFILE_URL){ document.getElementById('profileText').innerText="Нет PROFILE_URL - handshake заблокирован"; return; }
  document.getElementById('profileText').innerText="Запрос профиля...";
  try{
   const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
