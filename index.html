@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v5.1 fix</title>
+<title>Повелитель Тайн v5.2 fix</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -69,9 +69,9 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"", a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-// ФОЛБЕК для Main App — свежий handshake после смены токена
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_145d9fce";
 function log(s){ document.getElementById('debug').innerText+="\n"+s; }
+function unwrap(j){ if(j && j.result && typeof j.result==='object') return j.result; return j; }
 function showTab(id){
  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
  document.getElementById('t-'+id).classList.add('active');
@@ -83,22 +83,23 @@ function showTab(id){
 let G={inv:[],eq:{},pts:0};
 async function ensureUrls(){
  if(PROFILE_URL && ACTION_URL) return true;
- log("handshake "+HANDSHAKE+" uid="+uid);
  try{
   const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});
   const t=await r.text(); log("hs "+t.slice(0,300));
-  const j=JSON.parse(t);
-  if(j.ok){ PROFILE_URL=j.profile_url; ACTION_URL=j.action_url; log("hs ok"); return true; }
+  const j=unwrap(JSON.parse(t));
+  if(j.ok){ PROFILE_URL=j.profile_url; ACTION_URL=j.action_url; return true; }
  }catch(e){ log("hs err "+e); }
  return false;
 }
 async function loadProfile(){
  if(!PROFILE_URL) await ensureUrls();
- if(!PROFILE_URL){ document.getElementById('hallInfo').innerText="Открой из @ltmgame_bot → ◈ Зал → 🗺 Открыть Тинген\n(или нажми Обновить ещё раз)"; return; }
+ if(!PROFILE_URL){ document.getElementById('hallInfo').innerText="Открой из @ltmgame_bot → ◈ Зал → 🗺 Открыть Тинген"; return; }
  try{
   const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
-  const t=await r.text(); log("pr "+t.slice(0,250));
-  const d=JSON.parse(t); if(!d.ok) throw d.error;
+  const t=await r.text(); log("pr "+t.slice(0,350));
+  let j=JSON.parse(t); let d=unwrap(j);
+  if(!d.ok && !d.nickname) throw (d.error||"not ok");
+  // d теперь плоский профиль
   document.getElementById('nick').innerText=d.nickname;
   document.getElementById('lvl').innerText=d.level;
   document.getElementById('hp').innerText=d.hp+"/"+d.max_hp;
@@ -111,7 +112,7 @@ async function loadProfile(){
   document.getElementById('pts').innerText=d.stat_points>0?"✦ "+d.stat_points:"";
   document.getElementById('hallInfo').innerText=`Путь: ${d.path}\n❤️ ${d.hp}/${d.max_hp} · Ур.${d.level} · 💷 ${d.pounds} · ⭐ ${d.exp}\n🧪 ${d.potion}% · 🌀 ${d.madness}% · ✨${d.bomzh_left}с 🤢${d.rot_left}с`;
   let s=`💪 ${d.str} · 🏃 ${d.agi} · 🧠 ${d.int} · 🔮 ${d.spi} · ❤️ ${d.con}`;
-  if(d.stat_points>0) s+=`\n`+['str','agi','int','spi','con'].map(k=>`<span class="btn" style="padding:6px;font-size:11px" onclick="addStat('${k}')">+1 ${k}</span>`).join(' ');
+  if(d.stat_points>0) s+=`\n`+['str','agi','int','spi','con'].map(k=>`<span class="btn" style="padding:6px;font-size:11px;display:inline-block;margin:2px" onclick="addStat('${k}')">+1 ${k}</span>`).join(' ');
   document.getElementById('statsBox').innerHTML=s;
   G.inv=d.inventory||[]; G.eq=d.equipped||{}; G.pts=d.stat_points||0;
   renderBag();
@@ -120,7 +121,7 @@ async function loadProfile(){
 async function api(payload){
  if(!ACTION_URL) await ensureUrls();
  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
- const t=await r.text(); log(payload.action+" -> "+t.slice(0,300)); return JSON.parse(t);
+ const t=await r.text(); log(payload.action+" -> "+t.slice(0,300)); let j=JSON.parse(t); return unwrap(j);
 }
 function renderBag(){
  document.getElementById('bagCnt').innerText=G.inv.length+"/50";
@@ -179,4 +180,4 @@ async function loadQuests(){
 ensureUrls().then(loadProfile);
 </script>
 </body>
-                                                                                                                                              </html>
+                                                                                                                                  </html>
