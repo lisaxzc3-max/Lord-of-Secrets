@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v3</title>
+<title>Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -16,9 +16,7 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
 .bar i{display:block;height:100%;background:#e63946}
 .money{text-align:right;font-size:12px}
 .card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
-.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px;cursor:pointer}
-.btn:active{opacity:.6}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:8px 0}
 .nav a{font-size:11px;color:#e9d8a6;text-decoration:none}
 </style>
@@ -37,19 +35,11 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
   <div class="card">
     <h3>◈ Дела дня</h3>
     <div id="info" style="font-size:12px;white-space:pre-wrap">Загрузка из бота...</div>
-    <div style="margin-top:10px" class="grid">
-      <div class="btn" onclick="goBot('lake')">🌊 Озеро</div>
-      <div class="btn" onclick="goBot('profile')">◈ Профиль</div>
-    </div>
-    <div style="font-size:10px;opacity:.6;margin-top:8px">Открыто из @ltmgame_bot · UID <span id="uid">-</span></div>
-  </div>
-  <div class="card">
-    <h3>🧭 Быстрые действия</h3>
-    <div style="font-size:11px;opacity:.7">Бой, торг и квесты пока в боте — мини-апп показывает живой профиль без ошибок. Нажми кнопку — вернёт в бот.</div>
-    <div style="margin-top:10px" class="grid">
-      <div class="btn" onclick="goBot('menu')">◈ Зал</div>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="btn" onclick="location.reload()">🔄 Обновить</div>
       <div class="btn" onclick="Telegram.WebApp.close()">✕ Закрыть</div>
     </div>
+    <div style="font-size:10px;opacity:.6;margin-top:8px">Открыто из @ltmgame_bot · UID <span id="uid">-</span></div>
   </div>
 </div>
 <script>
@@ -58,7 +48,8 @@ const p=new URLSearchParams(location.search);
 const uid=p.get("u")||tg.initDataUnsafe?.user?.id||"-";
 document.getElementById('uid').innerText=uid;
 function q(k,d){return p.get(k)||d}
-document.getElementById('nick').innerText=q("nick","Путник");
+const nick=decodeURIComponent(q("nick","Путник"));
+document.getElementById('nick').innerText=nick;
 document.getElementById('lvl').innerText=q("lvl","1");
 document.getElementById('hp').innerText=q("hp","-")+"/"+q("max_hp","-");
 document.getElementById('pounds').innerText=q("p","0");
@@ -67,13 +58,8 @@ document.getElementById('potion').innerText=q("potion","0");
 let hp=parseInt(q("hp","50")), mx=parseInt(q("max_hp","50"));
 if(mx>0) document.getElementById('hpbar').style.width=(hp/mx*100)+"%";
 let path=decodeURIComponent(q("path","—"));
-document.getElementById('info').innerText=`Путь: ${path}\n❤️ ${hp}/${mx} · Ур.${q("lvl","1")} · 💷 ${q("p","0")}\n🧪 ${q("potion","0")}% · 🌀 ${q("madness","0")}%`;
-function goBot(where){
-  // просто закрываем и бот уже ждёт — действия делаем в боте
-  try{ tg.sendData(JSON.stringify({action:where})); }catch(e){ tg.close(); }
-  // фолбек если sendData не сработал (inline)
-  setTimeout(()=>{ try{tg.close()}catch(e){} },300);
-}
+if(!p.get("nick")) document.getElementById('info').innerText="Открой мини-апп из бота:\n t.me/ltmgame_bot → ◈ Зал → 🗺 Открыть Тинген\nТогда увидишь живой профиль.";
+else document.getElementById('info').innerText=`Путь: ${path}\n❤️ ${hp}/${mx} · Ур.${q("lvl","1")} · 💷 ${q("p","0")}\n🧪 ${q("potion","0")}% · 🌀 ${q("madness","0")}%`;
 </script>
 </body>
 </html>
