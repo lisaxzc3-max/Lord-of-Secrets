@@ -59,13 +59,12 @@ small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
 const tg=Telegram.WebApp; tg.ready(); tg.expand();
 let uid = new URLSearchParams(location.search).get("u") || tg.initDataUnsafe?.user?.id || "7320193489";
 document.getElementById('uid').innerText=uid;
-let PROFILE_URL = new URLSearchParams(location.search).get("p") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("p") : "";
-let ACTION_URL = new URLSearchParams(location.search).get("a") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("a") : "";
-if(!PROFILE_URL){ PROFILE_URL="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_d8f6edf6%3D%3D"; ACTION_URL="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_91a25a1c%3D%3D"; }
+let PROFILE_URL = new URLSearchParams(location.search).get("p") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("p") : "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_d8f6edf6%3D%3D";
+let ACTION_URL = new URLSearchParams(location.search).get("a") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("a") : "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_91a25a1c%3D%3D";
 function log(s){ document.getElementById('debug').innerText+="\n"+s; }
 async function loadProfile(){
  document.getElementById('profileText').innerText="Запрос профиля...";
- log("profile "+PROFILE_URL);
+ log("profile "+PROFILE_URL.slice(0,60));
  try{
   const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
   const t=await r.text(); log("profile raw "+t.slice(0,600));
