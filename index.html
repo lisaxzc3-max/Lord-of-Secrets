@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v2.5</title>
+<title>Повелитель Тайн v3</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -17,8 +17,10 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
 .money{text-align:right;font-size:12px}
 .card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
 .btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px;cursor:pointer}
-.hidden{display:none}
-small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
+.btn:active{opacity:.6}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:8px 0}
+.nav a{font-size:11px;color:#e9d8a6;text-decoration:none}
 </style>
 </head>
 <body>
@@ -26,80 +28,52 @@ small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
   <div class="top">
     <div class="avatar">𓂀</div>
     <div class="bars">
-      <div style="font-size:13px"><b id="nick">Загрузка...</b> · Ур.<span id="lvl">-</span></div>
+      <div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span></div>
       <div class="bar"><i id="hpbar" style="width:0%"></i></div>
-      <div style="font-size:10px"><span id="hp">-</span> · 🧪 <span id="potion">-</span>% · UID <span id="uid">-</span></div>
+      <div style="font-size:10px">❤️ <span id="hp">-</span> · 💷 <span id="pounds">-</span> · 🧪 <span id="potion">-</span>%</div>
     </div>
-    <div class="money">💷 <b id="pounds">-</b><br>⭐ <span id="exp">-</span></div>
+    <div class="money">⭐ <span id="exp">-</span></div>
   </div>
   <div class="card">
     <h3>◈ Дела дня</h3>
-    <div id="profileText" style="font-size:11px;white-space:pre-wrap">Подключение...</div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="btn" onclick="doExplore()">🌊 Озеро · Исследовать</div>
-      <div class="btn" onclick="loadProfile()">🔄 Обновить</div>
+    <div id="info" style="font-size:12px;white-space:pre-wrap">Загрузка из бота...</div>
+    <div style="margin-top:10px" class="grid">
+      <div class="btn" onclick="goBot('lake')">🌊 Озеро</div>
+      <div class="btn" onclick="goBot('profile')">◈ Профиль</div>
     </div>
-    <small id="debug"></small>
+    <div style="font-size:10px;opacity:.6;margin-top:8px">Открыто из @ltmgame_bot · UID <span id="uid">-</span></div>
   </div>
-  <div class="card hidden" id="eventCard">
-    <h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:12px"></div><div id="eventBtns" style="margin-top:10px"></div>
-  </div>
-  <div class="card hidden" id="battleCard">
-    <h3 id="battleTitle">⚔ Бой</h3><div id="battleText" style="font-size:12px;white-space:pre-wrap"></div>
-    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="btn" onclick="doBattle('basic')">⚔ Базовая</div><div class="btn" onclick="doBattle('flee')">🏃 Сбежать</div>
+  <div class="card">
+    <h3>🧭 Быстрые действия</h3>
+    <div style="font-size:11px;opacity:.7">Бой, торг и квесты пока в боте — мини-апп показывает живой профиль без ошибок. Нажми кнопку — вернёт в бот.</div>
+    <div style="margin-top:10px" class="grid">
+      <div class="btn" onclick="goBot('menu')">◈ Зал</div>
+      <div class="btn" onclick="Telegram.WebApp.close()">✕ Закрыть</div>
     </div>
   </div>
 </div>
 <script>
 const tg=Telegram.WebApp; tg.ready(); tg.expand();
-let uid = new URLSearchParams(location.search).get("u") || tg.initDataUnsafe?.user?.id || "7320193489";
+const p=new URLSearchParams(location.search);
+const uid=p.get("u")||tg.initDataUnsafe?.user?.id||"-";
 document.getElementById('uid').innerText=uid;
-// СВЕЖИЕ ПЕР-ЮЗЕР ССЫЛКИ ПОСЛЕ СМЕНЫ ТОКЕНА — не протухают через handshake
-let PROFILE_URL = new URLSearchParams(location.search).get("p") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("p") : "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_d8f6edf6%3D%3D";
-let ACTION_URL = new URLSearchParams(location.search).get("a") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("a") : "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_91a25a1c%3D%3D";
-function log(s){ document.getElementById('debug').innerText+="\n"+s; }
-async function loadProfile(){
- document.getElementById('profileText').innerText="Запрос профиля...";
- log("profile "+PROFILE_URL.slice(0,55));
- try{
-  const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
-  const t=await r.text(); log("profile raw "+t.slice(0,500));
-  const d=JSON.parse(t); if(!d.ok) throw d.error||"not ok";
-  document.getElementById('nick').innerText=d.nickname;
-  document.getElementById('lvl').innerText=d.level;
-  document.getElementById('hp').innerText=d.hp+"/"+d.max_hp;
-  document.getElementById('hpbar').style.width=(d.hp/d.max_hp*100)+"%";
-  document.getElementById('pounds').innerText=d.pounds;
-  document.getElementById('exp').innerText=d.exp;
-  document.getElementById('potion').innerText=d.potion;
-  document.getElementById('profileText').innerText=`Путь: ${d.path}\n❤️ ${d.hp}/${d.max_hp} · 🌀 ${d.madness}%\n✨ ${d.bomzh_left}с · 🤢 ${d.rot_left}с\nUID ${d.uid}`;
- }catch(e){ document.getElementById('profileText').innerText="Ошибка профиля: "+e+"\nОткрой из @ltmgame_bot → Открыть игру"; log("profile err "+e); }
+function q(k,d){return p.get(k)||d}
+document.getElementById('nick').innerText=q("nick","Путник");
+document.getElementById('lvl').innerText=q("lvl","1");
+document.getElementById('hp').innerText=q("hp","-")+"/"+q("max_hp","-");
+document.getElementById('pounds').innerText=q("p","0");
+document.getElementById('exp').innerText=q("exp","0");
+document.getElementById('potion').innerText=q("potion","0");
+let hp=parseInt(q("hp","50")), mx=parseInt(q("max_hp","50"));
+if(mx>0) document.getElementById('hpbar').style.width=(hp/mx*100)+"%";
+let path=decodeURIComponent(q("path","—"));
+document.getElementById('info').innerText=`Путь: ${path}\n❤️ ${hp}/${mx} · Ур.${q("lvl","1")} · 💷 ${q("p","0")}\n🧪 ${q("potion","0")}% · 🌀 ${q("madness","0")}%`;
+function goBot(where){
+  // просто закрываем и бот уже ждёт — действия делаем в боте
+  try{ tg.sendData(JSON.stringify({action:where})); }catch(e){ tg.close(); }
+  // фолбек если sendData не сработал (inline)
+  setTimeout(()=>{ try{tg.close()}catch(e){} },300);
 }
-async function doExplore(){
- try{
-  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"explore_lake"})});
-  const t=await r.text(); log("explore raw "+t.slice(0,500)); const d=JSON.parse(t);
-  if(d.type==="event"){
-   document.getElementById('eventCard').classList.remove('hidden');
-   document.getElementById('eventTitle').innerText=d.event;
-   document.getElementById('eventText').innerText=d.text;
-   const box=document.getElementById('eventBtns'); box.innerHTML="";
-   d.actions.forEach(a=>{ const b=document.createElement('div'); b.className='btn'; b.innerText=a.label; b.onclick=()=>doEvent(a.id); box.appendChild(b);});
-  } else if(d.type==="battle"){ document.getElementById('battleCard').classList.remove('hidden'); document.getElementById('battleTitle').innerText=d.enemy; document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max}`; }
-  else log(JSON.stringify(d));
- }catch(e){ log("explore err "+e); }
- loadProfile();
-}
-async function doEvent(id){
- const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"event_choice",move:id})});
- const d=await r.json(); alert(d.text); document.getElementById('eventCard').classList.add('hidden'); loadProfile();
-}
-async function doBattle(m){
- const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"battle",move:m})});
- const d=await r.json(); if(d.type==="victory") alert("Победа +"+d.exp_add+" опыта"); else if(d.type==="defeat") alert("Поражение"); else if(d.type==="battle") document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max}`; loadProfile();
-}
-loadProfile();
 </script>
 </body>
 </html>
