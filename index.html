@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v2.4</title>
+<title>Повелитель Тайн v2.5</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -16,7 +16,7 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
 .bar i{display:block;height:100%;background:#e63946}
 .money{text-align:right;font-size:12px}
 .card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
-.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px}
+.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px;cursor:pointer}
 .hidden{display:none}
 small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
 </style>
@@ -42,16 +42,12 @@ small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
     <small id="debug"></small>
   </div>
   <div class="card hidden" id="eventCard">
-    <h3 id="eventTitle">Событие</h3>
-    <div id="eventText" style="font-size:12px"></div>
-    <div id="eventBtns" style="margin-top:10px"></div>
+    <h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:12px"></div><div id="eventBtns" style="margin-top:10px"></div>
   </div>
   <div class="card hidden" id="battleCard">
-    <h3 id="battleTitle">⚔ Бой</h3>
-    <div id="battleText" style="font-size:12px;white-space:pre-wrap"></div>
+    <h3 id="battleTitle">⚔ Бой</h3><div id="battleText" style="font-size:12px;white-space:pre-wrap"></div>
     <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="btn" onclick="doBattle('basic')">⚔ Базовая</div>
-      <div class="btn" onclick="doBattle('flee')">🏃 Сбежать</div>
+      <div class="btn" onclick="doBattle('basic')">⚔ Базовая</div><div class="btn" onclick="doBattle('flee')">🏃 Сбежать</div>
     </div>
   </div>
 </div>
@@ -59,16 +55,17 @@ small{opacity:.6;font-size:10px;word-break:break-all;white-space:pre-wrap}
 const tg=Telegram.WebApp; tg.ready(); tg.expand();
 let uid = new URLSearchParams(location.search).get("u") || tg.initDataUnsafe?.user?.id || "7320193489";
 document.getElementById('uid').innerText=uid;
+// СВЕЖИЕ ПЕР-ЮЗЕР ССЫЛКИ ПОСЛЕ СМЕНЫ ТОКЕНА — не протухают через handshake
 let PROFILE_URL = new URLSearchParams(location.search).get("p") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("p") : "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_d8f6edf6%3D%3D";
 let ACTION_URL = new URLSearchParams(location.search).get("a") ? "https://api.telebotcreator.com/new-webhook?data="+new URLSearchParams(location.search).get("a") : "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_91a25a1c%3D%3D";
 function log(s){ document.getElementById('debug').innerText+="\n"+s; }
 async function loadProfile(){
  document.getElementById('profileText').innerText="Запрос профиля...";
- log("profile "+PROFILE_URL.slice(0,60));
+ log("profile "+PROFILE_URL.slice(0,55));
  try{
   const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
-  const t=await r.text(); log("profile raw "+t.slice(0,600));
-  const d=JSON.parse(t); if(!d.ok) throw d.error;
+  const t=await r.text(); log("profile raw "+t.slice(0,500));
+  const d=JSON.parse(t); if(!d.ok) throw d.error||"not ok";
   document.getElementById('nick').innerText=d.nickname;
   document.getElementById('lvl').innerText=d.level;
   document.getElementById('hp').innerText=d.hp+"/"+d.max_hp;
@@ -76,13 +73,13 @@ async function loadProfile(){
   document.getElementById('pounds').innerText=d.pounds;
   document.getElementById('exp').innerText=d.exp;
   document.getElementById('potion').innerText=d.potion;
-  document.getElementById('profileText').innerText=`Путь: ${d.path}\n❤️ ${d.hp}/${d.max_hp} · 🌀 ${d.madness}%\nUID ${d.uid}`;
- }catch(e){ document.getElementById('profileText').innerText="Ошибка профиля: "+e; log("profile err "+e); }
+  document.getElementById('profileText').innerText=`Путь: ${d.path}\n❤️ ${d.hp}/${d.max_hp} · 🌀 ${d.madness}%\n✨ ${d.bomzh_left}с · 🤢 ${d.rot_left}с\nUID ${d.uid}`;
+ }catch(e){ document.getElementById('profileText').innerText="Ошибка профиля: "+e+"\nОткрой из @ltmgame_bot → Открыть игру"; log("profile err "+e); }
 }
 async function doExplore(){
  try{
   const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"explore_lake"})});
-  const t=await r.text(); log("explore raw "+t.slice(0,600)); const d=JSON.parse(t);
+  const t=await r.text(); log("explore raw "+t.slice(0,500)); const d=JSON.parse(t);
   if(d.type==="event"){
    document.getElementById('eventCard').classList.remove('hidden');
    document.getElementById('eventTitle').innerText=d.event;
@@ -90,6 +87,7 @@ async function doExplore(){
    const box=document.getElementById('eventBtns'); box.innerHTML="";
    d.actions.forEach(a=>{ const b=document.createElement('div'); b.className='btn'; b.innerText=a.label; b.onclick=()=>doEvent(a.id); box.appendChild(b);});
   } else if(d.type==="battle"){ document.getElementById('battleCard').classList.remove('hidden'); document.getElementById('battleTitle').innerText=d.enemy; document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max}`; }
+  else log(JSON.stringify(d));
  }catch(e){ log("explore err "+e); }
  loadProfile();
 }
@@ -99,7 +97,7 @@ async function doEvent(id){
 }
 async function doBattle(m){
  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"battle",move:m})});
- const d=await r.json(); if(d.type==="victory") alert("Победа +"+d.exp_add); loadProfile();
+ const d=await r.json(); if(d.type==="victory") alert("Победа +"+d.exp_add+" опыта"); else if(d.type==="defeat") alert("Поражение"); else if(d.type==="battle") document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max}`; loadProfile();
 }
 loadProfile();
 </script>
