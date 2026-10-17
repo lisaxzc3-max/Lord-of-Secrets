@@ -1,1 +1,60 @@
-
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
+.wrap{max-width:420px;margin:0 auto;padding:12px}
+.top{display:flex;align-items:center;gap:10px;background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:10px}
+.avatar{width:48px;height:48px;border-radius:12px;background:#c9a86a;display:flex;align-items:center;justify-content:center;font-size:22px}
+.bars{flex:1}
+.bar{height:8px;background:#2a2a33;border-radius:8px;margin:4px 0;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:8px}
+.hp i{background:#e63946;width:72%}
+.sp i{background:#4cc9f0;width:55%}
+.xp i{background:#f4a261;width:30%}
+.money{text-align:right;font-size:12px}
+.money b{color:#f4d35e}
+.card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px}
+.banner{height:120px;border-radius:14px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #c9a86a;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.banner b{font-size:15px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:8px 0}
+.nav a{font-size:11px;text-align:center;color:#e9d8a6;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="avatar">𓂀</div>
+    <div class="bars">
+      <div style="font-size:13px"><b>Провидец</b> · Ур.1</div>
+      <div class="bar hp"><i></i></div>
+      <div class="bar sp"><i></i></div>
+      <div class="bar xp"><i></i></div>
+    </div>
+    <div class="money">💷 <b>0</b><br>⭐ 0</div>
+  </div>
+  <div class="card">
+    <h3>◈ Дела дня</h3>
+    <div style="margin-top:8px;font-size:12px">⟡ 🐀 Нашествие крыс 0/6<br>⟡ ✦ Дар дня</div>
+  </div>
+  <div class="grid">
+    <div class="btn">⌖ Тинген</div><div class="btn">📜 Квесты</div>
+    <div class="btn">🎒 Инвентарь</div><div class="btn">⚔ Площадка</div>
+    <div class="btn">◈ Профиль</div><div class="btn">⟡ Лидеры</div>
+  </div>
+  <div class="banner"><b>╭── 𓂀 ──╮ ТИНГЕН ── 𓂀 ──╯</b><span style="font-size:11px;opacity:.7">Город во Мгле</span></div>
+  <div style="height:60px"></div>
+</div>
+<div class="nav">
+  <a>◈ Зал</a><a>⚔ Поход</a><a>⬢ Сумка</a><a>𓂀 Снаряг</a><a>⌖ Лавка</a>
+</div>
+<script>Telegram.WebApp.ready();Telegram.WebApp.expand();</script>
+</body>
+</html>
