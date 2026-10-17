@@ -2,30 +2,28 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Повелитель Тайн</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Повелитель Тайн v2</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
 body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
-.wrap{max-width:420px;margin:0 auto;padding:12px}
+.wrap{max-width:420px;margin:0 auto;padding:12px;padding-bottom:70px}
 .top{display:flex;align-items:center;gap:10px;background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:10px}
-.avatar{width:48px;height:48px;border-radius:12px;background:#c9a86a;display:flex;align-items:center;justify-content:center;font-size:22px}
+.avatar{width:48px;height:48px;border-radius:12px;background:#c9a86a;display:flex;align-items:center;justify-content:center;font-size:22px;color:#000}
 .bars{flex:1}
 .bar{height:8px;background:#2a2a33;border-radius:8px;margin:4px 0;overflow:hidden}
-.bar i{display:block;height:100%;border-radius:8px}
-.hp i{background:#e63946;width:72%}
-.sp i{background:#4cc9f0;width:55%}
-.xp i{background:#f4a261;width:30%}
+.bar i{display:block;height:100%}
+.hp i{background:#e63946}
+.xp i{background:#f4a261}
 .money{text-align:right;font-size:12px}
-.money b{color:#f4d35e}
 .card{background:#14141b;border:1px solid #c9a86a;border-radius:14px;padding:14px;margin:10px 0}
+.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px;cursor:pointer}
+.btn:active{opacity:.6}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn{border:1px solid #c9a86a;background:#1c1c24;border-radius:12px;padding:12px;text-align:center;font-size:13px}
-.banner{height:120px;border-radius:14px;background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #c9a86a;display:flex;align-items:center;justify-content:center;flex-direction:column}
-.banner b{font-size:15px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0d;border-top:1px solid #c9a86a;display:flex;justify-content:space-around;padding:8px 0}
-.nav a{font-size:11px;text-align:center;color:#e9d8a6;text-decoration:none}
+.nav a{font-size:11px;color:#e9d8a6;text-decoration:none;text-align:center}
+.hidden{display:none}
 </style>
 </head>
 <body>
@@ -33,28 +31,124 @@ body{background:#0a0a0d;color:#e9d8a6;min-height:100vh}
   <div class="top">
     <div class="avatar">𓂀</div>
     <div class="bars">
-      <div style="font-size:13px"><b>Провидец</b> · Ур.1</div>
-      <div class="bar hp"><i></i></div>
-      <div class="bar sp"><i></i></div>
-      <div class="bar xp"><i></i></div>
+      <div style="font-size:13px"><b id="nick">Загрузка...</b> · Ур.<span id="lvl">-</span></div>
+      <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
+      <div style="font-size:10px"><span id="hp">-</span> · 🧪 <span id="potion">-</span>%</div>
     </div>
-    <div class="money">💷 <b>0</b><br>⭐ 0</div>
+    <div class="money">💷 <b id="pounds">-</b><br>⭐ <span id="exp">-</span></div>
   </div>
-  <div class="card">
+
+  <div class="card" id="mainCard">
     <h3>◈ Дела дня</h3>
-    <div style="margin-top:8px;font-size:12px">⟡ 🐀 Нашествие крыс 0/6<br>⟡ ✦ Дар дня</div>
+    <div style="font-size:12px;margin-top:8px" id="profileText">Подключение к боту...</div>
+    <div style="margin-top:10px" class="grid">
+      <div class="btn" onclick="doExplore()">🌊 Озеро · Исследовать</div>
+      <div class="btn" onclick="loadProfile()">🔄 Обновить</div>
+    </div>
   </div>
-  <div class="grid">
-    <div class="btn">⌖ Тинген</div><div class="btn">📜 Квесты</div>
-    <div class="btn">🎒 Инвентарь</div><div class="btn">⚔ Площадка</div>
-    <div class="btn">◈ Профиль</div><div class="btn">⟡ Лидеры</div>
+
+  <div class="card hidden" id="battleCard">
+    <h3 id="battleTitle">⚔ Бой</h3>
+    <div id="battleText" style="font-size:12px;white-space:pre-wrap"></div>
+    <div style="margin-top:10px" class="grid">
+      <div class="btn" onclick="doBattle('basic')">⚔ Базовая</div>
+      <div class="btn" onclick="doBattle('flee')">🏃 Сбежать</div>
+    </div>
   </div>
-  <div class="banner"><b>╭── 𓂀 ──╮ ТИНГЕН ── 𓂀 ──╯</b><span style="font-size:11px;opacity:.7">Город во Мгле</span></div>
-  <div style="height:60px"></div>
+
+  <div class="card hidden" id="eventCard">
+    <h3 id="eventTitle">Событие</h3>
+    <div id="eventText" style="font-size:12px"></div>
+    <div id="eventBtns" style="margin-top:10px"></div>
+  </div>
 </div>
+
 <div class="nav">
-  <a>◈ Зал</a><a>⚔ Поход</a><a>⬢ Сумка</a><a>𓂀 Снаряг</a><a>⌖ Лавка</a>
+  <a onclick="loadProfile()">◈ Зал</a>
+  <a onclick="doExplore()">🌊 Озеро</a>
+  <a onclick="loadProfile()">⬢ Сумка</a>
+  <a>⌖ Лавка</a>
 </div>
-<script>Telegram.WebApp.ready();Telegram.WebApp.expand();</script>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
+const uid = tg.initDataUnsafe?.user?.id || 7320193489;
+const HANDSHAKE = "https://api.telebot-creator.ru/webhook/10203062/api_handshake";
+
+let PROFILE_URL = "";
+let ACTION_URL = "";
+
+async function handshake(){
+  try{
+    const r = await fetch(HANDSHAKE, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({user_id: ""+uid})});
+    const j = await r.json();
+    if(j.ok){ PROFILE_URL=j.profile_url; ACTION_URL=j.action_url; return true;}
+  }catch(e){}
+  return false;
+}
+
+async function loadProfile(){
+  if(!PROFILE_URL) await handshake();
+  try{
+    const r = await fetch(PROFILE_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({})});
+    const d = await r.json();
+    if(!d.ok) throw 0;
+    document.getElementById('nick').innerText=d.nickname;
+    document.getElementById('lvl').innerText=d.level;
+    document.getElementById('hp').innerText=d.hp+"/"+d.max_hp;
+    document.getElementById('hpbar').style.width=(d.hp/d.max_hp*100)+"%";
+    document.getElementById('pounds').innerText=d.pounds;
+    document.getElementById('exp').innerText=d.exp;
+    document.getElementById('potion').innerText=d.potion;
+    document.getElementById('profileText').innerHTML=`Путь: ${d.path}<br>❤️ ${d.hp}/${d.max_hp} · 🌀 ${d.madness}% · ✨ ${d.bomzh_left?Math.floor(d.bomzh_left/60)+"м":"-"}<br><small>UID ${d.uid}</small>`;
+  }catch(e){ document.getElementById('profileText').innerText="Ошибка профиля. Открой мини-апп из бота @ltmgame_bot"; }
+}
+
+async function doExplore(){
+  if(!ACTION_URL) await handshake();
+  document.getElementById('eventCard').classList.add('hidden');
+  document.getElementById('battleCard').classList.add('hidden');
+  const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"explore_lake"})});
+  const d = await r.json();
+  if(d.type==="event"){
+    document.getElementById('eventCard').classList.remove('hidden');
+    document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Принцесса Топей":"📦 Сундук на дне";
+    document.getElementById('eventText').innerText=d.text;
+    const box=document.getElementById('eventBtns'); box.innerHTML="";
+    d.actions.forEach(a=>{
+      const b=document.createElement('div'); b.className='btn'; b.innerText=a.label;
+      b.onclick=()=>doEvent(a.id); box.appendChild(b);
+    });
+  } else if(d.type==="battle"){
+    showBattle(d);
+  } else if(d.error==="cooldown"){ alert("Подожди "+d.left+" сек"); }
+  else { alert(JSON.stringify(d)); }
+  loadProfile();
+}
+
+async function doEvent(id){
+  const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"event_choice", move:id})});
+  const d = await r.json();
+  alert(d.text); document.getElementById('eventCard').classList.add('hidden'); loadProfile();
+}
+
+function showBattle(d){
+  document.getElementById('battleCard').classList.remove('hidden');
+  document.getElementById('battleTitle').innerText="⚔ "+d.enemy;
+  document.getElementById('battleText').innerText=`❤️ ${d.hp}/${d.max_hp}\n👹 ${d.enemy} ${d.enemy_hp}/${d.enemy_max} · ${d.enemy_dmg} урон` + (d.rot_active?"\n🤢 -25 HP вирус":"");
+}
+
+async function doBattle(move){
+  const r = await fetch(ACTION_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({action:"battle", move:move})});
+  const d = await r.json();
+  if(d.type==="victory"){ alert("Победа! "+d.enemy+" · +"+d.exp_add+" опыта"); document.getElementById('battleCard').classList.add('hidden');}
+  else if(d.type==="defeat"){ alert("Поражение..."); document.getElementById('battleCard').classList.add('hidden');}
+  else if(d.type==="battle"){ showBattle(d); }
+  loadProfile();
+}
+
+handshake().then(loadProfile);
+</script>
 </body>
 </html>
