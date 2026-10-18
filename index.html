@@ -3,28 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v8.7</title>
+<title>Повелитель Тайн v9.0</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
-body{
-  background:linear-gradient(rgba(10,10,14,.72), rgba(10,10,14,.92)), url('./i-72.jpeg') center/cover fixed no-repeat, #0a0a0e;
-  color:#b8b5ad;
-  min-height:100vh
-}
+body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.92)),url('./i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
 .wrap{max-width:440px;margin:0 auto;padding:10px 10px 70px}
 .top{display:flex;gap:10px;background:rgba(22,22,26,.88);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:10px}
 .avatar{width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;color:#b8b5ad;font-size:20px}
 .bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:3px 0;overflow:hidden}
 .bar i{display:block;height:100%;transition:width .3s}
-.bar.hp i{background:#5a3a3a}
-.bar.mn i{background:#4a4e5a}
-.bar.exp i{background:#6a6560}
+.bar.hp i{background:#5a3a3a}.bar.mn i{background:#4a4e5a}.bar.exp i{background:#6a6560}
 .card{background:rgba(22,22,26,.86);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
 .btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;font-size:13px;margin:4px 0;cursor:pointer;color:#b8b5ad}
 .btn.gold{background:#3a3a3e;border-color:#4a4a4e;color:#d4d0c3;font-weight:600}
+.btn.act{background:#4a4a4e;border-color:#5a5a62;color:#fff;font-weight:700}
 .btn.red{background:#2b2b2e;border-color:#4a4a4e;color:#d4d0c3;font-weight:700}
-.btn.teal{background:#262a2e;border-color:#3e444a;color:#b8b5ad;font-weight:600}
 .btn.big{padding:14px;font-size:15px;border-radius:14px}
 .btn:active{transform:scale(.97)}
 .tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto}
@@ -44,6 +38,16 @@ body{
 .victoryHead{text-align:center;letter-spacing:4px;font-weight:800;margin:6px 0;font-size:20px;color:#c9c5b8}
 .lootGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
 .lootBox{border:1px solid #3a3a3e;border-radius:10px;padding:10px;text-align:center;background:rgba(28,28,32,.9)}
+.startOverlay{position:fixed;inset:0;background:rgba(6,6,10,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99;padding:14px;overflow:auto}
+.startCard{width:100%;max-width:380px;background:rgba(18,18,22,.98);border:1px solid #3a3a3e;border-radius:18px;padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.8)}
+.quote{margin:10px 0;background:rgba(28,28,32,.9);border:1px solid #2a2a2e;border-radius:12px;padding:10px;font-size:12px;line-height:1.4}
+.startInput{width:100%;background:#1a1a1e;border:1px solid #3a3a3e;border-radius:10px;padding:12px;text-align:center;color:#d4d0c3;font-size:16px;outline:none}
+.startHint{display:flex;justify-content:space-between;font-size:10px;opacity:.5;margin:4px 2px}
+.infoBox{display:flex;gap:8px;background:rgba(28,28,32,.7);border:1px solid #2a2a2e;border-radius:10px;padding:8px;margin:6px 0;font-size:11px;line-height:1.3}
+.pathGrid{display:grid;grid-template-columns:1fr;gap:6px;margin:6px 0}
+.pathCard{border:1px solid #2a2a2e;border-radius:12px;padding:10px;background:rgba(28,28,32,.85);cursor:pointer}
+.pathCard.sel{border-color:#5a5a62;background:#3a3a3e}
+.genderRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
 small{opacity:.6;font-size:10px;white-space:pre-wrap}
 h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 </style>
@@ -123,7 +127,7 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 </div>
 </div>
 <div class="btn red big" style="margin-top:10px" onclick="exploreAgain()">◎ Исследовать снова</div>
-<div class="btn teal" onclick="alert('⚡ Автобой — 5 боёв подряд — подключим следующим шагом')">⚡ Автобой</div>
+<div class="btn teal" onclick="alert('⚡ Автобой — 5 боёв — скоро')">⚡ Автобой</div>
 <div style="text-align:center;margin:8px 0;font-size:26px">📦</div>
 <div class="lootGrid">
 <div class="lootBox"><div style="font-size:16px">£</div><div style="color:#b8b5ad;font-weight:700" id="vTenge">+1</div><div style="font-size:10px;opacity:.6">ФУНТЫ</div></div>
@@ -133,6 +137,53 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div id="vDetails" class="hidden" style="font-size:11px;white-space:pre-wrap;opacity:.7;margin-top:6px"></div>
 </div>
 </div>
+
+<div id="startOverlay" class="startOverlay hidden">
+<div class="startCard">
+<div style="display:flex;gap:10px;align-items:center">
+<div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:18px">🦉</div>
+<div><div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div><div style="font-size:10px;opacity:.5;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div></div>
+</div>
+<div class="quote" id="startQuote">«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы. Имя твоё уже прошептала тьма — впиши своё.»</div>
+
+<div id="step1">
+<div style="font-size:12px;margin:6px 0">📜 Твоё имя</div>
+<input id="startNick" class="startInput" maxlength="10" value="Путник123">
+<div class="startHint"><span>до 10 символов, буквы/цифры/_/- без ссылок</span><span id="nickCnt">9/10</span></div>
+<div style="color:#e63946;font-size:11px" id="nickErr"></div>
+<div class="btn gold" style="margin-top:8px" onclick="startCheckNick()">Далее ›</div>
+</div>
+
+<div id="step2" class="hidden">
+<div style="font-size:12px;margin:6px 0">⟡ Избери Путь</div>
+<div class="pathGrid">
+<div class="pathCard" id="card-seer" onclick="pickPath('seer')">
+<b>𓂀 Путь Шута · 9 — Провидец</b><br><small>Нет силы клинка — лишь дух и интуиция. Навыки: 🃏 Карты · 👁 Ясновид. · ✨ Ритуал<br><i>Пассив: уклон 1/бой</i></small>
+</div>
+<div class="pathCard" id="card-sailor" onclick="pickPath('sailor')">
+<b>⚔ Путь Тирана · 9 — Матрос</b><br><small>Дитя бури. Церковь Бурь. Навыки: 👊 Удар · 🍺 Перепить · ⛈ Молитва<br><i>Пассив: +30 HP</i></small>
+</div>
+<div class="pathCard" id="card-hunter" onclick="pickPath('hunter')">
+<b>🏹 Путь Красного Жреца · 9 — Охотник</b><br><small>Клинок и ловушка. Навыки: 🗡️ Кинжал · 🪤 Ловушка · 💪 Усиление<br><i>Пассив: магнит неудач</i></small>
+</div>
+</div>
+<div style="color:#e63946;font-size:11px" id="pathErr"></div>
+<div class="btn gold" style="margin-top:8px" onclick="startConfirmPath()">Далее ›</div>
+</div>
+
+<div id="step3" class="hidden">
+<div style="font-size:12px;margin:6px 0">⚧ Выбери пол</div>
+<div class="genderRow">
+<div class="btn" id="g-male" onclick="pickGender('male')">♂ Мужчина</div>
+<div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div>
+</div>
+<div style="color:#e63946;font-size:11px" id="genderErr"></div>
+<div class="btn gold" style="margin-top:8px" onclick="startFinish()">𓂀 Войти в Тинген</div>
+</div>
+
+</div>
+</div>
+
 <div class="nav">
 <a onclick="showTab('hall')">◈ Зал</a><a onclick="showTab('travel')">🧭 Поход</a><a onclick="showTab('city')">⌖ Город</a><a onclick="showTab('bag')">🎒 Сумка</a>
 </div>
@@ -144,38 +195,69 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_df5df64d";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_fa362874";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 function showTab(id){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.getElementById('t-'+id).classList.add('active');['hall','travel','city','bag'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='bag')renderBag();}
 let G={inv:[],eq:{},path:"",hp:50,max:50,level:1,exp:0,lastLoc:"lake"};
+let START={nick:"",path:"",gender:""};
+document.getElementById('startNick').addEventListener('input',e=>{document.getElementById('nickCnt').innerText=e.target.value.length+"/10";document.getElementById('nickErr').innerText=""});
+function pickPath(p){START.path=p;document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));document.getElementById('card-'+p).classList.add('sel');document.getElementById('pathErr').innerText=""}
+function pickGender(g){START.gender=g;document.getElementById('g-male').className=g==='male'?'btn act':'btn';document.getElementById('g-female').className=g==='female'?'btn act':'btn';document.getElementById('genderErr').innerText=""}
+async function startCheckNick(){
+ let v=document.getElementById('startNick').value.trim();
+ if(!v){document.getElementById('nickErr').innerText="введи ник 2-10 символов";return}
+ if(v.length>10) v=v.slice(0,10);
+ START.nick=v;
+ let d=await api({action:"set_nickname",nick:v});
+ if(!d.ok){document.getElementById('nickErr').innerText=d.error||"ник занят или неверен";return}
+ document.getElementById('step1').classList.add('hidden');
+ document.getElementById('step2').classList.remove('hidden');
+ document.getElementById('startStep').innerText="2/3";
+ document.getElementById('startQuote').innerText="«Имя принято. Теперь избери Путь — он определит твои навыки в тумане.»";
+}
+async function startConfirmPath(){
+ if(!START.path){document.getElementById('pathErr').innerText="выбери путь";return}
+ let d=await api({action:"confirm_path",choice:START.path});
+ if(!d.ok){document.getElementById('pathErr').innerText=d.error||"ошибка пути";return}
+ document.getElementById('step2').classList.add('hidden');
+ document.getElementById('step3').classList.remove('hidden');
+ document.getElementById('startStep').innerText="3/3";
+ document.getElementById('startQuote').innerText="«Путь избран. Осталось — кем ты войдёшь в Тинген.»";
+}
+async function startFinish(){
+ if(!START.gender){document.getElementById('genderErr').innerText="выбери пол";return}
+ let d=await api({action:"set_gender",gender:START.gender});
+ if(!d.ok){document.getElementById('genderErr').innerText=d.error||"ошибка";return}
+ document.getElementById('startOverlay').classList.add('hidden');
+ loadProfile();
+}
+function maybeShowStart(j){
+ if(!j || !j.nickname || j.nickname==="Без имени" || j.nickname==="—" || !j.path || j.path==="—"){
+  let rnd="Путник"+Math.floor(100+Math.random()*900);
+  document.getElementById('startNick').value=rnd;
+  document.getElementById('nickCnt').innerText=rnd.length+"/10";
+  START={nick:"",path:"",gender:""};
+  document.getElementById('step1').classList.remove('hidden');
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('startStep').innerText="1/3";
+  document.getElementById('startQuote').innerText="«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы. Имя твоё уже прошептала тьма — впиши своё.»";
+  document.getElementById('startOverlay').classList.remove('hidden');
+ } else {
+  document.getElementById('startOverlay').classList.add('hidden');
+ }
+}
 (function initFromUrl(){
  let nick=qs.get("nick")?decodeURIComponent(qs.get("nick")):"";let lvl=qs.get("lvl")||"-",hp=qs.get("hp")||"-",mh=qs.get("max_hp")||"-",p=qs.get("p")||"-",exp=qs.get("exp")||"-",pot=qs.get("potion")||"-",mad=qs.get("madness")||"0",path=qs.get("path")?decodeURIComponent(qs.get("path")):"";
  if(nick){document.getElementById('nick').innerText=nick;document.getElementById('lvl').innerText=lvl;document.getElementById('hp').innerText=hp+"/"+mh;document.getElementById('hp2').innerText=hp+"/"+mh;document.getElementById('hpTop').innerText=hp+"/"+mh;document.getElementById('pounds').innerText=p;document.getElementById('exp').innerText=exp;document.getElementById('potion').innerText=pot;document.getElementById('path').innerText=path;document.getElementById('hallInfo').innerText="Путь: "+path+"\n❤️ "+hp+"/"+mh+" · Ур."+lvl+" · £ "+p+" · ⭐ "+exp+"\n🧪 "+pot+"% · 🌀 "+mad+"%";let h=parseInt(hp),m=parseInt(mh);if(m>0){document.getElementById('hpbar').style.width=(h/m*100)+"%";document.getElementById('hpbar2').style.width=(h/m*100)+"%";}}
 })();
-async function ensureUrls(){
-  if(PROFILE_URL&&ACTION_URL) return true;
-  try{
-    const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});
-    const txt=await r.text();
-    let j;
-    try{j=unwrap(JSON.parse(txt))}catch(e){throw "HANDSHAKE parse: "+txt.slice(0,300)}
-    if(!j.ok) throw "HANDSHAKE not ok: "+txt.slice(0,500);
-    if(!j.profile_url) throw "no profile_url in "+txt.slice(0,500);
-    PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;
-  }catch(e){
-    document.getElementById('hallInfo').innerText="Ошибка связи: "+e+"\nНажми 🔄 Обновить";
-    return false;
-  }
-}
+async function ensureUrls(){if(PROFILE_URL&&ACTION_URL) return true;try{const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const txt=await r.text();let j;try{j=unwrap(JSON.parse(txt))}catch(e){throw "HANDSHAKE parse: "+txt.slice(0,300)}if(!j.ok) throw "HANDSHAKE not ok: "+txt.slice(0,500);if(!j.profile_url) throw "no profile_url";PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}catch(e){document.getElementById('hallInfo').innerText="Ошибка связи: "+e;return false;}}
 async function loadProfile(){
  if(!PROFILE_URL) await ensureUrls();
- if(!PROFILE_URL){document.getElementById('hallInfo').innerText="Нет связи — нажми 🔄 Обновить\nUID "+uid+" HANDSHAKE df5df64d";return}
+ if(!PROFILE_URL){document.getElementById('hallInfo').innerText="Нет связи — нажми 🔄 Обновить\nUID "+uid;return}
  try{
   const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
-  const txt=await r.text();
-  let j;
-  try{j=unwrap(JSON.parse(txt))}catch(e){throw "profile parse: "+txt.slice(0,400)}
-  if(!j.ok&&!j.nickname) throw (j.error||txt.slice(0,400));
+  const txt=await r.text();let j;try{j=unwrap(JSON.parse(txt))}catch(e){throw "profile parse: "+txt.slice(0,400)}if(!j.ok&&!j.nickname) throw (j.error||txt.slice(0,400));
   document.getElementById('nick').innerText=j.nickname;document.getElementById('lvl').innerText=j.level;
   document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;document.getElementById('hp2').innerText=j.hp+"/"+j.max_hp;document.getElementById('hpTop').innerText=j.hp+"/"+j.max_hp;
   document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('hpbar2').style.width=(j.hp/j.max_hp*100)+"%";
@@ -187,6 +269,7 @@ async function loadProfile(){
   let need=j.level>=5?100:10*(2**(j.level-1));let pct=j.level>=5?100:Math.round(j.exp/need*100);document.getElementById('expPct').innerText=pct+"%";document.getElementById('expBarTxt').innerText="до "+(j.level+1)+" уровня "+pct+"%";document.getElementById('expBar').style.width=pct+"%";
   G.hp=j.hp;G.max=j.max_hp;G.path=j.path;G.level=j.level;G.exp=j.exp;
   let s='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">💪 '+j.str+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🏃 '+j.agi+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🧠 '+j.int+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🔮 '+j.spi+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">❤️ '+j.con+'</span></div>';if(j.stat_points>0)s+='<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">'+['str','agi','int','spi','con'].map(k=>'<span class="btn" style="padding:6px 8px" onclick="addStat(\''+k+'\')">+1 '+k+'</span>').join('')+'</div>';document.getElementById('statsBox').innerHTML=s;G.inv=j.inventory||[];G.eq=j.equipped||{};renderBag();
+  maybeShowStart(j);
  }catch(e){document.getElementById('hallInfo').innerText="Ошибка загрузки: "+e}
 }
 async function api(p){if(!ACTION_URL)await ensureUrls();const j=unwrap(JSON.parse(await (await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})).text()));return j;}
@@ -194,249 +277,63 @@ function renderBag(){document.getElementById('bagCnt').innerText=G.inv.length+"/
 async function doEquip(i){let d=await api({action:"equip",idx:""+i});alert(d.text||d.error);loadProfile()}
 async function doUnequip(s){let d=await api({action:"unequip",slot:s});alert(d.text||d.error);loadProfile()}
 async function addStat(s){let d=await api({action:"addstat",stat:s});alert(d.text||d.error);loadProfile()}
-const cityData={
-  "Центр":["Ратуша 🏛","Площадь 👥","Церковь Ночи 🌙","Собор Селены ⛪"],
-  "Север":["Рынок 🍎 — 🧺 Торговец","Таверна 🐉 — 🍺 Бармен","Клуб 🔮 — Гадалка","Вокзал 🚂 — 🧙 Бомж"],
-  "Восток":["Дома 🏠 — Подвал","Лечебница 🏥","Ястребы 🦅","Университет 🎓","Кладбище ⚰️"],
-  "Запад":["Бульвар 🌳","Банк 🏦","Опера 🎭","Гандрена 🛍️"]
-};
-function toggleDistrict(d){
-  let b=document.getElementById('body-'+d);
-  let ch=document.getElementById('ch-'+d);
-  if(!b) return;
-  let hid=b.classList.contains('hidden');
-  b.classList.toggle('hidden');
-  if(ch) ch.innerText=hid?'⌄':'›';
-}
-(function renderCity(){
-  let h="";
-  for(let d in cityData){
-    h+='<div class="district">';
-    h+='<div class="districtHead" onclick="toggleDistrict(\''+d+'\')"><span>▸ '+d+'</span><span id="ch-'+d+'" style="opacity:.6">›</span></div>';
-    h+='<div id="body-'+d+'" class="districtBody hidden">';
-    cityData[d].forEach(x=>{
-      let key="";
-      if(x.includes("Рынок")) key="market";
-      else if(x.includes("Таверна")) key="dragon_tavern";
-      else if(x.includes("Клуб")) key="fortune_club";
-      else if(x.includes("Вокзал")) key="station";
-      else if(x.includes("Дома")) key="houses";
-      if(key) h+='<div class="btn" onclick="openLoc(\''+key+'\')">'+x+'</div>';
-      else h+='<div class="btn" style="opacity:.5">'+x+'</div>';
-    });
-    h+='</div></div>';
-  }
-  document.getElementById('cityBtns').innerHTML=h;
-})();
-function openLoc(id){
-  const m={
-    market:"🍎 Рынок — специи, весы",
-    dragon_tavern:"🐉 Таверна — Бармен ждет 👁 Глаз",
-    fortune_club:"🔮 Клуб — карты шепчут",
-    station:"🚂 Вокзал — Бомж 4 вопроса",
-    houses:"🏠 Дома — Подвал · внутри Подвал"
-  };
-  document.getElementById('locInfo').innerText=m[id]||id;
-  let b=document.getElementById('locBtns');
-  b.innerHTML="";
-  if(id==='market') b.innerHTML='<div class="btn gold" onclick="doTrader()">🧺 Торговец · Торговаться</div>';
-  if(id==='dragon_tavern') b.innerHTML='<div class="btn gold" onclick="doNpc(\'barman\')">🍺 Бармен · Просьба</div>';
-  if(id==='station') b.innerHTML='<div class="btn gold" onclick="doNpc(\'bomzh\')">🧙 Бомж · 4 вопроса</div>';
-  if(id==='fortune_club') b.innerHTML='<div class="btn gold" onclick="doNpc(\'gadalka\')">𓂀 Гадалка</div>';
-  if(id==='houses') b.innerHTML='<div class="btn gold" onclick="doExplore(\'explore_rats\')">🕳 Войти в Подвал</div>';
-}
-async function doNpc(npc){
-  let d=await api({action:"npc",npc:npc});
-  if(d.type==="quiz"){
-    document.getElementById('eventCard').classList.remove('hidden');
-    document.getElementById('eventTitle').innerText=d.title;
-    document.getElementById('eventText').innerText=d.text;
-    let box=document.getElementById('eventBtns');
-    box.innerHTML="";
-    d.options.forEach(o=>{
-      let b=document.createElement('div');
-      b.className='btn gold';
-      b.innerText=o.label;
-      b.onclick=()=>doQuiz(o.id);
-      box.appendChild(b)
-    });
-  }else{
-    document.getElementById('eventCard').classList.remove('hidden');
-    document.getElementById('eventTitle').innerText=d.title||"НПС";
-    document.getElementById('eventText').innerText=d.text||JSON.stringify(d).slice(0,400);
-    let box=document.getElementById('eventBtns');
-    box.innerHTML="";
-    (d.actions||[]).forEach(a=>{
-      let b=document.createElement('div');
-      b.className='btn gold';
-      b.innerText=a.label;
-      b.onclick=()=>doBarman(a.id);
-      box.appendChild(b)
-    });
-    if(!(d.actions&&d.actions.length)){
-      box.innerHTML='<div class="btn" onclick="document.getElementById(\'eventCard\').classList.add(\'hidden\')">✕ Закрыть</div>'
-    }
-  }
-}
-async function doQuiz(id){
-  let d=await api({action:"bomzh_answer",move:id});
-  alert(d.text);
-  document.getElementById('eventCard').classList.add('hidden');
-  if(d.type==="quiz"){
-    document.getElementById('eventCard').classList.remove('hidden');
-    document.getElementById('eventTitle').innerText=d.title;
-    document.getElementById('eventText').innerText=d.text;
-    let box=document.getElementById('eventBtns');
-    box.innerHTML="";
-    d.options.forEach(o=>{
-      let b=document.createElement('div');
-      b.className='btn gold';
-      b.innerText=o.label;
-      b.onclick=()=>doQuiz(o.id);
-      box.appendChild(b)
-    });
-  }else loadProfile();
-}
-async function doBarman(id){
-  let m=id.includes("accept")?"accept":"give";
-  let d=await api({action:"barman",move:m});
-  alert(d.text||d.error);
-  document.getElementById('eventCard').classList.add('hidden');
-  loadProfile();
-}
-function openTravel(id){
-  G.lastLoc=id;
-  document.getElementById('eventCard').classList.add('hidden');
-  document.getElementById('battleCard').classList.add('hidden');
-  document.getElementById('victoryCard').classList.add('hidden');
-  if(id==='lake'){
-    document.getElementById('travelInfo').innerText="🌊 Топи — жабы, утопцы, роса";
-    document.getElementById('travelBtns').innerHTML='<div class="btn gold" onclick="doExplore(\'explore_lake\')">🔍 Исследовать берег</div>'
-  }
-}
+const cityData={"Центр":["Ратуша 🏛","Площадь 👥","Церковь Ночи 🌙","Собор Селены ⛪"],"Север":["Рынок 🍎 — 🧺 Торговец","Таверна 🐉 — 🍺 Бармен","Клуб 🔮 — Гадалка","Вокзал 🚂 — 🧙 Бомж"],"Восток":["Дома 🏠 — Подвал","Лечебница 🏥","Ястребы 🦅","Университет 🎓","Кладбище ⚰️"],"Запад":["Бульвар 🌳","Банк 🏦","Опера 🎭","Гандрена 🛍️"]};
+function toggleDistrict(d){let b=document.getElementById('body-'+d);let ch=document.getElementById('ch-'+d);if(!b) return;let hid=b.classList.contains('hidden');b.classList.toggle('hidden');if(ch) ch.innerText=hid?'⌄':'›';}
+(function renderCity(){let h="";for(let d in cityData){h+='<div class="district">';h+='<div class="districtHead" onclick="toggleDistrict(\''+d+'\')"><span>▸ '+d+'</span><span id="ch-'+d+'" style="opacity:.6">›</span></div>';h+='<div id="body-'+d+'" class="districtBody hidden">';cityData[d].forEach(x=>{let key="";if(x.includes("Рынок")) key="market";else if(x.includes("Таверна")) key="dragon_tavern";else if(x.includes("Клуб")) key="fortune_club";else if(x.includes("Вокзал")) key="station";else if(x.includes("Дома")) key="houses";if(key) h+='<div class="btn" onclick="openLoc(\''+key+'\')">'+x+'</div>';else h+='<div class="btn" style="opacity:.5">'+x+'</div>';});h+='</div></div>';}document.getElementById('cityBtns').innerHTML=h;})();
+function openLoc(id){const m={market:"🍎 Рынок — специи, весы",dragon_tavern:"🐉 Таверна — Бармен ждет 👁 Глаз",fortune_club:"🔮 Клуб — карты шепчут",station:"🚂 Вокзал — Бомж 4 вопроса",houses:"🏠 Дома — Подвал · внутри Подвал"};document.getElementById('locInfo').innerText=m[id]||id;let b=document.getElementById('locBtns');b.innerHTML="";if(id==='market') b.innerHTML='<div class="btn gold" onclick="doTrader()">🧺 Торговец · Торговаться</div>';if(id==='dragon_tavern') b.innerHTML='<div class="btn gold" onclick="doNpc(\'barman\')">🍺 Бармен · Просьба</div>';if(id==='station') b.innerHTML='<div class="btn gold" onclick="doNpc(\'bomzh\')">🧙 Бомж · 4 вопроса</div>';if(id==='fortune_club') b.innerHTML='<div class="btn gold" onclick="doNpc(\'gadalka\')">𓂀 Гадалка</div>';if(id==='houses') b.innerHTML='<div class="btn gold" onclick="doExplore(\'explore_rats\')">🕳 Войти в Подвал</div>';}
+async function doNpc(npc){let d=await api({action:"npc",npc:npc});if(d.type==="quiz"){document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText=d.title;document.getElementById('eventText').innerText=d.text;let box=document.getElementById('eventBtns');box.innerHTML="";d.options.forEach(o=>{let b=document.createElement('div');b.className='btn gold';b.innerText=o.label;b.onclick=()=>doQuiz(o.id);box.appendChild(b)});}else{document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText=d.title||"НПС";document.getElementById('eventText').innerText=d.text||JSON.stringify(d).slice(0,400);let box=document.getElementById('eventBtns');box.innerHTML="";(d.actions||[]).forEach(a=>{let b=document.createElement('div');b.className='btn gold';b.innerText=a.label;b.onclick=()=>doBarman(a.id);box.appendChild(b)});if(!(d.actions&&d.actions.length))box.innerHTML='<div class="btn" onclick="document.getElementById(\'eventCard\').classList.add(\'hidden\')">✕ Закрыть</div>';}}
+async function doQuiz(id){let d=await api({action:"bomzh_answer",move:id});alert(d.text);document.getElementById('eventCard').classList.add('hidden');if(d.type==="quiz"){document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText=d.title;document.getElementById('eventText').innerText=d.text;let box=document.getElementById('eventBtns');box.innerHTML="";d.options.forEach(o=>{let b=document.createElement('div');b.className='btn gold';b.innerText=o.label;b.onclick=()=>doQuiz(o.id);box.appendChild(b)});}else loadProfile();}
+async function doBarman(id){let m=id.includes("accept")?"accept":"give";let d=await api({action:"barman",move:m});alert(d.text||d.error);document.getElementById('eventCard').classList.add('hidden');loadProfile();}
+function openTravel(id){G.lastLoc=id;document.getElementById('eventCard').classList.add('hidden');document.getElementById('battleCard').classList.add('hidden');document.getElementById('victoryCard').classList.add('hidden');if(id==='lake'){document.getElementById('travelInfo').innerText="🌊 Топи — жабы, утопцы, роса";document.getElementById('travelBtns').innerHTML='<div class="btn gold" onclick="doExplore(\'explore_lake\')">🔍 Исследовать берег</div>'}}
 async function doExplore(a){
-  G.lastLoc=a.includes("lake")?"lake":"podval";
-  document.getElementById('victoryCard').classList.add('hidden');
-  let d=await api({action:a});
-  if(d.type==="event"){
-    document.getElementById('eventCard').classList.remove('hidden');
-    document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Принцесса":"📦 Сундук";
-    document.getElementById('eventText').innerText=d.text;
-    let box=document.getElementById('eventBtns');
-    box.innerHTML="";
-    d.actions.forEach(x=>{
-      let b=document.createElement('div');
-      b.className='btn gold';
-      b.innerText=x.label;
-      b.onclick=()=>doEvent(x.id);
-      box.appendChild(b)
-    });
-  }else if(d.type==="battle"){
-    document.getElementById('battleCard').classList.remove('hidden');
-    document.getElementById('vsEnemy').innerText=d.enemy;
-    document.getElementById('vsEHp').innerText=d.enemy_hp+"/"+d.enemy_max;
-    document.getElementById('vsEHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
-    document.getElementById('vsHp').innerText=d.hp+"/"+d.max_hp;
-    document.getElementById('vsHpBar').style.width=(d.hp/d.max_hp*100)+"%";
-    document.getElementById('battleTitle').innerText="⚔ "+d.enemy;
-    document.getElementById('battleText').innerText="❤️ "+d.hp+"/"+d.max_hp+" vs 👹 "+d.enemy+" "+d.enemy_hp+"/"+d.enemy_max;
-    let skills=document.getElementById('battleSkills');
-    skills.innerHTML="";
-    let path=G.path||"";
-    let acts=[];
-    if(path.includes("Шута")||path.includes("Шут")) acts=[["card","🃏 Карты"],["vision","👁 Ясновид."],["heal","✨ Ритуал"]];
-    else if(path.includes("Тирана")) acts=[["sailor_hit","👊 Удар"],["sailor_drink","🍺 Перепить"],["sailor_pray","⛈ Молитва"]];
-    else if(path.includes("Жреца")) acts=[["hunter_dagger","🗡️ Кинжал"],["hunter_trap","🪤 Ловушка"],["hunter_boost","💪 Усиление"]];
-    else acts=[["card","🃏 Карты"],["heal","✨ Ритуал"]];
-    acts.forEach(a=>{
-      let b=document.createElement('div');
-      b.className='btn gold';
-      b.innerText=a[1];
-      b.onclick=()=>doBattle(a[0]);
-      skills.appendChild(b)
-    });
-    let fb=document.createElement('div');
-    fb.className='btn';
-    fb.innerText="🏃 Побег";
-    fb.onclick=()=>doBattle('flee');
-    skills.appendChild(fb);
-    let bb=document.createElement('div');
-    bb.className='btn';
-    bb.innerText="⚔ Базовая";
-    bb.onclick=()=>doBattle('basic');
-    skills.appendChild(bb);
-  }else if(d.error) alert(d.error);
-  loadProfile();
+ G.lastLoc=a.includes("lake")?"lake":"podval";
+ document.getElementById('victoryCard').classList.add('hidden');
+ let d=await api({action:a});
+ if(d.type==="event"){document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Принцесса":"📦 Сундук";document.getElementById('eventText').innerText=d.text;let box=document.getElementById('eventBtns');box.innerHTML="";d.actions.forEach(x=>{let b=document.createElement('div');b.className='btn gold';b.innerText=x.label;b.onclick=()=>doEvent(x.id);box.appendChild(b)});}
+ else if(d.type==="battle"){
+  document.getElementById('battleCard').classList.remove('hidden');
+  document.getElementById('vsEnemy').innerText=d.enemy;document.getElementById('vsEHp').innerText=d.enemy_hp+"/"+d.enemy_max;document.getElementById('vsEHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
+  document.getElementById('vsHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('vsHpBar').style.width=(d.hp/d.max_hp*100)+"%";
+  document.getElementById('battleTitle').innerText="⚔ "+d.enemy;document.getElementById('battleText').innerText="❤️ "+d.hp+"/"+d.max_hp+" vs 👹 "+d.enemy+" "+d.enemy_hp+"/"+d.enemy_max;
+  let skills=document.getElementById('battleSkills');skills.innerHTML="";
+  let path=G.path||"";let acts=[];
+  if(path.includes("Шута")||path.includes("Шут")) acts=[["card","🃏 Карты"],["vision","👁 Ясновид."],["heal","✨ Ритуал"]];
+  else if(path.includes("Тирана")) acts=[["sailor_hit","👊 Удар"],["sailor_drink","🍺 Перепить"],["sailor_pray","⛈ Молитва"]];
+  else if(path.includes("Жреца")) acts=[["hunter_dagger","🗡️ Кинжал"],["hunter_trap","🪤 Ловушка"],["hunter_boost","💪 Усиление"]];
+  else acts=[["card","🃏 Карты"],["heal","✨ Ритуал"]];
+  acts.forEach(a=>{let b=document.createElement('div');b.className='btn gold';b.innerText=a[1];b.onclick=()=>doBattle(a[0]);skills.appendChild(b)});
+  let fb=document.createElement('div');fb.className='btn';fb.innerText="🏃 Побег";fb.onclick=()=>doBattle('flee');skills.appendChild(fb);
+  let bb=document.createElement('div');bb.className='btn';bb.innerText="⚔ Базовая";bb.onclick=()=>doBattle('basic');skills.appendChild(bb);
+ }else if(d.error) alert(d.error);
+ loadProfile();
 }
-async function doEvent(id){
-  let d=await api({action:"event_choice",move:id});
-  alert(d.text);
-  document.getElementById('eventCard').classList.add('hidden');
-  loadProfile()
-}
-function exploreAgain(){
-  document.getElementById('victoryCard').classList.add('hidden');
-  document.getElementById('battleCard').classList.add('hidden');
-  if(G.lastLoc==='podval') doExplore('explore_rats');
-  else doExplore('explore_lake');
-}
+async function doEvent(id){let d=await api({action:"event_choice",move:id});alert(d.text);document.getElementById('eventCard').classList.add('hidden');loadProfile()}
+function exploreAgain(){document.getElementById('victoryCard').classList.add('hidden');document.getElementById('battleCard').classList.add('hidden');if(G.lastLoc==='podval') doExplore('explore_rats');else doExplore('explore_lake');}
 async function doBattle(m){
-  let d=await api({action:"battle",move:m});
-  if(d.type==="victory"){
-    document.getElementById('battleCard').classList.add('hidden');
-    document.getElementById('victoryCard').classList.remove('hidden');
-    document.getElementById('vHp').innerText=(d.hp||G.hp)+"/"+(d.max_hp||G.max);
-    document.getElementById('vHpBar').style.width=((d.hp||G.hp)/(d.max_hp||G.max)*100)+"%";
-    document.getElementById('vMad').innerText=(d.madness!=null?d.madness:(document.getElementById('madTxt').innerText));
-    document.getElementById('vMadBar').style.width=(d.madness!=null?d.madness:(parseInt(document.getElementById('madTxt').innerText)||0))+"%";
-    let need=G.level>=5?100:10*(2**(G.level-1));
-    let pct=G.level>=5?100:Math.round((d.exp!=null?d.exp:G.exp)/need*100);
-    document.getElementById('vExpBarTxt').innerText=pct+"%";
-    document.getElementById('vExpBar').style.width=pct+"%";
-    document.getElementById('vExp').innerText="+"+(d.exp_add!=null?d.exp_add:1);
-    document.getElementById('vTenge').innerText="+"+(d.tenge!=null?d.tenge:1)+" £";
-    let det=(d.text||"Победа "+d.enemy+" +"+(d.exp_add||1)+" · +"+(d.tenge||1)+" £");
-    if(d.drop) det+="\n🎒 Лут: "+d.drop;
-    if(d.eye) det+="\n👁 "+d.eye;
-    document.getElementById('vDetails').innerText=det;
-  }else if(d.type==="defeat"){
-    document.getElementById('battleCard').classList.add('hidden');
-    document.getElementById('victoryCard').classList.remove('hidden');
-    document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОРАЖЕНИЕ ◆";
-    document.getElementById('vExp').innerText="+0";
-    document.getElementById('vTenge').innerText="+0 £";
-    document.getElementById('vDetails').innerText="💀 Поражение от "+d.enemy;
-    setTimeout(()=>{document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОБЕДА ◆"},3000);
-  }else if(d.type==="battle"){
-    document.getElementById('vsEHp').innerText=d.enemy_hp+"/"+d.enemy_max;
-    document.getElementById('vsEHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
-    document.getElementById('vsHp').innerText=d.hp+"/"+d.max_hp;
-    document.getElementById('vsHpBar').style.width=(d.hp/d.max_hp*100)+"%";
-    document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");
-  }
-  loadProfile();
+ let d=await api({action:"battle",move:m});
+ if(d.type==="victory"){
+  document.getElementById('battleCard').classList.add('hidden');
+  document.getElementById('victoryCard').classList.remove('hidden');
+  document.getElementById('vHp').innerText=(d.hp||G.hp)+"/"+(d.max_hp||G.max);document.getElementById('vHpBar').style.width=((d.hp||G.hp)/(d.max_hp||G.max)*100)+"%";
+  document.getElementById('vMad').innerText=(d.madness!=null?d.madness:(document.getElementById('madTxt').innerText));document.getElementById('vMadBar').style.width=(d.madness!=null?d.madness:(parseInt(document.getElementById('madTxt').innerText)||0))+"%";
+  let need=G.level>=5?100:10*(2**(G.level-1));let pct=G.level>=5?100:Math.round((d.exp!=null?d.exp:G.exp)/need*100);document.getElementById('vExpBarTxt').innerText=pct+"%";document.getElementById('vExpBar').style.width=pct+"%";
+  document.getElementById('vExp').innerText="+"+(d.exp_add!=null?d.exp_add:1);document.getElementById('vTenge').innerText="+"+(d.tenge!=null?d.tenge:1)+" £";
+  let det=(d.text||"Победа "+d.enemy+" +"+(d.exp_add||1)+" · +"+(d.tenge||1)+" £");if(d.drop) det+="\n🎒 Лут: "+d.drop;if(d.eye) det+="\n👁 "+d.eye;document.getElementById('vDetails').innerText=det;
+ }else if(d.type==="defeat"){
+  document.getElementById('battleCard').classList.add('hidden');document.getElementById('victoryCard').classList.remove('hidden');
+  document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОРАЖЕНИЕ ◆";document.getElementById('vExp').innerText="+0";document.getElementById('vTenge').innerText="+0 £";document.getElementById('vDetails').innerText="💀 Поражение от "+d.enemy;
+  setTimeout(()=>{document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОБЕДА ◆"},3000);
+ }else if(d.type==="battle"){
+  document.getElementById('vsEHp').innerText=d.enemy_hp+"/"+d.enemy_max;document.getElementById('vsEHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
+  document.getElementById('vsHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('vsHpBar').style.width=(d.hp/d.max_hp*100)+"%";
+  document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");
+ }
+ loadProfile();
 }
-async function doTrader(){
-  let d=await api({action:"trader_offer"});
-  if(d.ok){
-    document.getElementById('eventCard').classList.remove('hidden');
-    document.getElementById('eventTitle').innerText="🧺 Торговец";
-    document.getElementById('eventText').innerText=d.offer.name+" · "+d.offer.price+" £";
-    document.getElementById('eventBtns').innerHTML='<div class="btn gold" onclick="traderBuy()">Купить</div><div class="btn" onclick="traderHaggle()">Торговаться</div>'
-  }else alert(d.error)
-}
-async function traderBuy(){
-  let d=await api({action:"trader_buy"});
-  alert(d.text||d.error);
-  document.getElementById('eventCard').classList.add('hidden');
-  loadProfile()
-}
-async function traderHaggle(){
-  let d=await api({action:"trader_haggle"});
-  alert(d.text);
-  loadProfile()
-}
+async function doTrader(){let d=await api({action:"trader_offer"});if(d.ok){document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText="🧺 Торговец";document.getElementById('eventText').innerText=d.offer.name+" · "+d.offer.price+" £";document.getElementById('eventBtns').innerHTML='<div class="btn gold" onclick="traderBuy()">Купить</div><div class="btn" onclick="traderHaggle()">Торговаться</div>'}else alert(d.error)}
+async function traderBuy(){let d=await api({action:"trader_buy"});alert(d.text||d.error);document.getElementById('eventCard').classList.add('hidden');loadProfile()}
+async function traderHaggle(){let d=await api({action:"trader_haggle"});alert(d.text);loadProfile()}
 setTimeout(loadProfile,800);
 </script>
 </body>
-  </html>
+</html>
