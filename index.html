@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v8.1</title>
+<title>Повелитель Тайн v8.2</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -30,11 +30,8 @@ body{
   width:44px;height:44px;
   border-radius:12px;
   background:linear-gradient(135deg,#c9a86a,#8b6914);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#000;
-  font-size:20px
+  display:flex;align-items:center;justify-content:center;
+  color:#000;font-size:20px
 }
 .bar{
   height:7px;
@@ -79,6 +76,18 @@ body{
 .btn.gold{
   background:linear-gradient(135deg,#c9a86a,#8b6914);
   color:#000;
+  font-weight:700
+}
+.btn.red{
+  background:linear-gradient(135deg,#8b1a1a,#e63946);
+  border-color:#e63946;
+  color:#fff;
+  font-weight:700
+}
+.btn.teal{
+  background:linear-gradient(135deg,#0d3b2e,#0f5a42);
+  border-color:#1abc9c;
+  color:#e9d8a6;
   font-weight:700
 }
 .btn.big{
@@ -162,6 +171,26 @@ body{
 }
 .vsAvatar.enemy{
   background:linear-gradient(135deg,#e63946,#7a0a0a)
+}
+.victoryHead{
+  text-align:center;
+  letter-spacing:4px;
+  font-weight:800;
+  margin:6px 0;
+  font-size:20px
+}
+.lootGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:8px
+}
+.lootBox{
+  border:1px solid #c9a86a;
+  border-radius:10px;
+  padding:10px;
+  text-align:center;
+  background:rgba(30,30,40,.9)
 }
 small{
   opacity:.6;
@@ -279,6 +308,44 @@ h3{
 <div id="battleLog" style="font-size:11px;opacity:.7;margin-top:6px"></div>
 </div>
 
+<div id="victoryCard" class="card hidden" style="border-color:#c9a86a">
+<div class="victoryHead">◆ ПОБЕДА ◆</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+<div style="border:1px solid #333;border-radius:10px;padding:6px;text-align:center;background:rgba(30,30,40,.85)">
+<div style="font-size:10px;opacity:.6">❤️ HP</div>
+<div style="font-size:11px"><span id="vHp">-</span></div>
+<div class="bar hp"><i id="vHpBar" style="width:0%"></i></div>
+</div>
+<div style="border:1px solid #333;border-radius:10px;padding:6px;text-align:center;background:rgba(30,30,40,.85)">
+<div style="font-size:10px;opacity:.6">🌀 Безумие</div>
+<div style="font-size:11px" id="vMad">-</div>
+<div class="bar mn"><i id="vMadBar" style="width:0%"></i></div>
+</div>
+<div style="border:1px solid #333;border-radius:10px;padding:6px;text-align:center;background:rgba(30,30,40,.85)">
+<div style="font-size:10px;opacity:.6">⭐ Опыт</div>
+<div style="font-size:11px" id="vExpBarTxt">-</div>
+<div class="bar exp"><i id="vExpBar" style="width:0%"></i></div>
+</div>
+</div>
+<div class="btn red big" style="margin-top:10px" onclick="exploreAgain()">◎ Исследовать снова</div>
+<div class="btn teal" onclick="alert('⚡ Автобой — 5 боёв подряд — подключим следующим шагом')">⚡ Автобой</div>
+<div style="text-align:center;margin:8px 0;font-size:26px">📦</div>
+<div class="lootGrid">
+<div class="lootBox">
+<div style="font-size:16px">💰</div>
+<div style="color:#f1c40f;font-weight:700" id="vColls">+0</div>
+<div style="font-size:10px;opacity:.6">КОЛЛЫ</div>
+</div>
+<div class="lootBox">
+<div style="font-size:16px">✨</div>
+<div style="color:#4ecdc4;font-weight:700" id="vExp">+1</div>
+<div style="font-size:10px;opacity:.6">ОПЫТ</div>
+</div>
+</div>
+<div style="text-align:center;font-size:11px;opacity:.6;margin-top:8px;cursor:pointer" onclick="document.getElementById('vDetails').classList.toggle('hidden')">∨ Подробности</div>
+<div id="vDetails" class="hidden" style="font-size:11px;white-space:pre-wrap;opacity:.7;margin-top:6px"></div>
+</div>
+
 </div>
 
 <div class="nav">
@@ -315,7 +382,7 @@ function showTab(id){
   if(id === 'bag') renderBag();
 }
 
-let G = {inv:[],eq:{},path:"",hp:50,max:50};
+let G = {inv:[],eq:{},path:"",hp:50,max:50,level:1,exp:0,lastLoc:"lake"};
 
 (function initFromUrl(){
   let nick = qs.get("nick") ? decodeURIComponent(qs.get("nick")) : "";
@@ -400,7 +467,11 @@ async function loadProfile(){
     document.getElementById('expPct').innerText = pct + "%";
     document.getElementById('expBarTxt').innerText = "до " + (j.level+1) + " уровня " + pct + "%";
     document.getElementById('expBar').style.width = pct + "%";
-    G.hp = j.hp; G.max = j.max_hp; G.path = j.path;
+    G.hp = j.hp;
+    G.max = j.max_hp;
+    G.path = j.path;
+    G.level = j.level;
+    G.exp = j.exp;
     let s = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">';
     s += '<span style="border:1px solid #333;border-radius:6px;padding:2px 6px">💪 ' + j.str + '</span>';
     s += '<span style="border:1px solid #333;border-radius:6px;padding:2px 6px">🏃 ' + j.agi + '</span>';
@@ -570,19 +641,23 @@ async function doBarman(id){
 }
 
 function openTravel(id){
+  G.lastLoc = id;
   document.getElementById('eventCard').classList.add('hidden');
   document.getElementById('battleCard').classList.add('hidden');
+  document.getElementById('victoryCard').classList.add('hidden');
   if(id === 'lake'){
-    document.getElementById('travelInfo').innerText = "🌊 Топи — 30% 🐸/📦";
+    document.getElementById('travelInfo').innerText = "🌊 Топи — жабы, утопцы, роса";
     document.getElementById('travelBtns').innerHTML = '<div class="btn gold" onclick="doExplore(\'explore_lake\')">🔍 Исследовать берег</div>'
   }
   if(id === 'podval'){
     document.getElementById('travelInfo').innerText = "🕳 Подвал — крысы";
-    document.getElementById('travelBtns').innerHTML = '<div class="btn gold" onclick="doExplore(\'explore_rats\')">🔍 Исследовать</div>'
+    document.getElementById('travelBtns').innerHTML = '<div class="btn gold" onclick="doExplore(\'explore_rats\')">🔍 Спуститься в подвал</div>'
   }
 }
 
 async function doExplore(a){
+  G.lastLoc = a.includes("lake") ? "lake" : "podval";
+  document.getElementById('victoryCard').classList.add('hidden');
   let d = await api({action:a});
   if(d.type === "event"){
     document.getElementById('eventCard').classList.remove('hidden');
@@ -642,14 +717,40 @@ async function doEvent(id){
   loadProfile()
 }
 
+function exploreAgain(){
+  document.getElementById('victoryCard').classList.add('hidden');
+  document.getElementById('battleCard').classList.add('hidden');
+  if(G.lastLoc === 'lake') doExplore('explore_lake');
+  else doExplore('explore_rats');
+}
+
 async function doBattle(m){
   let d = await api({action:"battle",move:m});
   if(d.type === "victory"){
-    alert("🏆 Победа " + d.enemy + " +" + d.exp_add);
     document.getElementById('battleCard').classList.add('hidden');
+    document.getElementById('victoryCard').classList.remove('hidden');
+    document.getElementById('vHp').innerText = (d.hp||G.hp) + "/" + (d.max_hp||G.max);
+    document.getElementById('vHpBar').style.width = ((d.hp||G.hp)/(d.max_hp||G.max)*100) + "%";
+    document.getElementById('vMad').innerText = (d.madness!=null?d.madness:(document.getElementById('madTxt').innerText));
+    document.getElementById('vMadBar').style.width = (d.madness!=null?d.madness:(parseInt(document.getElementById('madTxt').innerText)||0)) + "%";
+    let need = G.level>=5?100:10*(2**(G.level-1));
+    let pct = G.level>=5?100:Math.round((d.exp!=null?d.exp:G.exp)/need*100);
+    document.getElementById('vExpBarTxt').innerText = pct + "%";
+    document.getElementById('vExpBar').style.width = pct + "%";
+    document.getElementById('vExp').innerText = "+" + (d.exp_add!=null?d.exp_add:1);
+    document.getElementById('vColls').innerText = "+0";
+    let det = (d.text||"Победа "+d.enemy+" +"+(d.exp_add||1));
+    if(d.drop) det += "\n🎒 Лут: " + d.drop;
+    if(d.eye) det += "\n👁 " + d.eye;
+    document.getElementById('vDetails').innerText = det;
   }else if(d.type === "defeat"){
-    alert("💀 Поражение");
     document.getElementById('battleCard').classList.add('hidden');
+    document.getElementById('victoryCard').classList.remove('hidden');
+    document.querySelector('#victoryCard .victoryHead').innerText = "◆ ПОРАЖЕНИЕ ◆";
+    document.getElementById('vExp').innerText = "+0";
+    document.getElementById('vColls').innerText = "+0";
+    document.getElementById('vDetails').innerText = "💀 Поражение от " + d.enemy;
+    setTimeout(()=>{document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОБЕДА ◆"},3000);
   }else if(d.type === "battle"){
     document.getElementById('vsEHp').innerText = d.enemy_hp + "/" + d.enemy_max;
     document.getElementById('vsEHpBar').style.width = (d.enemy_hp/d.enemy_max*100) + "%";
@@ -684,4 +785,4 @@ async function traderHaggle(){
 setTimeout(loadProfile,800);
 </script>
 </body>
-</html>
+                                                                               </html>
