@@ -330,7 +330,7 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_32e010ad";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_6538aeb3";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 function showTab(id){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.getElementById('t-'+id).classList.add('active');['hall','travel','city','bag'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='bag')renderBag();}
 let G={inv:[],eq:{},path:"",hp:50,max:50,level:1,exp:0,lastLoc:"lake"};
@@ -338,12 +338,30 @@ let G={inv:[],eq:{},path:"",hp:50,max:50,level:1,exp:0,lastLoc:"lake"};
  let nick=qs.get("nick")?decodeURIComponent(qs.get("nick")):"";let lvl=qs.get("lvl")||"-",hp=qs.get("hp")||"-",mh=qs.get("max_hp")||"-",p=qs.get("p")||"-",exp=qs.get("exp")||"-",pot=qs.get("potion")||"-",mad=qs.get("madness")||"0",path=qs.get("path")?decodeURIComponent(qs.get("path")):"";
  if(nick){document.getElementById('nick').innerText=nick;document.getElementById('lvl').innerText=lvl;document.getElementById('hp').innerText=hp+"/"+mh;document.getElementById('hp2').innerText=hp+"/"+mh;document.getElementById('hpTop').innerText=hp+"/"+mh;document.getElementById('pounds').innerText=p;document.getElementById('exp').innerText=exp;document.getElementById('potion').innerText=pot;document.getElementById('path').innerText=path;document.getElementById('hallInfo').innerText="Путь: "+path+"\n❤️ "+hp+"/"+mh+" · Ур."+lvl+" · £ "+p+" · ⭐ "+exp+"\n🧪 "+pot+"% · 🌀 "+mad+"%";let h=parseInt(hp),m=parseInt(mh);if(m>0){document.getElementById('hpbar').style.width=(h/m*100)+"%";document.getElementById('hpbar2').style.width=(h/m*100)+"%";}}
 })();
-async function ensureUrls(){if(PROFILE_URL&&ACTION_URL)return true;try{const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(JSON.parse(await r.text()));if(j.ok){PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true}}catch(e){}return false;}
+async function ensureUrls(){
+  if(PROFILE_URL&&ACTION_URL) return true;
+  try{
+    const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});
+    const txt=await r.text();
+    let j;
+    try{j=unwrap(JSON.parse(txt))}catch(e){throw "HANDSHAKE parse: "+txt.slice(0,300)}
+    if(!j.ok) throw "HANDSHAKE not ok: "+txt.slice(0,500);
+    if(!j.profile_url) throw "no profile_url in "+txt.slice(0,500);
+    PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;
+  }catch(e){
+    document.getElementById('hallInfo').innerText="Ошибка связи: "+e+"\nНажми 🔄 Обновить";
+    return false;
+  }
+}
 async function loadProfile(){
- if(!PROFILE_URL)await ensureUrls();if(!PROFILE_URL){document.getElementById('hallInfo').innerText="Нет связи — нажми 🔄 Обновить";return}
+ if(!PROFILE_URL) await ensureUrls();
+ if(!PROFILE_URL){document.getElementById('hallInfo').innerText="Нет связи — нажми 🔄 Обновить\nUID "+uid+" HANDSHAKE 6538aeb3";return}
  try{
-  const j=unwrap(JSON.parse(await (await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})).text()));
-  if(!j.ok&&!j.nickname)throw j.error;
+  const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
+  const txt=await r.text();
+  let j;
+  try{j=unwrap(JSON.parse(txt))}catch(e){throw "profile parse: "+txt.slice(0,400)}
+  if(!j.ok&&!j.nickname) throw (j.error||txt.slice(0,400));
   document.getElementById('nick').innerText=j.nickname;document.getElementById('lvl').innerText=j.level;
   document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;document.getElementById('hp2').innerText=j.hp+"/"+j.max_hp;document.getElementById('hpTop').innerText=j.hp+"/"+j.max_hp;
   document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('hpbar2').style.width=(j.hp/j.max_hp*100)+"%";
@@ -355,7 +373,7 @@ async function loadProfile(){
   let need=j.level>=5?100:10*(2**(j.level-1));let pct=j.level>=5?100:Math.round(j.exp/need*100);document.getElementById('expPct').innerText=pct+"%";document.getElementById('expBarTxt').innerText="до "+(j.level+1)+" уровня "+pct+"%";document.getElementById('expBar').style.width=pct+"%";
   G.hp=j.hp;G.max=j.max_hp;G.path=j.path;G.level=j.level;G.exp=j.exp;
   let s='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">💪 '+j.str+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🏃 '+j.agi+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🧠 '+j.int+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🔮 '+j.spi+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">❤️ '+j.con+'</span></div>';if(j.stat_points>0)s+='<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">'+['str','agi','int','spi','con'].map(k=>'<span class="btn" style="padding:6px 8px" onclick="addStat(\''+k+'\')">+1 '+k+'</span>').join('')+'</div>';document.getElementById('statsBox').innerHTML=s;G.inv=j.inventory||[];G.eq=j.equipped||{};renderBag();
- }catch(e){document.getElementById('hallInfo').innerText="Ошибка: "+e}
+ }catch(e){document.getElementById('hallInfo').innerText="Ошибка загрузки: "+e}
 }
 async function api(p){if(!ACTION_URL)await ensureUrls();const j=unwrap(JSON.parse(await (await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})).text()));return j;}
 function renderBag(){document.getElementById('bagCnt').innerText=G.inv.length+"/50";let h="";if(G.inv.length===0)h="<small>Пусто</small>";else G.inv.forEach((it,i)=>{h+='<div class="item"><div><b>'+(it.name||it)+'</b> <small> '+(it.slot||'')+'</small></div><div class="btn gold" style="padding:6px 8px" onclick="doEquip('+i+')">Надеть</div></div>'});document.getElementById('invList').innerHTML=h;let e="";["head","face","body","weapon","legs","necklace","ring"].forEach(s=>{let it=G.eq[s];if(it)e+='<div class="item"><div><b>'+it.name+'</b> <small>'+s+'</small></div><div class="btn" style="padding:6px 8px" onclick="doUnequip(\''+s+'\')">Снять</div></div>';else e+='<div class="item" style="opacity:.4">'+s+' — пусто</div>'});document.getElementById('eqList').innerHTML=e;}
