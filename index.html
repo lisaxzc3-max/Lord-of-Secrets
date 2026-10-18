@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v9.1</title>
+<title>Повелитель Тайн v9.2</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -208,8 +208,10 @@ async function startCheckNick(){
  if(!v){document.getElementById('nickErr').innerText="введи ник 2-10 символов";return}
  if(v.length>10) v=v.slice(0,10);
  START.nick=v;
+ document.getElementById('nickErr').innerText="проверка...";
  let d=await api({action:"set_nickname",nick:v});
  if(!d.ok){document.getElementById('nickErr').innerText=d.error||"ник занят или неверен";return}
+ document.getElementById('nickErr').innerText="";
  document.getElementById('step1').classList.add('hidden');
  document.getElementById('step2').classList.remove('hidden');
  document.getElementById('startStep').innerText="2/3";
@@ -217,8 +219,10 @@ async function startCheckNick(){
 }
 async function startConfirmPath(){
  if(!START.path){document.getElementById('pathErr').innerText="выбери путь";return}
+ document.getElementById('pathErr').innerText="сохранение...";
  let d=await api({action:"confirm_path",choice:START.path});
  if(!d.ok){document.getElementById('pathErr').innerText=d.error||"ошибка пути";return}
+ document.getElementById('pathErr').innerText="";
  document.getElementById('step2').classList.add('hidden');
  document.getElementById('step3').classList.remove('hidden');
  document.getElementById('startStep').innerText="3/3";
@@ -227,18 +231,26 @@ async function startConfirmPath(){
 async function startFinish(){
  if(!START.gender){
   document.getElementById('genderErr').innerText="выбери пол — нажми ♂ или ♀";
-  document.getElementById('genderErr').style.color="#e63946";
   return;
  }
  document.getElementById('genderErr').innerText="сохранение...";
- let d=await api({action:"set_gender",gender:START.gender});
+ document.getElementById('genderErr').style.color="#9a9690";
+ let d;
+ try{
+  d=await api({action:"set_gender",gender:START.gender});
+ }catch(e){
+  d={ok:false,error:"сеть: "+e}
+ }
  if(!d.ok){
-  document.getElementById('genderErr').innerText=d.error||"ошибка пола";
+  document.getElementById('genderErr').style.color="#e63946";
+  document.getElementById('genderErr').innerText=(d.error||"ошибка")+" — жми Начать игру снова";
   return;
  }
  document.getElementById('genderErr').innerText="";
  document.getElementById('startOverlay').classList.add('hidden');
- loadProfile();
+ // форсируем загрузку профиля и показываем зал
+ await loadProfile();
+ showTab('hall');
 }
 function maybeShowStart(j){
  if(!j || !j.nickname || j.nickname==="Без имени" || j.nickname==="—" || !j.path || j.path==="—"){
@@ -284,7 +296,7 @@ async function loadProfile(){
   maybeShowStart(j);
  }catch(e){document.getElementById('hallInfo').innerText="Ошибка загрузки: "+e}
 }
-async function api(p){if(!ACTION_URL)await ensureUrls();const j=unwrap(JSON.parse(await (await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})).text()));return j;}
+async function api(p){if(!ACTION_URL)await ensureUrls();if(!ACTION_URL) return {ok:false,error:"нет связи"};try{const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});const txt=await r.text();let j;try{j=unwrap(JSON.parse(txt))}catch(e){return {ok:false,error:"api parse: "+txt.slice(0,300)}}return j;}catch(e){return {ok:false,error:"сеть: "+e}}}
 function renderBag(){document.getElementById('bagCnt').innerText=G.inv.length+"/50";let h="";if(G.inv.length===0)h="<small>Пусто</small>";else G.inv.forEach((it,i)=>{h+='<div class="item"><div><b>'+(it.name||it)+'</b> <small> '+(it.slot||'')+'</small></div><div class="btn gold" style="padding:6px 8px" onclick="doEquip('+i+')">Надеть</div></div>'});document.getElementById('invList').innerHTML=h;let e="";["head","face","body","weapon","legs","necklace","ring"].forEach(s=>{let it=G.eq[s];if(it)e+='<div class="item"><div><b>'+it.name+'</b> <small>'+s+'</small></div><div class="btn" style="padding:6px 8px" onclick="doUnequip(\''+s+'\')">Снять</div></div>';else e+='<div class="item" style="opacity:.4">'+s+' — пусто</div>'});document.getElementById('eqList').innerHTML=e;}
 async function doEquip(i){let d=await api({action:"equip",idx:""+i});alert(d.text||d.error);loadProfile()}
 async function doUnequip(s){let d=await api({action:"unequip",slot:s});alert(d.text||d.error);loadProfile()}
@@ -348,4 +360,4 @@ async function traderHaggle(){let d=await api({action:"trader_haggle"});alert(d.
 setTimeout(loadProfile,800);
 </script>
 </body>
-</html>
+ </html>
