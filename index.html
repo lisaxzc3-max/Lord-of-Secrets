@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v9.0</title>
+<title>Повелитель Тайн v9.1</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -137,7 +137,6 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div id="vDetails" class="hidden" style="font-size:11px;white-space:pre-wrap;opacity:.7;margin-top:6px"></div>
 </div>
 </div>
-
 <div id="startOverlay" class="startOverlay hidden">
 <div class="startCard">
 <div style="display:flex;gap:10px;align-items:center">
@@ -145,7 +144,6 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div><div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div><div style="font-size:10px;opacity:.5;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div></div>
 </div>
 <div class="quote" id="startQuote">«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы. Имя твоё уже прошептала тьма — впиши своё.»</div>
-
 <div id="step1">
 <div style="font-size:12px;margin:6px 0">📜 Твоё имя</div>
 <input id="startNick" class="startInput" maxlength="10" value="Путник123">
@@ -153,7 +151,6 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div style="color:#e63946;font-size:11px" id="nickErr"></div>
 <div class="btn gold" style="margin-top:8px" onclick="startCheckNick()">Далее ›</div>
 </div>
-
 <div id="step2" class="hidden">
 <div style="font-size:12px;margin:6px 0">⟡ Избери Путь</div>
 <div class="pathGrid">
@@ -170,7 +167,6 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div style="color:#e63946;font-size:11px" id="pathErr"></div>
 <div class="btn gold" style="margin-top:8px" onclick="startConfirmPath()">Далее ›</div>
 </div>
-
 <div id="step3" class="hidden">
 <div style="font-size:12px;margin:6px 0">⚧ Выбери пол</div>
 <div class="genderRow">
@@ -178,12 +174,11 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div>
 </div>
 <div style="color:#e63946;font-size:11px" id="genderErr"></div>
-<div class="btn gold" style="margin-top:8px" onclick="startFinish()">𓂀 Войти в Тинген</div>
+<div class="btn gold" style="margin-top:8px" onclick="startFinish()">🎮 Начать игру</div>
+<div style="font-size:10px;opacity:.4;margin-top:6px;text-align:center">выбери пол и нажми Начать игру</div>
 </div>
-
 </div>
 </div>
-
 <div class="nav">
 <a onclick="showTab('hall')">◈ Зал</a><a onclick="showTab('travel')">🧭 Поход</a><a onclick="showTab('city')">⌖ Город</a><a onclick="showTab('bag')">🎒 Сумка</a>
 </div>
@@ -195,14 +190,19 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_fa362874";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_40510bf0";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 function showTab(id){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.getElementById('t-'+id).classList.add('active');['hall','travel','city','bag'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='bag')renderBag();}
 let G={inv:[],eq:{},path:"",hp:50,max:50,level:1,exp:0,lastLoc:"lake"};
 let START={nick:"",path:"",gender:""};
 document.getElementById('startNick').addEventListener('input',e=>{document.getElementById('nickCnt').innerText=e.target.value.length+"/10";document.getElementById('nickErr').innerText=""});
 function pickPath(p){START.path=p;document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));document.getElementById('card-'+p).classList.add('sel');document.getElementById('pathErr').innerText=""}
-function pickGender(g){START.gender=g;document.getElementById('g-male').className=g==='male'?'btn act':'btn';document.getElementById('g-female').className=g==='female'?'btn act':'btn';document.getElementById('genderErr').innerText=""}
+function pickGender(g){
+ START.gender=g;
+ document.getElementById('g-male').className=g==='male'?'btn act':'btn';
+ document.getElementById('g-female').className=g==='female'?'btn act':'btn';
+ document.getElementById('genderErr').innerText="";
+}
 async function startCheckNick(){
  let v=document.getElementById('startNick').value.trim();
  if(!v){document.getElementById('nickErr').innerText="введи ник 2-10 символов";return}
@@ -225,9 +225,18 @@ async function startConfirmPath(){
  document.getElementById('startQuote').innerText="«Путь избран. Осталось — кем ты войдёшь в Тинген.»";
 }
 async function startFinish(){
- if(!START.gender){document.getElementById('genderErr').innerText="выбери пол";return}
+ if(!START.gender){
+  document.getElementById('genderErr').innerText="выбери пол — нажми ♂ или ♀";
+  document.getElementById('genderErr').style.color="#e63946";
+  return;
+ }
+ document.getElementById('genderErr').innerText="сохранение...";
  let d=await api({action:"set_gender",gender:START.gender});
- if(!d.ok){document.getElementById('genderErr').innerText=d.error||"ошибка";return}
+ if(!d.ok){
+  document.getElementById('genderErr').innerText=d.error||"ошибка пола";
+  return;
+ }
+ document.getElementById('genderErr').innerText="";
  document.getElementById('startOverlay').classList.add('hidden');
  loadProfile();
 }
@@ -237,6 +246,9 @@ function maybeShowStart(j){
   document.getElementById('startNick').value=rnd;
   document.getElementById('nickCnt').innerText=rnd.length+"/10";
   START={nick:"",path:"",gender:""};
+  document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('g-male').className='btn';
+  document.getElementById('g-female').className='btn';
   document.getElementById('step1').classList.remove('hidden');
   document.getElementById('step2').classList.add('hidden');
   document.getElementById('step3').classList.add('hidden');
