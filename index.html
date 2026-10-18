@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v8.3</title>
+<title>Повелитель Тайн v8.4</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
 body{
-  background:linear-gradient(rgba(7,7,10,.62), rgba(7,7,10,.90)), url('./i-72.jpeg') center/cover fixed no-repeat, #07070a;
-  color:#e9d8a6;
+  background:linear-gradient(rgba(10,10,14,.72), rgba(10,10,14,.92)), url('./i-72.jpeg') center/cover fixed no-repeat, #0a0a0e;
+  color:#b8b5ad;
   min-height:100vh
 }
 .wrap{
@@ -20,22 +20,23 @@ body{
 .top{
   display:flex;
   gap:10px;
-  background:rgba(20,20,27,.88);
+  background:rgba(22,22,26,.88);
   backdrop-filter:blur(8px);
-  border:1px solid rgba(201,168,106,.5);
+  border:1px solid #3a3a3e;
   border-radius:16px;
   padding:10px
 }
 .avatar{
   width:44px;height:44px;
   border-radius:12px;
-  background:linear-gradient(135deg,#c9a86a,#8b6914);
+  background:#2b2b2e;
+  border:1px solid #4a4a4e;
   display:flex;align-items:center;justify-content:center;
-  color:#000;font-size:20px
+  color:#b8b5ad;font-size:20px
 }
 .bar{
   height:7px;
-  background:rgba(42,42,51,.8);
+  background:rgba(30,30,34,.9);
   border-radius:8px;
   margin:3px 0;
   overflow:hidden
@@ -46,49 +47,50 @@ body{
   transition:width .3s
 }
 .bar.hp i{
-  background:linear-gradient(90deg,#e63946,#ff7b7b)
+  background:#5a3a3a
 }
 .bar.mn i{
-  background:linear-gradient(90deg,#9d4edd,#5a189a)
+  background:#4a4e5a
 }
 .bar.exp i{
-  background:linear-gradient(90deg,#f4d35e,#ee964b)
+  background:#6a6560
 }
 .card{
-  background:rgba(20,20,27,.86);
+  background:rgba(22,22,26,.86);
   backdrop-filter:blur(8px);
-  border:1px solid rgba(201,168,106,.32);
+  border:1px solid #3a3a3e;
   border-radius:16px;
   padding:12px;
   margin:8px 0
 }
 .btn{
-  border:1px solid #c9a86a;
-  background:rgba(28,28,36,.92);
+  border:1px solid #3a3a3e;
+  background:rgba(38,38,42,.92);
   border-radius:10px;
   padding:10px;
   text-align:center;
   font-size:13px;
   margin:4px 0;
   cursor:pointer;
-  color:#e9d8a6
+  color:#b8b5ad
 }
 .btn.gold{
-  background:linear-gradient(135deg,#c9a86a,#8b6914);
-  color:#000;
-  font-weight:700
+  background:#3a3a3e;
+  border-color:#4a4a4e;
+  color:#d4d0c3;
+  font-weight:600
 }
 .btn.red{
-  background:linear-gradient(135deg,#8b1a1a,#e63946);
-  border-color:#e63946;
-  color:#fff;
+  background:#2b2b2e;
+  border-color:#4a4a4e;
+  color:#d4d0c3;
   font-weight:700
 }
 .btn.teal{
-  background:linear-gradient(135deg,#0d3b2e,#0f5a42);
-  border-color:#1abc9c;
-  color:#e9d8a6;
-  font-weight:700
+  background:#262a2e;
+  border-color:#3e444a;
+  color:#b8b5ad;
+  font-weight:600
 }
 .btn.big{
   padding:14px;
@@ -109,31 +111,31 @@ body{
   padding:8px;
   text-align:center;
   border-radius:10px;
-  background:rgba(28,28,36,.85);
-  border:1px solid #333;
+  background:rgba(30,30,34,.85);
+  border:1px solid #3a3a3e;
   font-size:11px;
   cursor:pointer;
   white-space:nowrap;
-  color:#e9d8a6
+  color:#9a9690
 }
 .tab.active{
-  background:#c9a86a;
-  color:#000;
-  border-color:#c9a86a
+  background:#3a3a3e;
+  color:#d4d0c3;
+  border-color:#4a4a4e
 }
 .nav{
   position:fixed;
   bottom:0;left:0;right:0;
-  background:rgba(10,10,13,.92);
+  background:rgba(14,14,16,.96);
   backdrop-filter:blur(10px);
-  border-top:1px solid rgba(201,168,106,.3);
+  border-top:1px solid #2a2a2e;
   display:flex;
   justify-content:space-around;
   padding:8px 0
 }
 .nav a{
   font-size:11px;
-  color:#e9d8a6;
+  color:#8a867e;
   text-decoration:none;
   cursor:pointer
 }
@@ -141,11 +143,11 @@ body{
   display:none
 }
 .item{
-  border:1px solid #2a2a33;
+  border:1px solid #2a2a2e;
   border-radius:10px;
   padding:8px;
   margin:4px 0;
-  background:rgba(30,30,40,.85);
+  background:rgba(28,28,32,.85);
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -161,21 +163,23 @@ body{
 .vsAvatar{
   width:52px;height:52px;
   border-radius:12px;
-  background:linear-gradient(135deg,#c9a86a,#8b6914);
+  background:#2b2b2e;
+  border:1px solid #4a4a4e;
   display:flex;align-items:center;justify-content:center;
-  color:#000;
-  font-size:22px;
+  color:#b8b5ad;font-size:22px;
   margin:0 auto 4px
 }
 .vsAvatar.enemy{
-  background:linear-gradient(135deg,#e63946,#7a0a0a)
+  background:#1e1e22;
+  border-color:#3a3a3e
 }
 .victoryHead{
   text-align:center;
   letter-spacing:4px;
   font-weight:800;
   margin:6px 0;
-  font-size:20px
+  font-size:20px;
+  color:#c9c5b8
 }
 .lootGrid{
   display:grid;
@@ -184,11 +188,11 @@ body{
   margin-top:8px
 }
 .lootBox{
-  border:1px solid #c9a86a;
+  border:1px solid #3a3a3e;
   border-radius:10px;
   padding:10px;
   text-align:center;
-  background:rgba(30,30,40,.9)
+  background:rgba(28,28,32,.9)
 }
 small{
   opacity:.6;
@@ -197,7 +201,8 @@ small{
 }
 h3{
   font-size:14px;
-  margin-bottom:6px
+  margin-bottom:6px;
+  color:#c9c5b8
 }
 </style>
 </head>
@@ -206,11 +211,11 @@ h3{
 <div class="top">
 <div class="avatar">𓂀</div>
 <div style="flex:1">
-<div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span> <span id="path" style="font-size:10px;border:1px solid #c9a86a;border-radius:6px;padding:1px 5px">-</span></div>
+<div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span> <span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">-</span></div>
 <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
 <div style="font-size:10px">❤️ <span id="hp">-</span> · ₸ <span id="pounds">-</span> · ⭐ <span id="exp">-</span> · 🧪 <span id="potion">-</span>%</div>
 </div>
-<div style="text-align:right;font-size:11px"><span id="pts" style="color:#f4d35e;font-weight:700"></span><br><span style="opacity:.6">UID <span id="uid">-</span></span></div>
+<div style="text-align:right;font-size:11px"><span id="pts" style="color:#9a9690;font-weight:700"></span><br><span style="opacity:.6">UID <span id="uid">-</span></span></div>
 </div>
 <div class="tabs">
 <div class="tab active" id="t-hall" onclick="showTab('hall')">◈ Зал</div>
@@ -253,23 +258,23 @@ h3{
 <h3 id="battleTitle">⚔ Бой</h3>
 <div class="vsGrid" style="margin:8px 0">
 <div><div class="vsAvatar">𓂀</div><b id="vsNick">Ты</b><div style="font-size:10px">❤️ <span id="vsHp">-</span></div><div class="bar hp"><i id="vsHpBar" style="width:0%"></i></div></div>
-<div style="font-size:18px">⚔</div>
+<div style="font-size:18px;color:#5a5a5e">⚔</div>
 <div><div class="vsAvatar enemy">👹</div><b id="vsEnemy">Враг</b><div style="font-size:10px">❤️ <span id="vsEHp">-</span></div><div class="bar hp"><i id="vsEHpBar" style="width:0%"></i></div></div>
 </div>
 <div id="battleText" style="font-size:11px;white-space:pre-wrap;opacity:.8"></div>
 <div id="battleSkills" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"></div>
 <div id="battleLog" style="font-size:11px;opacity:.7;margin-top:6px"></div>
 </div>
-<div id="victoryCard" class="card hidden" style="border-color:#c9a86a">
+<div id="victoryCard" class="card hidden" style="border-color:#3a3a3e">
 <div class="victoryHead">◆ ПОБЕДА ◆</div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-<div style="border:1px solid #333;border-radius:10px;padding:6px;text-align:center;background:rgba(30,30,40,.85)">
+<div style="border:1px solid #2a2a2e;border-radius:10px;padding:6px;text-align:center;background:rgba(28,28,32,.85)">
 <div style="font-size:10px;opacity:.6">❤️ HP</div><div style="font-size:11px"><span id="vHp">-</span></div><div class="bar hp"><i id="vHpBar" style="width:0%"></i></div>
 </div>
-<div style="border:1px solid #333;border-radius:10px;padding:6px;text-align:center;background:rgba(30,30,40,.85)">
+<div style="border:1px solid #2a2a2e;border-radius:10px;padding:6px;text-align:center;background:rgba(28,28,32,.85)">
 <div style="font-size:10px;opacity:.6">🌀 Безумие</div><div style="font-size:11px" id="vMad">-</div><div class="bar mn"><i id="vMadBar" style="width:0%"></i></div>
 </div>
-<div style="border:1px solid #333;border-radius:10px;padding:6px;text-align:center;background:rgba(30,30,40,.85)">
+<div style="border:1px solid #2a2a2e;border-radius:10px;padding:6px;text-align:center;background:rgba(28,28,32,.85)">
 <div style="font-size:10px;opacity:.6">⭐ Опыт</div><div style="font-size:11px" id="vExpBarTxt">-</div><div class="bar exp"><i id="vExpBar" style="width:0%"></i></div>
 </div>
 </div>
@@ -277,8 +282,8 @@ h3{
 <div class="btn teal" onclick="alert('⚡ Автобой — 5 боёв подряд — подключим следующим шагом')">⚡ Автобой</div>
 <div style="text-align:center;margin:8px 0;font-size:26px">📦</div>
 <div class="lootGrid">
-<div class="lootBox"><div style="font-size:16px">₸</div><div style="color:#f1c40f;font-weight:700" id="vTenge">+1</div><div style="font-size:10px;opacity:.6">ТЕНГЕ</div></div>
-<div class="lootBox"><div style="font-size:16px">✨</div><div style="color:#4ecdc4;font-weight:700" id="vExp">+1</div><div style="font-size:10px;opacity:.6">ОПЫТ</div></div>
+<div class="lootBox"><div style="font-size:16px">₸</div><div style="color:#b8b5ad;font-weight:700" id="vTenge">+1</div><div style="font-size:10px;opacity:.6">ТЕНГЕ</div></div>
+<div class="lootBox"><div style="font-size:16px">✨</div><div style="color:#9a9690;font-weight:700" id="vExp">+1</div><div style="font-size:10px;opacity:.6">ОПЫТ</div></div>
 </div>
 <div style="text-align:center;font-size:11px;opacity:.6;margin-top:8px;cursor:pointer" onclick="document.getElementById('vDetails').classList.toggle('hidden')">∨ Подробности</div>
 <div id="vDetails" class="hidden" style="font-size:11px;white-space:pre-wrap;opacity:.7;margin-top:6px"></div>
@@ -319,7 +324,7 @@ async function loadProfile(){
   document.getElementById('madTxt').innerText=j.madness+"%";document.getElementById('madBar').style.width=j.madness+"%";
   let need=j.level>=5?100:10*(2**(j.level-1));let pct=j.level>=5?100:Math.round(j.exp/need*100);document.getElementById('expPct').innerText=pct+"%";document.getElementById('expBarTxt').innerText="до "+(j.level+1)+" уровня "+pct+"%";document.getElementById('expBar').style.width=pct+"%";
   G.hp=j.hp;G.max=j.max_hp;G.path=j.path;G.level=j.level;G.exp=j.exp;
-  let s='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><span style="border:1px solid #333;border-radius:6px;padding:2px 6px">💪 '+j.str+'</span><span style="border:1px solid #333;border-radius:6px;padding:2px 6px">🏃 '+j.agi+'</span><span style="border:1px solid #333;border-radius:6px;padding:2px 6px">🧠 '+j.int+'</span><span style="border:1px solid #333;border-radius:6px;padding:2px 6px">🔮 '+j.spi+'</span><span style="border:1px solid #333;border-radius:6px;padding:2px 6px">❤️ '+j.con+'</span></div>';if(j.stat_points>0)s+='<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">'+['str','agi','int','spi','con'].map(k=>'<span class="btn" style="padding:6px 8px" onclick="addStat(\''+k+'\')">+1 '+k+'</span>').join('')+'</div>';document.getElementById('statsBox').innerHTML=s;G.inv=j.inventory||[];G.eq=j.equipped||{};renderBag();
+  let s='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">💪 '+j.str+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🏃 '+j.agi+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🧠 '+j.int+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">🔮 '+j.spi+'</span><span style="border:1px solid #2a2a2e;border-radius:6px;padding:2px 6px">❤️ '+j.con+'</span></div>';if(j.stat_points>0)s+='<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">'+['str','agi','int','spi','con'].map(k=>'<span class="btn" style="padding:6px 8px" onclick="addStat(\''+k+'\')">+1 '+k+'</span>').join('')+'</div>';document.getElementById('statsBox').innerHTML=s;G.inv=j.inventory||[];G.eq=j.equipped||{};renderBag();
  }catch(e){document.getElementById('hallInfo').innerText="Ошибка: "+e}
 }
 async function api(p){if(!ACTION_URL)await ensureUrls();const j=unwrap(JSON.parse(await (await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})).text()));return j;}
@@ -385,4 +390,4 @@ async function traderHaggle(){let d=await api({action:"trader_haggle"});alert(d.
 setTimeout(loadProfile,800);
 </script>
 </body>
-                  </html>
+  </html>
