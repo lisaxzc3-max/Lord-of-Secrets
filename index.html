@@ -12,226 +12,40 @@ body{
   color:#b8b5ad;
   min-height:100vh
 }
-.wrap{
-  max-width:440px;
-  margin:0 auto;
-  padding:10px 10px 70px
-}
-.top{
-  display:flex;
-  gap:10px;
-  background:rgba(22,22,26,.88);
-  backdrop-filter:blur(8px);
-  border:1px solid #3a3a3e;
-  border-radius:16px;
-  padding:10px
-}
-.avatar{
-  width:44px;height:44px;
-  border-radius:12px;
-  background:#2b2b2e;
-  border:1px solid #4a4a4e;
-  display:flex;align-items:center;justify-content:center;
-  color:#b8b5ad;font-size:20px
-}
-.bar{
-  height:7px;
-  background:rgba(30,30,34,.9);
-  border-radius:8px;
-  margin:3px 0;
-  overflow:hidden
-}
-.bar i{
-  display:block;
-  height:100%;
-  transition:width .3s
-}
-.bar.hp i{
-  background:#5a3a3a
-}
-.bar.mn i{
-  background:#4a4e5a
-}
-.bar.exp i{
-  background:#6a6560
-}
-.card{
-  background:rgba(22,22,26,.86);
-  backdrop-filter:blur(8px);
-  border:1px solid #3a3a3e;
-  border-radius:16px;
-  padding:12px;
-  margin:8px 0
-}
-.btn{
-  border:1px solid #3a3a3e;
-  background:rgba(38,38,42,.92);
-  border-radius:10px;
-  padding:10px;
-  text-align:center;
-  font-size:13px;
-  margin:4px 0;
-  cursor:pointer;
-  color:#b8b5ad
-}
-.btn.gold{
-  background:#3a3a3e;
-  border-color:#4a4a4e;
-  color:#d4d0c3;
-  font-weight:600
-}
-.btn.red{
-  background:#2b2b2e;
-  border-color:#4a4a4e;
-  color:#d4d0c3;
-  font-weight:700
-}
-.btn.teal{
-  background:#262a2e;
-  border-color:#3e444a;
-  color:#b8b5ad;
-  font-weight:600
-}
-.btn.big{
-  padding:14px;
-  font-size:15px;
-  border-radius:14px
-}
-.btn:active{
-  transform:scale(.97)
-}
-.tabs{
-  display:flex;
-  gap:6px;
-  margin:10px 0;
-  overflow-x:auto
-}
-.tab{
-  flex:1;
-  padding:8px;
-  text-align:center;
-  border-radius:10px;
-  background:rgba(30,30,34,.85);
-  border:1px solid #3a3a3e;
-  font-size:11px;
-  cursor:pointer;
-  white-space:nowrap;
-  color:#9a9690
-}
-.tab.active{
-  background:#3a3a3e;
-  color:#d4d0c3;
-  border-color:#4a4a4e
-}
-.nav{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  background:rgba(14,14,16,.96);
-  backdrop-filter:blur(10px);
-  border-top:1px solid #2a2a2e;
-  display:flex;
-  justify-content:space-around;
-  padding:8px 0
-}
-.nav a{
-  font-size:11px;
-  color:#8a867e;
-  text-decoration:none;
-  cursor:pointer
-}
-.hidden{
-  display:none
-}
-.item{
-  border:1px solid #2a2a2e;
-  border-radius:10px;
-  padding:8px;
-  margin:4px 0;
-  background:rgba(28,28,32,.85);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px
-}
-.vsGrid{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  gap:8px;
-  align-items:center;
-  text-align:center
-}
-.vsAvatar{
-  width:52px;height:52px;
-  border-radius:12px;
-  background:#2b2b2e;
-  border:1px solid #4a4a4e;
-  display:flex;align-items:center;justify-content:center;
-  color:#b8b5ad;font-size:22px;
-  margin:0 auto 4px
-}
-.vsAvatar.enemy{
-  background:#1e1e22;
-  border-color:#3a3a3e
-}
-.district{
-  margin:6px 0;
-  border:1px solid #2a2a2e;
-  border-radius:12px;
-  overflow:hidden;
-  background:rgba(28,28,32,.6)
-}
-.districtHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 12px;
-  cursor:pointer;
-  background:rgba(38,38,42,.9);
-  font-size:13px;
-  font-weight:600;
-  color:#c9c5b8
-}
-.districtBody{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  padding:8px;
-  background:rgba(22,22,26,.6)
-}
-.districtBody.hidden{
-  display:none
-}
-.victoryHead{
-  text-align:center;
-  letter-spacing:4px;
-  font-weight:800;
-  margin:6px 0;
-  font-size:20px;
-  color:#c9c5b8
-}
-.lootGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin-top:8px
-}
-.lootBox{
-  border:1px solid #3a3a3e;
-  border-radius:10px;
-  padding:10px;
-  text-align:center;
-  background:rgba(28,28,32,.9)
-}
-small{
-  opacity:.6;
-  font-size:10px;
-  white-space:pre-wrap
-}
-h3{
-  font-size:14px;
-  margin-bottom:6px;
-  color:#c9c5b8
-}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 70px}
+.top{display:flex;gap:10px;background:rgba(22,22,26,.88);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:10px}
+.avatar{width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;color:#b8b5ad;font-size:20px}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:3px 0;overflow:hidden}
+.bar i{display:block;height:100%;transition:width .3s}
+.bar.hp i{background:#5a3a3a}
+.bar.mn i{background:#4a4e5a}
+.bar.exp i{background:#6a6560}
+.card{background:rgba(22,22,26,.86);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;font-size:13px;margin:4px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;border-color:#4a4a4e;color:#d4d0c3;font-weight:600}
+.btn.red{background:#2b2b2e;border-color:#4a4a4e;color:#d4d0c3;font-weight:700}
+.btn.teal{background:#262a2e;border-color:#3e444a;color:#b8b5ad;font-weight:600}
+.btn.big{padding:14px;font-size:15px;border-radius:14px}
+.btn:active{transform:scale(.97)}
+.tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto}
+.tab{flex:1;padding:8px;text-align:center;border-radius:10px;background:rgba(30,30,34,.85);border:1px solid #3a3a3e;font-size:11px;cursor:pointer;white-space:nowrap;color:#9a9690}
+.tab.active{background:#3a3a3e;color:#d4d0c3;border-color:#4a4a4e}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,16,.96);backdrop-filter:blur(10px);border-top:1px solid #2a2a2e;display:flex;justify-content:space-around;padding:8px 0}
+.nav a{font-size:11px;color:#8a867e;text-decoration:none;cursor:pointer}
+.hidden{display:none}
+.item{border:1px solid #2a2a2e;border-radius:10px;padding:8px;margin:4px 0;background:rgba(28,28,32,.85);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.vsGrid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;text-align:center}
+.vsAvatar{width:52px;height:52px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;color:#b8b5ad;font-size:22px;margin:0 auto 4px}
+.vsAvatar.enemy{background:#1e1e22;border-color:#3a3a3e}
+.district{margin:6px 0;border:1px solid #2a2a2e;border-radius:12px;overflow:hidden;background:rgba(28,28,32,.6)}
+.districtHead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;cursor:pointer;background:rgba(38,38,42,.9);font-size:13px;font-weight:600;color:#c9c5b8}
+.districtBody{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px;background:rgba(22,22,26,.6)}
+.districtBody.hidden{display:none}
+.victoryHead{text-align:center;letter-spacing:4px;font-weight:800;margin:6px 0;font-size:20px;color:#c9c5b8}
+.lootGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.lootBox{border:1px solid #3a3a3e;border-radius:10px;padding:10px;text-align:center;background:rgba(28,28,32,.9)}
+small{opacity:.6;font-size:10px;white-space:pre-wrap}
+h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 </style>
 </head>
 <body>
