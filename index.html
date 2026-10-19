@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v112 DeadRegen Side</title>
+<title>Повелитель Тайн v113 ClickTop Full 720</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -56,7 +56,7 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 </head>
 <body>
 <div class="wrap">
-<div class="top">
+<div class="top" onclick="openProfile()" style="cursor:pointer">
 <div class="avatar">𓂀</div>
 <div style="flex:1">
 <div style="font-size:13px">
@@ -278,7 +278,7 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_1a5fa0fb";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_e485f876";
 function unwrap(j){
   return j&&j.result&&typeof j.result==='object'?j.result:j
 }
@@ -288,6 +288,14 @@ function showTab(id){
   ['hall','travel','city','bag'].forEach(x=>document.getElementById(x).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   if(id==='bag')renderBag();
+}
+function openProfile(){
+  let q=location.search;
+  if(!q.includes("p_enc")){
+    let extra=(q.includes("?")?"&":"?")+"p_enc="+(p_enc||"")+"&a_enc="+(a_enc||"")+"&u="+uid;
+    q=q+extra;
+  }
+  location.href="./profile/index.html"+q;
 }
 let G={
   inv:[],
@@ -340,7 +348,6 @@ function setDeadUI(isDead, left){
 function setRegenUI(left, hp, max){
   let box=document.getElementById('regenBox');
   if(!left || left<=0 || hp>=max){
-    // если мёртв — показываем тот же таймер что и dead
     if(G.dead && left>0){
       box.classList.remove('hidden');
       document.getElementById('regenTimer').innerText=document.getElementById('deadTimer').innerText;
@@ -365,7 +372,6 @@ function setRegenUI(left, hp, max){
   regenTimer=setInterval(()=>{
     left=Math.max(0,left-1);
     document.getElementById('regenTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');
-    // когда мёртв — синхроним с dead
     if(G.dead){
       document.getElementById('regenTimer').innerText=document.getElementById('deadTimer').innerText;
     }
@@ -592,7 +598,6 @@ async function loadProfile(){
     G.exp=j.exp;
     if(j.dead){
       setDeadUI(true, j.dead_left);
-      // при смерти показываем рядом реген тот же таймер
       setRegenUI(j.regen_left, j.hp, j.max_hp);
     } else {
       setDeadUI(false,0);
