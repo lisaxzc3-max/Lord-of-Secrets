@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v105 Start in Hall 720</title>
+<title>Повелитель Тайн v108 Full 720 Fix defeat+regen</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{
@@ -237,9 +237,6 @@ body{
   text-align:center;
   background:rgba(28,28,32,.9);
 }
-.startInline{
-  margin-top:10px;
-}
 .quote{
   margin:10px 0;
   background:rgba(28,28,32,.9);
@@ -333,8 +330,8 @@ h3{
 <h3>◈ Профиль</h3>
 <div id="hallInfo" style="font-size:12px;white-space:pre-wrap">Загрузка из бота...</div>
 <div id="statsBox" style="margin-top:8px"></div>
-<div id="startInHall" class="startInline hidden">
-<div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+<div id="startInHall" class="hidden">
+<div style="display:flex;gap:10px;align-items:center;margin-top:12px">
 <div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:18px">🦉</div>
 <div>
 <div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div>
@@ -515,7 +512,7 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_879f4c91";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_608919f4";
 function unwrap(j){
   return j&&j.result&&typeof j.result==='object'?j.result:j
 }
@@ -1011,6 +1008,11 @@ function exploreAgain(){
 }
 async function doBattle(m){
   let d=await api({action:"battle",move:m});
+  if(d.type==="defeat"){
+    // ФИКС: блокируем бой с 0 хп
+    document.getElementById('battleSkills').innerHTML='<div style="font-size:12px;opacity:.6">💀 Поражение — жди реген 10 мин</div>';
+    document.getElementById('battleSkills').style.pointerEvents="none";
+  }
   if(d.type==="victory"){
     document.getElementById('battleCard').classList.add('hidden');
     document.getElementById('victoryCard').classList.remove('hidden');
@@ -1034,9 +1036,10 @@ async function doBattle(m){
     document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОРАЖЕНИЕ ◆";
     document.getElementById('vExp').innerText="+0";
     document.getElementById('vTenge').innerText="+0 £";
-    document.getElementById('vDetails').innerText="💀 Поражение от "+d.enemy;
+    document.getElementById('vDetails').innerText="💀 Поражение от "+d.enemy+" — реген 100% за 10 мин вне боя";
     setTimeout(()=>{document.querySelector('#victoryCard .victoryHead').innerText="◆ ПОБЕДА ◆"},3000);
   }else if(d.type==="battle"){
+    document.getElementById('battleSkills').style.pointerEvents="auto";
     document.getElementById('vsEHp').innerText=d.enemy_hp+"/"+d.enemy_max;
     document.getElementById('vsEHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
     document.getElementById('vsHp').innerText=d.hp+"/"+d.max_hp;
@@ -1068,4 +1071,4 @@ async function traderHaggle(){
 setTimeout(loadProfile,800);
 </script>
 </body>
-</html>
+  </html>
