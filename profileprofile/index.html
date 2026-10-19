@@ -23,7 +23,7 @@ body{background:linear-gradient(rgba(10,10,14,.88),rgba(10,10,14,.96)),url('../i
 </head>
 <body>
 <div class="wrap">
-<div class="head"><a href="../index.html">← На главную</a><b style="margin-left:8px">Профиль</b></div>
+<div class="head"><a id="backHome" href="../index.html">← На главную</a><b style="margin-left:8px">Профиль</b></div>
 <div class="timerRow">
 <div id="deadBox" class="timerBox dead hidden"><div style="font-weight:700;font-size:18px">💀 <span id="deadTimer">10:00</span></div><div style="font-size:10px;opacity:.6">воскрешение</div></div>
 <div id="regenBox" class="timerBox regen hidden"><div style="font-weight:700;font-size:18px">🩹 <span id="regenTimer">10:00</span></div><div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div></div>
@@ -39,6 +39,11 @@ let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
+// FIX: На главную сохраняет ?p_enc=&a_enc=&u=
+document.addEventListener('DOMContentLoaded', ()=>{
+  let a=document.getElementById('backHome');
+  if(a) a.href="../index.html"+location.search;
+});
 async function ensure(){
  if(PROFILE_URL) return true;
  let uid=qs.get("u")||tg.initDataUnsafe?.user?.id;
