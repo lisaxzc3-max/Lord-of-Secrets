@@ -37,7 +37,7 @@ const tg=Telegram.WebApp;tg.ready();
 const qs=new URLSearchParams(location.search);
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_e485f876";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 async function ensure(){
  if(PROFILE_URL) return true;
@@ -77,10 +77,8 @@ async function load(){
     <div style="font-size:10px;opacity:.6">⭐ ${pct}% до Ур.${j.level+1}</div>
    </div>
   </div>
-  <div style="margin-top:10px;display:flex;flex-wrap:wrap"><span class="badge">💪 ${j.str}</span><span class="badge">🏃 ${j.agi}</span><span class="badge">🧠 ${j.int}</span><span class="badge">🔮 ${j.spi}</span><span class="badge">❤️ ${j.con}</span></div>
-  <div style="margin-top:8px;font-size:10px;opacity:.5">UID ${j.uid} · нажмите ← чтобы вернуться</div>`;
- let inv=j.inventory||[], eq=j.equipped||{};
- let h=""; if(inv.length===0) h="<span style='opacity:.5'>Пусто 0/50</span>"; else inv.slice(0,20).forEach(it=>{h+=`<div style="border:1px solid #2a2a2e;border-radius:8px;padding:6px;margin:4px 0">• ${it.name} <small>${it.rarity||''} ${it.slot||''}</small></div>`});
+  <div style="margin-top:10px;display:flex;flex-wrap:wrap"><span class="badge">💪 ${j.str}</span><span class="badge">🏃 ${j.agi}</span><span class="badge">🧠 ${j.int}</span><span class="badge">🔮 ${j.spi}</span><span class="badge">❤️ ${j.con}</span></div>`;
+ let inv=j.inventory||[]; let h=""; if(inv.length===0) h="<span style='opacity:.5'>Пусто 0/50</span>"; else inv.slice(0,20).forEach(it=>{h+=`<div style="border:1px solid #2a2a2e;border-radius:8px;padding:6px;margin:4px 0">• ${it.name} <small>${it.rarity||''} ${it.slot||''}</small></div>`});
  document.getElementById('invList').innerHTML=h; document.getElementById('invCard').classList.remove('hidden');
  document.getElementById('help').innerHTML=`<span class="badge">£ ${j.pounds}</span><span class="badge">+${j.potion}% зелье</span><span class="badge">Безумие ${j.madness}%</span><span class="badge">Ур.${j.level} ${pct}%</span>`;
  setTimers(j);
@@ -88,4 +86,4 @@ async function load(){
 load();
 </script>
 </body>
-  </html>
+</html>
