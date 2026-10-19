@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v110 Dead+Regen Timers</title>
+<title>Повелитель Тайн v111 DeathRegen SideBySide</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -50,6 +50,8 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 .deadBox{background:rgba(60,20,20,.92);border:1px solid #6a2a2a;border-radius:12px;padding:10px;margin:8px 0;text-align:center}
 .regenBox{background:rgba(20,50,20,.88);border:1px solid #2a6a2a;border-radius:12px;padding:8px;margin:8px 0;text-align:center;font-size:11px}
+.timerRow{display:flex;gap:8px;margin:8px 0}
+.timerRow .deadBox,.timerRow .regenBox{flex:1;margin:0}
 </style>
 </head>
 <body>
@@ -73,12 +75,15 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <span style="opacity:.6">UID <span id="uid">-</span></span>
 </div>
 </div>
+<div class="timerRow">
 <div id="deadBox" class="deadBox hidden">
-<div style="font-weight:700">💀 Ты мёртв</div>
-<div style="font-size:12px">До воскрешения <b id="deadTimer">10:00</b></div>
+<div style="font-weight:700">💀 <span id="deadTimer">10:00</span></div>
+<div style="font-size:10px;opacity:.6">воскрешение</div>
 </div>
 <div id="regenBox" class="regenBox hidden">
-<div>🩹 Реген <b id="regenTimer">00:00</b> до <span id="regenHp">50/50</span></div>
+<div style="font-weight:700">🩹 <span id="regenTimer">00:00</span></div>
+<div style="font-size:10px;opacity:.6">до <span id="regenHp">50/50</span></div>
+</div>
 </div>
 <div class="tabs">
 <div class="tab active" id="t-hall" onclick="showTab('hall')">◈ Зал</div>
@@ -273,7 +278,7 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_601cb29a";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_33786512";
 function unwrap(j){
   return j&&j.result&&typeof j.result==='object'?j.result:j
 }
@@ -923,4 +928,4 @@ async function traderHaggle(){
 setTimeout(loadProfile,800);
 </script>
 </body>
-  </html>
+</html>
