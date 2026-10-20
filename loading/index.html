@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Загрузка — Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:#050a0e;color:#b8b5ad;min-height:100vh;overflow:hidden}
+.loader{position:fixed;inset:0;background:linear-gradient(rgba(10,10,14,.55),rgba(10,10,14,.92)),url('../i-72.jpeg') center/cover no-repeat,#050a0e;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.photo{width:140px;height:140px;border-radius:22px;object-fit:cover;border:1px solid #4a4a4e;box-shadow:0 10px 30px rgba(0,0,0,.7)}
+.title{margin-top:14px;font-size:13px;letter-spacing:4px;font-weight:800;color:#d4d0c3}
+.sub{font-size:10px;opacity:.6;margin-top:4px}
+.spinner{width:38px;height:38px;border:3px solid rgba(184,181,173,.2);border-top-color:#d4d0c3;border-radius:50%;animation:spin 1s linear infinite;margin-top:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.count{margin-top:10px;font-size:11px;opacity:.7}
+.btnSkip{margin-top:14px;border:1px solid #3a3a3e;background:rgba(22,22,26,.8);border-radius:10px;padding:8px 14px;font-size:11px;color:#9a9690;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="loader">
+<img class="photo" src="../i-72.jpeg" onerror="this.style.display='none'">
+<div class="title">ПОВЕЛИТЕЛЬ ТАЙН</div>
+<div class="sub">Тинген ждёт...</div>
+<div class="spinner"></div>
+<div class="count">Вход через <b id="count">5</b>с</div>
+<div class="btnSkip" onclick="goMain()">Войти →</div>
+</div>
+<script>
+const tg=Telegram.WebApp;tg.ready();tg.expand();
+let left=5;
+let timer=setInterval(()=>{
+ left--;
+ document.getElementById('count').innerText=left;
+ if(left<=0){clearInterval(timer);goMain();}
+},1000);
+function goMain(){
+ clearInterval(timer);
+ // сохраняет ?u=&p_enc=&a_enc= для index.html
+ location.href="../index.html"+location.search;
+}
+// страховка если зависнет
+setTimeout(goMain,6000);
+</script>
+</body>
+  </html>
