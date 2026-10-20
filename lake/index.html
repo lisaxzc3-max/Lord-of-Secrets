@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Озёра — Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:linear-gradient(rgba(6,14,18,.78),rgba(6,14,18,.95)),url('../i-72.jpeg') center/cover fixed no-repeat,#050a0e;color:#b8b5ad;min-height:100vh}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
+.head{padding:10px 0;display:flex;gap:10px;align-items:center}
+.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
+.card{background:rgba(22,22,26,.88);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:12px;text-align:center;margin:4px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
+.btn.big{padding:16px;font-size:16px;border-radius:14px}
+.timerRow{display:flex;gap:8px;margin:8px 0}
+.timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
+.timerBox.dead{background:rgba(60,20,20,.92);border:1px solid #6a2a2a}
+.timerBox.regen{background:rgba(20,55,20,.92);border:1px solid #2a6a2a}
+.hidden{display:none}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar.hp i{background:#5a3a3a}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head"><a id="backHome" href="../index.html">← Зал</a><b>🌊 Озёра · Топи</b></div>
+<div class="timerRow"><div id="deadBox" class="timerBox dead hidden">💀 <span id="deadTimer">10:00</span></div><div id="regenBox" class="timerBox regen hidden">🩹 <span id="regenTimer">10:00</span></div></div>
+<div class="card">
+<div>❤️ <span id="hp">-</span> · 🌀 <span id="mad">-</span>% · ⭐ <span id="exp">-</span></div>
+<div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
+<div class="btn gold big" id="btnExplore" onclick="doExplore()">🔍 Исследовать берег</div>
+<div style="font-size:11px;opacity:.6;text-align:center">Жабы · Утопцы · Роса · Сундук</div>
+</div>
+<div id="eventCard" class="card hidden"><h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:13px;white-space:pre-wrap"></div><div id="eventBtns"></div></div>
+</div>
+<script>
+const tg=Telegram.WebApp;tg.ready();
+const qs=new URLSearchParams(location.search);
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
+let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
+let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
+let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
+document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
+async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
+async function load(){if(!PROFILE_URL) await ensure();const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const j=unwrap(await r.json());document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('mad').innerText=j.madness;document.getElementById('exp').innerText=j.exp;if(j.dead){document.getElementById('deadBox').classList.remove('hidden');document.getElementById('deadTimer').innerText=Math.floor(j.dead_left/60).toString().padStart(2,'0')+":"+(j.dead_left%60).toString().padStart(2,'0');document.getElementById('btnExplore').style.opacity=.4;} else document.getElementById('deadBox').classList.add('hidden');}
+async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
+async function doExplore(){
+ let d=await api({action:"explore_lake"});
+ if(d.error==="dead"){alert(d.text);return;}
+ if(d.type==="battle"){
+  // уносим в универсальный battle
+  location.href="../battle/index.html?enemy="+encodeURIComponent(d.enemy)+"&"+location.search.substring(1);
+  return;
+ }
+ if(d.type==="event"){
+  document.getElementById('eventCard').classList.remove('hidden');
+  document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Царевна":"📦 Сундук";
+  document.getElementById('eventText').innerText=d.text;
+  let box=document.getElementById('eventBtns');box.innerHTML="";
+  d.actions.forEach(a=>{
+   let b=document.createElement('div');b.className='btn gold';b.innerText=a.label;
+   b.onclick=async()=>{let r=await api({action:"event_choice",move:a.id});alert(r.text);document.getElementById('eventCard').classList.add('hidden');load();};
+   box.appendChild(b);
+  });
+ }
+ if(d.error) alert(d.error);
+}
+async function doEvent(id){let d=await api({action:"event_choice",move:id});alert(d.text);document.getElementById('eventCard').classList.add('hidden');load();}
+load();
+</script>
+</body>
+</html>
