@@ -36,7 +36,7 @@ body{background:linear-gradient(rgba(6,14,18,.82),rgba(6,14,18,.96)),url('../i-7
 <div style="font-size:12px">❤️ <span id="hp">-</span> · 🌀 <span id="mad">-</span>% · ⭐ <span id="exp">-</span></div>
 <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
 <div class="btn gold big" id="btnExplore" onclick="doExplore()">🔍 Исследовать берег</div>
-<div style="font-size:11px;opacity:.6;text-align:center">Жабы · Утопцы · Лягушка · Сундук → уходит в боевой/</div>
+<div style="font-size:11px;opacity:.6;text-align:center">Жабы · Утопцы · Лягушка · Сундук → уходит в battle/</div>
 </div>
 <div id="eventCard" class="card hidden"><h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:13px;white-space:pre-wrap"></div><div id="eventBtns"></div></div>
 </div>
@@ -58,9 +58,8 @@ async function doExplore(){
  if(d.error==="dead"){alert(d.text);await load();return;}
  if(d.error==="cooldown"){alert("⌛ Подожди "+d.left+"с");return;}
  if(d.type==="battle"){
-  // ИСПРАВЛЕНО: боевка внутри озера -> боевой/index.html
   let suffix=location.search ? "&"+location.search.slice(1) : "";
-  location.href="боевой/index.html?enemy="+encodeURIComponent(d.enemy)+suffix;
+  location.href="battle/index.html?enemy="+encodeURIComponent(d.enemy)+suffix;
   return;
  }
  if(d.type==="event"){
