@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Бой — Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:linear-gradient(rgba(10,10,14,.85),rgba(10,10,14,.96)),url('../i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
+.head{padding:10px 0;display:flex;gap:10px;align-items:center}
+.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
+.card{background:rgba(22,22,26,.9);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;margin:4px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
+.btn.dis{opacity:.45;pointer-events:none}
+.vsGrid{display:grid;grid-template-columns:1fr 24px 1fr;gap:8px;align-items:center;text-align:center}
+.vsImg{width:110px;height:110px;border-radius:14px;object-fit:cover;border:1px solid #4a4a4e;background:#1a1a1e}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
+.bar i{display:block;height:100%;transition:width .3s}
+.bar.hp i{background:#5a3a3a}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head"><a id="backHome" href="../lake/index.html">← Озёра</a><b id="enemyName">Бой</b></div>
+<div class="card">
+<div class="vsGrid">
+<div>
+<img id="playerImg" class="vsImg" src="../i-72.jpeg" onerror="this.src='../i-72.jpeg'">
+<div style="margin-top:6px;font-weight:700" id="playerName">Ты</div>
+<div style="font-size:11px">❤️ <span id="playerHp">-</span></div>
+<div class="bar hp"><i id="playerHpBar" style="width:0%"></i></div>
+</div>
+<div style="font-size:18px;opacity:.6">VS</div>
+<div>
+<img id="enemyImg" class="vsImg" src="../assets/monsters/utop.jpg" onerror="this.style.background='#2b2b2e';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+<div style="margin-top:6px;font-weight:700" id="enemyLabel">Враг</div>
+<div style="font-size:11px">❤️ <span id="enemyHp">-</span></div>
+<div class="bar hp"><i id="enemyHpBar" style="width:0%"></i></div>
+</div>
+</div>
+<div id="battleText" style="font-size:12px;white-space:pre-wrap;opacity:.8;margin-top:8px"></div>
+<div id="battleSkills" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px"></div>
+<div id="battleLog" style="font-size:11px;opacity:.6;margin-top:6px"></div>
+</div>
+<div id="victoryCard" class="card hidden"><div style="text-align:center;font-weight:800;letter-spacing:4px">◆ ПОБЕДА ◆</div><div style="text-align:center;margin:8px 0">📦 <span id="vTenge">+1</span> £ · ✨ <span id="vExp">+1</span></div><div class="btn gold" onclick="location.href='../lake/index.html'+location.search.substring(location.search.indexOf('?'))">◎ Исследовать снова</div></div>
+<div id="defeatCard" class="card hidden" style="border-color:#6a2a2a"><div style="text-align:center;font-weight:800;color:#ef4444">◆ ПОРАЖЕНИЕ ◆</div><div style="text-align:center;font-size:12px">💀 10:00 до воскрешения</div><div class="btn" onclick="location.href='../lake/index.html'+location.search.substring(location.search.indexOf('?'))">← К Озёрам</div></div>
+</div>
+<script>
+const tg=Telegram.WebApp;tg.ready();
+const qs=new URLSearchParams(location.search);
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
+let p_enc=qs.get("p_enc")||"",a_enc=qs.get("a_enc")||"";
+let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
+let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
+const pics={
+ "Утопленник":"../assets/monsters/utop.jpg",
+ "Жаба":"../assets/monsters/zhaba.jpg",
+ "Лягушка":"../assets/monsters/frog.jpg",
+ "Крыса":"../assets/monsters/rat.jpg",
+ "frog":"../assets/events/frog.jpg",
+ "chest":"../assets/events/chest.jpg"
+};
+document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../lake/index.html"+location.search;});
+async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
+async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
+async function load(){
+ if(!PROFILE_URL) await ensure();
+ let r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
+ let j=unwrap(await r.json());
+ document.getElementById('playerName').innerText=j.nickname;
+ document.getElementById('playerHp').innerText=j.hp+"/"+j.max_hp;
+ document.getElementById('playerHpBar').style.width=(j.hp/j.max_hp*100)+"%";
+ let enemy=qs.get("enemy")||j.battle_enemy||"Утопленник";
+ document.getElementById('enemyLabel').innerText=enemy;
+ document.getElementById('enemyName').innerText="⚔ "+enemy;
+ document.getElementById('enemyImg').src=pics[enemy]||"../assets/monsters/utop.jpg";
+ // если уже в бою — подтянем хп врага
+ if(j.battle_enemy){
+  document.getElementById('enemyHp').innerText=j.battle_enemy_hp+"/"+j.battle_enemy_max;
+  document.getElementById('enemyHpBar').style.width=(j.battle_enemy_hp/j.battle_enemy_max*100)+"%";
+ }
+ // навыки по пути
+ let path=j.path||"",skills=document.getElementById('battleSkills');skills.innerHTML="";
+ let acts=[];
+ if(path.includes("Шута")||path.includes("Шут")) acts=[["card","🃏 Карты"],["vision","👁 Ясновид."],["heal","✨ Ритуал"]];
+ else if(path.includes("Тирана")) acts=[["sailor_hit","👊 Удар"],["sailor_drink","🍺 Перепить"],["sailor_pray","⛈ Молитва"]];
+ else if(path.includes("Жреца")) acts=[["hunter_dagger","🗡️ Кинжал"],["hunter_trap","🪤 Ловушка"],["hunter_boost","💪 Усиление"]];
+ else acts=[["card","🃏 Карты"],["heal","✨ Ритуал"]];
+ acts.forEach(a=>{
+  let b=document.createElement('div');b.className='btn gold';b.innerText=a[1];
+  b.onclick=()=>doBattle(a[0]);
+  skills.appendChild(b);
+ });
+ let b2=document.createElement('div');b2.className='btn';b2.innerText='⚔ Базовая';b2.onclick=()=>doBattle('basic');skills.appendChild(b2);
+ let f=document.createElement('div');f.className='btn';f.innerText='🏃 Побег';f.onclick=()=>doBattle('flee');skills.appendChild(f);
+}
+async function doBattle(m){
+ let d=await api({action:"battle",move:m});
+ if(d.type==="victory"){
+  document.getElementById('victoryCard').classList.remove('hidden');
+  document.getElementById('vTenge').innerText="+"+(d.tenge||1);
+  document.getElementById('vExp').innerText="+"+(d.exp_add||1);
+  document.getElementById('battleSkills').style.pointerEvents="none";
+  return;
+ }
+ if(d.type==="defeat"){
+  document.getElementById('defeatCard').classList.remove('hidden');
+  document.getElementById('battleSkills').style.pointerEvents="none";
+  return;
+ }
+ if(d.type==="battle"){
+  document.getElementById('enemyHp').innerText=d.enemy_hp+"/"+d.enemy_max;
+  document.getElementById('enemyHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
+  document.getElementById('playerHp').innerText=d.hp+"/"+d.max_hp;
+  document.getElementById('playerHpBar').style.width=(d.hp/d.max_hp*100)+"%";
+  document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");
+ }
+}
+load();
+</script>
+</body>
+                      </html>
