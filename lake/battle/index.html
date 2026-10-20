@@ -48,7 +48,7 @@ body{background:linear-gradient(rgba(10,10,14,.85),rgba(10,10,14,.96)),url('../i
 <div id="defeatCard" class="card hidden" style="border-color:#6a2a2a"><div style="text-align:center;font-weight:800;color:#ef4444">◆ ПОРАЖЕНИЕ ◆</div><div style="text-align:center;font-size:12px">💀 10:00 до воскрешения</div><div class="btn" onclick="goLake()">← К Озёрам</div></div>
 </div>
 <script>
-const tg=Telegram.WebApp;tg.ready();
+const tg=Telegram.WebApp;tg.ready();tg.expand();
 const qs=new URLSearchParams(location.search);
 let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
 let p_enc=qs.get("p_enc")||"",a_enc=qs.get("a_enc")||"";
@@ -68,11 +68,17 @@ async function load(){
  document.getElementById('playerName').innerText=j.nickname;
  document.getElementById('playerHp').innerText=j.hp+"/"+j.max_hp;
  document.getElementById('playerHpBar').style.width=(j.hp/j.max_hp*100)+"%";
- let enemy=qs.get("enemy")||j.battle_enemy||"Утопленник";
+ let enemy=qs.get("enemy");
+ if(!enemy){
+  // если зашли без параметра — спросим у сервера активный бой
+  try{let s=await api({action:"battle_state"}); if(s.ok&&s.enemy) enemy=s.enemy;}catch(e){}
+  if(!enemy) enemy="Утопленник";
+ }
  document.getElementById('enemyLabel').innerText=enemy;
  document.getElementById('enemyName').innerText="⚔ "+enemy;
  document.getElementById('enemyImg').src=pics[enemy]||"../assets/monsters/utop.jpg";
- if(j.battle_enemy){document.getElementById('enemyHp').innerText=j.battle_enemy_hp+"/"+j.battle_enemy_max;document.getElementById('enemyHpBar').style.width=(j.battle_enemy_hp/j.battle_enemy_max*100)+"%";}
+ // хп врага из battle_state если есть
+ try{let s=await api({action:"battle_state"}); if(s.ok){document.getElementById('enemyHp').innerText=s.enemy_hp+"/"+s.enemy_max;document.getElementById('enemyHpBar').style.width=(s.enemy_hp/s.enemy_max*100)+"%";}}catch(e){}
  let path=j.path||"",skills=document.getElementById('battleSkills');skills.innerHTML="";
  let acts=[];
  if(path.includes("Шута")||path.includes("Шут")) acts=[["card","🃏 Карты"],["vision","👁 Ясновид."],["heal","✨ Ритуал"]];
@@ -88,7 +94,7 @@ async function doBattle(m){
  if(d.type==="victory"){document.getElementById('victoryCard').classList.remove('hidden');document.getElementById('vTenge').innerText="+"+(d.tenge||1);document.getElementById('vExp').innerText="+"+(d.exp_add||1);document.getElementById('battleSkills').style.pointerEvents="none";return;}
  if(d.type==="defeat"){document.getElementById('defeatCard').classList.remove('hidden');document.getElementById('battleSkills').style.pointerEvents="none";return;}
  if(d.type==="battle"){document.getElementById('enemyHp').innerText=d.enemy_hp+"/"+d.enemy_max;document.getElementById('enemyHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";document.getElementById('playerHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('playerHpBar').style.width=(d.hp/d.max_hp*100)+"%";document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");}
- if(d.error==="dead"){alert(d.text);}
+ if(d.error) alert(d.error||d.text);
 }
 load();
 </script>
