@@ -34,7 +34,7 @@ body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.88)),url('../I
 </div>
 <div style="font-size:18px;opacity:.6">VS</div>
 <div>
-<img id="enemyImg" class="vsImg" src="./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png" onerror="this.style.background='#2b2b2e';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
+<img id="enemyImg" class="vsImg" src="./utop.jpg" onerror="this.style.background='#2b2b2e';this.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'">
 <div style="margin-top:6px;font-weight:700" id="enemyLabel">Враг</div>
 <div style="font-size:11px">❤️ <span id="enemyHp">-</span></div>
 <div class="bar hp"><i id="enemyHpBar" style="width:0%"></i></div>
@@ -55,7 +55,7 @@ let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
-const pics={"Утопленник":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png","Жаба":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png","frog":"../../assets/events/frog.jpg","chest":"../../assets/events/chest.jpg"};
+const pics={"Утопленник":"./utop.jpg","Жаба":"./frog.jpg"};
 function goLake(){location.href="../index.html"+location.search;}
 document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
 async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
@@ -73,7 +73,7 @@ async function load(){
  if(enemy==="Лягушка") enemy="Жаба";
  document.getElementById('enemyLabel').innerText=enemy;
  document.getElementById('enemyName').innerText="⚔ "+enemy;
- document.getElementById('enemyImg').src=pics[enemy]||"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png";
+ document.getElementById('enemyImg').src=pics[enemy]||"./utop.jpg";
  try{let s=await api({action:"battle_state"}); if(s.ok){document.getElementById('enemyHp').innerText=s.enemy_hp+"/"+s.enemy_max;document.getElementById('enemyHpBar').style.width=(s.enemy_hp/s.enemy_max*100)+"%";}}catch(e){}
  let path=j.path||"",skills=document.getElementById('battleSkills');skills.innerHTML="";
  let acts=[];
