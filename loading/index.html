@@ -30,18 +30,17 @@ body{background:#050a0e;color:#b8b5ad;min-height:100vh;overflow:hidden}
 <script>
 const tg=Telegram.WebApp;tg.ready();tg.expand();
 let left=5;
-let timer=setInterval(()=>{
- left--;
- document.getElementById('count').innerText=left;
- if(left<=0){clearInterval(timer);goMain();}
-},1000);
+let timer=setInterval(()=>{left--;document.getElementById('count').innerText=left;if(left<=0){clearInterval(timer);goMain();}},1000);
 function goMain(){
  clearInterval(timer);
- // сохраняет ?u=&p_enc=&a_enc= для index.html
- location.href="../index.html"+location.search;
+ let q=location.search;
+ let sep=q.includes("?")?"&":"?";
+ if(!q) q="?v=116";
+ else if(!q.includes("v=")) q+=sep+"v=116";
+ // пробиваем кэш index.html при каждом входе
+ location.href="../index.html"+q+"&_t="+Date.now();
 }
-// страховка если зависнет
 setTimeout(goMain,6000);
 </script>
 </body>
-  </html>
+</html>
