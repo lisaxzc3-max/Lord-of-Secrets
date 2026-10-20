@@ -68,7 +68,6 @@ async function load(){
  document.getElementById('playerName').innerText=j.nickname;
  document.getElementById('playerHp').innerText=j.hp+"/"+j.max_hp;
  document.getElementById('playerHpBar').style.width=(j.hp/j.max_hp*100)+"%";
- document.getElementById('playerImg').src="../../i-72.jpeg";
  let enemy=qs.get("enemy");
  if(!enemy){try{let s=await api({action:"battle_state"}); if(s.ok&&s.enemy) enemy=s.enemy;}catch(e){}}
  if(!enemy) enemy="Утопленник";
