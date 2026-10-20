@@ -6,11 +6,11 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
-body{background:linear-gradient(rgba(6,14,18,.45),rgba(6,14,18,.88)),url('./lake_bg.jpg') center/cover fixed no-repeat,#050a0e;color:#b8b5ad;min-height:100vh}
+body{background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),url('./lake_bg.jpg') center/cover fixed no-repeat,#050a0e;color:#b8b5ad;min-height:100vh}
 .wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
 .head{padding:10px 0;display:flex;gap:10px;align-items:center}
 .head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
-.card{background:rgba(22,22,26,.9);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
+.card{background:rgba(22,22,26,.88);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
 .btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:12px;text-align:center;margin:6px 0;cursor:pointer;color:#b8b5ad}
 .btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
 .btn.big{padding:16px;font-size:16px;border-radius:14px}
@@ -57,23 +57,8 @@ async function doExplore(){
  let d=await api({action:"explore_lake"});
  if(d.error==="dead"){alert(d.text);await load();return;}
  if(d.error==="cooldown"){alert("⌛ Подожди "+d.left+"с");return;}
- if(d.type==="battle"){
-  let suffix=location.search ? "&"+location.search.slice(1) : "";
-  location.href="battle/index.html?enemy="+encodeURIComponent(d.enemy)+suffix;
-  return;
- }
- if(d.type==="event"){
-  document.getElementById('eventCard').classList.remove('hidden');
-  document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Царевна":"📦 Сундук";
-  document.getElementById('eventText').innerText=d.text;
-  let box=document.getElementById('eventBtns');box.innerHTML="";
-  d.actions.forEach(a=>{
-   let b=document.createElement('div');b.className='btn gold';b.innerText=a.label;
-   b.onclick=async()=>{let r=await api({action:"event_choice",move:a.id});alert(r.text);document.getElementById('eventCard').classList.add('hidden');load();};
-   box.appendChild(b);
-  });
-  return;
- }
+ if(d.type==="battle"){let suffix=location.search ? "&"+location.search.slice(1) : "";location.href="battle/index.html?enemy="+encodeURIComponent(d.enemy)+suffix;return;}
+ if(d.type==="event"){document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Царевна":"📦 Сундук";document.getElementById('eventText').innerText=d.text;let box=document.getElementById('eventBtns');box.innerHTML="";d.actions.forEach(a=>{let b=document.createElement('div');b.className='btn gold';b.innerText=a.label;b.onclick=async()=>{let r=await api({action:"event_choice",move:a.id});alert(r.text);document.getElementById('eventCard').classList.add('hidden');load();};box.appendChild(b);});return;}
  if(d.error) alert(d.error);
 }
 load();
