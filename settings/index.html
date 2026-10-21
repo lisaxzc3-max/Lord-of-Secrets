@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Настройки — Повелитель Тайн v118</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:linear-gradient(rgba(10,10,14,.82),rgba(10,10,14,.94)),url('../i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
+.head{padding:10px 0;display:flex;gap:10px;align-items:center}
+.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
+.card{background:rgba(22,22,26,.92);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:12px;text-align:center;margin:6px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
+.btn.red{border-color:#6a2a2a;background:rgba(60,20,20,.9);color:#d4c5b8;font-weight:700}
+.btn.dis{opacity:.45;pointer-events:none}
+.btn:active{transform:scale(.97)}
+.input{width:100%;background:#1a1a1e;border:1px solid #3a3a3e;border-radius:10px;padding:12px;color:#d4d0c3;text-align:center;outline:none;font-size:15px}
+.pathCard{border:1px solid #2a2a2e;border-radius:12px;padding:10px;margin:6px 0;background:rgba(28,28,32,.8);cursor:pointer}
+.pathCard.sel{border-color:#5a5a62;background:#3a3a3e}
+.hidden{display:none}
+h3{font-size:14px;color:#c9c5b8;margin-bottom:6px}
+small{opacity:.6;font-size:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head"><a id="backHome" href="../index.html">← Назад</a><b>⚙️ Настройки</b><span style="margin-left:auto;font-size:11px;opacity:.6">UID <span id="uid">-</span></span></div>
+
+<div class="card">
+<div style="font-size:12px;opacity:.7">Текущий: <b id="curNick">-</b> · <span id="curPath">-</span> · Ур.<span id="curLvl">-</span></div>
+<h3 style="margin-top:10px">1. Смена ника</h3>
+<input id="newNick" class="input" maxlength="16" placeholder="Новый ник 2-16 буквы/цифры/_/- без пробелов">
+<div id="nickErr" style="color:#e63946;font-size:11px;min-height:14px;margin-top:4px"></div>
+<div class="btn gold" onclick="changeNick()">Сменить ник</div>
+<div style="font-size:10px;opacity:.5">Меняется везде: главная 𓂀 · профиль · бой `vsGrid`. Проверка занятости через `nick_index`.</div>
+</div>
+
+<div class="card">
+<h3>2. Смена пути <span style="font-size:10px;opacity:.5">сбросит уровень и навыки</span></h3>
+<div id="curPath2" style="font-size:11px;opacity:.6;margin-bottom:6px"></div>
+<div class="pathCard" id="c-seer" onclick="pick('seer')"><b>𓂀 Путь Шута · Провидец</b><div style="font-size:11px;opacity:.7">🔮 Гадание КД2 уклон 2 · 🪃 Бумеранг КД3 6→3 (+30% силы) · 🎭 Актёрство КД1 -25% 1 ход · пассив Предчувствие</div></div>
+<div class="pathCard" id="c-sailor" onclick="pick('sailor')"><b>⚔ Путь Тирана · Матрос</b><div style="font-size:11px;opacity:.7">👊 Сильный удар КД2 10+40% силы · 🍺 Перепить КД3 сон 2 · 😡 Гнев КД2 x2 сила/ловк · пассив Чешуя +30 HP</div></div>
+<div class="pathCard" id="c-hunter" onclick="pick('hunter')"><b>🏹 Путь Жреца · Охотник</b><div style="font-size:11px;opacity:.7">🔥 Берсерк КД2 -25HP +100% силы · 🪤 Ловушка КД3 оглуш 2 · 😤 Провокация КД1 -25% метк 2 хода · пассив Слабые места x2</div></div>
+<div class="btn red" onclick="changePath()">Сменить путь</div>
+<div style="font-size:10px;opacity:.5">Сбросит прогресс `lvl1 exp0`, очистит `cds` и бафы, сменит навыки в `профиле 📜` и в `lake/battle/` — пути не пересекаются.</div>
+</div>
+</div>
+<script>
+const tg=Telegram.WebApp;tg.ready();tg.expand();
+const qs=new URLSearchParams(location.search);
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
+document.getElementById('uid').innerText=uid;
+let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
+let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
+let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
+document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
+async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
+async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
+let pickPath="";
+function pick(p){pickPath=p;document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));document.getElementById('c-'+p).classList.add('sel');}
+async function load(){if(!PROFILE_URL) await ensure();const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const j=unwrap(await r.json());document.getElementById('curNick').innerText=j.nickname;document.getElementById('curPath').innerText=j.path;document.getElementById('curLvl').innerText=j.level;document.getElementById('curPath2').innerText="Сейчас: "+j.path+" · Ур."+j.level+" · HP "+j.hp+"/"+j.max_hp;if(j.path_key) pick(j.path_key); document.getElementById('newNick').placeholder=j.nickname;}
+async function changeNick(){
+ let v=document.getElementById('newNick').value.trim();
+ if(!v){document.getElementById('nickErr').innerText="Введи ник";return;}
+ let d=await api({action:"set_nickname",nick:v});
+ if(!d.ok){document.getElementById('nickErr').innerText=d.error;return;}
+ document.getElementById('nickErr').innerText=""; alert("Ник сменён: "+v+" — виден везде");
+ document.getElementById('newNick').value=""; load();
+}
+async function changePath(){
+ if(!pickPath){alert("Выбери путь");return;}
+ if(!confirm("Сменить путь на "+pickPath+"? Уровень обнулится до 1 и навыки сменятся!")) return;
+ let d=await api({action:"confirm_path",choice:pickPath});
+ if(!d.ok){alert(d.error);return;}
+ alert("Путь сменён: "+pickPath+" — навыки обновлены в профиле и в бою");
+ load();
+}
+load();
+</script>
+</body>
+                                                                                       </html>
