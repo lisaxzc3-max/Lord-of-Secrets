@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Бой — Повелитель Тайн v115 fix paths</title>
+<title>Бой — Повелитель Тайн v115 all paths</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -70,9 +70,9 @@ function renderSkills(cds){
  if(path.includes("Шута")||path.includes("Шут")){
   acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
  } else if(path.includes("Тирана")){
-  acts=[["sailor_hit","👊 Удар",cds.hit||0],["sailor_drink","🍺 Перепить",cds.drink||0],["sailor_pray","⛈ Молитва",cds.pray||0]];
+  acts=[["sailor_hit","👊 Сильный удар",cds.hit||0],["sailor_drink","🍺 Перепить",cds.drink||0],["sailor_pray","😡 Гнев",cds.pray||0]];
  } else if(path.includes("Жреца")||path.includes("Красного")){
-  acts=[["hunter_dagger","🗡️ Кинжал",cds.dagger||0],["hunter_trap","🪤 Ловушка",cds.trap||0],["hunter_boost","💪 Усиление",cds.boost||0]];
+  acts=[["hunter_dagger","🔥 Берсерк",cds.dagger||0],["hunter_trap","🪤 Ловушка",cds.trap||0],["hunter_boost","😤 Провокация",cds.boost||0]];
  } else {
   acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
  }
