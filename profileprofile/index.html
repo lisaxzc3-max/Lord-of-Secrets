@@ -3,245 +3,143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Характеристики — Повелитель Тайн</title>
+<title>Профиль — Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Inter,Arial;
-}
-body{
-  background:linear-gradient(rgba(10,10,14,.78), rgba(10,10,14,.94)), url('../IMG_20261019_202745.jpg') center/cover fixed no-repeat, #0a0a0e;
-  color:#b8b5ad;
-  min-height:100vh;
-}
-.wrap{
-  max-width:440px;
-  margin:0 auto;
-  padding:10px 10px 60px;
-}
-.head{
-  padding:12px 0;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  border-bottom:1px solid #2a2a2e;
-  margin-bottom:10px;
-}
-.head a{
-  color:#b8b5ad;
-  text-decoration:none;
-  font-size:16px;
-  border:1px solid #3a3a3e;
-  border-radius:8px;
-  padding:4px 8px;
-}
-.title{
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.5;
-  margin:8px 0 6px;
-}
-.statsGrid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  background:rgba(22,22,26,.94);
-  border:1px solid #2a2a2e;
-  border-radius:14px;
-  overflow:hidden;
-}
-.statCell{
-  padding:10px 4px;
-  text-align:center;
-  border-right:1px solid #2a2a2e;
-}
-.statCell:last-child{
-  border-right:none;
-}
-.statIcon{
-  font-size:16px;
-  opacity:.7;
-}
-.statVal{
-  font-size:20px;
-  font-weight:800;
-  margin:4px 0 2px;
-  color:#e9e6d8;
-}
-.statBonus{
-  font-size:10px;
-  color:#4ade80;
-  font-weight:700;
-}
-.statLabel{
-  font-size:9px;
-  opacity:.5;
-  letter-spacing:1px;
-  margin-top:2px;
-}
-.card{
-  background:rgba(22,22,26,.88);
-  backdrop-filter:blur(6px);
-  border:1px solid #3a3a3e;
-  border-radius:14px;
-  padding:12px;
-  margin:8px 0;
-}
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:12px;
-  margin:6px 0;
-}
-.row b{
-  font-weight:700;
-}
-.bar{
-  height:6px;
-  background:rgba(30,30,34,.9);
-  border-radius:8px;
-  overflow:hidden;
-  margin:6px 0 10px;
-}
-.bar i{
-  display:block;
-  height:100%;
-}
-.bar.hp i{
-  background:linear-gradient(90deg, #ef4444, #f87171);
-}
-.bar.mad i{
-  background:linear-gradient(90deg, #a855f7, #c084fc);
-}
-.bar.pot i{
-  background:linear-gradient(90deg, #22d3ee, #38bdf8);
-}
-.timerRow{
-  display:flex;
-  gap:8px;
-  margin:8px 0;
-}
-.timerBox{
-  flex:1;
-  border-radius:12px;
-  padding:10px;
-  text-align:center;
-}
-.timerBox.dead{
-  background:rgba(60,20,20,.92);
-  border:1px solid #6a2a2a;
-}
-.timerBox.regen{
-  background:rgba(20,55,20,.92);
-  border:1px solid #2a6a2a;
-}
-.badge{
-  background:rgba(42,42,46,.9);
-  border:1px solid #4a4a4e;
-  border-radius:8px;
-  padding:4px 8px;
-  font-size:10px;
-  margin:2px;
-  display:inline-block;
-}
-.hidden{
-  display:none;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:linear-gradient(rgba(10,10,14,.78),rgba(10,10,14,.94)),url('../i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
+.head{padding:10px 0;display:flex;gap:10px;align-items:center}
+.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
+.card{background:rgba(22,22,26,.90);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;margin:6px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
+.btn:active{transform:scale(.97)}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar.hp i{background:#5a3a3a}
+.bar.exp i{background:#6a6560}
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:6px }
+.stat{border:1px solid #2a2a2e;border-radius:10px;padding:8px;background:rgba(28,28,32,.85);text-align:center}
+.hidden{display:none}
+.skill{border:1px solid #2a2a2e;border-radius:12px;padding:10px;margin:6px 0;background:rgba(28,28,32,.75)}
+.skill b{color:#d4d0c3}
+.badge{float:right;font-size:9px;border:1px solid #3a3a3e;border-radius:6px;padding:1px 5px;opacity:.7}
+.passive{border:1px dashed #4a4a4e;background:rgba(40,36,28,.75)}
+.titleRow{display:flex;justify-content:space-between;align-items:center}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="head">
-<a id="backHome" href="../index.html">← На главную</a>
-<b style="margin-left:8px;font-size:13px;letter-spacing:2px;opacity:.6">ХАРАКТЕРИСТИКИ</b>
-</div>
-<div class="timerRow">
-<div id="deadBox" class="timerBox dead hidden"><div style="font-weight:700;font-size:16px">💀 <span id="deadTimer">10:00</span></div><div style="font-size:10px;opacity:.6">воскрешение</div></div>
-<div id="regenBox" class="timerBox regen hidden"><div style="font-weight:700;font-size:16px">🩹 <span id="regenTimer">10:00</span></div><div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div></div>
-</div>
-<div class="title">ХАРАКТЕРИСТИКИ</div>
-<div class="statsGrid" id="statsGrid">
-<div class="statCell"><div class="statIcon">⚔</div><div class="statVal" id="vStr">-</div><div class="statBonus" id="bStr">+0</div><div class="statLabel">СИЛА</div></div>
-<div class="statCell"><div class="statIcon">彡</div><div class="statVal" id="vAgi">-</div><div class="statBonus" id="bAgi">+0</div><div class="statLabel">ЛОВКОСТЬ</div></div>
-<div class="statCell"><div class="statIcon">🛡</div><div class="statVal" id="vCon">-</div><div class="statBonus" id="bCon">+0</div><div class="statLabel">ВЫНОСЛ.</div></div>
-<div class="statCell"><div class="statIcon">🧠</div><div class="statVal" id="vInt">-</div><div class="statBonus" id="bInt">+0</div><div class="statLabel">ИНТЕЛЛ.</div></div>
-<div class="statCell"><div class="statIcon">◎</div><div class="statVal" id="vSpi">-</div><div class="statBonus" id="bSpi">+0</div><div class="statLabel">ЗОРКОСТЬ</div></div>
-</div>
+<div class="head"><a id="backHome" href="../index.html">← Зал</a><b>𓂀 Профиль</b><span style="margin-left:auto;font-size:11px;opacity:.6">UID <span id="uid">-</span></span></div>
+
 <div class="card">
-<div class="row"><span>♡ ЗДОРОВЬЕ</span><b><span id="hpVal">-</span> / <span id="hpMax">-</span></b></div>
-<div class="bar hp"><i id="hpBar" style="width:0%"></i></div>
-<div class="row"><span>🌀 БЕЗУМИЕ</span><b><span id="madVal">-</span>%</b></div>
-<div class="bar mad"><i id="madBar" style="width:0%"></i></div>
-<div class="row"><span>🧪 УСВОЕНИЕ</span><b><span id="potVal">-</span>%</b></div>
-<div class="bar pot"><i id="potBar" style="width:0%"></i></div>
-<div class="row" style="margin-top:10px"><span>◈ Путь</span><b id="pathVal">-</b></div>
-<div class="row"><span>⭐ Уровень</span><b id="lvlVal">-</b></div>
-<div class="row"><span>£ Фунты</span><b id="poundsVal">-</b></div>
+<div style="display:flex;gap:10px;align-items:center">
+<div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:20px">𓂀</div>
+<div style="flex:1">
+<div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span> <span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">-</span></div>
+<div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
+<div style="font-size:11px">❤️ <span id="hp">-</span> · £ <span id="pounds">-</span> · ⭐ <span id="exp">-</span></div>
+<div class="bar exp"><i id="expbar" style="width:0%"></i></div>
 </div>
-<div class="card" id="invCard"><b style="font-size:12px">🎒 Инвентарь <span id="invCnt" style="opacity:.5"></span></b><div id="invList" style="margin-top:8px;font-size:11px;white-space:pre-wrap"></div></div>
 </div>
+<div class="grid" style="margin-top:8px">
+<div class="stat">⚔ <b id="s_str">-</b><br><small>Сила</small></div>
+<div class="stat">🏃 <b id="s_agi">-</b><br><small>Ловк</small></div>
+<div class="stat">🧠 <b id="s_int">-</b><br><small>Инт</small></div>
+<div class="stat">✨ <b id="s_spi">-</b><br><small>Дух</small></div>
+</div>
+<div style="text-align:center;margin-top:6px;font-size:11px;opacity:.6">🛡 Тело <span id="s_con">-</span> · 🎯 Очков <span id="pts">0</span></div>
+</div>
+
+<div class="btn gold" onclick="toggleSkills()">📜 Навыки ▾</div>
+<div id="skillsBox" class="card hidden">
+<div class="titleRow"><b id="skillsTitle">Навыки пути</b><span id="skillsPath" style="font-size:10px;opacity:.6"></span></div>
+<div id="skillsList"></div>
+</div>
+
+<div class="card">
+<div style="font-size:12px;opacity:.7">Нажми 📜 чтобы развернуть / свернуть описание. У каждого пути только свои 3 навыка + пассивка — не пересекаются.</div>
+</div>
+</div>
+
 <script>
-const tg=Telegram.WebApp;tg.ready();
+const tg=Telegram.WebApp;tg.ready();tg.expand();
 const qs=new URLSearchParams(location.search);
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
+document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
+let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
-document.addEventListener('DOMContentLoaded', ()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
-async function ensure(){if(PROFILE_URL) return true;let uid=qs.get("u")||tg.initDataUnsafe?.user?.id;let r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});let j=unwrap(await r.json());PROFILE_URL=j.profile_url;return true;}
-let dt=null,rt=null;
-function setTimers(j){
- let d=document.getElementById('deadBox'), rg=document.getElementById('regenBox');
- if(j.dead){
-  d.classList.remove('hidden'); rg.classList.remove('hidden');
-  let dl=j.dead_left; document.getElementById('deadTimer').innerText=Math.floor(dl/60).toString().padStart(2,'0')+":"+(dl%60).toString().padStart(2,'0');
-  document.getElementById('regenTimer').innerText=Math.floor(dl/60).toString().padStart(2,'0')+":"+(dl%60).toString().padStart(2,'0');
-  document.getElementById('regenHp').innerText=j.hp+"/"+j.max_hp;
-  if(dt) clearInterval(dt); dt=setInterval(()=>{dl=Math.max(0,dl-1);document.getElementById('deadTimer').innerText=Math.floor(dl/60).toString().padStart(2,'0')+":"+(dl%60).toString().padStart(2,'0');document.getElementById('regenTimer').innerText=document.getElementById('deadTimer').innerText; if(dl<=0) location.reload();},1000);
+document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
+async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
+
+let PLAYER_PATH="";
+function toggleSkills(){
+ document.getElementById('skillsBox').classList.toggle('hidden');
+}
+
+function renderSkills(path){
+ PLAYER_PATH=path||"";
+ let box=document.getElementById('skillsList');
+ let title=document.getElementById('skillsTitle');
+ let sub=document.getElementById('skillsPath');
+ box.innerHTML="";
+ if(path.includes("Шута")||path.includes("Шут")){
+  title.innerText="𓂀 Провидец — Путь Шута";
+  sub.innerText="3 навыка + пассивка";
+  box.innerHTML=`
+  <div class="skill"><div><b>🔮 Гадание</b> <span class="badge">КД 2</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Проверьте грозит ли вам опасность.<br>Уклонение следующие 2 хода.</div><div style="font-size:10px;opacity:.5">Перезарядка 2 хода</div></div>
+  <div class="skill"><div><b>🪃 Бумажный бумеранг</b> <span class="badge">КД 3</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Используете бумагу как метательное оружие.<br>6 урона в 1-й ход + 3 при возвращении во 2-й (+30% от силы).</div><div style="font-size:10px;opacity:.5">Перезарядка 3 хода</div></div>
+  <div class="skill"><div><b>🎭 Актёрское мастерство</b> <span class="badge">КД 1</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Владея мимикой пугаете врага своим лицом.<br>Понижает атаку и защиту врага на 25% — 1 ход.</div><div style="font-size:10px;opacity:.5">Перезарядка 1 ход</div></div>
+  <div class="skill passive"><div><b>👁 Пассивка: Предчувствие опасности</b></div><div style="font-size:11px;opacity:.8;margin-top:4px">Уклоняетесь от первой атаки в бою.</div></div>`;
+ } else if(path.includes("Тирана")){
+  title.innerText="⚔ Матрос — Путь Тирана";
+  sub.innerText="3 навыка + пассивка";
+  box.innerHTML=`
+  <div class="skill"><div><b>👊 Сильный удар</b> <span class="badge">КД 2</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Превосходная физическая сила — удар сильнее в несколько раз.<br>Урон 10 (+40% от силы).</div><div style="font-size:10px;opacity:.5">Перезарядка 2 хода</div></div>
+  <div class="skill"><div><b>🍺 Перепить</b> <span class="badge">КД 3</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Опытом распития рома выводите соперника из строя.<br>Противник засыпает на 2 хода и не атакует.</div><div style="font-size:10px;opacity:.5">Перезарядка 3 хода</div></div>
+  <div class="skill"><div><b>😡 Гнев</b> <span class="badge">КД 2</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">В гневе сила и ловкость повышаются в 2 раза.<br>Действует 1 ход.</div><div style="font-size:10px;opacity:.5">Перезарядка 2 хода</div></div>
+  <div class="skill passive"><div><b>🛡 Пассивка: Чешуя под кожей</b></div><div style="font-size:11px;opacity:.8;margin-top:4px">Здоровье +30. Уже учтено в max HP.</div></div>`;
+ } else if(path.includes("Жреца")||path.includes("Красного")){
+  title.innerText="🏹 Охотник — Путь Красного Жреца";
+  sub.innerText="3 навыка + пассивка";
+  box.innerHTML=`
+  <div class="skill"><div><b>🔥 Берсерк</b> <span class="badge">КД 2</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Жертвуете здоровьем ради мощи.<br>Сила +100%, урон 10 (+50% от атаки), -25 HP, 1 ход.</div><div style="font-size:10px;opacity:.5">Перезарядка 2 хода · нужно >25 HP</div></div>
+  <div class="skill"><div><b>🪤 Ловушка</b> <span class="badge">КД 3</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Заманиваете противника в ловушку — оглушение.<br>Действует 2 хода.</div><div style="font-size:10px;opacity:.5">Перезарядка 3 хода</div></div>
+  <div class="skill"><div><b>😤 Провокация</b> <span class="badge">КД 1</span></div><div style="font-size:11px;opacity:.8;margin-top:4px">Провоцируете ярость — враг бьёт только атаками.<br>-25% к меткости врага, 2 хода.</div><div style="font-size:10px;opacity:.5">Перезарядка 1 ход</div></div>
+  <div class="skill passive"><div><b>🎯 Пассивка: Слабые места</b></div><div style="font-size:11px;opacity:.8;margin-top:4px">Первое нанесение урона за бой бьёт в уязвимое место — урон x2.</div></div>`;
  } else {
-  d.classList.add('hidden');
-  if(j.regen_left && j.hp<j.max_hp){
-   rg.classList.remove('hidden'); let rl=j.regen_left; document.getElementById('regenTimer').innerText=Math.floor(rl/60).toString().padStart(2,'0')+":"+(rl%60).toString().padStart(2,'0'); document.getElementById('regenHp').innerText=j.hp+"/"+j.max_hp;
-   if(rt) clearInterval(rt); rt=setInterval(()=>{rl=Math.max(0,rl-1);document.getElementById('regenTimer').innerText=Math.floor(rl/60).toString().padStart(2,'0')+":"+(rl%60).toString().padStart(2,'0'); if(rl<=0) location.reload();},1000);
-  } else rg.classList.add('hidden');
+  title.innerText="Выбери путь";
+  sub.innerText="—";
+  box.innerHTML=`<div style="font-size:12px;opacity:.6;text-align:center;padding:10px">Путь не выбран — навыки появятся после выбора у Далии в Зале.</div>`;
  }
 }
-async function load(){
- await ensure();
- let r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
- let j=unwrap(await r.json());
- document.getElementById('vStr').innerText=j.str;
- document.getElementById('vAgi').innerText=j.agi;
- document.getElementById('vCon').innerText=j.con;
- document.getElementById('vInt').innerText=j.int;
- document.getElementById('vSpi').innerText=j.spi;
- document.getElementById('bStr').innerText="+"+Math.max(0,j.str-5);
- document.getElementById('bAgi').innerText="+"+Math.max(0,j.agi-5);
- document.getElementById('bCon').innerText="+"+Math.max(0,j.con-5);
- document.getElementById('bInt').innerText="+"+Math.max(0,j.int-5);
- document.getElementById('bSpi').innerText="+"+Math.max(0,j.spi-5);
- document.getElementById('hpVal').innerText=j.hp;
- document.getElementById('hpMax').innerText=j.max_hp;
- document.getElementById('hpBar').style.width=(j.hp/j.max_hp*100)+"%";
- document.getElementById('madVal').innerText=j.madness;
- document.getElementById('madBar').style.width=j.madness+"%";
- document.getElementById('potVal').innerText=j.potion;
- document.getElementById('potBar').style.width=j.potion+"%";
- document.getElementById('pathVal').innerText=j.path;
- document.getElementById('lvlVal').innerText=j.level;
- document.getElementById('poundsVal').innerText=j.pounds;
- let inv=j.inventory||[];
- let txt="";
- if(inv.length===0) txt="Пусто 0/50";
- else txt=inv.slice(0,20).map(it=>`• ${it.name} ${it.rarity||''} ${it.slot||''}`).join('\n');
- document.getElementById('invList').innerText=txt;
- document.getElementById('invCnt').innerText=" "+inv.length+"/50";
- setTimers(j);
+
+async function loadProfile(){
+ if(!PROFILE_URL) await ensure();
+ const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
+ const j=unwrap(await r.json());
+ document.getElementById('nick').innerText=j.nickname;
+ document.getElementById('lvl').innerText=j.level;
+ document.getElementById('path').innerText=j.path;
+ document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;
+ document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";
+ document.getElementById('pounds').innerText=j.pounds;
+ document.getElementById('exp').innerText=j.exp;
+ let need=j.level<5? (10*(2**(j.level-1))):1;
+ document.getElementById('expbar').style.width=Math.min(100, j.exp/need*100)+"%";
+ document.getElementById('s_str').innerText=j.str;
+ document.getElementById('s_agi').innerText=j.agi;
+ document.getElementById('s_int').innerText=j.int;
+ document.getElementById('s_spi').innerText=j.spi;
+ document.getElementById('s_con').innerText=j.con;
+ document.getElementById('pts').innerText=j.stat_points;
+ renderSkills(j.path||"");
 }
-load();
+setTimeout(loadProfile,500);
 </script>
 </body>
-  </html>
+</html>
