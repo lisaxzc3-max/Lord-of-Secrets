@@ -3,355 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v115 Main No Battle 720</title>
+<title>Повелитель Тайн v118 Main Full + Settings</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Inter,Arial;
-}
-body{
-  background:linear-gradient(rgba(10,10,14,.72), rgba(10,10,14,.92)), url('./i-72.jpeg') center/cover fixed no-repeat, #0a0a0e;
-  color:#b8b5ad;
-  min-height:100vh;
-}
-.wrap{
-  max-width:440px;
-  margin:0 auto;
-  padding:10px 10px 70px;
-}
-.top{
-  display:flex;
-  gap:10px;
-  background:rgba(22,22,26,.88);
-  backdrop-filter:blur(8px);
-  border:1px solid #3a3a3e;
-  border-radius:16px;
-  padding:10px;
-}
-.avatar{
-  width:44px;
-  height:44px;
-  border-radius:12px;
-  background:#2b2b2e;
-  border:1px solid #4a4a4e;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#b8b5ad;
-  font-size:20px;
-}
-.bar{
-  height:7px;
-  background:rgba(30,30,34,.9);
-  border-radius:8px;
-  margin:3px 0;
-  overflow:hidden;
-}
-.bar i{
-  display:block;
-  height:100%;
-  transition:width .3s;
-}
-.bar.hp i{
-  background:#5a3a3a;
-}
-.bar.mn i{
-  background:#4a4e5a;
-}
-.bar.exp i{
-  background:#6a6560;
-}
-.card{
-  background:rgba(22,22,26,.86);
-  backdrop-filter:blur(8px);
-  border:1px solid #3a3a3e;
-  border-radius:16px;
-  padding:12px;
-  margin:8px 0;
-}
-.btn{
-  border:1px solid #3a3a3e;
-  background:rgba(38,38,42,.92);
-  border-radius:10px;
-  padding:10px;
-  text-align:center;
-  font-size:13px;
-  margin:4px 0;
-  cursor:pointer;
-  color:#b8b5ad;
-}
-.btn.gold{
-  background:#3a3a3e;
-  border-color:#4a4a4e;
-  color:#d4d0c3;
-  font-weight:600;
-}
-.btn.act{
-  background:#4a4a4e;
-  border-color:#5a5a62;
-  color:#fff;
-  font-weight:700;
-}
-.btn.red{
-  background:#2b2b2e;
-  border-color:#4a4a4e;
-  color:#d4d0c3;
-  font-weight:700;
-}
-.btn.big{
-  padding:14px;
-  font-size:15px;
-  border-radius:14px;
-}
-.btn.dis{
-  opacity:.45;
-  pointer-events:none;
-}
-.btn:active{
-  transform:scale(.97);
-}
-.tabs{
-  display:flex;
-  gap:6px;
-  margin:10px 0;
-  overflow-x:auto;
-}
-.tab{
-  flex:1;
-  padding:8px;
-  text-align:center;
-  border-radius:10px;
-  background:rgba(30,30,34,.85);
-  border:1px solid #3a3a3e;
-  font-size:11px;
-  cursor:pointer;
-  white-space:nowrap;
-  color:#9a9690;
-}
-.tab.active{
-  background:#3a3a3e;
-  color:#d4d0c3;
-  border-color:#4a4a4e;
-}
-.nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:rgba(14,14,16,.96);
-  backdrop-filter:blur(10px);
-  border-top:1px solid #2a2a2e;
-  display:flex;
-  justify-content:space-around;
-  padding:8px 0;
-}
-.nav a{
-  font-size:11px;
-  color:#8a867e;
-  text-decoration:none;
-  cursor:pointer;
-}
-.hidden{
-  display:none;
-}
-.item{
-  border:1px solid #2a2a2e;
-  border-radius:10px;
-  padding:8px;
-  margin:4px 0;
-  background:rgba(28,28,32,.85);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-}
-.vsGrid{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  gap:8px;
-  align-items:center;
-  text-align:center;
-}
-.vsAvatar{
-  width:52px;
-  height:52px;
-  border-radius:12px;
-  background:#2b2b2e;
-  border:1px solid #4a4a4e;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#b8b5ad;
-  font-size:22px;
-  margin:0 auto 4px;
-}
-.vsAvatar.enemy{
-  background:#1e1e22;
-  border-color:#3a3a3e;
-}
-.district{
-  margin:6px 0;
-  border:1px solid #2a2a2e;
-  border-radius:12px;
-  overflow:hidden;
-  background:rgba(28,28,32,.6);
-}
-.districtHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 12px;
-  cursor:pointer;
-  background:rgba(38,38,42,.9);
-  font-size:13px;
-  font-weight:600;
-  color:#c9c5b8;
-}
-.districtBody{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  padding:8px;
-  background:rgba(22,22,26,.6);
-}
-.districtBody.hidden{
-  display:none;
-}
-.victoryHead{
-  text-align:center;
-  letter-spacing:4px;
-  font-weight:800;
-  margin:6px 0;
-  font-size:20px;
-  color:#c9c5b8;
-}
-.lootGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin-top:8px;
-}
-.lootBox{
-  border:1px solid #3a3a3e;
-  border-radius:10px;
-  padding:10px;
-  text-align:center;
-  background:rgba(28,28,32,.9);
-}
-.quote{
-  margin:10px 0;
-  background:rgba(28,28,32,.9);
-  border:1px solid #2a2a2e;
-  border-radius:12px;
-  padding:10px;
-  font-size:12px;
-  line-height:1.4;
-}
-.startInput{
-  width:100%;
-  background:#1a1a1e;
-  border:1px solid #3a3a3e;
-  border-radius:10px;
-  padding:12px;
-  text-align:center;
-  color:#d4d0c3;
-  font-size:16px;
-  outline:none;
-}
-.startHint{
-  display:flex;
-  justify-content:space-between;
-  font-size:10px;
-  opacity:.5;
-  margin:4px 2px;
-}
-.pathGrid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:6px;
-  margin:6px 0;
-}
-.pathCard{
-  border:1px solid #2a2a2e;
-  border-radius:12px;
-  padding:10px;
-  background:rgba(28,28,32,.85);
-  cursor:pointer;
-}
-.pathCard.sel{
-  border-color:#5a5a62;
-  background:#3a3a3e;
-}
-.genderRow{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  margin:6px 0;
-}
-small{
-  opacity:.6;
-  font-size:10px;
-  white-space:pre-wrap;
-}
-h3{
-  font-size:14px;
-  margin-bottom:6px;
-  color:#c9c5b8;
-}
-.timerRow{
-  display:flex;
-  gap:8px;
-  margin:8px 0;
-}
-.timerBox{
-  flex:1;
-  border-radius:12px;
-  padding:10px;
-  text-align:center;
-}
-.timerBox.dead{
-  background:rgba(60,20,20,.92);
-  border:1px solid #6a2a2a;
-}
-.timerBox.regen{
-  background:rgba(20,55,20,.92);
-  border:1px solid #2a6a2a;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.92)),url('./i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 70px}
+.top{display:flex;gap:10px;background:rgba(22,22,26,.88);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:10px;align-items:center}
+.avatar{width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;color:#b8b5ad;font-size:20px;cursor:pointer}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:3px 0;overflow:hidden}
+.bar i{display:block;height:100%;transition:width .3s}
+.bar.hp i{background:#5a3a3a}.bar.mn i{background:#4a4e5a}.bar.exp i{background:#6a6560}
+.card{background:rgba(22,22,26,.86);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;font-size:13px;margin:4px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;border-color:#4a4a4e;color:#d4d0c3;font-weight:600}
+.btn.act{background:#4a4a4e;border-color:#5a5a62;color:#fff;font-weight:700}
+.btn.red{background:#2b2b2e;border-color:#4a4a4e;color:#d4d0c3;font-weight:700}
+.btn.big{padding:14px;font-size:15px;border-radius:14px}
+.btn.dis{opacity:.45;pointer-events:none}
+.btn:active{transform:scale(.97)}
+.tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto}
+.tab{flex:1;padding:8px;text-align:center;border-radius:10px;background:rgba(30,30,34,.85);border:1px solid #3a3a3e;font-size:11px;cursor:pointer;white-space:nowrap;color:#9a9690}
+.tab.active{background:#3a3a3e;color:#d4d0c3;border-color:#4a4a4e}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,16,.96);backdrop-filter:blur(10px);border-top:1px solid #2a2a2e;display:flex;justify-content:space-around;padding:8px 0}
+.nav a{font-size:11px;color:#8a867e;text-decoration:none;cursor:pointer}
+.hidden{display:none}
+.item{border:1px solid #2a2a2e;border-radius:10px;padding:8px;margin:4px 0;background:rgba(28,28,32,.85);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.district{margin:6px 0;border:1px solid #2a2a2e;border-radius:12px;overflow:hidden;background:rgba(28,28,32,.6)}
+.districtHead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;cursor:pointer;background:rgba(38,38,42,.9);font-size:13px;font-weight:600;color:#c9c5b8}
+.districtBody{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px;background:rgba(22,22,26,.6)}
+.districtBody.hidden{display:none}
+.quote{margin:10px 0;background:rgba(28,28,32,.9);border:1px solid #2a2a2e;border-radius:12px;padding:10px;font-size:12px;line-height:1.4}
+.startInput{width:100%;background:#1a1a1e;border:1px solid #3a3a3e;border-radius:10px;padding:12px;text-align:center;color:#d4d0c3;font-size:16px;outline:none}
+.startHint{display:flex;justify-content:space-between;font-size:10px;opacity:.5;margin:4px 2px}
+.pathCard{border:1px solid #2a2a2e;border-radius:12px;padding:10px;background:rgba(28,28,32,.85);cursor:pointer}
+.pathCard.sel{border-color:#5a5a62;background:#3a3a3e}
+.genderRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+small{opacity:.6;font-size:10px;white-space:pre-wrap}
+h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
+.timerRow{display:flex;gap:8px;margin:8px 0}
+.timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
+.timerBox.dead{background:rgba(60,20,20,.92);border:1px solid #6a2a2a}
+.timerBox.regen{background:rgba(20,55,20,.92);border:1px solid #2a6a2a}
+.gear{width:32px;height:32px;border-radius:8px;background:rgba(38,38,42,.9);border:1px solid #3a3a3e;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="top" onclick="openProfile()" style="cursor:pointer">
-<div class="avatar">𓂀</div>
-<div style="flex:1">
-<div style="font-size:13px">
-<b id="nick">-</b> · Ур.<span id="lvl">-</span>
-<span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">-</span>
+<div class="top">
+<div class="avatar" onclick="openProfile()">𓂀</div>
+<div style="flex:1" onclick="openProfile()" style="cursor:pointer">
+<div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span> <span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">-</span></div>
+<div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
+<div style="font-size:10px">❤️ <span id="hp">-</span> · £ <span id="pounds">-</span> · ⭐ <span id="exp">-</span> · 🧪 <span id="potion">-</span></div>
 </div>
-<div class="bar hp">
-<i id="hpbar" style="width:0%"></i>
-</div>
-<div style="font-size:10px">
-❤️ <span id="hp">-</span> · £ <span id="pounds">-</span> · ⭐ <span id="exp">-</span> · 🧪 <span id="potion">-</span>%
-</div>
-</div>
-<div style="text-align:right;font-size:11px">
-<span id="pts" style="color:#9a9690;font-weight:700"></span><br>
-<span style="opacity:.6">UID <span id="uid">-</span></span>
+<div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+<div class="gear" onclick="openSettings(event)">⚙️</div>
+<div style="font-size:10px;opacity:.6">UID <span id="uid">-</span></div>
 </div>
 </div>
 <div class="timerRow">
-<div id="deadBox" class="timerBox dead hidden">
-<div style="font-weight:700;font-size:18px">💀 <span id="deadTimer">10:00</span></div>
-<div style="font-size:10px;opacity:.6">воскрешение</div>
-</div>
-<div id="regenBox" class="timerBox regen hidden">
-<div style="font-weight:700;font-size:18px">🩹 <span id="regenTimer">10:00</span></div>
-<div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div>
-</div>
+<div id="deadBox" class="timerBox dead hidden"><div style="font-weight:700;font-size:18px">💀 <span id="deadTimer">10:00</span></div><div style="font-size:10px;opacity:.6">воскрешение</div></div>
+<div id="regenBox" class="timerBox regen hidden"><div style="font-weight:700;font-size:18px">🩹 <span id="regenTimer">10:00</span></div><div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div></div>
 </div>
 <div class="tabs">
 <div class="tab active" id="t-hall" onclick="showTab('hall')">◈ Зал</div>
@@ -361,57 +74,21 @@ h3{
 </div>
 <div id="hall" class="card">
 <div id="startInHall" class="hidden">
-<div style="display:flex;gap:10px;align-items:center">
-<div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:18px">🦉</div>
-<div>
-<div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div>
-<div style="font-size:10px;opacity:.5;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div>
-</div>
-</div>
+<div style="display:flex;gap:10px;align-items:center"><div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:18px">🦉</div><div><div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div><div style="font-size:10px;opacity:.5;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div></div></div>
 <div class="quote" id="startQuote">«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы.»</div>
-<div id="step1">
-<div style="font-size:12px;margin:6px 0">📜 Твоё имя</div>
-<input id="startNick" class="startInput" maxlength="10" value="Путник123">
-<div class="startHint"><span>до 10 символов</span><span id="nickCnt">9/10</span></div>
-<div style="color:#e63946;font-size:11px" id="nickErr"></div>
-<div class="btn gold" style="margin-top:8px" onclick="startCheckNick()">Далее ›</div>
+<div id="step1"><div style="font-size:12px;margin:6px 0">📜 Твоё имя</div><input id="startNick" class="startInput" maxlength="16" value="Путник123"><div class="startHint"><span>до 16 символов</span><span id="nickCnt">9/16</span></div><div style="color:#e63946;font-size:11px" id="nickErr"></div><div class="btn gold" style="margin-top:8px" onclick="startCheckNick()">Далее ›</div></div>
+<div id="step2" class="hidden"><div style="margin:6px 0">⟡ Избери Путь</div><div style="display:grid;gap:6px"><div class="pathCard" id="card-seer" onclick="pickPath('seer')"><b>𓂀 Путь Шута · Провидец</b><div style="font-size:11px;opacity:.6">🔮 Гадание · 🪃 Бумеранг · 🎭 Актёрство</div></div><div class="pathCard" id="card-sailor" onclick="pickPath('sailor')"><b>⚔ Путь Тирана · Матрос</b><div style="font-size:11px;opacity:.6">👊 Сильный удар · 🍺 Перепить · 😡 Гнев</div></div><div class="pathCard" id="card-hunter" onclick="pickPath('hunter')"><b>🏹 Путь Жреца · Охотник</b><div style="font-size:11px;opacity:.6">🔥 Берсерк · 🪤 Ловушка · 😤 Провокация</div></div></div><div style="color:#e63946;font-size:11px" id="pathErr"></div><div class="btn gold" style="margin-top:8px" onclick="startConfirmPath()">Далее ›</div></div>
+<div id="step3" class="hidden"><div class="genderRow"><div class="btn" id="g-male" onclick="pickGender('male')">♂ Мужчина</div><div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div></div><div style="color:#e63946;font-size:11px" id="genderErr"></div><div class="btn gold" onclick="startFinish()">🎮 Начать игру</div></div>
 </div>
-<div id="step2" class="hidden">
-<div style="margin:6px 0">⟡ Избери Путь</div>
-<div style="display:grid;gap:6px">
-<div class="pathCard" id="card-seer" onclick="pickPath('seer')"><b>𓂀 Путь Шута · Провидец</b></div>
-<div class="pathCard" id="card-sailor" onclick="pickPath('sailor')"><b>⚔ Путь Тирана · Матрос</b></div>
-<div class="pathCard" id="card-hunter" onclick="pickPath('hunter')"><b>🏹 Путь Жреца · Охотник</b></div>
-</div>
-<div style="color:#e63946;font-size:11px" id="pathErr"></div>
-<div class="btn gold" style="margin-top:8px" onclick="startConfirmPath()">Далее ›</div>
-</div>
-<div id="step3" class="hidden">
-<div class="genderRow">
-<div class="btn" id="g-male" onclick="pickGender('male')">♂ Мужчина</div>
-<div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div>
-</div>
-<div style="color:#e63946;font-size:11px" id="genderErr"></div>
-<div class="btn gold" onclick="startFinish()">🎮 Начать игру</div>
-</div>
-</div>
-<div id="hallProfileHint" class="hidden" style="text-align:center;padding:20px 0;opacity:.6">
-Нажми на <b>𓂀 ник</b> сверху чтобы открыть характеристики →
-</div>
+<div id="hallProfileHint" class="hidden" style="text-align:center;padding:20px 0;opacity:.6">Нажми на <b>𓂀</b> для профиля или <b>⚙️</b> для настроек →</div>
 </div>
 <div id="travel" class="card hidden">
 <h3>🧭 Поход</h3>
 <div class="btn gold big" onclick="openLake()">🌊 Озёра — Топи (открыть локацию)</div>
-<div style="font-size:11px;opacity:.6;margin-top:6px;text-align:center">Боёвка теперь в lake/ и battle/</div>
-<div style="font-size:11px;margin-top:8px">
-❤️ <span id="hp2">-</span> · 🌀 <span id="madTxt">-</span>%
-</div>
-<div class="bar hp">
-<i id="hpbar2" style="width:0%"></i>
-</div>
-<div class="bar mn">
-<i id="madBar" style="width:0%"></i>
-</div>
+<div style="font-size:11px;opacity:.6;margin-top:6px;text-align:center">Боёвка теперь в lake/ и lake/battle/ на фоне топи</div>
+<div style="font-size:11px;margin-top:8px">❤️ <span id="hp2">-</span> · 🌀 <span id="madTxt">-</span>%</div>
+<div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
+<div class="bar mn"><i id="madBar" style="width:0%"></i></div>
 </div>
 <div id="city" class="card hidden">
 <h3>⌖ Тинген</h3>
@@ -426,22 +103,11 @@ h3{
 <h3 style="margin-top:10px">⬢ Надето</h3>
 <div id="eqList"></div>
 </div>
-<div id="eventCard" class="card hidden">
-<h3 id="eventTitle">Событие</h3>
-<div id="eventText" style="font-size:12px;white-space:pre-wrap"></div>
-<div id="eventBtns"></div>
+<div id="eventCard" class="card hidden"><h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:12px;white-space:pre-wrap"></div><div id="eventBtns"></div></div>
 </div>
-</div>
-<div class="nav">
-<a onclick="showTab('hall')">◈ Зал</a>
-<a onclick="showTab('travel')">🧭 Поход</a>
-<a onclick="showTab('city')">⌖ Город</a>
-<a onclick="showTab('bag')">🎒 Сумка</a>
-</div>
+<div class="nav"><a onclick="showTab('hall')">◈ Зал</a><a onclick="showTab('travel')">🧭 Поход</a><a onclick="showTab('city')">⌖ Город</a><a onclick="showTab('bag')">🎒 Сумка</a></div>
 <script>
-const tg=Telegram.WebApp;
-tg.ready();
-tg.expand();
+const tg=Telegram.WebApp;tg.ready();tg.expand();
 const qs=new URLSearchParams(location.search);
 let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
 document.getElementById('uid').innerText=uid;
@@ -449,189 +115,33 @@ let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
-function unwrap(j){
-  return j&&j.result&&typeof j.result==='object'?j.result:j
-}
-function showTab(id){
-  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
-  document.getElementById('t-'+id).classList.add('active');
-  ['hall','travel','city','bag'].forEach(x=>document.getElementById(x).classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  if(id==='bag')renderBag();
-}
-function openProfile(){
-  let q=location.search;
-  if(!q.includes("p_enc")){
-    let extra=(q.includes("?")?"&":"?")+"p_enc="+(p_enc||"")+"&a_enc="+(a_enc||"")+"&u="+uid;
-    q=q+extra;
-  }
-  location.href="./profileprofile/index.html"+q;
-}
-function openLake(){
-  let q=location.search;
-  if(!q.includes("p_enc")){
-    let extra=(q.includes("?")?"&":"?")+"p_enc="+(p_enc||"")+"&a_enc="+(a_enc||"")+"&u="+uid;
-    q=q+extra;
-  }
-  location.href="./lake/index.html"+q;
-}
-let G={
-  inv:[],
-  eq:{},
-  path:"",
-  hp:50,
-  max:50,
-  level:1,
-  exp:0,
-  lastLoc:"lake",
-  dead:false,
-  deadLeft:0,
-};
-let deadTimer=null;
-let regenTimer=null;
-function setDeadUI(isDead, left){
-  G.dead=isDead;
-  G.deadLeft=left||0;
-  let box=document.getElementById('deadBox');
-  let btn=document.getElementById('btnExploreLake');
-  if(isDead){
-    box.classList.remove('hidden');
-    document.getElementById('deadTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');
-    if(deadTimer) clearInterval(deadTimer);
-    deadTimer=setInterval(()=>{
-      G.deadLeft=Math.max(0,G.deadLeft-1);
-      document.getElementById('deadTimer').innerText=Math.floor(G.deadLeft/60).toString().padStart(2,'0')+":"+(G.deadLeft%60).toString().padStart(2,'0');
-      if(G.deadLeft<=0){
-        clearInterval(deadTimer);deadTimer=null;
-        setDeadUI(false,0);loadProfile();
-      }
-    },1000);
-  } else {
-    box.classList.add('hidden');
-    if(deadTimer){clearInterval(deadTimer);deadTimer=null;}
-  }
-}
-function setRegenUI(left, hp, max){
-  let box=document.getElementById('regenBox');
-  if(!left||left<=0||hp>=max){
-    box.classList.add('hidden');
-    if(regenTimer){clearInterval(regenTimer);regenTimer=null;}
-    return;
-  }
-  box.classList.remove('hidden');
-  document.getElementById('regenTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');
-  document.getElementById('regenHp').innerText=hp+"/"+max;
-  if(regenTimer) clearInterval(regenTimer);
-  regenTimer=setInterval(()=>{
-    left=Math.max(0,left-1);
-    document.getElementById('regenTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');
-    if(left<=0){clearInterval(regenTimer);regenTimer=null;loadProfile();}
-  },1000);
-}
-let START={
-  nick:"",
-  path:"",
-  gender:"",
-};
-document.getElementById('startNick').addEventListener('input', e=>{
-  document.getElementById('nickCnt').innerText=e.target.value.length+"/10";
-  document.getElementById('nickErr').innerText="";
-});
-function pickPath(p){
-  START.path=p;
-  document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('card-'+p).classList.add('sel');
-}
-function pickGender(g){
-  START.gender=g;
-  document.getElementById('g-male').className=g==='male'?'btn act':'btn';
-  document.getElementById('g-female').className=g==='female'?'btn act':'btn';
-}
-async function startCheckNick(){
-  let v=document.getElementById('startNick').value.trim();
-  START.nick=v;
-  let d=await api({action:"set_nickname",nick:v});
-  if(!d.ok){document.getElementById('nickErr').innerText=d.error;return;}
-  document.getElementById('step1').classList.add('hidden');
-  document.getElementById('step2').classList.remove('hidden');
-}
-async function startConfirmPath(){
-  if(!START.path) return;
-  let d=await api({action:"confirm_path",choice:START.path});
-  if(!d.ok) return;
-  document.getElementById('step2').classList.add('hidden');
-  document.getElementById('step3').classList.remove('hidden');
-}
-async function startFinish(){
-  if(!START.gender) return;
-  let d=await api({action:"set_gender",gender:START.gender});
-  if(d&&d.ok){
-    document.getElementById('startInHall').classList.add('hidden');
-    document.getElementById('hallProfileHint').classList.remove('hidden');
-    await loadProfile();
-  }
-}
-function maybeShowStart(j){
-  if(!j||!j.nickname||j.nickname==="Без имени"||j.path==="—"){
-    document.getElementById('startInHall').classList.remove('hidden');
-    document.getElementById('hallProfileHint').classList.add('hidden');
-  } else {
-    document.getElementById('startInHall').classList.add('hidden');
-    document.getElementById('hallProfileHint').classList.remove('hidden');
-  }
-}
-async function ensureUrls(){
-  if(PROFILE_URL&&ACTION_URL) return true;
-  try{
-    const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});
-    const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;
-  }catch(e){return false;}
-}
-async function loadProfile(){
-  if(!PROFILE_URL) await ensureUrls();
-  const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
-  const j=unwrap(await r.json());
-  document.getElementById('nick').innerText=j.nickname;
-  document.getElementById('lvl').innerText=j.level;
-  document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;
-  document.getElementById('hp2').innerText=j.hp+"/"+j.max_hp;
-  document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";
-  document.getElementById('hpbar2').style.width=(j.hp/j.max_hp*100)+"%";
-  document.getElementById('pounds').innerText=j.pounds;
-  document.getElementById('exp').innerText=j.exp;
-  document.getElementById('path').innerText=j.path;
-  if(j.dead){setDeadUI(true,j.dead_left);setRegenUI(j.regen_left,j.hp,j.max_hp);}else{setDeadUI(false,0);setRegenUI(j.regen_left||0,j.hp,j.max_hp);}
-  maybeShowStart(j);
-  renderBagFromJ(j);
-}
-function renderBagFromJ(j){
-  G.inv=j.inventory||[];G.eq=j.equipped||{};
-  let h="";if(G.inv.length===0) h="<small>Пусто</small>";else G.inv.forEach((it,i)=>{h+=`<div class="item"><div><b>`+it.name+`</b></div><div class="btn gold" onclick="doEquip(`+i+`)">Надеть</div></div>`});
-  document.getElementById('invList').innerHTML=h;
-  let e="";["head","face","body","weapon","legs","necklace","ring"].forEach(s=>{let it=G.eq[s];if(it) e+=`<div class="item"><div><b>`+it.name+`</b><small>`+s+`</small></div><div class="btn" onclick="doUnequip('`+s+`')">Снять</div></div>`;else e+=`<div class="item" style="opacity:.4">`+s+` — пусто</div>`});
-  document.getElementById('eqList').innerHTML=e;
-}
+function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
+function showTab(id){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.getElementById('t-'+id).classList.add('active');['hall','travel','city','bag'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='bag')renderBag();}
+function openProfile(){let q=location.search;if(!q.includes("p_enc")){let e=(q.includes("?")?"&":"?")+"p_enc="+(p_enc||"")+"&a_enc="+(a_enc||"")+"&u="+uid;q=q+e;}location.href="./profileprofile/index.html"+q;}
+function openLake(){let q=location.search;if(!q.includes("p_enc")){let e=(q.includes("?")?"&":"?")+"p_enc="+(p_enc||"")+"&a_enc="+(a_enc||"")+"&u="+uid;q=q+e;}location.href="./lake/index.html"+q;}
+function openSettings(e){if(e) e.stopPropagation();let q=location.search;if(!q.includes("p_enc")){let ex=(q.includes("?")?"&":"?")+"p_enc="+(p_enc||"")+"&a_enc="+(a_enc||"")+"&u="+uid;q=q+ex;}location.href="./settings/index.html"+q;}
+let G={inv:[],eq:{},path:"",hp:50,max:50,level:1,exp:0,lastLoc:"lake",dead:false,deadLeft:0};
+let deadTimer=null,regenTimer=null;
+function setDeadUI(isDead,left){G.dead=isDead;G.deadLeft=left||0;let box=document.getElementById('deadBox');if(isDead){box.classList.remove('hidden');document.getElementById('deadTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');if(deadTimer) clearInterval(deadTimer);deadTimer=setInterval(()=>{G.deadLeft=Math.max(0,G.deadLeft-1);document.getElementById('deadTimer').innerText=Math.floor(G.deadLeft/60).toString().padStart(2,'0')+":"+(G.deadLeft%60).toString().padStart(2,'0');if(G.deadLeft<=0){clearInterval(deadTimer);deadTimer=null;setDeadUI(false,0);loadProfile();}},1000);}else{box.classList.add('hidden');if(deadTimer){clearInterval(deadTimer);deadTimer=null;}}}
+function setRegenUI(left,hp,max){let box=document.getElementById('regenBox');if(!left||left<=0||hp>=max){box.classList.add('hidden');if(regenTimer){clearInterval(regenTimer);regenTimer=null;}return;}box.classList.remove('hidden');document.getElementById('regenTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');document.getElementById('regenHp').innerText=hp+"/"+max;if(regenTimer) clearInterval(regenTimer);regenTimer=setInterval(()=>{left=Math.max(0,left-1);document.getElementById('regenTimer').innerText=Math.floor(left/60).toString().padStart(2,'0')+":"+(left%60).toString().padStart(2,'0');if(left<=0){clearInterval(regenTimer);regenTimer=null;loadProfile();}},1000);}
+let START={nick:"",path:"",gender:""};
+document.getElementById('startNick').addEventListener('input',e=>{document.getElementById('nickCnt').innerText=e.target.value.length+"/16";document.getElementById('nickErr').innerText="";});
+function pickPath(p){START.path=p;document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));document.getElementById('card-'+p).classList.add('sel');}
+function pickGender(g){START.gender=g;document.getElementById('g-male').className=g==='male'?'btn act':'btn';document.getElementById('g-female').className=g==='female'?'btn act':'btn';}
+async function startCheckNick(){let v=document.getElementById('startNick').value.trim();START.nick=v;let d=await api({action:"set_nickname",nick:v});if(!d.ok){document.getElementById('nickErr').innerText=d.error;return;}document.getElementById('step1').classList.add('hidden');document.getElementById('step2').classList.remove('hidden');}
+async function startConfirmPath(){if(!START.path) return;let d=await api({action:"confirm_path",choice:START.path});if(!d.ok) return;document.getElementById('step2').classList.add('hidden');document.getElementById('step3').classList.remove('hidden');}
+async function startFinish(){if(!START.gender) return;let d=await api({action:"set_gender",gender:START.gender});if(d&&d.ok){document.getElementById('startInHall').classList.add('hidden');document.getElementById('hallProfileHint').classList.remove('hidden');await loadProfile();}}
+function maybeShowStart(j){if(!j||!j.nickname||j.nickname==="Без имени"||j.path==="—"){document.getElementById('startInHall').classList.remove('hidden');document.getElementById('hallProfileHint').classList.add('hidden');}else{document.getElementById('startInHall').classList.add('hidden');document.getElementById('hallProfileHint').classList.remove('hidden');}}
+async function ensureUrls(){if(PROFILE_URL&&ACTION_URL) return true;try{const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}catch(e){return false;}}
+async function loadProfile(){if(!PROFILE_URL) await ensureUrls();const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const j=unwrap(await r.json());document.getElementById('nick').innerText=j.nickname;document.getElementById('lvl').innerText=j.level;document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;document.getElementById('hp2').innerText=j.hp+"/"+j.max_hp;document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('hpbar2').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('madTxt').innerText=j.madness;document.getElementById('madBar').style.width=Math.min(100,j.madness)+"%";document.getElementById('pounds').innerText=j.pounds;document.getElementById('exp').innerText=j.exp;document.getElementById('potion').innerText=j.potion;document.getElementById('path').innerText=j.path;if(j.dead){setDeadUI(true,j.dead_left);setRegenUI(j.regen_left,j.hp,j.max_hp);}else{setDeadUI(false,0);setRegenUI(j.regen_left||0,j.hp,j.max_hp);}maybeShowStart(j);renderBagFromJ(j);}
+function renderBagFromJ(j){G.inv=j.inventory||[];G.eq=j.equipped||{};let h="";if(G.inv.length===0) h="<small>Пусто</small>";else G.inv.forEach((it,i)=>{h+=`<div class="item"><div><b>`+it.name+`</b><small>`+(it.bonus||"")+`</small></div><div class="btn gold" onclick="doEquip(`+i+`)">Надеть</div></div>`});document.getElementById('invList').innerHTML=h;document.getElementById('bagCnt').innerText="("+G.inv.length+"/50)";let e="";["head","face","body","weapon","legs","necklace","ring"].forEach(s=>{let it=G.eq[s];if(it) e+=`<div class="item"><div><b>`+it.name+`</b><small>`+s+`</small></div><div class="btn" onclick="doUnequip('`+s+`')">Снять</div></div>`;else e+=`<div class="item" style="opacity:.4">`+s+` — пусто</div>`});document.getElementById('eqList').innerHTML=e;}
 function renderBag(){}
 async function api(p){if(!ACTION_URL) await ensureUrls();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
-const cityData={
-  "Центр":["Ратуша 🏛","Площадь 👥","Церковь Ночи 🌙"],
-  "Север":["Рынок 🍎 — 🧺 Торговец","Таверна 🐉 — 🍺 Бармен"],
-  "Восток":["Дома 🏠 — Подвал","Лечебница 🏥"],
-  "Запад":["Бульвар 🌳","Банк 🏦"]
-};
+async function doEquip(i){let d=await api({action:"equip",idx:i});if(d.ok) loadProfile();}
+async function doUnequip(s){let d=await api({action:"unequip",slot:s});if(d.ok) loadProfile();}
+const cityData={"Центр":["Ратуша 🏛","Площадь 👥","Церковь Ночи 🌙"],"Север":["Рынок 🍎 — 🧺 Торговец","Таверна 🐉 — 🍺 Бармен"],"Восток":["Дома 🏠 — Подвал","Лечебница 🏥"],"Запад":["Бульвар 🌳","Банк 🏦"]};
 function toggleDistrict(d){let b=document.getElementById('body-'+d);let ch=document.getElementById('ch-'+d);if(!b) return;let hid=b.classList.contains('hidden');b.classList.toggle('hidden');if(ch) ch.innerText=hid?'⌄':'›';}
-(function renderCity(){
-  let h="";
-  for(let d in cityData){
-    h+='<div class="district"><div class="districtHead" onclick="toggleDistrict(\''+d+'\')"><span>▸ '+d+'</span><span id="ch-'+d+'" style="opacity:.6">›</span></div><div id="body-'+d+'" class="districtBody hidden">';
-    cityData[d].forEach(x=>{
-      let key="";if(x.includes("Рынок")) key="market";else if(x.includes("Таверна")) key="dragon_tavern";else if(x.includes("Дома")) key="houses";
-      if(key) h+='<div class="btn" onclick="openLoc(\''+key+'\')">'+x+'</div>';else h+='<div class="btn" style="opacity:.5">'+x+'</div>';
-    });
-    h+='</div></div>';
-  }
-  document.getElementById('cityBtns').innerHTML=h;
-})();
+(function renderCity(){let h="";for(let d in cityData){h+='<div class="district"><div class="districtHead" onclick="toggleDistrict(\''+d+'\')"><span>▸ '+d+'</span><span id="ch-'+d+'" style="opacity:.6">›</span></div><div id="body-'+d+'" class="districtBody hidden">';cityData[d].forEach(x=>{let key="";if(x.includes("Рынок")) key="market";else if(x.includes("Таверна")) key="dragon_tavern";else if(x.includes("Дома")) key="houses";if(key) h+='<div class="btn" onclick="openLoc(\''+key+'\')">'+x+'</div>';else h+='<div class="btn" style="opacity:.5">'+x+'</div>';});h+='</div></div>';}document.getElementById('cityBtns').innerHTML=h;})();
 function openLoc(id){document.getElementById('locInfo').innerText=id;}
 setTimeout(loadProfile,600);
 </script>
