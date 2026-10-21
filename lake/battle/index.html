@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Бой — Повелитель Тайн v115</title>
+<title>Бой — Повелитель Тайн v115 fix paths</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -14,7 +14,7 @@ body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.88)),url('../I
 .btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;margin:4px 0;cursor:pointer;color:#b8b5ad;position:relative}
 .btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
 .btn.dis{opacity:.45;pointer-events:none}
-.btn small{position:absolute;top:3px;right:6px;font-size:9px;opacity:.8}
+.btn small{position:absolute;top:3px;right:6px;font-size:9px;opacity:.9}
 .vsGrid{display:grid;grid-template-columns:1fr 24px 1fr;gap:8px;align-items:center;text-align:center}
 .vsImg{width:110px;height:110px;border-radius:14px;object-fit:cover;border:1px solid #4a4a4e;background:#1a1a1e}
 .bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
@@ -58,25 +58,24 @@ let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:""
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 const pics={"Утопленник":"./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png","Жаба":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"};
+let PLAYER_PATH="";
 function goLake(){location.href="../index.html"+location.search;}
 document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
 async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
 async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
-function mapCdToBtn(d){
- let m={"divination":"divination","boomerang":"boomerang","acting":"acting","hit":"sailor_hit","drink":"sailor_drink","pray":"sailor_pray","dagger":"hunter_dagger","trap":"hunter_trap","boost":"hunter_boost","basic":"basic"};
- let cds=d.cds||{};
- let out={};
- for(let k in cds) out[k]=cds[k];
- for(let k in m) if(out[k]===undefined) out[m[k]]=0;
- return out;
-}
-function renderSkills(path,cds){
+function renderSkills(cds){
+ let path=PLAYER_PATH||"";
  let skills=document.getElementById('battleSkills');skills.innerHTML="";
  let acts=[];
- if(path.includes("Шута")||path.includes("Шут")) acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
- else if(path.includes("Тирана")) acts=[["sailor_hit","👊 Удар",cds.hit||0],["sailor_drink","🍺 Перепить",cds.drink||0],["sailor_pray","⛈ Молитва",cds.pray||0]];
- else if(path.includes("Жреца")) acts=[["hunter_dagger","🗡️ Кинжал",cds.dagger||0],["hunter_trap","🪤 Ловушка",cds.trap||0],["hunter_boost","💪 Усиление",cds.boost||0]];
- else acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
+ if(path.includes("Шута")||path.includes("Шут")){
+  acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
+ } else if(path.includes("Тирана")){
+  acts=[["sailor_hit","👊 Удар",cds.hit||0],["sailor_drink","🍺 Перепить",cds.drink||0],["sailor_pray","⛈ Молитва",cds.pray||0]];
+ } else if(path.includes("Жреца")||path.includes("Красного")){
+  acts=[["hunter_dagger","🗡️ Кинжал",cds.dagger||0],["hunter_trap","🪤 Ловушка",cds.trap||0],["hunter_boost","💪 Усиление",cds.boost||0]];
+ } else {
+  acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
+ }
  acts.forEach(a=>{
   let b=document.createElement('div');
   let cd=a[2];
@@ -94,6 +93,7 @@ async function load(){
  if(!PROFILE_URL) await ensure();
  let r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
  let j=unwrap(await r.json());
+ PLAYER_PATH=j.path||"";
  document.getElementById('playerName').innerText=j.nickname;
  document.getElementById('playerHp').innerText=j.hp+"/"+j.max_hp;
  document.getElementById('playerHpBar').style.width=(j.hp/j.max_hp*100)+"%";
@@ -105,13 +105,13 @@ async function load(){
  document.getElementById('enemyName').innerText="⚔ "+enemy;
  document.getElementById('enemyImg').src=pics[enemy]||"./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png";
  let cds={};
- try{let s=await api({action:"battle_state"}); if(s.ok){document.getElementById('enemyHp').innerText=s.enemy_hp+"/"+s.enemy_max;document.getElementById('enemyHpBar').style.width=(s.enemy_hp/s.enemy_max*100)+"%";if(s.cds) cds=mapCdToBtn(s);}}catch(e){}
- renderSkills(j.path||"",cds);
+ try{let s=await api({action:"battle_state"}); if(s.ok){document.getElementById('enemyHp').innerText=s.enemy_hp+"/"+s.enemy_max;document.getElementById('enemyHpBar').style.width=(s.enemy_hp/s.enemy_max*100)+"%";if(s.cds) cds=s.cds;}}catch(e){}
+ renderSkills(cds);
 }
 async function doBattle(m){
  let d=await api({action:"battle",move:m});
  if(d.error==="cooldown"){
-  if(d.cds) renderSkills(document.getElementById('enemyLabel').innerText,mapCdToBtn(d));
+  if(d.cds) renderSkills(d.cds);
   return;
  }
  if(d.error && d.error!=="cooldown"){return;}
@@ -121,9 +121,9 @@ async function doBattle(m){
   document.getElementById('enemyHp').innerText=d.enemy_hp+"/"+d.enemy_max;document.getElementById('enemyHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
   document.getElementById('playerHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('playerHpBar').style.width=(d.hp/d.max_hp*100)+"%";
   document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");
-  if(d.cds) renderSkills(document.getElementById('enemyLabel').innerText,mapCdToBtn(d));
+  if(d.cds) renderSkills(d.cds);
   else {
-   try{let s=await api({action:"battle_state"}); if(s.ok&&s.cds) renderSkills(document.getElementById('enemyLabel').innerText,mapCdToBtn(s));}catch(e){}
+   try{let s=await api({action:"battle_state"}); if(s.ok&&s.cds) renderSkills(s.cds);}catch(e){}
   }
  }
 }
