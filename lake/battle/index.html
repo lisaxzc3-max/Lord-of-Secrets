@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Бой — Повелитель Тайн v115</title>
+<title>Бой — Повелитель Тайн v115 Провидец</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -13,12 +13,14 @@ body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.88)),url('../I
 .card{background:rgba(22,22,26,.92);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:10px 0}
 .btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;margin:4px 0;cursor:pointer;color:#b8b5ad}
 .btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
+.btn.dis{opacity:.45;pointer-events:none}
 .vsGrid{display:grid;grid-template-columns:1fr 24px 1fr;gap:8px;align-items:center;text-align:center}
 .vsImg{width:110px;height:110px;border-radius:14px;object-fit:cover;border:1px solid #4a4a4e;background:#1a1a1e}
 .bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
 .bar i{display:block;height:100%;transition:width .3s}
 .bar.hp i{background:#5a3a3a}
 .hidden{display:none}
+.cd{font-size:9px;opacity:.6}
 </style>
 </head>
 <body>
@@ -77,10 +79,10 @@ async function load(){
  try{let s=await api({action:"battle_state"}); if(s.ok){document.getElementById('enemyHp').innerText=s.enemy_hp+"/"+s.enemy_max;document.getElementById('enemyHpBar').style.width=(s.enemy_hp/s.enemy_max*100)+"%";}}catch(e){}
  let path=j.path||"",skills=document.getElementById('battleSkills');skills.innerHTML="";
  let acts=[];
- if(path.includes("Шута")||path.includes("Шут")) acts=[["card","🃏 Карты"],["vision","👁 Ясновид."],["heal","✨ Ритуал"]];
+ if(path.includes("Шута")||path.includes("Шут")) acts=[["divination","🔮 Гадание"],["boomerang","🪃 Бумеранг"],["acting","🎭 Актёрство"]];
  else if(path.includes("Тирана")) acts=[["sailor_hit","👊 Удар"],["sailor_drink","🍺 Перепить"],["sailor_pray","⛈ Молитва"]];
  else if(path.includes("Жреца")) acts=[["hunter_dagger","🗡️ Кинжал"],["hunter_trap","🪤 Ловушка"],["hunter_boost","💪 Усиление"]];
- else acts=[["card","🃏 Карты"],["heal","✨ Ритуал"]];
+ else acts=[["divination","🔮 Гадание"],["boomerang","🪃 Бумеранг"],["acting","🎭 Актёрство"]];
  acts.forEach(a=>{let b=document.createElement('div');b.className='btn gold';b.innerText=a[1];b.onclick=()=>doBattle(a[0]);skills.appendChild(b);});
  let bb=document.createElement('div');bb.className='btn';bb.innerText='⚔ Базовая';bb.onclick=()=>doBattle('basic');skills.appendChild(bb);
  let f=document.createElement('div');f.className='btn';f.innerText='🏃 Побег';f.onclick=()=>doBattle('flee');skills.appendChild(f);
@@ -90,7 +92,8 @@ async function doBattle(m){
  if(d.type==="victory"){document.getElementById('victoryCard').classList.remove('hidden');document.getElementById('vTenge').innerText="+"+(d.tenge||1);document.getElementById('vExp').innerText="+"+(d.exp_add||1);document.getElementById('battleSkills').style.pointerEvents="none";return;}
  if(d.type==="defeat"){document.getElementById('defeatCard').classList.remove('hidden');document.getElementById('battleSkills').style.pointerEvents="none";return;}
  if(d.type==="battle"){document.getElementById('enemyHp').innerText=d.enemy_hp+"/"+d.enemy_max;document.getElementById('enemyHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";document.getElementById('playerHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('playerHpBar').style.width=(d.hp/d.max_hp*100)+"%";document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");}
- if(d.error) alert(d.error||d.text);
+ if(d.error==="dead"){alert(d.text);}
+ else if(d.error) alert(d.error);
 }
 load();
 </script>
