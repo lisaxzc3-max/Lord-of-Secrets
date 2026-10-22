@@ -1,9 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Озёра — Повелитель Тайн v118 events true pics</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Озёра — Повелитель Тайн v118 events direct</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -41,7 +40,7 @@ body{background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),url('./IMG_
 </div>
 <div id="eventCard" class="card hidden">
 <h3 id="eventTitle">Событие</h3>
-<img id="eventImg" class="eventImg" src="./TBCSECRET_secret_0668627b.png">
+<img id="eventImg" class="eventImg" src="./IMG_20261020_125409.jpg">
 <div id="eventText" style="font-size:12px;white-space:pre-wrap;line-height:1.4"></div>
 <div id="eventBtns"></div>
 </div>
@@ -61,14 +60,16 @@ async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_
 async function load(){if(!PROFILE_URL) await ensure();const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const j=unwrap(await r.json());document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('mad').innerText=j.madness;document.getElementById('exp').innerText=j.exp;if(j.dead){document.getElementById('deadBox').classList.remove('hidden');document.getElementById('deadTimer').innerText=j.dead_mmss||(Math.floor(j.dead_left/60).toString().padStart(2,'0')+":"+(j.dead_left%60).toString().padStart(2,'0'));document.getElementById('btnExplore').classList.add('dis');}else{document.getElementById('deadBox').classList.add('hidden');document.getElementById('btnExplore').classList.remove('dis');}if(j.dead){document.getElementById('regenBox').classList.remove('hidden');document.getElementById('regenTimer').innerText=document.getElementById('deadTimer').innerText;document.getElementById('regenHp').innerText=j.hp+"/"+j.max_hp;}else if(j.regen_left&&j.hp<j.max_hp){document.getElementById('regenBox').classList.remove('hidden');document.getElementById('regenTimer').innerText=j.regen_mmss;document.getElementById('regenHp').innerText=j.hp+"/"+j.max_hp;}else document.getElementById('regenBox').classList.add('hidden');}
 function setEventImage(kind){
  let img=document.getElementById('eventImg');
- let map={
-  frog: "./TBCSECRET_secret_0668627b.png",
-  chest: "./TBCSECRET_secret_adfeda88.png"
- };
- let url=map[kind]||"./IMG_20261020_125409.jpg";
  img.style.display="block";
- img.src=url;
- img.onerror=function(){ this.onerror=null; this.src="./IMG_20261020_125409.jpg"; };
+ if(kind==="frog"){
+  img.src="./TBCSECRET_secret_0668627b.png";
+  img.onerror=function(){this.onerror=null;this.src="./TBCSECRET_secret_0668627b.png";};
+ } else if(kind==="chest"){
+  img.src="./TBCSECRET_secret_adfeda88.png";
+  img.onerror=function(){this.onerror=null;this.src="./TBCSECRET_secret_adfeda88.png";};
+ } else {
+  img.src="./IMG_20261020_125409.jpg";
+ }
 }
 async function doExplore(){
  let d=await api({action:"explore_lake"});
