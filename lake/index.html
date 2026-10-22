@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Озёра — Повелитель Тайн v118 events real pics</title>
+<title>Озёра — Повелитель Тайн v118 events fix</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -40,7 +40,7 @@ body{background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),url('./IMG_
 </div>
 <div id="eventCard" class="card hidden">
 <h3 id="eventTitle">Событие</h3>
-<img id="eventImg" class="eventImg" src="./TBCSECRET_secret_0668627b.png" onerror="this.style.display='none'">
+<img id="eventImg" class="eventImg" src="./IMG_20261020_125409.jpg">
 <div id="eventText" style="font-size:12px;white-space:pre-wrap;line-height:1.4"></div>
 <div id="eventBtns"></div>
 </div>
@@ -65,9 +65,9 @@ function setEventImage(kind){
   chest: "./TBCSECRET_secret_adfeda88.png"
  };
  let url=map[kind]||"./IMG_20261020_125409.jpg";
- img.src=url;
  img.style.display="block";
- img.onerror=function(){this.style.display='none';};
+ img.src=url;
+ img.onerror=function(){ this.onerror=null; this.src="./IMG_20261020_125409.jpg"; };
 }
 async function doExplore(){
  let d=await api({action:"explore_lake"});
@@ -101,4 +101,4 @@ async function doExplore(){
 load();
 </script>
 </body>
-</html>
+ </html>
