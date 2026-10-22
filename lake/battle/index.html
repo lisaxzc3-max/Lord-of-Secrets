@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Бой — Повелитель Тайн v115 all paths</title>
+<title>Бой — Повелитель Тайн v118 all paths fixed</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -45,7 +45,7 @@ body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.88)),url('../I
 <div id="battleText" style="font-size:12px;white-space:pre-wrap;opacity:.8;margin-top:8px"></div>
 <div id="battleSkills" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px"></div>
 </div>
-<div id="victoryCard" class="card hidden"><div style="text-align:center;font-weight:800;letter-spacing:4px">◆ ПОБЕДА ◆</div><div style="text-align:center;margin:8px 0">📦 <span id="vTenge">+1</span> £ · ✨ <span id="vExp">+1</span></div><div class="btn gold" onclick="goLake()">◎ Исследовать снова</div></div>
+<div id="victoryCard" class="card hidden"><div style="text-align:center;font-weight:800;letter-spacing:4px">◆ ПОБЕДА ◆</div><div style="text-align:center;margin:8px 0">📦 <span id="vTenge">+1</span> £ · ✨ <span id="vExp">+1</span></div><div class="btn gold" onclick="exploreAgain()">🔍 Исследовать снова</div><div class="btn" onclick="goLake()">✕ Закрыть</div></div>
 <div id="defeatCard" class="card hidden" style="border-color:#6a2a2a"><div style="text-align:center;font-weight:800;color:#ef4444">◆ ПОРАЖЕНИЕ ◆</div><div style="text-align:center;font-size:12px">💀 10:00 до воскрешения</div><div class="btn" onclick="goLake()">← К Озёрам</div></div>
 </div>
 <script>
@@ -60,6 +60,17 @@ function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 const pics={"Утопленник":"./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png","Жаба":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"};
 let PLAYER_PATH="";
 function goLake(){location.href="../index.html"+location.search;}
+function exploreAgain(){
+ api({action:"explore_lake"}).then(d=>{
+  if(d.ok&&d.type==="battle"){
+   let suffix=location.search.includes("?")?"&"+location.search.slice(1):"";
+   location.href="./index.html?enemy="+encodeURIComponent(d.enemy)+suffix;
+  } else if(d.ok&&d.type==="event"){alert(d.text);goLake();}
+  else if(d.error==="dead"){alert(d.text);goLake();}
+  else if(d.error==="cooldown"){alert("⌛ "+d.left+"с");}
+  else if(d.error){goLake();}
+ }).catch(()=>goLake());
+}
 document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
 async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
 async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
@@ -67,6 +78,7 @@ function renderSkills(cds){
  let path=PLAYER_PATH||"";
  let skills=document.getElementById('battleSkills');skills.innerHTML="";
  let acts=[];
+ // строго по пути — без пересечений
  if(path.includes("Шута")||path.includes("Шут")){
   acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
  } else if(path.includes("Тирана")){
@@ -110,10 +122,7 @@ async function load(){
 }
 async function doBattle(m){
  let d=await api({action:"battle",move:m});
- if(d.error==="cooldown"){
-  if(d.cds) renderSkills(d.cds);
-  return;
- }
+ if(d.error==="cooldown"){if(d.cds) renderSkills(d.cds);return;}
  if(d.error && d.error!=="cooldown"){return;}
  if(d.type==="victory"){document.getElementById('victoryCard').classList.remove('hidden');document.getElementById('vTenge').innerText="+"+(d.tenge||1);document.getElementById('vExp').innerText="+"+(d.exp_add||1);document.getElementById('battleSkills').style.pointerEvents="none";return;}
  if(d.type==="defeat"){document.getElementById('defeatCard').classList.remove('hidden');document.getElementById('battleSkills').style.pointerEvents="none";return;}
@@ -122,9 +131,7 @@ async function doBattle(m){
   document.getElementById('playerHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('playerHpBar').style.width=(d.hp/d.max_hp*100)+"%";
   document.getElementById('battleText').innerText=(d.log||"")+" "+(d.e_log||"");
   if(d.cds) renderSkills(d.cds);
-  else {
-   try{let s=await api({action:"battle_state"}); if(s.ok&&s.cds) renderSkills(s.cds);}catch(e){}
-  }
+  else {try{let s=await api({action:"battle_state"}); if(s.ok&&s.cds) renderSkills(s.cds);}catch(e){}}
  }
 }
 load();
