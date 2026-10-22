@@ -1,9 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Озёра — Повелитель Тайн v115</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Озёра — Повелитель Тайн v118 events</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -11,10 +10,9 @@ body{background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),url('./IMG_
 .wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
 .head{padding:10px 0;display:flex;gap:10px;align-items:center}
 .head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
-.card{background:rgba(22,22,26,.88);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
+.card{background:rgba(22,22,26,.90);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
 .btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:12px;text-align:center;margin:6px 0;cursor:pointer;color:#b8b5ad}
 .btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
-.btn.big{padding:16px;font-size:16px;border-radius:14px}
 .btn.dis{opacity:.45;pointer-events:none}
 .timerRow{display:flex;gap:8px;margin:8px 0}
 .timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
@@ -24,6 +22,7 @@ body{background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),url('./IMG_
 .bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
 .bar i{display:block;height:100%}
 .bar.hp i{background:#5a3a3a}
+.eventImg{width:100%;height:180px;border-radius:12px;object-fit:cover;border:1px solid #3a3a3e;background:#1a1a1e;display:block;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -37,9 +36,14 @@ body{background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),url('./IMG_
 <div style="font-size:12px">❤️ <span id="hp">-</span> · 🌀 <span id="mad">-</span>% · ⭐ <span id="exp">-</span></div>
 <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
 <div class="btn gold big" id="btnExplore" onclick="doExplore()">🔍 Исследовать берег</div>
-<div style="font-size:11px;opacity:.6;text-align:center">Жабы · Утопцы · Лягушка · Сундук → уходит в battle/</div>
+<div style="font-size:11px;opacity:.6;text-align:center">Жаба · Утопленник · события 🐸 📦 — 30% шанс</div>
 </div>
-<div id="eventCard" class="card hidden"><h3 id="eventTitle">Событие</h3><div id="eventText" style="font-size:13px;white-space:pre-wrap"></div><div id="eventBtns"></div></div>
+<div id="eventCard" class="card hidden">
+<h3 id="eventTitle">Событие</h3>
+<img id="eventImg" class="eventImg" src="./IMG_20261020_125409.jpg" onerror="this.style.display='none'">
+<div id="eventText" style="font-size:12px;white-space:pre-wrap;line-height:1.4"></div>
+<div id="eventBtns"></div>
+</div>
 </div>
 <script>
 const tg=Telegram.WebApp;tg.ready();tg.expand();
@@ -54,12 +58,44 @@ document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById(
 async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
 async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
 async function load(){if(!PROFILE_URL) await ensure();const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const j=unwrap(await r.json());document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";document.getElementById('mad').innerText=j.madness;document.getElementById('exp').innerText=j.exp;if(j.dead){document.getElementById('deadBox').classList.remove('hidden');document.getElementById('deadTimer').innerText=j.dead_mmss||(Math.floor(j.dead_left/60).toString().padStart(2,'0')+":"+(j.dead_left%60).toString().padStart(2,'0'));document.getElementById('btnExplore').classList.add('dis');}else{document.getElementById('deadBox').classList.add('hidden');document.getElementById('btnExplore').classList.remove('dis');}if(j.dead){document.getElementById('regenBox').classList.remove('hidden');document.getElementById('regenTimer').innerText=document.getElementById('deadTimer').innerText;document.getElementById('regenHp').innerText=j.hp+"/"+j.max_hp;}else if(j.regen_left&&j.hp<j.max_hp){document.getElementById('regenBox').classList.remove('hidden');document.getElementById('regenTimer').innerText=j.regen_mmss;document.getElementById('regenHp').innerText=j.hp+"/"+j.max_hp;}else document.getElementById('regenBox').classList.add('hidden');}
+function setEventImage(kind){
+ let img=document.getElementById('eventImg');
+ let map={
+  frog: "./frog.jpg",
+  chest: "./chest.jpg"
+ };
+ let url=map[kind]||"./IMG_20261020_125409.jpg";
+ img.src=url;
+ img.style.display="block";
+ img.onerror=function(){this.style.display='none';};
+}
 async function doExplore(){
  let d=await api({action:"explore_lake"});
  if(d.error==="dead"){alert(d.text);await load();return;}
  if(d.error==="cooldown"){alert("⌛ Подожди "+d.left+"с");return;}
- if(d.type==="battle"){let suffix=location.search ? "&"+location.search.slice(1) : "";location.href="battle/index.html?enemy="+encodeURIComponent(d.enemy)+suffix;return;}
- if(d.type==="event"){document.getElementById('eventCard').classList.remove('hidden');document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Царевна":"📦 Сундук";document.getElementById('eventText').innerText=d.text;let box=document.getElementById('eventBtns');box.innerHTML="";d.actions.forEach(a=>{let b=document.createElement('div');b.className='btn gold';b.innerText=a.label;b.onclick=async()=>{let r=await api({action:"event_choice",move:a.id});alert(r.text);document.getElementById('eventCard').classList.add('hidden');load();};box.appendChild(b);});return;}
+ if(d.type==="battle"){
+  let suffix=location.search ? "&"+location.search.slice(1) : "";
+  location.href="battle/index.html?enemy="+encodeURIComponent(d.enemy)+suffix;
+  return;
+ }
+ if(d.type==="event"){
+  document.getElementById('eventCard').classList.remove('hidden');
+  document.getElementById('eventTitle').innerText=d.event==="frog"?"🐸 Царевна-жаба":"📦 Сундук в омуте";
+  document.getElementById('eventText').innerText=d.text;
+  setEventImage(d.event==="frog"?"frog":"chest");
+  let box=document.getElementById('eventBtns');box.innerHTML="";
+  d.actions.forEach(a=>{
+   let b=document.createElement('div');b.className='btn gold';b.innerText=a.label;
+   b.onclick=async()=>{
+    let r=await api({action:"event_choice",move:a.id});
+    document.getElementById('eventText').innerText=r.text;
+    setEventImage(r.image|| (a.id.includes("frog")?"frog":"chest"));
+    box.innerHTML='<div class="btn" onclick="document.getElementById(\'eventCard\').classList.add(\'hidden\');load();">Закрыть</div>';
+   };
+   box.appendChild(b);
+  });
+  return;
+ }
  if(d.error) alert(d.error);
 }
 load();
