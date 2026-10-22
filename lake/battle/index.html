@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Бой — Повелитель Тайн v118 all paths fixed</title>
+<title>Бой — Повелитель Тайн v118 escape fix</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
@@ -65,8 +65,11 @@ function exploreAgain(){
   if(d.ok&&d.type==="battle"){
    let suffix=location.search.includes("?")?"&"+location.search.slice(1):"";
    location.href="./index.html?enemy="+encodeURIComponent(d.enemy)+suffix;
-  } else if(d.ok&&d.type==="event"){alert(d.text);goLake();}
-  else if(d.error==="dead"){alert(d.text);goLake();}
+  } else if(d.ok&&d.type==="event"){
+   location.href="../index.html"+location.search;
+   // озеро покажет ивент с картинкой
+   setTimeout(()=>{},300);
+  } else if(d.error==="dead"){alert(d.text);goLake();}
   else if(d.error==="cooldown"){alert("⌛ "+d.left+"с");}
   else if(d.error){goLake();}
  }).catch(()=>goLake());
@@ -78,7 +81,6 @@ function renderSkills(cds){
  let path=PLAYER_PATH||"";
  let skills=document.getElementById('battleSkills');skills.innerHTML="";
  let acts=[];
- // строго по пути — без пересечений
  if(path.includes("Шута")||path.includes("Шут")){
   acts=[["divination","🔮 Гадание",cds.divination||0],["boomerang","🪃 Бумеранг",cds.boomerang||0],["acting","🎭 Актёрство",cds.acting||0]];
  } else if(path.includes("Тирана")){
@@ -121,11 +123,17 @@ async function load(){
  renderSkills(cds);
 }
 async function doBattle(m){
+ if(m==="flee"){
+  let d=await api({action:"battle",move:"flee"});
+  goLake();
+  return;
+ }
  let d=await api({action:"battle",move:m});
  if(d.error==="cooldown"){if(d.cds) renderSkills(d.cds);return;}
  if(d.error && d.error!=="cooldown"){return;}
  if(d.type==="victory"){document.getElementById('victoryCard').classList.remove('hidden');document.getElementById('vTenge').innerText="+"+(d.tenge||1);document.getElementById('vExp').innerText="+"+(d.exp_add||1);document.getElementById('battleSkills').style.pointerEvents="none";return;}
  if(d.type==="defeat"){document.getElementById('defeatCard').classList.remove('hidden');document.getElementById('battleSkills').style.pointerEvents="none";return;}
+ if(d.type==="flee"){goLake();return;}
  if(d.type==="battle"){
   document.getElementById('enemyHp').innerText=d.enemy_hp+"/"+d.enemy_max;document.getElementById('enemyHpBar').style.width=(d.enemy_hp/d.enemy_max*100)+"%";
   document.getElementById('playerHp').innerText=d.hp+"/"+d.max_hp;document.getElementById('playerHpBar').style.width=(d.hp/d.max_hp*100)+"%";
