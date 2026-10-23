@@ -4,208 +4,310 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Профиль — Повелитель Тайн</title>
+<title>Профиль — Повелитель Тайн v118</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Inter, Arial, sans-serif;
-}
-body {
-  min-height: 100vh;
-  color: #b8b5ad;
-  background:
-    linear-gradient(rgba(10,10,14,.78), rgba(10,10,14,.94)),
-    url('../i-72.jpeg') center/cover fixed no-repeat,
-    #0a0a0e;
-}
-.wrap {
-  max-width: 440px;
-  margin: 0 auto;
-  padding: 10px 10px 60px;
-}
-.head {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 10px 0;
-}
-.head a {
-  color: #b8b5ad;
-  text-decoration: none;
-  border: 1px solid #3a3a3e;
-  border-radius: 8px;
-  padding: 7px 10px;
-  font-size: 13px;
-}
-.head b {
-  color: #d4d0c3;
-  font-size: 15px;
-}
-.uid {
-  margin-left: auto;
-  font-size: 11px;
-  opacity: .6;
-}
-.card {
-  background: rgba(22,22,26,.90);
-  border: 1px solid #3a3a3e;
-  border-radius: 16px;
-  padding: 14px;
-  margin: 8px 0;
-}
-h1 {
-  color: #d4d0c3;
-  font-size: 19px;
-  margin-bottom: 8px;
-}
-h2 {
-  color: #d4d0c3;
-  font-size: 15px;
-  margin-bottom: 10px;
-}
-p {
-  font-size: 12px;
-  line-height: 1.6;
-  opacity: .8;
-}
-.stat {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid #303035;
-  font-size: 13px;
-}
-.stat:last-child {
-  border-bottom: 0;
-}
-.stat span:last-child {
-  color: #d4d0c3;
-  text-align: right;
-}
-.btn {
-  display: block;
-  width: 100%;
-  border: 1px solid #49464a;
-  background: rgba(38,38,42,.92);
-  border-radius: 10px;
-  padding: 12px;
-  margin-top: 10px;
-  color: #d4d0c3;
-  text-align: center;
-  text-decoration: none;
-  font-size: 13px;
-  cursor: pointer;
-}
-.btn:active {
-  background: #343138;
-}
-.note {
-  font-size: 11px;
-  opacity: .55;
-  margin-top: 10px;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
+body{background:linear-gradient(rgba(10,10,14,.78),rgba(10,10,14,.94)),url('../i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
+.head{padding:10px 0;display:flex;gap:10px;align-items:center}
+.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
+.card{background:rgba(22,22,26,.90);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
+.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;margin:6px 0;cursor:pointer;color:#b8b5ad}
+.btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
+.btn.sm{padding:6px 10px;font-size:12px;min-width:36px}
+.btn.dis{opacity:.35;pointer-events:none}
+.btn:active{transform:scale(.97)}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:4px 0;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar.hp i{background:#5a3a3a}
+.bar.exp i{background:#6a6560}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stat{border:1px solid #2a2a2e;border-radius:10px;padding:8px;background:rgba(28,28,32,.85);text-align:center}
+.statRow{display:flex;justify-content:space-between;align-items:center;border:1px solid #2a2a2e;border-radius:10px;padding:8px;margin:4px 0;background:rgba(28,28,32,.85)}
+.hidden{display:none}
+.skill{border:1px solid #2a2a2e;border-radius:12px;padding:10px;margin:6px 0;background:rgba(28,28,32,.75)}
+.skill b{color:#d4d0c3}
+.badge{float:right;font-size:9px;border:1px solid #3a3a3e;border-radius:6px;padding:1px 5px;opacity:.7}
+.passive{border:1px dashed #4a4a4e;background:rgba(40,36,28,.75)}
+.titleRow{display:flex;justify-content:space-between;align-items:center}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="head">
-    <a id="backHome" href="../index.html">← Зал</a>
-    <b>𓂀 Профиль</b>
-    <a id="homeButton" href="../home/index.html">🏠 Дом</a>
-    <span class="uid">UID <span id="uid">-</span></span>
-  </div>
+<div class="head">
+  <a id="backHome" href="../index.html">← Зал</a>
+  <b>𓂀 Профиль</b>
+  <a id="homeButton" href="../home/index.html">🏠 Дом</a>
+  <span style="margin-left:auto;font-size:11px;opacity:.6">UID <span id="uid">-</span></span>
+</div>
 
-  <div class="card">
-    <h1 id="playerName">Путник</h1>
-    <p>Личный профиль. Здесь будут отображаться сведения о твоём персонаже.</p>
-  </div>
+<div class="card">
+<div style="display:flex;gap:10px;align-items:center">
+<div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:20px">𓂀</div>
+<div style="flex:1">
+<div style="font-size:13px"><b id="nick">-</b> · Ур.<span id="lvl">-</span> <span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">-</span></div>
+<div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
+<div style="font-size:11px">❤️ <span id="hp">-</span> · £ <span id="pounds">-</span> · ⭐ <span id="exp">-</span></div>
+<div class="bar exp"><i id="expbar" style="width:0%"></i></div>
+</div>
+</div>
+<div style="text-align:center;margin-top:6px;font-size:11px;opacity:.6">🛡 Тело <span id="s_con_top">-</span> · 🎯 Очков <span id="pts_top">0</span></div>
+</div>
 
-  <div class="card">
-    <h2>📜 Сведения</h2>
-    <div class="stat">
-      <span>Имя</span>
-      <span id="nameValue">-</span>
-    </div>
-    <div class="stat">
-      <span>Telegram ID</span>
-      <span id="telegramId">-</span>
-    </div>
-    <div class="stat">
-      <span>Статус</span>
-      <span>Путник</span>
-    </div>
-  </div>
+<div class="btn gold" onclick="toggleStats()">📊 Статы ▾ <span id="ptsBadge" style="font-size:10px;opacity:.7"></span></div>
+<div id="statsBox" class="card hidden">
+<div class="titleRow"><b>Характеристики</b><span style="font-size:11px;opacity:.6">Очков: <span id="pts">0</span></span></div>
+<div id="statsList"></div>
+<div style="font-size:10px;opacity:.5;margin-top:4px">5 очков за уровень `1→5`. Кнопка `+` активна пока есть очки. `Тело` сразу меняет `max HP`.</div>
+</div>
 
-  <div class="card">
-    <h2>🏠 Твоё владение</h2>
-    <p>Посети свой дом. В будущем здесь появятся помещения и возможности для развития.</p>
-    <a class="btn" id="openHome" href="../home/index.html">🏠 Перейти в дом</a>
-  </div>
+<div class="btn gold" onclick="toggleSkills()">📜 Навыки ▾</div>
+<div id="skillsBox" class="card hidden">
+<div class="titleRow"><b id="skillsTitle">Навыки пути</b><span id="skillsPath" style="font-size:10px;opacity:.6"></span></div>
+<div id="skillsList"></div>
+</div>
 
-  <div class="card">
-    <h2>⚙️ Действия</h2>
-    <button class="btn" id="refreshButton" type="button">↻ Обновить профиль</button>
-    <p class="note">Некоторые игровые характеристики пока не подключены.</p>
-  </div>
-
+<div class="card">
+<div style="font-size:11px;opacity:.6;text-align:center">⚙️ Настройки → `settings/` · смена ника везде и смена пути сброс `lvl1`</div>
+</div>
 </div>
 
 <script>
-(function () {
-  const tg = window.Telegram && window.Telegram.WebApp;
+const tg=Telegram.WebApp;
+tg.ready();
+tg.expand();
 
-  if (tg) {
-    tg.ready();
-    tg.expand();
+const qs=new URLSearchParams(location.search);
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
+document.getElementById('uid').innerText=uid;
+
+let p_enc=qs.get("p_enc")||qs.get("p")||"";
+let a_enc=qs.get("a_enc")||qs.get("a")||"";
+
+let PROFILE_URL=p_enc
+  ?"https://api.telebotcreator.com/new-webhook?data="+p_enc
+  :"";
+
+let ACTION_URL=a_enc
+  ?"https://api.telebotcreator.com/new-webhook?data="+a_enc
+  :"";
+
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+
+function unwrap(j){
+  return j&&j.result&&typeof j.result==='object'?j.result:j;
+}
+
+/* Навигация: зал и дом сохраняют параметры пользователя */
+document.addEventListener('DOMContentLoaded',()=>{
+  let a=document.getElementById('backHome');
+  if(a) a.href="../index.html"+location.search;
+
+  let h=document.getElementById('homeButton');
+  if(h) h.href="../home/index.html"+location.search;
+});
+
+async function ensure(){
+  if(PROFILE_URL&&ACTION_URL) return true;
+
+  const r=await fetch(HANDSHAKE,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user_id:String(uid)})
+  });
+
+  const j=unwrap(await r.json());
+  PROFILE_URL=j.profile_url;
+  ACTION_URL=j.action_url;
+  return true;
+}
+
+async function api(p){
+  if(!ACTION_URL) await ensure();
+
+  const r=await fetch(ACTION_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(p)
+  });
+
+  return unwrap(await r.json());
+}
+
+function toggleStats(){
+  document.getElementById('statsBox').classList.toggle('hidden');
+}
+
+function toggleSkills(){
+  document.getElementById('skillsBox').classList.toggle('hidden');
+}
+
+let CUR={};
+
+function renderStats(j){
+  CUR=j;
+
+  document.getElementById('pts').innerText=j.stat_points;
+  document.getElementById('pts_top').innerText=j.stat_points;
+  document.getElementById('s_con_top').innerText=j.con;
+
+  document.getElementById('ptsBadge').innerText=
+    j.stat_points>0?" · +"+j.stat_points:"";
+
+  let box=document.getElementById('statsList');
+  let has=j.stat_points>0;
+
+  box.innerHTML=`
+    <div class="statRow">
+      <div>⚔ Сила <b>${j.str}</b></div>
+      <div class="btn sm ${has?'gold':''} ${has?'':'dis'}" onclick="addStat('str')">+</div>
+    </div>
+    <div class="statRow">
+      <div>🏃 Ловкость <b>${j.agi}</b></div>
+      <div class="btn sm ${has?'gold':''} ${has?'':'dis'}" onclick="addStat('agi')">+</div>
+    </div>
+    <div class="statRow">
+      <div>🧠 Интеллект <b>${j.int}</b></div>
+      <div class="btn sm ${has?'gold':''} ${has?'':'dis'}" onclick="addStat('int')">+</div>
+    </div>
+    <div class="statRow">
+      <div>✨ Дух <b>${j.spi}</b></div>
+      <div class="btn sm ${has?'gold':''} ${has?'':'dis'}" onclick="addStat('spi')">+</div>
+    </div>
+    <div class="statRow">
+      <div>🛡 Тело <b>${j.con}</b></div>
+      <div class="btn sm ${has?'gold':''} ${has?'':'dis'}" onclick="addStat('con')">+</div>
+    </div>
+  `;
+}
+
+async function addStat(s){
+  let d=await api({action:"addstat",stat:s});
+
+  if(!d.ok){
+    alert(d.error);
+    return;
   }
 
-  const params = new URLSearchParams(location.search);
-  const user = tg && tg.initDataUnsafe
-    ? tg.initDataUnsafe.user
-    : null;
+  await loadProfile();
+}
 
-  const uidFromUrl =
-    params.get('uid') ||
-    params.get('user_id') ||
-    params.get('id');
+function renderSkills(path){
+  let box=document.getElementById('skillsList');
+  let title=document.getElementById('skillsTitle');
+  let sub=document.getElementById('skillsPath');
 
-  const userId = user && user.id
-    ? String(user.id)
-    : (uidFromUrl || '-');
+  box.innerHTML="";
 
-  const userName = user
-    ? [user.first_name, user.last_name].filter(Boolean).join(' ')
-    : (params.get('name') || 'Путник');
+  if(path.includes("Шута")||path.includes("Шут")){
+    title.innerText="𓂀 Провидец — Путь Шута";
+    sub.innerText="3 навыка + пассивка";
 
-  document.getElementById('uid').textContent = userId;
-  document.getElementById('telegramId').textContent = userId;
-  document.getElementById('playerName').textContent = userName;
-  document.getElementById('nameValue').textContent = userName;
+    box.innerHTML=`
+      <div class="skill">
+        <div><b>🔮 Гадание</b> <span class="badge">КД 2</span></div>
+        <div style="font-size:11px;opacity:.8;margin-top:4px">Уклонение 2 хода.</div>
+      </div>
+      <div class="skill">
+        <div><b>🪃 Бумажный бумеранг</b> <span class="badge">КД 3</span></div>
+        <div style="font-size:11px;opacity:.8;margin-top:4px">6 урона + 3 при возврате (+30% силы).</div>
+      </div>
+      <div class="skill">
+        <div><b>🎭 Актёрское мастерство</b> <span class="badge">КД 1</span></div>
+        <div style="font-size:11px;opacity:.8;margin-top:4px">-25% атаки/защиты врага 1 ход.</div>
+      </div>
+      <div class="skill passive">
+        <div><b>👁 Предчувствие опасности</b></div>
+        <div style="font-size:11px;opacity:.8">Уклон первой атаки в бою.</div>
+      </div>
+    `;
+  }else if(path.includes("Тирана")){
+    title.innerText="⚔ Матрос — Путь Тирана";
+    sub.innerText="3 навыка + пассивка";
 
-  const query = location.search;
+    box.innerHTML=`
+      <div class="skill">
+        <div><b>👊 Сильный удар</b> <span class="badge">КД 2</span></div>
+        <div style="font-size:11px;opacity:.8">10 (+40% силы).</div>
+      </div>
+      <div class="skill">
+        <div><b>🍺 Перепить</b> <span class="badge">КД 3</span></div>
+        <div style="font-size:11px;opacity:.8">Сон врага 2 хода.</div>
+      </div>
+      <div class="skill">
+        <div><b>😡 Гнев</b> <span class="badge">КД 2</span></div>
+        <div style="font-size:11px;opacity:.8">Сила и ловк x2 1 ход.</div>
+      </div>
+      <div class="skill passive">
+        <div><b>🛡 Чешуя под кожей</b></div>
+        <div style="font-size:11px;opacity:.8">+30 HP к max.</div>
+      </div>
+    `;
+  }else if(path.includes("Жреца")||path.includes("Красного")){
+    title.innerText="🏹 Охотник — Путь Красного";
+    sub.innerText="3 навыка + пассивка";
 
-  document.getElementById('backHome').href =
-    '../index.html' + query;
+    box.innerHTML=`
+      <div class="skill">
+        <div><b>🔥 Берсерк</b> <span class="badge">КД 2</span></div>
+        <div style="font-size:11px;opacity:.8">+100% силы -25HP 10 (+50% атаки) 1 ход.</div>
+      </div>
+      <div class="skill">
+        <div><b>🪤 Ловушка</b> <span class="badge">КД 3</span></div>
+        <div style="font-size:11px;opacity:.8">Оглуш 2 хода.</div>
+      </div>
+      <div class="skill">
+        <div><b>😤 Провокация</b> <span class="badge">КД 1</span></div>
+        <div style="font-size:11px;opacity:.8">-25% меткости 2 хода, только атаки.</div>
+      </div>
+      <div class="skill passive">
+        <div><b>🎯 Слабые места</b></div>
+        <div style="font-size:11px;opacity:.8">Первый урон x2.</div>
+      </div>
+    `;
+  }else{
+    title.innerText="Выбери путь";
+    sub.innerText="—";
 
-  document.getElementById('homeButton').href =
-    '../home/index.html' + query;
+    box.innerHTML=`
+      <div style="font-size:12px;opacity:.6;text-align:center;padding:10px">
+        Путь не выбран.
+      </div>
+    `;
+  }
+}
 
-  document.getElementById('openHome').href =
-    '../home/index.html' + query;
+async function loadProfile(){
+  if(!PROFILE_URL) await ensure();
 
-  document.getElementById('refreshButton').addEventListener(
-    'click',
-    function () {
-      location.reload();
-    }
-  );
-})();
+  const r=await fetch(PROFILE_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:"{}"
+  });
+
+  const j=unwrap(await r.json());
+
+  document.getElementById('nick').innerText=j.nickname;
+  document.getElementById('lvl').innerText=j.level;
+  document.getElementById('path').innerText=j.path;
+  document.getElementById('hp').innerText=j.hp+"/"+j.max_hp;
+  document.getElementById('hpbar').style.width=(j.hp/j.max_hp*100)+"%";
+  document.getElementById('pounds').innerText=j.pounds;
+  document.getElementById('exp').innerText=j.exp;
+
+  let need=j.level<5?(10*(2**(j.level-1))):1;
+
+  document.getElementById('expbar').style.width=
+    Math.min(100,j.exp/need*100)+"%";
+
+  renderStats(j);
+  renderSkills(j.path||"");
+}
+
+setTimeout(loadProfile,500);
 </script>
 </body>
 </html>
