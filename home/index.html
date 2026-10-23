@@ -63,10 +63,17 @@ body {
   margin: 8px 0;
   color: #d4d0c3;
   font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .btn:disabled {
   opacity: .8;
+  cursor: not-allowed;
+}
+
+.btn:active {
+  transform: scale(.98);
 }
 
 h1 {
@@ -85,6 +92,7 @@ p {
 
 <body>
 <div class="wrap">
+
   <div class="head">
     <a id="backProfile" href="../profileprofile/index.html">← Профиль</a>
     <b>🏠 Дом</b>
@@ -99,6 +107,7 @@ p {
   </div>
 
   <div class="card" aria-label="Помещения дома">
+
     <button class="btn" type="button" disabled>
       🧪 Лаборатория
     </button>
@@ -107,9 +116,10 @@ p {
       🐾 Вольер
     </button>
 
-    <button class="btn" type="button" disabled>
+    <a class="btn" id="farmButton" href="../farm/index.html">
       🌾 Ферма
-    </button>
+    </a>
+
   </div>
 </div>
 
@@ -123,8 +133,10 @@ p {
   }
 
   const link = document.getElementById("backProfile");
-
   link.href = "../profileprofile/index.html" + location.search;
+
+  const farmButton = document.getElementById("farmButton");
+  farmButton.href = "../farm/index.html" + location.search;
 })();
 </script>
 </body>
