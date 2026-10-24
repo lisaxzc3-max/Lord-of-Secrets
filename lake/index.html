@@ -4,315 +4,117 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080b0f">
-<title>Озёра · Топи | Повелитель Тайн</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Озёра · Топи</title>
+
 <style>
-*{box-sizing:border-box}
-:root{color-scheme:dark;--panel:rgba(22,22,27,.94);--line:#403c46;--text:#ded9d0;--muted:#9b96a2;--gold:#d4b579;--danger:#d86d73;--success:#71b98c}
-body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-serif;background:#080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat}
-body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(#090c11aa,#09090df2)}
-button,a{-webkit-tap-highlight-color:transparent}
-button{font:inherit}
-.wrap{max-width:480px;margin:auto;padding:12px 12px calc(32px + env(safe-area-inset-bottom))}
-.head{display:flex;align-items:center;gap:11px;padding:8px 0 14px}
-.back{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#19181de8;white-space:nowrap}
-.heading{font-size:16px;font-weight:800}
-.subheading{font-size:10px;letter-spacing:2px;color:var(--gold);margin-top:3px}
-.card{border:1px solid var(--line);border-radius:17px;padding:15px;background:var(--panel);box-shadow:0 10px 28px #0003;margin-bottom:12px}
-.stats{font-size:13px;line-height:1.7}
-.bar{height:7px;background:#333039;border-radius:9px;overflow:hidden;margin:8px 0 13px}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9a4747,#d66d6d);transition:width .25s}
-.button{display:block;width:100%;padding:14px 12px;margin-top:9px;border:1px solid #5b4b36;border-radius:11px;background:linear-gradient(135deg,#51442f,#302832);color:#e7d5ae;font-weight:800;cursor:pointer}
-.button:disabled{opacity:.55;cursor:wait}
-.button.secondary{background:#242229;border-color:var(--line);color:var(--text)}
-.note{text-align:center;font-size:11px;color:var(--muted);line-height:1.6;margin-top:12px}
-.timerRow{display:flex;gap:8px;margin-bottom:10px}
-.timerBox{flex:1;padding:10px;border:1px solid var(--line);border-radius:11px;background:#17151bea}
-.timerBox.dead{border-color:#743c43}
-.timerBox.regen{border-color:#376544}
-.timerTitle{font-size:10px;color:var(--muted);margin-top:3px}
-.hidden{display:none!important}
-.error{margin-top:12px;padding:11px;border:1px solid #783b42;border-radius:10px;color:#f0a3a3;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.5}
-.message{margin-top:10px;font-size:12px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+  --panel: rgba(22,22,27,.94);
+  --line: #403c46;
+  --text: #ded9d0;
+  --gold: #d4b579;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font: 14px Inter, Arial, sans-serif;
+  background: #080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(#090c11aa, #09090df2);
+}
+
+.wrap {
+  max-width: 480px;
+  margin: auto;
+  padding: 12px 12px 32px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 8px 0 14px;
+}
+
+.back {
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #19181de8;
+}
+
+.heading {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.subheading {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-top: 3px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 15px;
+  background: var(--panel);
+  box-shadow: 0 10px 28px #0003;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 14px 12px;
+  margin-top: 9px;
+  border: 1px solid #5b4b36;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #51442f, #302832);
+  color: #e7d5ae;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
 </style>
 </head>
+
 <body>
 <div class="wrap">
   <header class="head">
-    <a class="back" id="backHome" href="../index.html">← Зал</a>
+    <a class="back" href="../index.html">← Зал</a>
     <div>
       <div class="heading">🌊 Озёра · Топи</div>
       <div class="subheading">LORD OF THE MYSTERIES</div>
     </div>
   </header>
 
-  <div class="timerRow">
-    <div id="deadBox" class="timerBox dead hidden">
-      <strong>💀 <span id="deadTimer">--:--</span></strong>
-      <div class="timerTitle">Время до воскрешения</div>
-    </div>
-    <div id="regenBox" class="timerBox regen hidden">
-      <strong>🩹 <span id="regenTimer">--:--</span></strong>
-      <div class="timerTitle">Восстановление · <span id="regenHp">—</span></div>
-    </div>
-  </div>
-
   <section class="card">
-    <div class="stats">
-      ❤️ Здоровье: <span id="hp">—</span>
-      <br>🌀 Безумие: <span id="mad">—</span>%
-      · ⭐ Опыт: <span id="exp">—</span>
-    </div>
-
-    <div class="bar"><i id="hpbar"></i></div>
-
-    <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
-
-    <div id="message" class="message" aria-live="polite"></div>
-
-    <div id="errorBox" class="error hidden" role="alert">
-      <div id="errorText"></div>
-      <button class="button secondary" id="retryBtn" type="button">Повторить подключение</button>
-    </div>
+    <button class="button" id="exploreBtn" type="button">
+      🔍 Исследовать берег
+    </button>
   </section>
 </div>
 
 <script>
 "use strict";
 
-const tg = window.Telegram?.WebApp || null;
-
-try {
-  tg?.ready();
-  tg?.expand();
-  tg?.setHeaderColor("#080b0f");
-} catch (_) {}
-
-const qs = new URLSearchParams(location.search);
-const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
-const pEnc = qs.get("p_enc") || qs.get("p") || "";
-const aEnc = qs.get("a_enc") || qs.get("a") || "";
-
-const HANDSHAKE =
-  "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
-
-let PROFILE_URL = pEnc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(pEnc)
-  : "";
-
-let ACTION_URL = aEnc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc)
-  : "";
-
-let handshakePromise = null;
-let profile = null;
-let deadUntil = null;
-let regenUntil = null;
-let intervalId = null;
-
-const $ = id => document.getElementById(id);
-
-function showError(message) {
-  $("errorText").textContent = message || "Не удалось подключиться.";
-  $("errorBox").classList.remove("hidden");
-}
-
-function hideError() {
-  $("errorBox").classList.add("hidden");
-}
-
-function setMessage(text) {
-  $("message").textContent = text || "";
-}
-
-function unwrap(value) {
-  let out = value;
-
-  for (let i = 0; i < 4 && out && typeof out === "object" && "result" in out; i++) {
-    out = out.result;
-  }
-
-  return out;
-}
-
-async function ensure() {
-  if (PROFILE_URL && ACTION_URL) return true;
-  if (handshakePromise) return handshakePromise;
-
-  handshakePromise = (async () => {
-    const resp = await fetch(HANDSHAKE, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({user_id: String(uid)}),
-      cache: "no-store"
-    });
-
-    if (!resp.ok) {
-      throw new Error("Ошибка подключения (HTTP " + resp.status + ").");
-    }
-
-    const data = unwrap(await resp.json());
-
-    const profileUrl = data?.profile_url || data?.PROFILE_URL || "";
-    const actionUrl = data?.action_url || data?.ACTION_URL || "";
-
-    if (!profileUrl || !actionUrl) {
-      throw new Error("Ссылки игрового сервера не получены.");
-    }
-
-    PROFILE_URL = String(profileUrl);
-    ACTION_URL = String(actionUrl);
-
-    return true;
-  })();
-
-  try {
-    return await handshakePromise;
-  } finally {
-    handshakePromise = null;
-  }
-}
-
-async function loadProfile() {
-  await ensure();
-
-  const response = await fetch(PROFILE_URL, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({type: "profile"}),
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
-    throw new Error("Ошибка загрузки профиля (HTTP " + response.status + ").");
-  }
-
-  const data = unwrap(await response.json());
-
-  if (!data || typeof data !== "object") {
-    throw new Error("Профиль не получен.");
-  }
-
-  return data;
-}
-
-function clampHp(hp, maxHp) {
-  const current = Number(hp);
-  const max = Number(maxHp);
-
-  if (!Number.isFinite(current) || !Number.isFinite(max) || max <= 0) {
-    return 0;
-  }
-
-  return Math.max(0, Math.min(max, current));
-}
-
-function setHpVisual(hp, maxHp) {
-  const current = clampHp(hp, maxHp);
-  const max = Number(maxHp) || 100;
-  const percent = Math.max(0, Math.min(100, current / max * 100));
-
-  $("hp").textContent = current + " / " + max;
-  $("hpbar").style.width = percent + "%";
-}
-
-function updateTimers() {
-  const now = Date.now();
-
-  if (deadUntil && now >= deadUntil) {
-    deadUntil = null;
-    $("deadBox").classList.add("hidden");
-  } else if (deadUntil) {
-    const total = Math.max(0, Math.ceil((deadUntil - now) / 1000));
-    $("deadTimer").textContent =
-      String(Math.floor(total / 60)).padStart(2, "0") + ":" +
-      String(total % 60).padStart(2, "0");
-  }
-
-  if (regenUntil && now >= regenUntil) {
-    regenUntil = null;
-    $("regenBox").classList.add("hidden");
-  } else if (regenUntil) {
-    const total = Math.max(0, Math.ceil((regenUntil - now) / 1000));
-    $("regenTimer").textContent =
-      String(Math.floor(total / 60)).padStart(2, "0") + ":" +
-      String(total % 60).padStart(2, "0");
-  }
-}
-
-function hasTrueFlag(value) {
-  return value === true || value === 1 || value === "1" || value === "true";
-}
-
-function isProfileDead(data) {
-  return hasTrueFlag(data?.dead) || hasTrueFlag(data?.dead_now);
-}
-
-function getHp(data) {
-  return data?.hp ?? data?.health ?? data?.current_hp;
-}
-
-function renderState(data) {
-  profile = Object.assign({}, profile || {}, data);
-
-  const rawHp = getHp(data) ?? getHp(profile);
-  const max = Number(data.max_hp ?? profile.max_hp ?? 100) || 100;
-  const hpKnown = rawHp !== undefined && rawHp !== null && rawHp !== "";
-  const hp = hpKnown ? clampHp(rawHp, max) : null;
-
-  if (hpKnown) {
-    setHpVisual(hp, max);
-  }
-
-  $("mad").textContent = Number(data.mad ?? profile.mad ?? 0);
-  $("exp").textContent = Number(data.exp ?? profile.exp ?? 0);
-
-  if ((hpKnown && hp <= 0) || isProfileDead(data)) {
-    const secs = Number(data.dead_after || profile.dead_after || 60);
-    deadUntil = Date.now() + secs * 1000;
-    $("deadBox").classList.remove("hidden");
-    $("deadTimer").textContent = "00:" + String(Math.max(0, secs)).padStart(2, "0");
-  } else {
-    deadUntil = null;
-    $("deadBox").classList.add("hidden");
-  }
-
-  const regenHp = Number(data.regen_hp ?? profile.regen_hp ?? 0);
-
-  if (regenHp > 0) {
-    const wait = Number(data.regen_time ?? profile.regen_time ?? 0) || 0;
-    regenUntil = Date.now() + wait * 1000;
-    $("regenBox").classList.remove("hidden");
-    $("regenHp").textContent = regenHp;
-  } else {
-    regenUntil = null;
-    $("regenBox").classList.add("hidden");
-  }
-}
-
-async function refreshLake() {
-  hideError();
-
-  try {
-    const data = await loadProfile();
-    renderState(data);
-    setMessage(data.message || "");
-  } catch (error) {
-    showError(error.message || "Не удалось загрузить профиль.");
-  }
-}
-
-function exploreLake() {
+document.getElementById("exploreBtn").addEventListener("click", function () {
   window.location.href = "./battle/index.html";
-}
-
-$("exploreBtn").addEventListener("click", exploreLake);
-$("retryBtn").addEventListener("click", refreshLake);
-
-window.addEventListener("DOMContentLoaded", () => {
-  $("backHome").href = "../index.html" + location.search;
-  intervalId = setInterval(updateTimers, 1000);
-  refreshLake();
 });
 </script>
 </body>
