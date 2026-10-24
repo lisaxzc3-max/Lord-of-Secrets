@@ -502,7 +502,7 @@ async function loadProfile() {
   const response = await fetch(PROFILE_URL, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: "{}",
+    body: JSON.stringify({type: "profile"}),
     cache: "no-store"
   });
 
@@ -1008,4 +1008,4 @@ $("retryBtn")?.addEventListener("click", () => load());
 window.addEventListener("DOMContentLoaded", load);
 </script>
 </body>
-</html>
+  </html>
