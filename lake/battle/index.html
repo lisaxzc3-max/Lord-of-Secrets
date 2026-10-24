@@ -22,7 +22,8 @@ h1{font-size:19px;margin:3px 0}
 .round{font-size:10px;color:var(--gold)}
 .fighters{display:grid;grid-template-columns:1fr 28px 1fr;gap:7px;align-items:start;margin-top:12px}
 .fighter{text-align:center;min-width:0}
-.portrait{aspect-ratio:1;border:1px solid #514653;border-radius:14px;background:radial-gradient(circle,#504050,#17151c);display:grid;place-items:center;font-size:56px;margin-bottom:8px}
+.portrait{aspect-ratio:1;border:1px solid #514653;border-radius:14px;background:radial-gradient(circle,#504050,#17151c);overflow:hidden;margin-bottom:8px;padding:4px}
+.portrait img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px}
 .fighterName{font-weight:800;font-size:13px}
 .role{font-size:10px;color:var(--muted);margin-top:3px}
 .vs{margin-top:45px;color:var(--gold);font-weight:900}
@@ -58,7 +59,8 @@ h1{font-size:19px;margin:3px 0}
 .action{border:1px solid var(--line);border-radius:10px;padding:12px;background:#29252f;color:var(--text);font-weight:700;cursor:pointer}
 .primary{background:linear-gradient(135deg,#e4ca91,#b28c4d);color:#20190f}
 .note{text-align:center;color:#827b89;font-size:10px;line-height:1.6;padding:8px}
-@media(max-width:360px){.wrap{padding:8px}.card{padding:11px}.fighters{gap:4px;grid-template-columns:1fr 20px 1fr}.fighterName{font-size:12px}.portrait{font-size:48px}}
+.rewardBox{margin:14px 0;padding:12px;border:1px solid #5d4b32;background:#211e25;border-radius:12px;color:var(--gold);font-size:13px;line-height:1.8}
+@media(max-width:360px){.wrap{padding:8px}.card{padding:11px}.fighters{gap:4px;grid-template-columns:1fr 20px 1fr}.fighterName{font-size:12px}}
 </style>
 </head>
 <body>
@@ -73,7 +75,7 @@ h1{font-size:19px;margin:3px 0}
 <div class="arenaTop"><span class="sectionLabel">ПОЛЕ БОЯ</span><span class="round" id="round">⚔ Ход 1</span></div>
 <div class="fighters">
 <div class="fighter">
-<div class="portrait">🎭</div>
+<div class="portrait"><img src="../../i-72.jpeg" alt="Портрет игрока" onerror="this.onerror=null;this.src='../../IMG_20261019_202745.jpg'"></div>
 <div class="fighterName" id="playerName">Путешественник</div>
 <div class="role">Путь Шута</div>
 <div class="hpNumbers"><span>❤️ Здоровье</span><strong id="php">100/100</strong></div>
@@ -82,7 +84,7 @@ h1{font-size:19px;margin:3px 0}
 </div>
 <div class="vs">VS</div>
 <div class="fighter">
-<div class="portrait" id="enemyIcon">🐸</div>
+<div class="portrait"><img id="enemyImage" src="./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png" alt="Монстр"></div>
 <div class="fighterName" id="enemyName">Жаба</div>
 <div class="role">Враждебная сущность</div>
 <div class="hpNumbers"><span>🩸 Здоровье</span><strong id="ehp">70/70</strong></div>
@@ -104,14 +106,18 @@ h1{font-size:19px;margin:3px 0}
 <section class="card" id="skillCard">
 <div class="skillHeader"><h2>ТВОИ ДЕЙСТВИЯ</h2><span>Путь Шута</span></div>
 <div class="skillGrid" id="skills"></div>
-<div class="sub" style="margin-top:10px">Урон, яд, оглушение и перезарядки работают в браузере. Сервер не требуется.</div>
+<div class="sub" style="margin-top:10px">Урон, яд, оглушение и перезарядки работают в браузере.</div>
 </section>
 
 <section class="card result hidden" id="result">
-<div style="font-size:36px">✦</div>
+<div style="font-size:36px" id="resultIcon">✦</div>
 <h2 id="resultTitle">ПОБЕДА</h2>
 <p id="resultText">Противник повержен.</p>
-<p id="reward"></p>
+<div class="rewardBox hidden" id="rewardBox">
+<div>✨ Получено опыта: <strong>+1</strong></div>
+<div>£ Получено фунтов: <strong>+1</strong></div>
+<div class="sub" id="totalRewards"></div>
+</div>
 <div class="actions">
 <button class="action primary" id="again">Новый бой</button>
 <button class="action" id="home">К озёрам</button>
@@ -126,16 +132,22 @@ h1{font-size:19px;margin:3px 0}
 
 const $ = id => document.getElementById(id);
 const KEY = "lotm_game_v1";
+const REWARD_KEY = "lotm_rewards_v1";
 const query = new URLSearchParams(location.search);
 
 function fresh(name) {
   const toad = /жаб|лягуш/i.test(name || "Жаба");
   return {
     player: {name:"Путешественник", hp:100, max:100, poison:0, stun:0},
-    enemy: {name:toad ? "Жаба" : "Утопленник", hp:toad ? 70 : 85, max:toad ? 70 : 85},
+    enemy: {
+      name:toad ? "Жаба" : "Утопленник",
+      hp:toad ? 70 : 85,
+      max:toad ? 70 : 85
+    },
     turn:1,
     cd:{water:0, hug:0, boom:0, divine:0, acting:0},
     ended:false,
+    rewarded:false,
     log:[],
     last:"Противник перед тобой. Выбирай действие."
   };
@@ -153,6 +165,26 @@ let s = load();
 
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {}
+}
+
+function getRewards() {
+  try {
+    const r = JSON.parse(localStorage.getItem(REWARD_KEY));
+    return {
+      exp:Math.max(0,Number(r?.exp)||0),
+      pounds:Math.max(0,Number(r?.pounds)||0)
+    };
+  } catch(e) {
+    return {exp:0,pounds:0};
+  }
+}
+
+function addRewards(exp,pounds) {
+  const r = getRewards();
+  r.exp += exp;
+  r.pounds += pounds;
+  try { localStorage.setItem(REWARD_KEY,JSON.stringify(r)); } catch(e) {}
+  return r;
 }
 
 function rnd(min,max) {
@@ -230,6 +262,11 @@ function render() {
   updateBar("p",s.player.hp,s.player.max);
   updateBar("e",s.enemy.hp,s.enemy.max);
   $("playerName").textContent = s.player.name;
+  $("enemyName").textContent = s.enemy.name;
+  $("enemyImage").src = s.enemy.name==="Жаба"
+    ? "./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"
+    : "./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png";
+  $("enemyImage").alt = s.enemy.name;
   $("round").textContent = "⚔ Ход "+s.turn;
   renderSkills();
   renderLog();
@@ -247,12 +284,6 @@ function enemyTurn() {
 
   const toad = s.enemy.name==="Жаба";
   let damage;
-
-  if(s.player.stun>0) {
-    s.player.stun--;
-    log("Оглушение не даёт тебе действовать в этот ход.","bad");
-    return;
-  }
 
   if(toad && s.cd.water===0 && Math.random()<0.55) {
     damage = rnd(10,20);
@@ -279,16 +310,30 @@ function enemyTurn() {
 }
 
 function finish(win) {
+  if(s.ended) return;
+
   s.ended = true;
   $("skillCard").classList.add("hidden");
   $("result").classList.remove("hidden");
   $("resultTitle").textContent = win ? "ПОБЕДА" : "ПОРАЖЕНИЕ";
-  $("resultText").textContent = win ? "Противник повержен. Ты получил награду." : "Здоровье иссякло. Начни новое сражение.";
-  $("reward").textContent = win ? "+10 тенге · +15 опыта" : "Награда не получена.";
+  $("resultIcon").textContent = win ? "✦" : "☠";
+  $("resultText").textContent = win
+    ? "Противник повержен. Ты получил награду."
+    : "Здоровье иссякло. Начни новое сражение.";
   $("status").textContent = win ? "Победа" : "Поражение";
 
-  if(win) log("Победа! Получено 10 тенге и 15 опыта.","good");
-  else log("Поражение. Сражение окончено.","bad");
+  if(win && !s.rewarded) {
+    s.rewarded = true;
+    const totals = addRewards(1,1);
+    $("rewardBox").classList.remove("hidden");
+    $("totalRewards").textContent =
+      "Всего в этом браузере: "+totals.exp+" опыта и "+totals.pounds+" £.";
+    log("Победа! Получено +1 опыт и +1 фунт (£).","good");
+  } else {
+    $("rewardBox").classList.add("hidden");
+  }
+
+  if(!win) log("Поражение. Сражение окончено.","bad");
 
   message(win ? "Противник повержен." : "Ты больше не можешь продолжать бой.","ИСХОД СРАЖЕНИЯ",win ? "✦" : "☠");
   save();
@@ -303,8 +348,9 @@ function turn(key) {
     $("skillCard").classList.add("hidden");
     $("result").classList.remove("hidden");
     $("resultTitle").textContent = "ОТСТУПЛЕНИЕ";
+    $("resultIcon").textContent = "🏃";
     $("resultText").textContent = "Ты покинул поле боя.";
-    $("reward").textContent = "Награда не получена.";
+    $("rewardBox").classList.add("hidden");
     $("status").textContent = "Отступление";
     log("Ты отступил и покинул поле боя.","");
     message("Ты покидаешь поле боя.","ОТСТУПЛЕНИЕ","🏃");
@@ -344,7 +390,8 @@ function turn(key) {
       log("Жаба использует пассивное умение «Скользкая кожа» и уклоняется от атаки!","bad");
     } else {
       s.enemy.hp = Math.max(0,s.enemy.hp-damage);
-      log("Ты применяешь «"+skills[key][0].replace(/^.{2}\s/,"")+"» и наносишь "+damage+" урона.","good");
+      const skillName = skills[key][0].replace(/^[^\s]+\s/,"");
+      log("Ты применяешь «"+skillName+"» и наносишь "+damage+" урона.","good");
     }
   }
 
@@ -356,7 +403,9 @@ function turn(key) {
 
   if(s.player.hp<=0) return finish(false);
 
-  message(s.player.stun ? "Утопленник оглушил тебя. В следующем раунде ты пропустишь действие." : "Ход завершён. Выбирай следующее действие.");
+  message(s.player.stun
+    ? "Утопленник оглушил тебя. В следующем раунде ты пропустишь действие."
+    : "Ход завершён. Выбирай следующее действие.");
   save();
   render();
 }
@@ -378,8 +427,6 @@ $("home").addEventListener("click",()=>location.href="../index.html");
 
 if(s.ended) s = fresh(query.get("enemy") || s.enemy.name);
 if(!s.log.length) log("Ты столкнулся с противником: "+s.enemy.name+".");
-$("enemyName").textContent = s.enemy.name;
-$("enemyIcon").textContent = s.enemy.name==="Жаба" ? "🐸" : "🧟";
 message(s.last || "Противник перед тобой. Выбирай действие.","БОЙ НАЧАЛСЯ","⚔️");
 render();
 save();
