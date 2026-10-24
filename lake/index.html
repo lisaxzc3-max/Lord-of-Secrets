@@ -90,6 +90,10 @@ body::before {
   font-weight: 800;
   cursor: pointer;
 }
+
+.button:active {
+  transform: scale(.99);
+}
 </style>
 </head>
 
@@ -114,7 +118,7 @@ body::before {
 "use strict";
 
 document.getElementById("exploreBtn").addEventListener("click", function () {
-  window.location.href = "./battle/index.html";
+  window.location.href = "./battle/index.html" + window.location.search;
 });
 </script>
 </body>
