@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
@@ -9,7 +8,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box}
-:root{color-scheme:dark;--panel:rgba(22,22,27,.94);--line:#403c46;--text:#ded9d0;--muted:#9b96a2;--gold:#d4b579}
+:root{color-scheme:dark;--panel:rgba(22,22,27,.94);--line:#403c46;--text:#ded9d0;--muted:#9b96a2;--gold:#d4b579;--danger:#d86d73;--success:#71b98c}
 body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-serif;background:#080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat}
 body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(#090c11aa,#09090df2)}
 button,a{-webkit-tap-highlight-color:transparent}
@@ -22,7 +21,7 @@ button{font:inherit}
 .card{border:1px solid var(--line);border-radius:17px;padding:15px;background:var(--panel);box-shadow:0 10px 28px #0003;margin-bottom:12px}
 .stats{font-size:13px;line-height:1.7}
 .bar{height:7px;background:#333039;border-radius:9px;overflow:hidden;margin:8px 0 13px}
-.bar i{display:block;height:100%;width:0;background:#a65353;transition:width .25s}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9a4747,#d66d6d);transition:width .25s}
 .button{display:block;width:100%;padding:14px 12px;margin-top:9px;border:1px solid #5b4b36;border-radius:11px;background:linear-gradient(135deg,#51442f,#302832);color:#e7d5ae;font-weight:800;cursor:pointer}
 .button:disabled{opacity:.55;cursor:wait}
 .button.secondary{background:#242229;border-color:var(--line);color:var(--text)}
@@ -67,9 +66,7 @@ button{font:inherit}
 
     <div class="bar"><i id="hpbar"></i></div>
 
-    <button class="button" id="exploreBtn" type="button">
-      🔍 Исследовать берег
-    </button>
+    <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
 
     <div class="note">
       В тумане можно встретить жабу, утопленника или обнаружить событие.
@@ -80,9 +77,7 @@ button{font:inherit}
 
     <div id="errorBox" class="error hidden" role="alert">
       <div id="errorText"></div>
-      <button class="button secondary" id="retryBtn" type="button">
-        Повторить подключение
-      </button>
+      <button class="button secondary" id="retryBtn" type="button">Повторить подключение</button>
     </div>
   </section>
 </div>
@@ -91,140 +86,76 @@ button{font:inherit}
 "use strict";
 
 const tg = window.Telegram?.WebApp || null;
-
-try {
-  tg?.ready();
-  tg?.expand();
-  tg?.setHeaderColor("#080b0f");
-} catch (_) {}
+try { tg?.ready(); tg?.expand(); tg?.setHeaderColor("#080b0f"); } catch (_) {}
 
 const qs = new URLSearchParams(location.search);
-const uid = String(
-  qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489"
-);
+const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
+const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 
-const pEnc = qs.get("p_enc") || qs.get("p") || "";
-const aEnc = qs.get("a_enc") || qs.get("a") || "";
-
-const HANDSHAKE =
-  "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
-
-let PROFILE_URL = pEnc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(pEnc)
-  : "";
-
-let ACTION_URL = aEnc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc)
-  : "";
-
-let busy = false;
+let PROFILE_URL = "";
+let ACTION_URL = "";
 let handshakePromise = null;
+let busy = false;
+let profile = null;
+let deadUntil = null;
+let regenUntil = null;
+let intervalId = null;
 
 const $ = id => document.getElementById(id);
 
-function unwrap(data) {
-  let result = data;
-
-  for (let i = 0; i < 3; i++) {
-    if (result && result.result && typeof result.result === "object") {
-      result = result.result;
-    } else {
-      break;
-    }
-  }
-
-  return result;
-}
-
-function setMessage(text) {
-  $("message").textContent = text || "";
-}
-
-function showError(text) {
-  $("errorText").textContent =
-    text || "Не удалось подключиться к игре.";
-
-  $("errorBox").classList.remove("hidden");
+function showError(message) {
+  const box = $("errorBox");
+  const text = $("errorText");
+  text.textContent = message || "Не удалось подключиться.";
+  box.classList.remove("hidden");
 }
 
 function hideError() {
   $("errorBox").classList.add("hidden");
 }
 
-function setBusy(value) {
-  busy = value;
-
-  $("exploreBtn").disabled =
-    value || $("exploreBtn").dataset.dead === "true";
-
-  $("exploreBtn").textContent = value
-    ? "⏳ Исследуем берег..."
-    : "🔍 Исследовать берег";
+function setMessage(text) {
+  $("message").textContent = text || "";
 }
 
-function urlWithQuery(path, removeKeys = []) {
-  const params = new URLSearchParams(location.search);
-
-  for (const key of removeKeys) {
-    params.delete(key);
+function cloneData(value) {
+  if (value === null || value === undefined) return value;
+  if (typeof value === "object") {
+    if (Array.isArray(value)) return value.map(cloneData);
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, cloneData(v)]));
   }
-
-  const query = params.toString();
-  return path + (query ? "?" + query : "");
+  return value;
 }
 
-$("backHome").href = urlWithQuery(
-  "../index.html",
-  ["event_data", "enemy"]
-);
+function unwrap(value) {
+  let out = value;
+  for (let i = 0; i < 4 && out && typeof out === "object" && "result" in out; i++) {
+    out = out.result;
+  }
+  return out;
+}
 
-async function ensureUrls() {
+async function ensure() {
   if (PROFILE_URL && ACTION_URL) return true;
   if (handshakePromise) return handshakePromise;
 
   handshakePromise = (async () => {
-    const response = await fetch(HANDSHAKE, {
+    const resp = await fetch(HANDSHAKE, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({user_id: uid}),
+      body: JSON.stringify({ user_id: uid }),
       cache: "no-store"
     });
 
-    if (!response.ok) {
-      throw new Error(
-        "Ошибка подключения к игровому серверу: HTTP " + response.status
-      );
-    }
+    if (!resp.ok) throw new Error("Не удалось подключиться к игровой системе (HTTP " + resp.status + ").");
 
-    const data = unwrap(await response.json());
+    const data = unwrap(await resp.json());
+    const profileUrl = data?.profile_url || data?.PROFILE_URL || "";
+    const actionUrl = data?.action_url || data?.ACTION_URL || "";
 
-    const profile = data?.profile_url || data?.PROFILE_URL;
-    const action = data?.action_url || data?.ACTION_URL;
-
-    if (
-      typeof profile !== "string" ||
-      typeof action !== "string" ||
-      !profile ||
-      !action
-    ) {
-      throw new Error(
-        "Сервер не вернул адреса игрового профиля и действий."
-      );
-    }
-
-    const profileUrl = new URL(profile);
-    const actionUrl = new URL(action);
-
-    if (
-      profileUrl.protocol !== "https:" ||
-      actionUrl.protocol !== "https:"
-    ) {
-      throw new Error("Сервер вернул некорректный адрес подключения.");
-    }
-
-    PROFILE_URL = profileUrl.href;
-    ACTION_URL = actionUrl.href;
-
+    if (!profileUrl || !actionUrl) throw new Error("Сервер не вернул ссылки профиля и действий.");
+    PROFILE_URL = String(profileUrl);
+    ACTION_URL = String(actionUrl);
     return true;
   })();
 
@@ -235,198 +166,201 @@ async function ensureUrls() {
   }
 }
 
-async function postJson(url, body) {
-  const response = await fetch(url, {
+async function api(payload) {
+  await ensure();
+  const response = await fetch(ACTION_URL, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
     cache: "no-store"
   });
 
-  if (!response.ok) {
-    throw new Error(
-      "Игровой сервер вернул HTTP " + response.status
-    );
-  }
-
+  if (!response.ok) throw new Error("Ошибка игрового сервера (HTTP " + response.status + ").");
   const data = unwrap(await response.json());
-
-  if (!data || typeof data !== "object") {
-    throw new Error(
-      "Игровой сервер вернул пустой или некорректный ответ."
-    );
-  }
-
-  return data;
-}
-
-async function api(payload) {
-  await ensureUrls();
-  return postJson(ACTION_URL, payload);
+  if (!data || typeof data !== "object") throw new Error("Сервер вернул некорректный ответ.");
+  return cloneData(data);
 }
 
 async function loadProfile() {
-  await ensureUrls();
-  return postJson(PROFILE_URL, {});
+  await ensure();
+  const response = await fetch(PROFILE_URL, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ type: "profile" }),
+    cache: "no-store"
+  });
+
+  if (!response.ok) throw new Error("Не удалось загрузить профиль (HTTP " + response.status + ").");
+  const data = unwrap(await response.json());
+  if (!data || typeof data !== "object") throw new Error("Профиль игрока не получен.");
+  return cloneData(data);
 }
 
-function formatTime(seconds) {
-  const value = Math.max(0, Number(seconds) || 0);
-  const minutes = Math.floor(value / 60);
-  const secs = Math.floor(value % 60);
-
-  return String(minutes).padStart(2, "0") +
-    ":" + String(secs).padStart(2, "0");
+function clampHp(hp, maxHp) {
+  const current = Number(hp);
+  const max = Number(maxHp);
+  if (!Number.isFinite(current) || !Number.isFinite(max) || max <= 0) return 0;
+  return Math.max(0, Math.min(max, current));
 }
 
-function renderProfile(profile) {
-  const hp = Number(profile.hp ?? 0);
-  const maxHp = Math.max(1, Number(profile.max_hp ?? 50));
-  const madness = Number(profile.madness ?? 0);
-  const exp = Number(profile.exp ?? 0);
+function setHpVisual(hp, maxHp) {
+  const current = clampHp(hp, maxHp);
+  const max = Number(maxHp) || 1;
+  const percent = Math.max(0, Math.min(100, (current / max) * 100));
+  $("hp").textContent = current + " / " + max;
+  $("hpbar").style.width = percent + "%";
+}
 
-  $("hp").textContent = hp + "/" + maxHp;
-  $("mad").textContent = madness;
-  $("exp").textContent = exp;
+function updateTimers() {
+  const now = Date.now();
 
-  $("hpbar").style.width =
-    Math.max(0, Math.min(100, hp / maxHp * 100)) + "%";
-
-  const dead = Boolean(profile.dead);
-  const regenerating = Boolean(
-    dead || (profile.regen_left && hp < maxHp)
-  );
-
-  $("deadBox").classList.toggle("hidden", !dead);
-  $("regenBox").classList.toggle("hidden", !regenerating);
-
-  if (dead) {
-    $("deadTimer").textContent =
-      profile.dead_mmss || formatTime(profile.dead_left);
+  if (deadUntil && now >= deadUntil) {
+    deadUntil = null;
+    $("deadBox").classList.add("hidden");
+    $("deadTimer").textContent = "--:--";
+  } else if (deadUntil) {
+    const ms = deadUntil - now;
+    const total = Math.max(0, Math.ceil(ms / 1000));
+    const min = String(Math.floor(total / 60)).padStart(2, "0");
+    const sec = String(total % 60).padStart(2, "0");
+    $("deadTimer").textContent = min + ":" + sec;
   }
 
-  if (regenerating) {
-    $("regenTimer").textContent =
-      profile.regen_mmss ||
-      formatTime(profile.regen_left ?? profile.dead_left);
-
-    $("regenHp").textContent = hp + "/" + maxHp;
+  if (regenUntil && now >= regenUntil) {
+    regenUntil = null;
+    $("regenBox").classList.add("hidden");
+    $("regenTimer").textContent = "--:--";
+    $("regenHp").textContent = "—";
+  } else if (regenUntil) {
+    const ms = regenUntil - now;
+    const total = Math.max(0, Math.ceil(ms / 1000));
+    const min = String(Math.floor(total / 60)).padStart(2, "0");
+    const sec = String(total % 60).padStart(2, "0");
+    $("regenTimer").textContent = min + ":" + sec;
   }
+}
 
-  $("exploreBtn").dataset.dead = dead ? "true" : "false";
-  $("exploreBtn").disabled = busy || dead;
+function startClock() {
+  if (intervalId) clearInterval(intervalId);
+  intervalId = setInterval(updateTimers, 1000);
+}
 
-  if (dead) {
-    setMessage(
-      "Персонаж не может исследовать берег, пока не восстановится."
-    );
-  } else if (hp < maxHp) {
-    setMessage("Здоровье восстановлено не полностью. Будь осторожен.");
+function renderState(data) {
+  if (!data || typeof data !== "object") return;
+
+  profile = data;
+  const hp = clampHp(data.hp, data.max_hp || 100);
+  const max = Number(data.max_hp) || 100;
+
+  setHpVisual(hp, max);
+  $("mad").textContent = Number(data.mad || 0);
+  $("exp").textContent = Number(data.exp || 0);
+
+  $("exploreBtn").disabled = Number(hp) <= 0 || !!data.dead || !!data.dead_now;
+
+  if (Number(hp) <= 0 || data.dead) {
+    const secs = Number(data.dead_after || 60);
+    deadUntil = Date.now() + secs * 1000;
+    $("deadBox").classList.remove("hidden");
+    $("deadTimer").textContent = "00:" + String(Math.max(0, secs)).padStart(2, "0");
+    setMessage("Ты погиб. Нужно переждать воскрешение.");
   } else {
-    setMessage("");
+    $("deadBox").classList.add("hidden");
+    $("deadTimer").textContent = "--:--";
+    deadUntil = null;
+  }
+
+  if (Number(data.regen_hp || 0) > 0) {
+    const wait = Number(data.regen_time || 0) || 0;
+    regenUntil = Date.now() + wait * 1000;
+    $("regenBox").classList.remove("hidden");
+    $("regenHp").textContent = Number(data.regen_hp || 0);
+    $("regenTimer").textContent = "00:" + String(Math.max(0, wait)).padStart(2, "0");
+  } else {
+    $("regenBox").classList.add("hidden");
+    $("regenHp").textContent = "—";
+    $("regenTimer").textContent = "--:--";
+    regenUntil = null;
   }
 }
 
-async function load() {
+async function refreshLake() {
+  busy = true;
   hideError();
+  $("exploreBtn").disabled = true;
 
   try {
-    const profile = await loadProfile();
-    renderProfile(profile);
+    const data = await loadProfile();
+    renderState(data);
+    setMessage(data.message || "Похоже, туман сегодня особенно плотный.");
   } catch (error) {
-    console.error("Lake profile error:", error);
-
-    showError(
-      "Не удалось подключиться к игровому профилю.\n" +
-      (error.message || "Проверь подключение и попробуй снова.")
-    );
-  }
-}
-
-function goBattle(enemy) {
-  const params = new URLSearchParams(location.search);
-
-  params.delete("event_data");
-  params.set("enemy", enemy || "Утопленник");
-
-  location.href = "battle/index.html?" + params.toString();
-}
-
-function goEvent(data) {
-  const params = new URLSearchParams(location.search);
-
-  params.delete("enemy");
-  params.set("event_data", JSON.stringify(data));
-
-  location.href = "event/index.html?" + params.toString();
-}
-
-async function explore() {
-  if (busy || $("exploreBtn").dataset.dead === "true") return;
-
-  hideError();
-  setMessage("");
-  setBusy(true);
-
-  try {
-    const data = await api({action: "explore_lake"});
-
-    if (data.error === "dead") {
-      setMessage(
-        data.text || "Персонаж не может продолжить исследование."
-      );
-
-      await load();
-      return;
-    }
-
-    if (data.error === "cooldown") {
-      setMessage(
-        "⌛ Подожди " + (data.left ?? "?") + " секунд."
-      );
-      return;
-    }
-
-    if (data.type === "battle") {
-      goBattle(data.enemy || "Утопленник");
-      return;
-    }
-
-    if (data.type === "event") {
-      goEvent(data);
-      return;
-    }
-
-    if (data.error) {
-      setMessage(
-        data.text || data.message || "Не удалось исследовать берег."
-      );
-      return;
-    }
-
-    setMessage(
-      data.text ||
-      data.message ||
-      "Берег затихает. Ничего нового не произошло."
-    );
-
-    await load();
-  } catch (error) {
-    console.error("Lake explore error:", error);
-
-    showError(
-      "Не удалось исследовать берег.\n" +
-      (error.message || "Проверь подключение и попробуй снова.")
-    );
+    showError(error.message || "Не удалось загрузить состояние озера.");
   } finally {
-    setBusy(false);
+    busy = false;
+    if (profile && Number(profile.hp || 0) > 0) {
+      $("exploreBtn").disabled = false;
+    }
   }
 }
 
-$("exploreBtn").addEventListener("click", explore);
-$("retryBtn").addEventListener("click", load);
+async function exploreLake() {
+  if (busy) return;
 
-load();
+  const hp = Number(profile?.hp || 0);
+  if (!profile || hp <= 0) {
+    setMessage("Ты мёртв. Сначала дождись воскрешения.");
+    return;
+  }
+
+  busy = true;
+  hideError();
+  $("exploreBtn").disabled = true;
+
+  try {
+    const data = await api({ action: "explore" });
+    const response = unwrap(data);
+
+    if (response?.dead || Number(response?.hp || 0) <= 0) {
+      renderState({
+        hp: 0,
+        max_hp: Number(response?.max_hp || profile?.max_hp || 100),
+        mad: response?.mad ?? profile?.mad ?? 0,
+        exp: response?.exp ?? profile?.exp ?? 0,
+        dead: true,
+        dead_after: Number(response?.dead_after || 60),
+        message: response?.message || "Ты погиб и ждёшь воскрешения."
+      });
+      return;
+    }
+
+    if (response?.type === "battle") {
+      const enemy = response.enemy || response.enemy_name || "Утопленник";
+      const params = new URLSearchParams(location.search);
+      params.set("enemy", enemy);
+      location.href = "./battle/index.html?" + params.toString();
+      return;
+    }
+
+    const next = Object.assign({}, profile, response || {});
+    renderState(next);
+    setMessage(response?.message || "Ты осматриваешь берег и слушаешь туман.");
+  } catch (error) {
+    showError(error.message || "Ошибка исследования.");
+  } finally {
+    busy = false;
+    if (profile && Number(profile.hp || 0) > 0) {
+      $("exploreBtn").disabled = false;
+    }
+  }
+}
+
+$("exploreBtn").addEventListener("click", exploreLake);
+$("retryBtn").addEventListener("click", refreshLake);
+
+window.addEventListener("DOMContentLoaded", () => {
+  startClock();
+  refreshLake();
+});
 </script>
 </body>
 </html>
