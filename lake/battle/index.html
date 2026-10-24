@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
@@ -235,6 +234,26 @@ let initialized = false;
 let PLAYER_PATH = "";
 let logEntries = [];
 let lastCds = {};
+
+// Визуальные навыки противников. Эти эффекты не отправляются на сервер.
+let visualPlayerHp = null;
+let lastServerHp = null;
+let enemyTurnCount = 0;
+let poisonTurns = 0;
+let enemyGuardTurns = 0;
+
+const enemySkills = {
+  "Утопленник": [
+    {name:"Хватка из глубины",icon:"🌊",text:"Утопленник хватает тебя ледяными руками.",damage:0.10},
+    {name:"Водяная могила",icon:"💧",text:"Утопленник обрушивает на тебя тяжёлый поток воды.",damage:0.16},
+    {name:"Мёртвый прилив",icon:"☠️",text:"Мёртвый прилив сковывает тело холодом.",damage:0.07,poison:true}
+  ],
+  "Жаба": [
+    {name:"Ядовитый плевок",icon:"🧪",text:"Жаба выплёвывает едкую болотную слизь.",damage:0.08,poison:true},
+    {name:"Прыжок-раздавливание",icon:"🐸",text:"Жаба резко прыгает и обрушивается на тебя всей тяжестью.",damage:0.16},
+    {name:"Болотная кожа",icon:"🛡️",text:"Жаба покрывается защитной болотной слизью.",damage:0,guard:true}
+  ]
+};
 
 const $ = id => document.getElementById(id);
 
@@ -665,6 +684,12 @@ async function load() {
     $("playerName").textContent = profile.nickname || "Путешественник";
     $("playerPath").textContent = PLAYER_PATH || "Путь неизвестен";
 
+    visualPlayerHp = Number(profile.hp);
+    lastServerHp = Number(profile.hp);
+    enemyTurnCount = 0;
+    poisonTurns = 0;
+    enemyGuardTurns = 0;
+
     setHealth("player", profile.hp, profile.max_hp);
 
     const requestedEnemy = qs.get("enemy");
@@ -715,6 +740,163 @@ async function load() {
   }
 }
 
+function getEnemySkillList() {
+  const name = $("enemyLabel").textContent.trim();
+
+  return (name === "Жаба" || name === "Лягушка")
+    ? enemySkills["Жаба"]
+    : enemySkills["Утопленник"];
+}
+
+function syncVisualPlayerHp(serverHp) {
+  if (serverHp == null || !Number.isFinite(Number(serverHp))) return;
+
+  serverHp = Number(serverHp);
+
+  if (lastServerHp === null || visualPlayerHp === null) {
+    visualPlayerHp = serverHp;
+    lastServerHp = serverHp;
+    return;
+  }
+
+  // Сохраняем визуальный урон и учитываем изменения HP от сервера.
+  visualPlayerHp = Math.max(
+    0,
+    visualPlayerHp + serverHp - lastServerHp
+  );
+
+  lastServerHp = serverHp;
+}
+
+function getVisualMaxHp() {
+  const value = Number($("playerHp").textContent.split("/")[1]);
+
+  return Number.isFinite(value) && value > 0
+    ? value
+    : 100;
+}
+
+function applyVisualEnemySkill() {
+  if (ended || visualPlayerHp === null || visualPlayerHp <= 0) return;
+
+  enemyTurnCount++;
+
+  const enemyName = $("enemyLabel").textContent.trim();
+  const skills = getEnemySkillList();
+  const maxHp = getVisualMaxHp();
+
+  // Яд продолжает наносить визуальный урон.
+  if (poisonTurns > 0) {
+    const poisonDamage = Math.max(
+      1,
+      Math.round(maxHp * 0.025)
+    );
+
+    visualPlayerHp = Math.max(
+      0,
+      visualPlayerHp - poisonDamage
+    );
+
+    poisonTurns--;
+
+    addLog(
+      "🧪 Яд наносит " + poisonDamage +
+      " урона. Осталось ходов отравления: " +
+      poisonTurns + ".",
+      "bad"
+    );
+
+    setHealth("player", visualPlayerHp, maxHp);
+
+    if (visualPlayerHp <= 0) {
+      addLog(
+        "☠️ Визуальное здоровье игрока достигло нуля.",
+        "bad"
+      );
+      return;
+    }
+  }
+
+  // Визуальный эффект защиты Жабы.
+  if (enemyGuardTurns > 0) {
+    enemyGuardTurns--;
+
+    addLog(
+      "🛡️ Болотная кожа защищает Жабу от следующего удара.",
+      "info"
+    );
+
+    return;
+  }
+
+  const skill = skills[
+    Math.floor(Math.random() * skills.length)
+  ];
+
+  if (!skill) return;
+
+  addLog(
+    skill.icon + " " + enemyName +
+    " использует навык «" + skill.name +
+    "». " + skill.text,
+    "bad"
+  );
+
+  if (skill.guard) {
+    enemyGuardTurns = 1;
+
+    setMessage(
+      skill.text,
+      "НАВЫК ПРОТИВНИКА",
+      skill.icon
+    );
+
+    return;
+  }
+
+  const damage = Math.max(
+    1,
+    Math.round(maxHp * skill.damage)
+  );
+
+  visualPlayerHp = Math.max(
+    0,
+    visualPlayerHp - damage
+  );
+
+  setHealth("player", visualPlayerHp, maxHp);
+
+  addLog(
+    "💥 «" + skill.name +
+    "» наносит визуальный урон: -" +
+    damage + " HP.",
+    "bad"
+  );
+
+  if (skill.poison) {
+    poisonTurns = Math.max(poisonTurns, 3);
+
+    addLog(
+      "🧪 Ты отравлен. Яд нанесёт дополнительный урон в следующих ходах.",
+      "bad"
+    );
+  }
+
+  setMessage(
+    skill.text + "\nПолучено визуального урона: " +
+    damage + " HP.",
+    "АТАКА ПРОТИВНИКА",
+    skill.icon
+  );
+
+  if (visualPlayerHp <= 0) {
+    addLog(
+      "☠️ Визуальное здоровье игрока достигло нуля.",
+      "bad"
+    );
+  }
+}
+
 async function doBattle(move) {
   if (busy || ended) return;
 
@@ -726,7 +908,13 @@ async function doBattle(move) {
 
     if (data.error === "cooldown") {
       if (data.cds) renderSkills(data.cds);
-      setMessage("Эта способность ещё восстанавливается.", "ПЕРЕЗАРЯДКА", "⌛");
+
+      setMessage(
+        "Эта способность ещё восстанавливается.",
+        "ПЕРЕЗАРЯДКА",
+        "⌛"
+      );
+
       return;
     }
 
@@ -741,6 +929,7 @@ async function doBattle(move) {
         "ДЕЙСТВИЕ НЕ ВЫПОЛНЕНО",
         "⚠️"
       );
+
       addLog(data.text || String(data.error), "bad");
       return;
     }
@@ -758,34 +947,55 @@ async function doBattle(move) {
       if (data.enemy_hp != null) {
         setHealth("enemy", data.enemy_hp, data.enemy_max);
       }
+
       showVictory(data);
       return;
     }
 
     if (data.type === "defeat") {
-      if (data.hp != null) setHealth("player", data.hp, data.max_hp);
+      if (data.hp != null) {
+        setHealth("player", data.hp, data.max_hp);
+      }
+
       showDefeat(data);
       return;
     }
 
     if (data.type === "flee" || move === "flee") {
-      setMessage("Ты покидаешь поле боя.", "ОТСТУПЛЕНИЕ", "🏃");
+      setMessage(
+        "Ты покидаешь поле боя.",
+        "ОТСТУПЛЕНИЕ",
+        "🏃"
+      );
+
       goLake();
       return;
     }
 
     if (data.type === "battle") {
       if (data.hp != null && data.max_hp != null) {
-        setHealth("player", data.hp, data.max_hp);
+        syncVisualPlayerHp(data.hp);
+
+        setHealth(
+          "player",
+          visualPlayerHp,
+          data.max_hp
+        );
       }
 
       if (data.enemy_hp != null && data.enemy_max != null) {
-        setHealth("enemy", data.enemy_hp, data.enemy_max);
+        setHealth(
+          "enemy",
+          data.enemy_hp,
+          data.enemy_max
+        );
       }
 
       const playerLog = data.log || "";
       const enemyLog = data.e_log || "";
-      const fullLog = [playerLog, enemyLog].filter(Boolean).join("\n");
+      const fullLog = [playerLog, enemyLog]
+        .filter(Boolean)
+        .join("\n");
 
       setMessage(
         fullLog || "Ход завершён. Следи за здоровьем.",
@@ -793,8 +1003,16 @@ async function doBattle(move) {
         "⚔️"
       );
 
-      if (playerLog) addLog(playerLog, "good");
-      if (enemyLog) addLog(enemyLog, "bad");
+      if (playerLog) {
+        addLog(playerLog, "good");
+      }
+
+      if (enemyLog) {
+        addLog(enemyLog, "bad");
+      }
+
+      // Визуальный ответ противника после хода игрока.
+      applyVisualEnemySkill();
 
       if (data.cds) {
         renderSkills(data.cds);
@@ -814,7 +1032,10 @@ async function doBattle(move) {
       "❔"
     );
   } catch (error) {
-    showError(error.message || "Ошибка связи при выполнении хода.");
+    showError(
+      error.message || "Ошибка связи при выполнении хода."
+    );
+
     setMessage(
       "Не удалось получить подтверждение хода.",
       "ОШИБКА СЕТИ",
@@ -835,7 +1056,10 @@ async function exploreAgain() {
     const data = await api({action: "explore_lake"});
 
     if (data.type === "battle") {
-      location.href = battleUrl(data.enemy || "Утопленник");
+      location.href = battleUrl(
+        data.enemy || "Утопленник"
+      );
+
       return;
     }
 
@@ -845,7 +1069,10 @@ async function exploreAgain() {
     }
 
     if (data.error === "dead") {
-      alert(data.text || "Ты не можешь продолжить исследование.");
+      alert(
+        data.text || "Ты не можешь продолжить исследование."
+      );
+
       goLake();
       return;
     }
@@ -856,13 +1083,20 @@ async function exploreAgain() {
     }
 
     if (data.error) {
-      showError(data.text || data.message || "Не удалось исследовать берег.");
+      showError(
+        data.text ||
+        data.message ||
+        "Не удалось исследовать берег."
+      );
+
       return;
     }
 
     goLake();
   } catch (error) {
-    showError(error.message || "Не удалось начать новое исследование.");
+    showError(
+      error.message || "Не удалось начать новое исследование."
+    );
   } finally {
     setBusy(false);
   }
@@ -877,4 +1111,4 @@ $("retryBtn").addEventListener("click", load);
 load();
 </script>
 </body>
-</html>
+                                                           </html>
