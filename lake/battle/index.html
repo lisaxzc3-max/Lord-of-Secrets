@@ -235,7 +235,7 @@ let PLAYER_PATH = "";
 let logEntries = [];
 let lastCds = {};
 
-// Визуальные навыки противников. Эти эффекты не отправляются на сервер.
+// навыки противников.
 let visualPlayerHp = null;
 let lastServerHp = null;
 let enemyTurnCount = 0;
@@ -759,7 +759,7 @@ function syncVisualPlayerHp(serverHp) {
     return;
   }
 
-  // Сохраняем визуальный урон и учитываем изменения HP от сервера.
+  // Сохраняем  урон и учитываем изменения HP от сервера.
   visualPlayerHp = Math.max(
     0,
     visualPlayerHp + serverHp - lastServerHp
@@ -785,7 +785,7 @@ function applyVisualEnemySkill() {
   const skills = getEnemySkillList();
   const maxHp = getVisualMaxHp();
 
-  // Яд продолжает наносить визуальный урон.
+  // Яд продолжает наносить  урон.
   if (poisonTurns > 0) {
     const poisonDamage = Math.max(
       1,
@@ -868,7 +868,7 @@ function applyVisualEnemySkill() {
 
   addLog(
     "💥 «" + skill.name +
-    "» наносит визуальный урон: -" +
+    "» наносит  урон: -" +
     damage + " HP.",
     "bad"
   );
@@ -883,7 +883,7 @@ function applyVisualEnemySkill() {
   }
 
   setMessage(
-    skill.text + "\nПолучено визуального урона: " +
+    skill.text + "\nПолучено  урона: " +
     damage + " HP.",
     "АТАКА ПРОТИВНИКА",
     skill.icon
