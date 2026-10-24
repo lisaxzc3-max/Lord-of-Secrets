@@ -3,364 +3,249 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050a0e">
 <title>Озёра — Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Inter, Arial, sans-serif;
-}
-
-body {
-  background:
-    linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.80)),
-    url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat,
-    #050a0e;
-  color: #b8b5ad;
-  min-height: 100vh;
-}
-
-.wrap {
-  max-width: 440px;
-  margin: 0 auto;
-  padding: 10px 10px 60px;
-}
-
-.head {
-  padding: 10px 0;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.head a {
-  color: #b8b5ad;
-  text-decoration: none;
-  border: 1px solid #3a3a3e;
-  border-radius: 8px;
-  padding: 4px 8px;
-}
-
-.card {
-  background: rgba(22,22,26,.90);
-  border: 1px solid #3a3a3e;
-  border-radius: 16px;
-  padding: 14px;
-  margin: 10px 0;
-}
-
-.btn {
-  border: 1px solid #3a3a3e;
-  background: rgba(38,38,42,.92);
-  border-radius: 10px;
-  padding: 12px;
-  text-align: center;
-  margin: 6px 0;
-  cursor: pointer;
-  color: #b8b5ad;
-  user-select: none;
-}
-
-.btn.gold {
-  background: #3a3a3e;
-  color: #d4d0c3;
-  font-weight: 700;
-}
-
-.btn.dis {
-  opacity: .45;
-  pointer-events: none;
-}
-
-.timerRow {
-  display: flex;
-  gap: 8px;
-  margin: 8px 0;
-}
-
-.timerBox {
-  flex: 1;
-  border-radius: 12px;
-  padding: 10px;
-  text-align: center;
-}
-
-.timerBox.dead {
-  background: rgba(60,20,20,.92);
-  border: 1px solid #6a2a2a;
-}
-
-.timerBox.regen {
-  background: rgba(20,55,20,.92);
-  border: 1px solid #2a6a2a;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.bar {
-  height: 7px;
-  background: rgba(30,30,34,.9);
-  border-radius: 8px;
-  margin: 7px 0;
-  overflow: hidden;
-}
-
-.bar i {
-  display: block;
-  height: 100%;
-  transition: width .3s ease;
-}
-
-.bar.hp i {
-  background: #8d4545;
-}
-
-.status {
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.note {
-  font-size: 11px;
-  opacity: .65;
-  text-align: center;
-  line-height: 1.5;
-  margin-top: 8px;
-}
-
-#message {
-  white-space: pre-wrap;
-  font-size: 12px;
-  line-height: 1.5;
-  margin-top: 8px;
-}
-
-.loading {
-  opacity: .65;
-  pointer-events: none;
-}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.86)),url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat,#050a0e;color:#b8b5ad;min-height:100vh;font-family:Inter,Arial,sans-serif}
+.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
+.head{padding:10px 0;display:flex;gap:10px;align-items:center}
+.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:8px 10px;font-size:13px}
+.head b{font-size:15px}
+.card{background:rgba(22,22,26,.93);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
+.btn{display:block;width:100%;border:1px solid #3a3a3e;background:rgba(38,38,42,.95);border-radius:10px;padding:13px 12px;text-align:center;margin:8px 0;cursor:pointer;color:#b8b5ad;font:inherit;user-select:none}
+.btn.gold{background:linear-gradient(135deg,#51452f,#353039);color:#e4d2a8;font-weight:700;border-color:#776344}
+.btn:disabled,.btn.dis{opacity:.45;pointer-events:none}
+.timerRow{display:flex;gap:8px;margin:8px 0}
+.timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
+.timerBox.dead{background:rgba(60,20,20,.92);border:1px solid #6a2a2a}
+.timerBox.regen{background:rgba(20,55,20,.92);border:1px solid #2a6a2a}
+.hidden{display:none!important}
+.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:7px 0;overflow:hidden}
+.bar i{display:block;height:100%;transition:width .3s ease;background:#8d4545}
+.status{font-size:12px;line-height:1.6}
+.note{font-size:11px;opacity:.72;text-align:center;line-height:1.6;margin-top:10px}
+#message{white-space:pre-wrap;font-size:12px;line-height:1.6;margin-top:10px;overflow-wrap:anywhere}
+.loading{opacity:.65;pointer-events:none}
+.error{color:#e7a0a0;border:1px solid #713b42;border-radius:10px;padding:10px;font-size:12px;line-height:1.5;margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere}
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
   <div class="head">
     <a id="backHome" href="../index.html">← Зал</a>
     <b>🌊 Озёра · Топи</b>
   </div>
 
   <div class="timerRow">
-
     <div id="deadBox" class="timerBox dead hidden">
       💀 <span id="deadTimer">10:00</span>
-      <div style="font-size:10px;opacity:.6">воскрешение</div>
+      <div style="font-size:10px;opacity:.7">воскрешение</div>
     </div>
-
     <div id="regenBox" class="timerBox regen hidden">
       🩹 <span id="regenTimer">10:00</span>
-      <div style="font-size:10px;opacity:.6">
-        реген <span id="regenHp">0/50</span>
-      </div>
+      <div style="font-size:10px;opacity:.7">реген <span id="regenHp">0/50</span></div>
     </div>
-
   </div>
 
   <div class="card">
-
     <div class="status">
       ❤️ <span id="hp">-</span>
       · 🌀 <span id="mad">-</span>%
       · ⭐ <span id="exp">-</span>
     </div>
-
-    <div class="bar hp">
-      <i id="hpbar" style="width:0%"></i>
-    </div>
-
-    <div class="btn gold" id="btnExplore" onclick="doExplore()">
-      🔍 Исследовать берег
-    </div>
-
+    <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
+    <button class="btn gold" id="btnExplore" type="button">🔍 Исследовать берег</button>
     <div class="note">
       Жаба · Утопленник · события 🐸 📦
-      <br>
-      Исследуй берег, чтобы встретить противника или найти событие.
+      <br>Исследуй берег, чтобы встретить противника или найти событие.
     </div>
-
-    <div id="message"></div>
-
+    <div id="message" aria-live="polite"></div>
+    <div id="errorBox" class="error hidden" role="alert">
+      <div id="errorText"></div>
+      <button id="retryBtn" class="btn" type="button">Повторить загрузку</button>
+    </div>
   </div>
-
 </div>
 
 <script>
-const tg = window.Telegram?.WebApp;
+"use strict";
 
+const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
+  try { tg.setHeaderColor("#050a0e"); } catch (e) {}
 }
 
 const qs = new URLSearchParams(location.search);
-
-let uid =
-  qs.get("u") ||
-  tg?.initDataUnsafe?.user?.id ||
-  "7320193489";
-
-let p_enc = qs.get("p_enc") || qs.get("p") || "";
-let a_enc = qs.get("a_enc") || qs.get("a") || "";
+const telegramUserId = tg?.initDataUnsafe?.user?.id;
+const uid = String(qs.get("u") || telegramUserId || "7320193489");
+const p_enc = qs.get("p_enc") || qs.get("p") || "";
+const a_enc = qs.get("a_enc") || qs.get("a") || "";
 
 let PROFILE_URL = p_enc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + p_enc
+  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(p_enc)
   : "";
 
 let ACTION_URL = a_enc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + a_enc
+  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(a_enc)
   : "";
 
-const HANDSHAKE =
-  "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
-
+const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 let busy = false;
+let handshakePromise = null;
 
-function unwrap(j) {
-  return j && j.result && typeof j.result === "object"
-    ? j.result
-    : j;
+const $ = id => document.getElementById(id);
+
+function unwrap(value) {
+  if (value && value.result && typeof value.result === "object") {
+    return value.result;
+  }
+  return value;
 }
 
 function setMessage(text) {
-  document.getElementById("message").innerText = text || "";
+  $("message").textContent = text || "";
+}
+
+function showError(message) {
+  $("errorText").textContent = message || "Не удалось загрузить данные. Проверь соединение.";
+  $("errorBox").classList.remove("hidden");
+}
+
+function clearError() {
+  $("errorBox").classList.add("hidden");
 }
 
 function setBusy(value) {
   busy = value;
-
-  const button = document.getElementById("btnExplore");
-
-  if (value) {
-    button.classList.add("loading");
-    button.innerText = "⏳ Исследуем...";
-  } else {
-    button.classList.remove("loading");
-    button.innerText = "🔍 Исследовать берег";
-  }
+  const button = $("btnExplore");
+  button.classList.toggle("loading", value);
+  button.disabled = value || button.classList.contains("dis");
+  button.textContent = value ? "⏳ Исследуем..." : "🔍 Исследовать берег";
 }
 
 function preserveQuery(url) {
   const params = new URLSearchParams(location.search);
   params.delete("event_data");
-
   const query = params.toString();
-
   return url + (query ? "?" + query : "");
 }
 
-document.getElementById("backHome").href =
-  preserveQuery("../index.html");
+$("backHome").href = preserveQuery("../index.html");
 
-async function ensure() {
-  if (PROFILE_URL && ACTION_URL) return true;
+async function ensureUrls(force = false) {
+  if (!force && PROFILE_URL && ACTION_URL) return true;
+  if (handshakePromise) return handshakePromise;
 
-  const response = await fetch(HANDSHAKE, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      user_id: String(uid)
-    })
-  });
+  handshakePromise = (async () => {
+    try {
+      const response = await fetch(HANDSHAKE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: uid }),
+        cache: "no-store"
+      });
 
-  const result = unwrap(await response.json());
+      if (!response.ok) {
+        throw new Error("Ошибка подключения Telebot Creator: HTTP " + response.status);
+      }
 
-  if (!result || !result.profile_url || !result.action_url) {
-    throw new Error("Не удалось подключиться к игровому профилю.");
+      const raw = await response.json();
+      const data = unwrap(raw);
+
+      const profile = data?.profile_url || data?.PROFILE_URL;
+      const action = data?.action_url || data?.ACTION_URL;
+
+      if (typeof profile !== "string" || !profile ||
+          typeof action !== "string" || !action) {
+        throw new Error("Ответ подключения не содержит адресов profile_url и action_url.");
+      }
+
+      const profileParsed = new URL(profile);
+      const actionParsed = new URL(action);
+
+      if (profileParsed.protocol !== "https:" || actionParsed.protocol !== "https:") {
+        throw new Error("Игровой сервер вернул некорректный адрес API.");
+      }
+
+      PROFILE_URL = profileParsed.href;
+      ACTION_URL = actionParsed.href;
+      return true;
+    } finally {
+      handshakePromise = null;
+    }
+  })();
+
+  return handshakePromise;
+}
+
+async function fetchJson(url, body, timeoutMs = 15000) {
+  if (!url) throw new Error("Адрес API не настроен.");
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      throw new Error("Ошибка игрового сервера: HTTP " + response.status);
+    }
+
+    return unwrap(await response.json());
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error("Сервер не ответил за 15 секунд.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  PROFILE_URL = result.profile_url;
-  ACTION_URL = result.action_url;
-
-  return true;
 }
 
 async function api(payload) {
-  if (!ACTION_URL) {
-    await ensure();
-  }
-
-  const response = await fetch(ACTION_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
-
-  const result = unwrap(await response.json());
-
-  if (!result || typeof result !== "object") {
-    throw new Error("Сервер вернул некорректный ответ.");
-  }
-
-  return result;
+  if (!ACTION_URL) await ensureUrls();
+  return await fetchJson(ACTION_URL, payload);
 }
 
-async function load() {
-  if (!PROFILE_URL) {
-    await ensure();
-  }
+async function loadProfile() {
+  if (!PROFILE_URL) await ensureUrls();
+  return await fetchJson(PROFILE_URL, {});
+}
 
-  const response = await fetch(PROFILE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: "{}"
-  });
+function formatTime(seconds) {
+  const total = Math.max(0, Number(seconds) || 0);
+  return String(Math.floor(total / 60)).padStart(2, "0") + ":" +
+    String(Math.floor(total % 60)).padStart(2, "0");
+}
 
-  const j = unwrap(await response.json());
-
-  if (!j || typeof j !== "object") {
-    throw new Error("Не удалось загрузить профиль.");
-  }
-
+function setProfileValue(j) {
   const hp = Number(j.hp) || 0;
   const maxHp = Math.max(1, Number(j.max_hp) || 50);
   const madness = Number(j.madness) || 0;
   const exp = Number(j.exp) || 0;
 
-  document.getElementById("hp").innerText =
-    hp + "/" + maxHp;
+  $("hp").textContent = hp + "/" + maxHp;
+  $("hpbar").style.width = Math.max(0, Math.min(100, hp / maxHp * 100)) + "%";
+  $("mad").textContent = madness;
+  $("exp").textContent = exp;
 
-  document.getElementById("hpbar").style.width =
-    Math.max(0, Math.min(100, hp / maxHp * 100)) + "%";
-
-  document.getElementById("mad").innerText = madness;
-  document.getElementById("exp").innerText = exp;
-
-  const deadBox = document.getElementById("deadBox");
-  const regenBox = document.getElementById("regenBox");
-  const exploreButton = document.getElementById("btnExplore");
+  const deadBox = $("deadBox");
+  const regenBox = $("regenBox");
+  const exploreButton = $("btnExplore");
 
   if (j.dead) {
     deadBox.classList.remove("hidden");
-
-    document.getElementById("deadTimer").innerText =
-      j.dead_mmss ||
-      (
-        String(Math.floor((Number(j.dead_left) || 0) / 60)).padStart(2, "0") +
-        ":" +
-        String((Number(j.dead_left) || 0) % 60).padStart(2, "0")
-      );
-
+    $("deadTimer").textContent = j.dead_mmss || formatTime(j.dead_left);
     exploreButton.classList.add("dis");
   } else {
     deadBox.classList.add("hidden");
@@ -369,121 +254,96 @@ async function load() {
 
   if (j.dead) {
     regenBox.classList.remove("hidden");
-
-    document.getElementById("regenTimer").innerText =
-      document.getElementById("deadTimer").innerText;
-
-    document.getElementById("regenHp").innerText =
-      hp + "/" + maxHp;
-
+    $("regenTimer").textContent = $("deadTimer").textContent;
+    $("regenHp").textContent = hp + "/" + maxHp;
   } else if (j.regen_left && hp < maxHp) {
     regenBox.classList.remove("hidden");
-
-    document.getElementById("regenTimer").innerText =
-      j.regen_mmss || "00:00";
-
-    document.getElementById("regenHp").innerText =
-      hp + "/" + maxHp;
-
+    $("regenTimer").textContent = j.regen_mmss || formatTime(j.regen_left);
+    $("regenHp").textContent = hp + "/" + maxHp;
   } else {
     regenBox.classList.add("hidden");
   }
 
-  return j;
+  exploreButton.disabled = busy || exploreButton.classList.contains("dis");
 }
 
-/*
- * Все события направляются на отдельную страницу.
- * Параметры пользователя и webhook сохраняются.
- */
+async function load() {
+  clearError();
+  try {
+    const profile = await loadProfile();
+    setProfileValue(profile);
+  } catch (error) {
+    console.error("Lake profile loading error:", error);
+    showError("Не удалось загрузить игровой профиль.\n" +
+      (error.message || "Проверь соединение и повтори попытку."));
+  }
+}
+
 function openEvent(eventData) {
   const params = new URLSearchParams(location.search);
-
+  params.delete("enemy");
   params.set("event_data", JSON.stringify(eventData));
-
   location.href = "event/index.html?" + params.toString();
 }
 
-/*
- * Исследование берега.
- * Бои по-прежнему открываются в battle/index.html.
- * События теперь открываются в event/index.html.
- */
+function openBattle(enemy) {
+  const params = new URLSearchParams(location.search);
+  params.delete("event_data");
+  params.set("enemy", enemy || "Утопленник");
+  location.href = "battle/index.html?" + params.toString();
+}
+
 async function doExplore() {
-  if (busy) return;
+  if (busy || $("btnExplore").classList.contains("dis")) return;
 
-  const button = document.getElementById("btnExplore");
-
-  if (button.classList.contains("dis")) {
-    return;
-  }
-
-  setBusy(true);
+  clearError();
   setMessage("");
+  setBusy(true);
 
   try {
-    const d = await api({
-      action: "explore_lake"
-    });
+    const d = await api({ action: "explore_lake" });
 
-    if (d.error === "dead") {
+    if (d?.error === "dead") {
       alert(d.text || "Персонаж не может исследовать берег.");
       await load();
       return;
     }
 
-    if (d.error === "cooldown") {
+    if (d?.error === "cooldown") {
       alert("⌛ Подожди " + (d.left ?? "?") + "с");
       return;
     }
 
-    if (d.type === "battle") {
-      const params = new URLSearchParams(location.search);
-
-      params.set("enemy", d.enemy);
-
-      location.href = "battle/index.html?" + params.toString();
+    if (d?.type === "battle") {
+      openBattle(d.enemy);
       return;
     }
 
-    if (d.type === "event") {
+    if (d?.type === "event") {
       openEvent(d);
       return;
     }
 
-    if (d.error) {
-      alert(d.text || d.error);
+    if (d?.error) {
+      setMessage(d.text || "Не удалось исследовать берег.");
       return;
     }
 
-    if (d.text) {
-      setMessage(d.text);
-    } else {
-      setMessage("Берег затихает. Здесь пока ничего не произошло.");
-    }
-
+    setMessage(d?.text || "Берег затихает. Здесь пока ничего не произошло.");
     await load();
-
   } catch (error) {
     console.error("Lake exploration error:", error);
-
-    alert(
-      "Не удалось исследовать берег.\n" +
-      (error.message || "Проверь соединение и попробуй снова.")
-    );
-
+    showError("Не удалось исследовать берег.\n" +
+      (error.message || "Проверь соединение и попробуй снова."));
   } finally {
     setBusy(false);
   }
 }
 
-load().catch(error => {
-  console.error("Profile loading error:", error);
-  setMessage(
-    "Не удалось загрузить профиль: " +
-    (error.message || "ошибка соединения")
-  );
-});
+$("btnExplore").addEventListener("click", doExplore);
+$("retryBtn").addEventListener("click", load);
+
+load();
 </script>
 </body>
 </html>
