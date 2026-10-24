@@ -358,7 +358,36 @@ async function exploreLake() {
       return;
     }
 
-    if (response?.dead || Number(response?.hp || 0) <= 0) {
+    /*
+     * ИСПРАВЛЕНИЕ:
+     * Отсутствующее поле hp не означает, что игрок погиб.
+     * Смерть фиксируем только при явном признаке от сервера
+     * или если сервер действительно вернул hp <= 0.
+     */
+    const responseHasHp =
+      response &&
+      Object.prototype.hasOwnProperty.call(response, "hp") &&
+      response.hp !== null &&
+      response.hp !== "";
+
+    const responseHp = responseHasHp ? Number(response.hp) : NaN;
+
+    const serverSaysDead =
+      response?.dead === true ||
+      response?.dead === 1 ||
+      response?.dead === "1" ||
+      response?.dead === "true" ||
+      response?.dead_now === true ||
+      response?.dead_now === 1 ||
+      response?.dead_now === "1" ||
+      response?.dead_now === "true";
+
+    if (
+      serverSaysDead ||
+      (responseHasHp &&
+        Number.isFinite(responseHp) &&
+        responseHp <= 0)
+    ) {
       renderState({
         hp: 0,
         max_hp: Number(response?.max_hp || profile?.max_hp || 100),
@@ -371,6 +400,10 @@ async function exploreLake() {
       return;
     }
 
+    /*
+     * Если ответ исследования не содержит hp,
+     * сохраняем прежнее здоровье из профиля.
+     */
     const next = Object.assign({}, profile, response || {});
     renderState(next);
     setMessage(response?.message || "Ты осматриваешь берег и слушаешь туман.");
