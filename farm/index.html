@@ -6,791 +6,446 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ферма — Повелитель тайн</title>
 <style>
-:root {
-  --bg:#101611; --panel:#1a241c; --card:#222f24;
-  --line:#405343; --gold:#e6ce80; --text:#e8e5d8;
-  --muted:#aab6a7;
-}
+:root{--bg:#101611;--panel:#1a241c;--card:#222f24;--line:#405343;--gold:#e6ce80;--text:#e8e5d8;--muted:#aab6a7}
 *{box-sizing:border-box}
-body{
-  margin:0;background:radial-gradient(ellipse at top,#263528,#101611 60%);
-  color:var(--text);font:15px/1.45 system-ui,Arial,sans-serif
-}
-button,a{font:inherit}
-button{cursor:pointer}
-button:active{transform:scale(.98)}
-.wrap{max-width:720px;margin:auto;padding:12px 12px 40px}
+body{margin:0;background:radial-gradient(ellipse at top,#263528,#101611 65%);color:var(--text);font:15px/1.45 system-ui,Arial,sans-serif}
+button,a{font:inherit}button{cursor:pointer}button:active{transform:scale(.98)}
+.wrap{max-width:760px;margin:auto;padding:12px 12px 40px}
 header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-header a,.smallbtn{
-  color:var(--text);text-decoration:none;background:#253127;
-  border:1px solid var(--line);border-radius:10px;padding:9px 12px
-}
+header a,.smallbtn{color:var(--text);text-decoration:none;background:#253127;border:1px solid var(--line);border-radius:10px;padding:9px 12px}
 .brand{font-size:11px;letter-spacing:2px;color:var(--muted)}
-h1{font-size:25px;margin:8px 0 2px}
-h2{font-size:17px;margin:0}
-p{margin:5px 0}
-.muted{color:var(--muted);font-size:12px}
-.hero{
-  padding:16px;border:1px solid #4b5c42;border-radius:18px;
-  background:linear-gradient(130deg,#293b2a,#1b271d);margin-bottom:10px
-}
+h1{font-size:25px;margin:8px 0 2px}h2{font-size:17px;margin:0}h3{font-size:14px;margin:5px 0}
+p{margin:5px 0}.muted{color:var(--muted);font-size:12px}
+.hero{padding:16px;border:1px solid #4b5c42;border-radius:18px;background:linear-gradient(130deg,#293b2a,#1b271d);margin-bottom:10px}
 .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.level{
-  white-space:nowrap;border:1px solid #6a6545;background:#353526;
-  color:var(--gold);border-radius:12px;padding:8px 10px;font-size:12px
-}
+.level{white-space:nowrap;border:1px solid #6a6545;background:#353526;color:var(--gold);border-radius:12px;padding:8px 10px;font-size:12px}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px}
 .stat{background:#111a13aa;border:1px solid #3a4c3a;border-radius:12px;padding:10px;min-width:0}
-.stat span{display:block;color:var(--muted);font-size:11px}
-.stat strong{font-size:18px;color:var(--gold)}
-.progress{height:7px;background:#101710;border-radius:10px;overflow:hidden;margin:7px 0}
-.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#8aa76a,#d7d98c)}
+.stat span{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:18px;color:var(--gold)}
+.progress{height:7px;background:#101710;border-radius:10px;overflow:hidden;margin:7px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#8aa76a,#d7d98c)}
 .panel{border:1px solid var(--line);background:var(--panel);border-radius:15px;margin:10px 0;overflow:hidden}
-.panel-head{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:13px 14px;cursor:pointer;list-style:none
-}
-.panel-head::-webkit-details-marker{display:none}
-.panel-head .left{display:flex;align-items:center;gap:10px;min-width:0}
-.panel-head .symbol{font-size:23px}
-.panel-head .summary{font-size:11px;color:var(--muted);text-align:right}
-.panel-head .chev{display:inline-block;color:var(--muted);transition:transform .2s}
-details[open] .chev{transform:rotate(180deg)}
-.panel-body{padding:0 12px 13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px;cursor:pointer;list-style:none}
+.panel-head::-webkit-details-marker{display:none}.panel-head .left{display:flex;align-items:center;gap:10px;min-width:0}
+.panel-head .symbol{font-size:23px}.panel-head .summary{font-size:11px;color:var(--muted);text-align:right}
+.chev{display:inline-block;color:var(--muted);transition:transform .2s}details[open] .chev{transform:rotate(180deg)}
+.panel-body{padding:0 12px 13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .card{min-width:0;padding:11px;border:1px solid #3a4a3b;border-radius:12px;background:var(--card)}
-.card h3{font-size:14px;margin:5px 0}
-.emoji{font-size:31px;line-height:1.3;margin:3px 0}
-.card p{font-size:12px;color:var(--muted);min-height:31px}
-.action{
-  display:block;width:100%;padding:9px 10px;border-radius:9px;
-  border:1px solid #6a8058;background:#3c5234;color:#f3f0e2;margin-top:7px
-}
-.action.alt{background:#30362a;border-color:#5a5b43}
-.action:disabled,.smallbtn:disabled{opacity:.38;cursor:not-allowed}
-.toolbar{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
-.toolbar button{
-  border:1px solid var(--line);border-radius:9px;padding:8px 10px;
-  background:#263329;color:var(--text)
-}
-.plot{min-height:145px;text-align:center;display:flex;flex-direction:column;justify-content:center}
-.plot .emoji{font-size:35px}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{background:#252f26;border:1px solid #3b4c3d;border-radius:9px;padding:8px 9px;font-size:12px}
+.card p{font-size:12px;color:var(--muted);min-height:30px}.action{display:block;width:100%;padding:9px 10px;border-radius:9px;border:1px solid #6a8058;background:#3c5234;color:#f3f0e2;margin-top:7px}
+.action.alt{background:#30362a;border-color:#5a5b43}.action:disabled,.smallbtn:disabled{opacity:.38;cursor:not-allowed}
+.toolbar{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.toolbar button{border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#263329;color:var(--text)}
+.plot{min-height:150px;text-align:center;display:flex;flex-direction:column;justify-content:center}.emoji{font-size:31px;line-height:1.3;margin:3px 0}.plot .emoji{font-size:36px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}.chip{background:#252f26;border:1px solid #3b4c3d;border-radius:9px;padding:8px 9px;font-size:12px}
 .notice{border:1px solid #5d5a3b;background:#2d2c20;border-radius:11px;padding:11px;color:#e3d9ac;font-size:12px;margin:9px 0}
 .quest{padding:10px;border:1px solid #3d4b3b;border-radius:11px;background:#222d23;margin:7px 0}
-.quest-top{display:flex;justify-content:space-between;gap:8px;font-size:13px}
-.quest small{color:var(--muted)}
-.quest.done{border-color:#728253}
-#log{font-size:12px;color:var(--muted);line-height:1.8;max-height:170px;overflow:auto}
+.quest-top{display:flex;justify-content:space-between;gap:8px;font-size:13px}.quest small{color:var(--muted)}.quest.done{border-color:#728253}
+.rarity{display:inline-block;border-radius:7px;padding:3px 6px;font-size:10px;font-weight:700;border:1px solid currentColor;margin:2px 0}
+.common{color:#d0d7ce}.uncommon{color:#8fe0a0}.rare{color:#82c9ff}.epic{color:#d7a0ff}.legendary{color:#ffd56a}
+.mutation{color:#e7b7ff}.event-tag{color:#f2d989;font-weight:700}
+#log{font-size:12px;color:var(--muted);line-height:1.8;max-height:190px;overflow:auto}
 .footer{text-align:center;color:#758375;font-size:11px;padding:15px 0}
-@media(max-width:390px){
-  .grid{grid-template-columns:1fr}
-  .stats{gap:5px}
-  .stat{padding:8px}
-  .stat strong{font-size:16px}
-  .hero{padding:12px}
-}
+.badge{font-size:11px;color:#e4d6a2;background:#363324;padding:4px 7px;border-radius:8px}
+@media(max-width:390px){.grid{grid-template-columns:1fr}.stats{gap:5px}.stat{padding:8px}.stat strong{font-size:16px}.hero{padding:12px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-  <a id="homeLink" href="../home/index.html">← Дом</a>
-  <span class="brand">ПОВЕЛИТЕЛЬ ТАЙН</span>
-</header>
+<header><a id="homeLink" href="../home/index.html">← Дом</a><span class="brand">ПОВЕЛИТЕЛЬ ТАЙН</span></header>
 
 <section class="hero">
-  <div class="hero-top">
-    <div>
-      <h1>🌾 Ферма</h1>
-      <p class="muted" id="farmMood">Небольшое хозяйство с большими планами.</p>
-    </div>
-    <div class="level">УРОВЕНЬ <b id="level">1</b></div>
-  </div>
-  <div class="progress"><span id="xpBar"></span></div>
-  <p class="muted" id="xpText">0 опыта</p>
+  <div class="hero-top"><div><h1>🌾 Ферма</h1><p class="muted" id="farmMood">Здесь даже морковь может стать легендой.</p></div><div class="level">УРОВЕНЬ <b id="level">1</b></div></div>
+  <div class="progress"><span id="xpBar"></span></div><p class="muted" id="xpText">0 опыта</p>
   <div class="stats">
     <div class="stat"><span>🪙 Монеты</span><strong id="coins">100</strong></div>
     <div class="stat"><span>🌱 Грядки</span><strong id="plotCount">3/10</strong></div>
     <div class="stat"><span>🐾 Животные</span><strong id="animalCount">0/20</strong></div>
   </div>
-  <div class="toolbar">
-    <button type="button" onclick="claimDaily()">🎁 Награда дня</button>
-    <button type="button" onclick="saveGame()">💾 Сохранить</button>
-  </div>
+  <div class="toolbar"><button onclick="claimDaily()">🎁 Награда дня</button><button onclick="saveGame()">💾 Сохранить</button></div>
 </section>
 
-<div id="eventBox" class="notice">Погода ясная. Самое время заняться хозяйством.</div>
+<div id="eventBox" class="notice">Погода спокойная. Но это ненадолго.</div>
 
 <details class="panel" open>
-  <summary class="panel-head">
-    <span class="left"><span class="symbol">🌱</span><span><b>Грядки</b><br><span class="muted">Посадка и сбор урожая</span></span></span>
-    <span class="summary" id="plotsSummary">3 участка <span class="chev">⌄</span></span>
-  </summary>
-  <div class="panel-body">
-    <div class="toolbar">
-      <button type="button" onclick="buyPlot()">＋ Грядка · <span id="plotPrice">40</span> 🪙</button>
-      <button type="button" onclick="harvestAll()">🧺 Собрать готовое</button>
-    </div>
-    <div class="muted">Выбери культуру для посадки</div>
-    <div class="grid" id="seedShop" style="margin-top:7px"></div>
-    <div class="grid" id="plots" style="margin-top:10px"></div>
-  </div>
+<summary class="panel-head"><span class="left"><span class="symbol">🌱</span><span><b>Грядки</b><br><span class="muted">Редкости, мутации и урожай</span></span></span><span class="summary" id="plotsSummary">3 участка <span class="chev">⌄</span></span></summary>
+<div class="panel-body">
+  <div class="toolbar"><button onclick="buyPlot()">＋ Грядка · <span id="plotPrice">40</span> 🪙</button><button onclick="harvestAll()">🧺 Собрать готовое</button></div>
+  <div class="muted">Выбери семена. Редкость определяет шанс получить более ценный урожай.</div>
+  <div class="grid" id="seedShop" style="margin-top:7px"></div><div class="grid" id="plots" style="margin-top:10px"></div>
+</div>
 </details>
 
 <details class="panel">
-  <summary class="panel-head">
-    <span class="left"><span class="symbol">🐔</span><span><b>Курятник</b><br><span class="muted">Яйца и забота о курах</span></span></span>
-    <span class="summary" id="chickenSummary">0/10 <span class="chev">⌄</span></span>
-  </summary>
-  <div class="panel-body">
-    <div class="toolbar">
-      <button type="button" onclick="buyAnimal('chicken')">＋ Курица · 30 🪙</button>
-      <button type="button" onclick="feedAnimals('chicken')">🌾 Покормить · 5 🪙/шт.</button>
-      <button type="button" onclick="collectAll('chicken')">🧺 Собрать яйца</button>
-    </div>
-    <div class="grid" id="chickens"></div>
-  </div>
+<summary class="panel-head"><span class="left"><span class="symbol">🐔</span><span><b>Курятник</b><br><span class="muted">Яйца и забота о курах</span></span></span><span class="summary" id="chickenSummary">0/10 <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div class="toolbar"><button onclick="buyAnimal('chicken')">＋ Курица · 30 🪙</button><button onclick="feedAnimals('chicken')">🌾 Покормить · 5 🪙/шт.</button><button onclick="collectAll('chicken')">🧺 Собрать яйца</button></div><div class="grid" id="chickens"></div></div>
 </details>
 
 <details class="panel">
-  <summary class="panel-head">
-    <span class="left"><span class="symbol">🐄</span><span><b>Коровник</b><br><span class="muted">Молоко и большое стадо</span></span></span>
-    <span class="summary" id="cowSummary">0/10 <span class="chev">⌄</span></span>
-  </summary>
-  <div class="panel-body">
-    <div class="toolbar">
-      <button type="button" onclick="buyAnimal('cow')">＋ Корова · 80 🪙</button>
-      <button type="button" onclick="feedAnimals('cow')">🌿 Покормить · 10 🪙/шт.</button>
-      <button type="button" onclick="collectAll('cow')">🧺 Собрать молоко</button>
-    </div>
-    <div class="grid" id="cows"></div>
-  </div>
+<summary class="panel-head"><span class="left"><span class="symbol">🐄</span><span><b>Коровник</b><br><span class="muted">Молоко и большое стадо</span></span></span><span class="summary" id="cowSummary">0/10 <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div class="toolbar"><button onclick="buyAnimal('cow')">＋ Корова · 80 🪙</button><button onclick="feedAnimals('cow')">🌿 Покормить · 10 🪙/шт.</button><button onclick="collectAll('cow')">🧺 Собрать молоко</button></div><div class="grid" id="cows"></div></div>
 </details>
 
 <details class="panel" open>
-  <summary class="panel-head">
-    <span class="left"><span class="symbol">📜</span><span><b>Заказы и задания</b><br><span class="muted">Дополнительные монеты и опыт</span></span></span>
-    <span class="summary" id="questSummary">0/3 <span class="chev">⌄</span></span>
-  </summary>
-  <div class="panel-body">
-    <div class="muted">Выполняй поручения, чтобы получать награды. После выполнения всего набора появятся новые задания.</div>
-    <div id="quests"></div>
-  </div>
+<summary class="panel-head"><span class="left"><span class="symbol">📜</span><span><b>Заказы и задания</b><br><span class="muted">Монеты, опыт и редкие находки</span></span></span><span class="summary" id="questSummary">0/3 <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div class="muted">Задания обновляются после полного выполнения набора.</div><div id="quests"></div></div>
 </details>
 
 <details class="panel">
-  <summary class="panel-head">
-    <span class="left"><span class="symbol">🧺</span><span><b>Склад и рынок</b><br><span class="muted">Запасы и продажа продукции</span></span></span>
-    <span class="summary">Продать всё <span class="chev">⌄</span></span>
-  </summary>
-  <div class="panel-body">
-    <div id="inventory" class="chips"></div>
-    <button class="action" onclick="sellAll()">💰 Продать все продукты</button>
-    <p class="muted">Во время высокого спроса товары продаются дороже.</p>
-  </div>
+<summary class="panel-head"><span class="left"><span class="symbol">✨</span><span><b>Альбом мутаций</b><br><span class="muted">Открывай необычные формы растений</span></span></span><span class="summary" id="mutationSummary">0 открыто <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div class="notice">Мутация появляется при сборе созревшего растения. Некоторые виды доступны только во время конкретных событий.</div><div class="grid" id="mutationBook"></div></div>
 </details>
 
 <details class="panel">
-  <summary class="panel-head">
-    <span class="left"><span class="symbol">📖</span><span><b>Журнал фермы</b><br><span class="muted">Последние события</span></span></span>
-    <span class="summary">История <span class="chev">⌄</span></span>
-  </summary>
-  <div class="panel-body"><div id="log"></div></div>
+<summary class="panel-head"><span class="left"><span class="symbol">🏆</span><span><b>Достижения и серия</b><br><span class="muted">Долгосрочные цели</span></span></span><span class="summary">Прогресс <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div id="achievements"></div></div>
 </details>
 
-<div class="footer">Сохранение хранится в этом браузере на этом устройстве. Таймеры продолжают идти, пока ты не в игре.</div>
+<details class="panel">
+<summary class="panel-head"><span class="left"><span class="symbol">🧺</span><span><b>Склад и рынок</b><br><span class="muted">Запасы и продажа продукции</span></span></span><span class="summary">Продать всё <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div id="inventory" class="chips"></div><button class="action" onclick="sellAll()">💰 Продать все продукты</button><p class="muted">Во время высокого спроса цены повышаются. Мутировавшие растения стоят дороже.</p></div>
+</details>
+
+<details class="panel">
+<summary class="panel-head"><span class="left"><span class="symbol">📖</span><span><b>Журнал фермы</b><br><span class="muted">Последние события и открытия</span></span></span><span class="summary">История <span class="chev">⌄</span></span></summary>
+<div class="panel-body"><div id="log"></div></div>
+</details>
+<div class="footer">Сохранение хранится в этом браузере на этом устройстве. Растения и животные продолжают работать, пока тебя нет.</div>
 </div>
 
 <script>
 "use strict";
 
-const qs = new URLSearchParams(location.search);
-const uid = qs.get("u") || "guest";
-const SAVE_KEY = "lom_farm_v1_" + uid;
-const MAX_PLOTS = 10;
-const MAX_PER_ANIMAL = 10;
+const qs=new URLSearchParams(location.search);
+const uid=qs.get("u")||"guest";
+const SAVE_KEY="lom_farm_v1_"+uid;
+const MAX_PLOTS=10,MAX_PER_ANIMAL=10;
 
-const CROPS = {
-  carrot:{name:"Морковь",emoji:"🥕",seedPrice:5,sellPrice:12,growMs:30000,unlock:1,desc:"Быстро растёт."},
-  wheat:{name:"Пшеница",emoji:"🌾",seedPrice:8,sellPrice:18,growMs:60000,unlock:1,desc:"Надёжный урожай."},
-  potato:{name:"Картофель",emoji:"🥔",seedPrice:10,sellPrice:25,growMs:90000,unlock:1,desc:"Дольше растёт, дороже продаётся."},
-  berry:{name:"Лунная ягода",emoji:"🫐",seedPrice:18,sellPrice:48,growMs:150000,unlock:3,desc:"Редкая ягода для опытных фермеров."},
-  herb:{name:"Звёздная трава",emoji:"🌿",seedPrice:30,sellPrice:85,growMs:240000,unlock:5,desc:"Ценная трава с долгим циклом роста."}
+const CROPS={
+ carrot:{name:"Морковь",emoji:"🥕",seedPrice:5,sellPrice:12,growMs:30000,unlock:1,desc:"Быстрая и надёжная."},
+ wheat:{name:"Пшеница",emoji:"🌾",seedPrice:8,sellPrice:18,growMs:60000,unlock:1,desc:"Неприхотливая культура."},
+ potato:{name:"Картофель",emoji:"🥔",seedPrice:10,sellPrice:25,growMs:90000,unlock:1,desc:"Долго растёт, хорошо продаётся."},
+ berry:{name:"Лунная ягода",emoji:"🫐",seedPrice:18,sellPrice:48,growMs:150000,unlock:3,desc:"Редкая ягода, любит ночные события."},
+ herb:{name:"Звёздная трава",emoji:"🌿",seedPrice:30,sellPrice:85,growMs:240000,unlock:5,desc:"Дорогая трава с долгим циклом."},
+ crystal:{name:"Кристальный корень",emoji:"💎",seedPrice:55,sellPrice:150,growMs:360000,unlock:8,desc:"Редкая культура, раскрывается под грозой."}
 };
-
-const ANIMALS = {
-  chicken:{name:"Курица",emoji:"🐔",price:30,product:"egg",productName:"Яйца",productEmoji:"🥚",productPrice:8,productionMs:45000,feedCost:5},
-  cow:{name:"Корова",emoji:"🐄",price:80,product:"milk",productName:"Молоко",productEmoji:"🥛",productPrice:20,productionMs:90000,feedCost:10}
+const RARITIES=[
+ {name:"Обычное",key:"common",chance:65,mult:1},
+ {name:"Необычное",key:"uncommon",chance:23,mult:1.5},
+ {name:"Редкое",key:"rare",chance:9,mult:2.5},
+ {name:"Эпическое",key:"epic",chance:2.5,mult:5},
+ {name:"Легендарное",key:"legendary",chance:.5,mult:12}
+];
+const MUTATIONS={
+ golden:{name:"Золотое",emoji:"✨",mult:3,desc:"Золотая оболочка. Цена ×3.",events:["gold"]},
+ lunar:{name:"Лунное",emoji:"🌙",mult:4,desc:"Сияет лунным светом. Цена ×4.",events:["moon"]},
+ storm:{name:"Грозовое",emoji:"⚡",mult:5,desc:"Пропитано энергией грозы. Цена ×5.",events:["storm"]},
+ crystal:{name:"Кристальное",emoji:"🔷",mult:6,desc:"Покрыто кристаллическими гранями. Цена ×6.",events:["meteor","storm"]},
+ firefly:{name:"Светлячковое",emoji:"🪲",mult:3.5,desc:"Светится в темноте. Цена ×3,5.",events:["fireflies"]},
+ rainbow:{name:"Радужное",emoji:"🌈",mult:8,desc:"Крайне редкая мутация после дождя.",events:["rainbow"]},
+ void:{name:"Искажённое",emoji:"🌀",mult:15,desc:"Странная мутация из разлома. Цена ×15.",events:["rift"]}
 };
-
-const PRODUCT_NAMES = {
-  carrot:"🥕 Морковь",wheat:"🌾 Пшеница",potato:"🥔 Картофель",
-  berry:"🫐 Лунная ягода",herb:"🌿 Звёздная трава",
-  egg:"🥚 Яйца",milk:"🥛 Молоко"
+const ANIMALS={
+ chicken:{name:"Курица",emoji:"🐔",price:30,product:"egg",productName:"Яйца",productEmoji:"🥚",productPrice:8,productionMs:45000,feedCost:5},
+ cow:{name:"Корова",emoji:"🐄",price:80,product:"milk",productName:"Молоко",productEmoji:"🥛",productPrice:20,productionMs:90000,feedCost:10}
 };
-
-const BASE_PRICES = {
-  carrot:12,wheat:18,potato:25,berry:48,herb:85,egg:8,milk:20
-};
+const PRODUCT_NAMES={carrot:"🥕 Морковь",wheat:"🌾 Пшеница",potato:"🥔 Картофель",berry:"🫐 Лунная ягода",herb:"🌿 Звёздная трава",crystal:"💎 Кристальный корень",egg:"🥚 Яйца",milk:"🥛 Молоко"};
+const BASE_PRICES={carrot:12,wheat:18,potato:25,berry:48,herb:85,crystal:150,egg:8,milk:20};
+const EVENTS=[
+ {type:"growth",name:"Тёплый дождь",emoji:"🌧️",duration:180000,label:"Растения растут на 25% быстрее.",mutationChance:0},
+ {type:"market",name:"Высокий спрос",emoji:"📈",duration:180000,label:"Цены на рынке выше на 50%.",mutationChance:0},
+ {type:"gold",name:"Золотой сезон",emoji:"🌟",duration:150000,label:"Появляется шанс золотой мутации.",mutationChance:.13},
+ {type:"moon",name:"Полнолуние",emoji:"🌕",duration:150000,label:"Лунные ягоды могут стать лунными мутантами.",mutationChance:.18},
+ {type:"storm",name:"Грозовой фронт",emoji:"⛈️",duration:120000,label:"Шанс грозовой и кристальной мутации.",mutationChance:.16},
+ {type:"meteor",name:"Метеоритный дождь",emoji:"☄️",duration:90000,label:"Редкий шанс кристальной мутации.",mutationChance:.22},
+ {type:"fireflies",name:"Нашествие светлячков",emoji:"🪲",duration:150000,label:"Шанс светлячковой мутации.",mutationChance:.18},
+ {type:"rainbow",name:"Радужный рассвет",emoji:"🌈",duration:90000,label:"Очень редкая радужная мутация.",mutationChance:.1},
+ {type:"rift",name:"Разлом реальности",emoji:"🌀",duration:60000,label:"Маленький шанс искажённой мутации. Береги рассудок.",mutationChance:.08},
+ {type:"normal",name:"Ясная погода",emoji:"☀️",duration:120000,label:"Обычная погода. Можно передохнуть.",mutationChance:0}
+];
 
 function newGame(){
-  return {
-    coins:100,xp:0,level:1,nextId:4,
-    plots:[
-      {id:1,crop:null,plantedAt:0},
-      {id:2,crop:null,plantedAt:0},
-      {id:3,crop:null,plantedAt:0}
-    ],
-    animals:[],
-    inventory:{carrot:0,wheat:0,potato:0,berry:0,herb:0,egg:0,milk:0},
-    log:["Ферма открыта. В наличии 100 монет и три грядки."],
-    lastDaily:"",
-    questSet:0,
-    quests:[],
-    event:{type:"normal",until:0,label:"Ясная погода: всё работает в обычном режиме."}
-  };
+ return {coins:100,xp:0,level:1,nextId:4,
+ plots:[{id:1,crop:null,plantedAt:0},{id:2,crop:null,plantedAt:0},{id:3,crop:null,plantedAt:0}],
+ animals:[],inventory:{carrot:0,wheat:0,potato:0,berry:0,herb:0,crystal:0,egg:0,milk:0},
+ log:["Ферма открыта. В наличии 100 монет и три грядки."],lastDaily:"",questSet:0,quests:[],
+ event:{type:"normal",until:0,label:"Ясная погода."},
+ discoveries:[],harvests:0,mutationsFound:0,combo:0,bestCombo:0,soldUnits:0,
+ achievements:{firstHarvest:false,collector:false,rich:false,mutant:false,farmer:false}
+ };
 }
-
 function makeQuests(set){
-  const templates = [
-    [
-      {type:"harvest",target:"carrot",goal:3,title:"Собрать 3 морковки",reward:25,xp:15},
-      {type:"collect",target:"egg",goal:3,title:"Собрать 3 яйца",reward:30,xp:15},
-      {type:"sell",target:"any",goal:5,title:"Продать 5 единиц продукции",reward:35,xp:20}
-    ],
-    [
-      {type:"harvest",target:"wheat",goal:2,title:"Собрать 2 пучка пшеницы",reward:30,xp:15},
-      {type:"collect",target:"milk",goal:2,title:"Собрать 2 единицы молока",reward:35,xp:20},
-      {type:"sell",target:"any",goal:8,title:"Продать 8 единиц продукции",reward:40,xp:25}
-    ],
-    [
-      {type:"harvest",target:"potato",goal:2,title:"Собрать 2 картофелины",reward:35,xp:20},
-      {type:"collect",target:"egg",goal:5,title:"Собрать 5 яиц",reward:35,xp:20},
-      {type:"sell",target:"any",goal:10,title:"Продать 10 единиц продукции",reward:50,xp:30}
-    ]
-  ];
-  return templates[set % templates.length].map((q,i)=>({
-    ...q,id:set+"-"+i,progress:0,done:false
-  }));
+ const all=[
+ [
+ {type:"harvest",target:"carrot",goal:3,title:"Собрать 3 морковки",reward:25,xp:15},
+ {type:"collect",target:"egg",goal:3,title:"Собрать 3 яйца",reward:30,xp:15},
+ {type:"sell",target:"any",goal:5,title:"Продать 5 единиц продукции",reward:35,xp:20}
+ ],
+ [
+ {type:"harvest",target:"wheat",goal:2,title:"Собрать 2 пучка пшеницы",reward:30,xp:15},
+ {type:"collect",target:"milk",goal:2,title:"Собрать 2 единицы молока",reward:35,xp:20},
+ {type:"sell",target:"any",goal:8,title:"Продать 8 единиц продукции",reward:40,xp:25}
+ ],
+ [
+ {type:"harvest",target:"potato",goal:2,title:"Собрать 2 картофелины",reward:35,xp:20},
+ {type:"mutate",target:"any",goal:1,title:"Найти первую мутацию",reward:70,xp:35},
+ {type:"sell",target:"any",goal:10,title:"Продать 10 единиц продукции",reward:50,xp:30}
+ ],
+ [
+ {type:"harvest",target:"berry",goal:2,title:"Собрать 2 лунные ягоды",reward:55,xp:30},
+ {type:"collect",target:"egg",goal:5,title:"Собрать 5 яиц",reward:35,xp:20},
+ {type:"sell",target:"any",goal:15,title:"Продать 15 единиц продукции",reward:65,xp:35}
+ ]
+ ];
+ return all[set%all.length].map((q,i)=>({...q,id:set+"-"+i,progress:0,done:false}));
 }
-
 function normalize(g){
-  const fresh = newGame();
-  g.coins = Number.isFinite(g.coins) ? g.coins : 100;
-  g.xp = Number(g.xp) || 0;
-  g.level = Math.max(1,Number(g.level)||1);
-  g.nextId = Number(g.nextId)||4;
-  g.inventory = Object.assign({},fresh.inventory,g.inventory||{});
-
-  g.plots = Array.isArray(g.plots) ? g.plots.slice(0,MAX_PLOTS) : fresh.plots;
-  g.animals = Array.isArray(g.animals) ? g.animals.filter(a=>a&&ANIMALS[a.type]) : [];
-  g.animals = g.animals.filter(a=>{
-    const before = g.animals.slice(0,g.animals.indexOf(a));
-    return before.filter(x=>x.type===a.type).length < MAX_PER_ANIMAL;
-  });
-
-  g.log = Array.isArray(g.log) ? g.log : fresh.log;
-  g.lastDaily = g.lastDaily || "";
-  g.questSet = Number(g.questSet)||0;
-  g.event = g.event || fresh.event;
-  g.quests = Array.isArray(g.quests)&&g.quests.length ? g.quests : makeQuests(g.questSet);
-  return g;
+ const fresh=newGame();
+ g.coins=Number.isFinite(g.coins)?g.coins:100;g.xp=Number(g.xp)||0;g.level=Math.max(1,Number(g.level)||1);g.nextId=Number(g.nextId)||4;
+ g.inventory=Object.assign({},fresh.inventory,g.inventory||{});
+ g.plots=Array.isArray(g.plots)?g.plots.slice(0,MAX_PLOTS):fresh.plots;
+ g.plots.forEach(p=>{if(!("rarity" in p))p.rarity=null;if(!("mutation" in p))p.mutation=null;});
+ g.animals=Array.isArray(g.animals)?g.animals.filter(a=>a&&ANIMALS[a.type]):[];
+ for(const type of Object.keys(ANIMALS)){let n=0;g.animals=g.animals.filter(a=>a.type!==type||n++<MAX_PER_ANIMAL);}
+ g.log=Array.isArray(g.log)?g.log:fresh.log;g.lastDaily=g.lastDaily||"";g.questSet=Number(g.questSet)||0;
+ g.event=g.event||fresh.event;g.quests=Array.isArray(g.quests)&&g.quests.length?g.quests:makeQuests(g.questSet);
+ for(const key of ["discoveries","harvests","mutationsFound","soldUnits"])if(!Array.isArray(g[key])&&key==="discoveries")g[key]=[];
+ else if(typeof g[key]!=="number")g[key]=0;
+ g.combo=Number(g.combo)||0;g.bestCombo=Number(g.bestCombo)||0;g.achievements=Object.assign({},fresh.achievements,g.achievements||{});
+ return g;
 }
-
-function loadGame(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
-    if(raw) return normalize(JSON.parse(raw));
-  }catch(e){console.warn("Не удалось загрузить сохранение",e);}
-  return newGame();
-}
-
-let game = loadGame();
-let selectedCrop = "carrot";
-
-function saveQuietly(){
-  try{localStorage.setItem(SAVE_KEY,JSON.stringify(game));}catch(e){}
-}
-
-function saveGame(){
-  saveQuietly();
-  notify("Ферма сохранена.");
-}
-
-function notify(message){
-  addLog(message);
-  render();
-}
-
-function addLog(message){
-  const time = new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
-  game.log.unshift(time+" · "+message);
-  game.log = game.log.slice(0,20);
-}
-
-function spend(amount){
-  if(game.coins < amount){
-    notify("Не хватает монет. Продай запасы или выполни задание.");
-    return false;
-  }
-  game.coins -= amount;
-  return true;
-}
-
+function loadGame(){try{const raw=localStorage.getItem(SAVE_KEY);if(raw)return normalize(JSON.parse(raw));}catch(e){console.warn("Не удалось загрузить сохранение",e);}return newGame();}
+let game=loadGame(),selectedCrop="carrot";
+function saveQuietly(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(game));}catch(e){}}
+function saveGame(){saveQuietly();notify("Ферма сохранена.");}
+function notify(message){addLog(message);render();}
+function addLog(message){const t=new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});game.log.unshift(t+" · "+message);game.log=game.log.slice(0,35);}
+function spend(amount){if(game.coins<amount){notify("Не хватает монет. Продай запасы или выполни задание.");return false;}game.coins-=amount;return true;}
 function xpNeed(){return 50+(game.level-1)*30;}
-
 function addXP(amount){
-  game.xp += amount;
-  while(game.xp >= xpNeed()){
-    game.xp -= xpNeed();
-    game.level++;
-    const reward = 20+game.level*5;
-    game.coins += reward;
-    addLog("Новый уровень фермы: "+game.level+"! Получено "+reward+" монет.");
-    for(const crop of Object.values(CROPS)){
-      if(crop.unlock===game.level) addLog("Открыта новая культура: "+crop.name+".");
-    }
-  }
+ game.xp+=amount;
+ while(game.xp>=xpNeed()){
+  game.xp-=xpNeed();game.level++;const reward=20+game.level*5;game.coins+=reward;
+  addLog("Новый уровень фермы: "+game.level+"! Получено "+reward+" монет.");
+  for(const crop of Object.values(CROPS))if(crop.unlock===game.level)addLog("Открыта культура: "+crop.name+".");
+ }
 }
-
-function formatTime(ms){
-  const seconds = Math.max(0,Math.ceil(ms/1000));
-  return seconds>=60 ? Math.floor(seconds/60)+"м "+(seconds%60)+"с" : seconds+"с";
+function formatTime(ms){const s=Math.max(0,Math.ceil(ms/1000));return s>=60?Math.floor(s/60)+"м "+(s%60)+"с":s+"с";}
+function currentEvent(){return game.event.until>Date.now()?game.event:EVENTS[EVENTS.length-1];}
+function eventData(type){return EVENTS.find(e=>e.type===type)||EVENTS[EVENTS.length-1];}
+function growthMultiplier(){return game.event.until>Date.now()&&game.event.type==="growth"?.75:1;}
+function marketMultiplier(){return game.event.until>Date.now()&&game.event.type==="market"?1.5:1;}
+function cropProgress(plot){if(!plot.crop)return 0;const c=CROPS[plot.crop];return Math.min(1,(Date.now()-plot.plantedAt)/(c.growMs*growthMultiplier()));}
+function rarityRoll(){
+ const r=Math.random()*100;let n=0;
+ for(const item of RARITIES){n+=item.chance;if(r<n)return item;}
+ return RARITIES[0];
 }
-
-function cropProgress(plot){
-  if(!plot.crop) return 0;
-  const crop = CROPS[plot.crop];
-  return Math.min(1,(Date.now()-plot.plantedAt)/(crop.growMs*growthMultiplier()));
+function mutationRoll(cropKey){
+ if(game.event.until<=Date.now())return null;
+ const ev=game.event,def=MUTATIONS[ev.type];
+ let candidates=Object.entries(MUTATIONS).filter(([key,m])=>m.events.includes(ev.type));
+ if(!candidates.length||!ev.mutationChance)return null;
+ if(cropKey==="berry"&&ev.type==="moon")ev.mutationChance=.3;
+ if(cropKey==="crystal"&&(ev.type==="storm"||ev.type==="meteor"))ev.mutationChance=Math.min(.4,ev.mutationChance*1.5);
+ if(Math.random()>ev.mutationChance)return null;
+ return candidates[Math.floor(Math.random()*candidates.length)][0];
 }
-
-function growthMultiplier(){
-  return game.event.until>Date.now() && game.event.type==="growth" ? 0.75 : 1;
+function recordDiscovery(key){
+ if(!game.discoveries.includes(key)){game.discoveries.push(key);addLog("Новое открытие: "+MUTATIONS[key].emoji+" "+MUTATIONS[key].name+" мутация!");addXP(12);}
 }
-
-function marketMultiplier(){
-  return game.event.until>Date.now() && game.event.type==="market" ? 1.5 : 1;
-}
-
 function plant(id){
-  const plot = game.plots.find(p=>p.id===id);
-  if(!plot||plot.crop) return;
-
-  const crop = CROPS[selectedCrop];
-  if(game.level<crop.unlock){
-    notify("Эта культура откроется на уровне "+crop.unlock+".");
-    return;
-  }
-  if(!spend(crop.seedPrice)) return;
-
-  plot.crop = selectedCrop;
-  plot.plantedAt = Date.now();
-  addXP(1);
-  addLog("Посажена культура: "+crop.name+".");
-  updateQuest("plant",selectedCrop,1);
-  saveQuietly();
-  render();
+ const p=game.plots.find(x=>x.id===id);if(!p||p.crop)return;
+ const c=CROPS[selectedCrop];
+ if(game.level<c.unlock){notify("Эта культура откроется на уровне "+c.unlock+".");return;}
+ if(!spend(c.seedPrice))return;
+ p.crop=selectedCrop;p.plantedAt=Date.now();p.rarity=null;p.mutation=null;
+ addXP(1);addLog("Посажена культура: "+c.name+".");updateQuest("plant",selectedCrop,1);saveQuietly();render();
 }
-
 function harvest(id){
-  const plot = game.plots.find(p=>p.id===id);
-  if(!plot||!plot.crop) return;
-
-  const crop = CROPS[plot.crop];
-  if(cropProgress(plot)<1){
-    notify("Урожай ещё не созрел.");
-    return;
-  }
-
-  const key = plot.crop;
-  game.inventory[key] = (game.inventory[key]||0)+1;
-  plot.crop = null;
-  plot.plantedAt = 0;
-  addXP(8);
-  addLog("Собран урожай: "+crop.name+" ×1.");
-  updateQuest("harvest",key,1);
-  saveQuietly();
-  render();
+ const p=game.plots.find(x=>x.id===id);if(!p||!p.crop)return;
+ if(cropProgress(p)<1){notify("Урожай ещё не созрел.");return;}
+ const key=p.crop,c=CROPS[key],rarity=rarityRoll(),mutation=mutationRoll(key);
+ let price=Math.round(c.sellPrice*rarity.mult*(mutation?MUTATIONS[mutation].mult:1));
+ game.inventory[key]=(game.inventory[key]||0)+1;
+ game.inventory._value=(game.inventory._value||0)+price;
+ game.harvests++;game.combo++;game.bestCombo=Math.max(game.bestCombo,game.combo);
+ game.achievements.firstHarvest=true;
+ if(mutation){game.mutationsFound++;recordDiscovery(mutation);updateQuest("mutate",mutation,1);}
+ const rkey=key+"_"+rarity.key+(mutation?"_"+mutation:"");
+ addLog("Собрано: "+(mutation?MUTATIONS[mutation].emoji+" ":"")+c.emoji+" "+c.name+" · "+rarity.name+(mutation?" · "+MUTATIONS[mutation].name:"")+". Оценка: "+price+" монет.");
+ game.inventory._items=game.inventory._items||[];
+ game.inventory._items.push({key,rarity:rarity.key,mutation,price});
+ updateQuest("harvest",key,1);
+ if(game.harvests>=10)game.achievements.farmer=true;
+ if(game.mutationsFound>=5)game.achievements.mutant=true;
+ p.crop=null;p.plantedAt=0;p.rarity=null;p.mutation=null;addXP(8+Math.round(rarity.mult));
+ saveQuietly();render();
 }
-
 function harvestAll(){
-  let count = 0;
-  for(const plot of game.plots){
-    if(plot.crop && cropProgress(plot)>=1){
-      const key = plot.crop;
-      game.inventory[key] = (game.inventory[key]||0)+1;
-      addLog("Собран урожай: "+CROPS[key].name+" ×1.");
-      updateQuest("harvest",key,1);
-      plot.crop = null;
-      plot.plantedAt = 0;
-      count++;
-    }
-  }
-  if(!count){notify("Пока нет созревших растений.");return;}
-  addXP(count*8);
-  addLog("Собрано растений: "+count+".");
-  saveQuietly();
-  render();
+ let count=0;
+ for(const p of game.plots.slice()){if(p.crop&&cropProgress(p)>=1){harvest(p.id);count++;}}
+ if(!count)notify("Пока нет созревших растений.");
 }
-
 function buyPlot(){
-  if(game.plots.length>=MAX_PLOTS){
-    notify("Достигнут лимит: максимум 10 грядок.");
-    return;
-  }
-  const price = 40+(game.plots.length-3)*25;
-  if(!spend(price)) return;
-  game.plots.push({id:game.nextId++,crop:null,plantedAt:0});
-  addLog("Куплена новая грядка за "+price+" монет.");
-  saveQuietly();
-  render();
+ if(game.plots.length>=MAX_PLOTS){notify("Достигнут лимит: максимум 10 грядок.");return;}
+ const price=40+(game.plots.length-3)*25;if(!spend(price))return;
+ game.plots.push({id:game.nextId++,crop:null,plantedAt:0,rarity:null,mutation:null});
+ addLog("Куплена новая грядка за "+price+" монет.");saveQuietly();render();
 }
-
-function animalCount(type){
-  return game.animals.filter(a=>a.type===type).length;
-}
-
+function animalCount(type){return game.animals.filter(a=>a.type===type).length;}
 function buyAnimal(type){
-  const data = ANIMALS[type];
-  if(animalCount(type)>=MAX_PER_ANIMAL){
-    notify("Лимит достигнут: максимум 10 "+(type==="chicken"?"кур":"коров")+".");
-    return;
-  }
-  if(!spend(data.price)) return;
-
-  game.animals.push({
-    id:game.nextId++,type,
-    lastProducedAt:Date.now(),
-    fedUntil:0
-  });
-  addLog("На ферме появилась "+data.name.toLowerCase()+".");
-  updateQuest("buy",type,1);
-  saveQuietly();
-  render();
+ const d=ANIMALS[type];if(animalCount(type)>=MAX_PER_ANIMAL){notify("Лимит достигнут: максимум 10 "+(type==="chicken"?"кур":"коров")+".");return;}
+ if(!spend(d.price))return;
+ game.animals.push({id:game.nextId++,type,lastProducedAt:Date.now(),fedUntil:0});
+ addLog("На ферме появилась "+d.name.toLowerCase()+".");updateQuest("buy",type,1);saveQuietly();render();
 }
-
-function productionPeriod(animal){
-  return animal.fedUntil>Date.now()
-    ? Math.round(ANIMALS[animal.type].productionMs*0.6)
-    : ANIMALS[animal.type].productionMs;
-}
-
+function productionPeriod(a){return a.fedUntil>Date.now()?Math.round(ANIMALS[a.type].productionMs*.6):ANIMALS[a.type].productionMs;}
 function collectAnimal(id){
-  const animal = game.animals.find(a=>a.id===id);
-  if(!animal) return;
-
-  const data = ANIMALS[animal.type];
-  const period = productionPeriod(animal);
-  const elapsed = Date.now()-animal.lastProducedAt;
-  const count = Math.floor(elapsed/period);
-
-  if(count<1){
-    notify(data.name+" пока ничего не произвела. Осталось "+formatTime(period-elapsed%period)+".");
-    return;
-  }
-
-  game.inventory[data.product] = (game.inventory[data.product]||0)+count;
-  animal.lastProducedAt += count*period;
-  addXP(count*3);
-  addLog("Собрано: "+data.productName+" ×"+count+".");
-  updateQuest("collect",data.product,count);
-  saveQuietly();
-  render();
+ const a=game.animals.find(x=>x.id===id);if(!a)return;const d=ANIMALS[a.type],period=productionPeriod(a),elapsed=Date.now()-a.lastProducedAt,count=Math.floor(elapsed/period);
+ if(count<1){notify(d.name+" пока ничего не произвела. Осталось "+formatTime(period-elapsed%period)+".");return;}
+ game.inventory[d.product]=(game.inventory[d.product]||0)+count;a.lastProducedAt+=count*period;addXP(count*3);addLog("Собрано: "+d.productName+" ×"+count+".");updateQuest("collect",d.product,count);saveQuietly();render();
 }
-
 function collectAll(type){
-  let total = 0;
-  for(const animal of game.animals.filter(a=>a.type===type)){
-    const data = ANIMALS[type];
-    const period = productionPeriod(animal);
-    const count = Math.floor((Date.now()-animal.lastProducedAt)/period);
-    if(count>0){
-      game.inventory[data.product] = (game.inventory[data.product]||0)+count;
-      animal.lastProducedAt += count*period;
-      total += count;
-      updateQuest("collect",data.product,count);
-    }
-  }
-
-  if(!total){notify("Пока нечего собирать. Животным нужно время.");return;}
-  addXP(total*3);
-  addLog("Собрано продукции: "+total+".");
-  saveQuietly();
-  render();
+ let total=0;for(const a of game.animals.filter(x=>x.type===type)){const d=ANIMALS[type],period=productionPeriod(a),count=Math.floor((Date.now()-a.lastProducedAt)/period);if(count>0){game.inventory[d.product]=(game.inventory[d.product]||0)+count;a.lastProducedAt+=count*period;total+=count;updateQuest("collect",d.product,count);}}
+ if(!total){notify("Пока нечего собирать. Животным нужно время.");return;}addXP(total*3);addLog("Собрано продукции: "+total+".");saveQuietly();render();
 }
-
 function feedAnimals(type){
-  const animals = game.animals.filter(a=>a.type===type);
-  if(!animals.length){notify("Сначала заведи хотя бы одно животное.");return;}
-
-  const cost = ANIMALS[type].feedCost*animals.length;
-  if(!spend(cost)) return;
-
-  const until = Date.now()+5*60*1000;
-  animals.forEach(a=>a.fedUntil=until);
-  addLog("Животные накормлены. Производство ускорено на 5 минут.");
-  saveQuietly();
-  render();
+ const arr=game.animals.filter(a=>a.type===type);if(!arr.length){notify("Сначала заведи хотя бы одно животное.");return;}
+ if(!spend(ANIMALS[type].feedCost*arr.length))return;
+ const until=Date.now()+300000;arr.forEach(a=>a.fedUntil=until);addLog("Животные накормлены. Производство ускорено на 5 минут.");saveQuietly();render();
 }
-
 function sellAll(){
-  let total = 0;
-  let sold = 0;
-
-  for(const [key,basePrice] of Object.entries(BASE_PRICES)){
-    const count = game.inventory[key]||0;
-    if(count>0){
-      total += count*Math.round(basePrice*marketMultiplier());
-      sold += count;
-      game.inventory[key] = 0;
-      updateQuest("sell",key,count);
-    }
-  }
-
-  if(!sold){notify("На складе пока нет продуктов для продажи.");return;}
-
-  game.coins += total;
-  addXP(Math.max(2,Math.floor(total/15)));
-  addLog("Продано продуктов: "+sold+" на "+total+" монет.");
-  saveQuietly();
-  render();
+ let total=0,sold=0;
+ const items=game.inventory._items||[];
+ for(const [key,base] of Object.entries(BASE_PRICES)){
+  const count=game.inventory[key]||0;if(count>0){total+=count*Math.round(base*marketMultiplier());sold+=count;game.inventory[key]=0;updateQuest("sell",key,count);}
+ }
+ for(const item of items){total+=Math.round(item.price*marketMultiplier());sold++;}
+ game.inventory._items=[];game.inventory._value=0;
+ if(!sold){notify("На складе пока нет продуктов для продажи.");return;}
+ game.coins+=total;game.soldUnits+=sold;addXP(Math.max(2,Math.floor(total/15)));
+ if(game.coins>=1000)game.achievements.rich=true;
+ addLog("Продано продуктов: "+sold+" на "+total+" монет.");updateQuest("sell","any",0);saveQuietly();render();
 }
-
 function updateQuest(type,target,amount){
-  for(const quest of game.quests){
-    if(quest.done||quest.type!==type) continue;
-    const matches = quest.target==="any" || quest.target===target;
-    if(matches) quest.progress = Math.min(quest.goal,quest.progress+amount);
-  }
+ for(const q of game.quests){if(q.done||q.type!==type)continue;if(q.target==="any"||q.target===target)q.progress=Math.min(q.goal,q.progress+amount);}
 }
-
 function claimQuest(id){
-  const quest = game.quests.find(q=>q.id===id);
-  if(!quest||quest.done||quest.progress<quest.goal) return;
-
-  quest.done = true;
-  game.coins += quest.reward;
-  addXP(quest.xp);
-  addLog("Выполнено задание: "+quest.title+". Награда: "+quest.reward+" монет.");
-
-  if(game.quests.every(q=>q.done)){
-    game.questSet++;
-    game.quests = makeQuests(game.questSet);
-    addLog("Появились новые поручения.");
-  }
-  saveQuietly();
-  render();
+ const q=game.quests.find(x=>x.id===id);if(!q||q.done||q.progress<q.goal)return;
+ q.done=true;game.coins+=q.reward;addXP(q.xp);addLog("Выполнено: "+q.title+". Награда: "+q.reward+" монет.");
+ if(game.quests.every(x=>x.done)){game.questSet++;game.quests=makeQuests(game.questSet);addLog("Появились новые поручения.");}
+ saveQuietly();render();
 }
-
-function todayKey(){
-  const date = new Date();
-  return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-}
-
+function todayKey(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function claimDaily(){
-  if(game.lastDaily===todayKey()){
-    notify("Награда дня уже получена. Следующая появится после смены даты.");
-    return;
-  }
-  game.lastDaily = todayKey();
-  const reward = 25+game.level*5;
-  game.coins += reward;
-  addXP(5);
-  addLog("Получена ежедневная награда: "+reward+" монет и 5 опыта.");
-  saveQuietly();
-  render();
+ if(game.lastDaily===todayKey()){notify("Награда дня уже получена. Возвращайся после смены даты.");return;}
+ game.lastDaily=todayKey();const reward=25+game.level*5;game.coins+=reward;addXP(5);addLog("Ежедневная награда: "+reward+" монет и 5 опыта.");saveQuietly();render();
 }
-
 function rollEvent(){
-  if(game.event.until>Date.now()) return;
-
-  const random = Math.random();
-  if(random<0.34){
-    game.event={
-      type:"growth",until:Date.now()+3*60*1000,
-      label:"🌧️ Тёплый дождь! Растения растут на 25% быстрее в ближайшие 3 минуты."
-    };
-  }else if(random<0.67){
-    game.event={
-      type:"market",multiplier:1.5,until:Date.now()+3*60*1000,
-      label:"📈 Высокий спрос! Продажа продукции приносит на 50% больше монет в ближайшие 3 минуты."
-    };
-  }else{
-    game.event={
-      type:"normal",until:Date.now()+3*60*1000,
-      label:"☀️ Ясная погода. Можно спокойно работать."
-    };
-  }
+ const pool=EVENTS.filter(e=>e.type!=="normal");
+ let ev;
+ const roll=Math.random();
+ if(roll<.18)ev=EVENTS.find(e=>e.type==="growth");
+ else if(roll<.34)ev=EVENTS.find(e=>e.type==="market");
+ else if(roll<.47)ev=EVENTS.find(e=>e.type==="gold");
+ else if(roll<.59)ev=EVENTS.find(e=>e.type==="moon");
+ else if(roll<.7)ev=EVENTS.find(e=>e.type==="storm");
+ else if(roll<.79)ev=EVENTS.find(e=>e.type==="fireflies");
+ else if(roll<.86)ev=EVENTS.find(e=>e.type==="meteor");
+ else if(roll<.92)ev=EVENTS.find(e=>e.type==="rainbow");
+ else if(roll<.96&&game.level>=5)ev=EVENTS.find(e=>e.type==="rift");
+ else ev=EVENTS.find(e=>e.type==="normal");
+ game.event={type:ev.type,until:Date.now()+ev.duration,label:ev.emoji+" "+ev.name+"! "+ev.label,mutationChance:ev.mutationChance};
+ addLog("Событие: "+ev.name+". "+ev.label);
 }
-
 function renderShop(){
-  const box = document.getElementById("seedShop");
-  box.innerHTML = "";
-
-  for(const [key,crop] of Object.entries(CROPS)){
-    const locked = game.level<crop.unlock;
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <div class="emoji">${locked?"🔒":crop.emoji}</div>
-      <h3>${crop.name}</h3>
-      <p>${locked?"Откроется на уровне "+crop.unlock+".":crop.desc+" Рост: "+Math.round(crop.growMs/1000)+" сек."}<br>
-      Семена: ${crop.seedPrice} 🪙 · Продажа: ${crop.sellPrice} 🪙</p>
-      <button class="action ${selectedCrop===key?"":"alt"}" ${locked?"disabled":""}>
-        ${locked?"Закрыто":selectedCrop===key?"✓ Выбрано":"Выбрать"}
-      </button>`;
-    div.querySelector("button").onclick=()=>{selectedCrop=key;render();};
-    box.appendChild(div);
-  }
+ const box=document.getElementById("seedShop");box.innerHTML="";
+ for(const [key,c] of Object.entries(CROPS)){
+  const locked=game.level<c.unlock,div=document.createElement("div");div.className="card";
+  div.innerHTML=`<div class="emoji">${locked?"🔒":c.emoji}</div><h3>${c.name}</h3><p>${locked?"Откроется на уровне "+c.unlock+".":c.desc+" Рост: "+Math.round(c.growMs/1000)+" сек."}<br>Семена: ${c.seedPrice} 🪙 · База: ${c.sellPrice} 🪙</p><button class="action ${selectedCrop===key?"":"alt"}" ${locked?"disabled":""}>${locked?"Закрыто":selectedCrop===key?"✓ Выбрано":"Выбрать"}</button>`;
+  div.querySelector("button").onclick=()=>{selectedCrop=key;render();};box.appendChild(div);
+ }
 }
-
 function renderPlots(){
-  const box = document.getElementById("plots");
-  box.innerHTML = "";
-
-  game.plots.forEach(plot=>{
-    const div = document.createElement("div");
-    div.className = "card plot";
-
-    if(!plot.crop){
-      const crop = CROPS[selectedCrop];
-      div.innerHTML = `
-        <div class="emoji">🟫</div>
-        <h3>Грядка №${plot.id}</h3>
-        <p>Пустая. Выбрано: ${crop.name}.</p>
-        <button class="action">🌱 Посадить · ${crop.seedPrice} 🪙</button>`;
-      div.querySelector("button").onclick=()=>plant(plot.id);
-    }else{
-      const crop = CROPS[plot.crop];
-      const progress = cropProgress(plot);
-      const ready = progress>=1;
-      const remaining = crop.growMs*growthMultiplier()-(Date.now()-plot.plantedAt);
-      div.innerHTML = `
-        <div class="emoji">${ready?crop.emoji:"🌱"}</div>
-        <h3>${crop.name}</h3>
-        <p>${ready?"Урожай созрел!":"Осталось "+formatTime(remaining)}</p>
-        <div class="progress"><span style="width:${progress*100}%"></span></div>
-        <button class="action" ${ready?"":"disabled"}>${ready?"🧺 Собрать":"⏳ Растёт"}</button>`;
-      div.querySelector("button").onclick=()=>harvest(plot.id);
-    }
-    box.appendChild(div);
-  });
+ const box=document.getElementById("plots");box.innerHTML="";
+ game.plots.forEach(p=>{
+  const div=document.createElement("div");div.className="card plot";
+  if(!p.crop){
+   const c=CROPS[selectedCrop];div.innerHTML=`<div class="emoji">🟫</div><h3>Грядка №${p.id}</h3><p>Пустая. Выбрано: ${c.name}.</p><button class="action">🌱 Посадить · ${c.seedPrice} 🪙</button>`;
+   div.querySelector("button").onclick=()=>plant(p.id);
+  }else{
+   const c=CROPS[p.crop],progress=cropProgress(p),ready=progress>=1,remaining=c.growMs*growthMultiplier()-(Date.now()-p.plantedAt);
+   div.innerHTML=`<div class="emoji">${ready?c.emoji:"🌱"}</div><h3>${c.name}</h3><p>${ready?"Урожай созрел!":"Осталось "+formatTime(remaining)}<br>${game.event.until>Date.now()?"Событие: "+eventData(game.event.type).name:"Мутация пока не определена"}</p><div class="progress"><span style="width:${progress*100}%"></span></div><button class="action" ${ready?"":"disabled"}>${ready?"🧺 Собрать":"⏳ Растёт"}</button>`;
+   div.querySelector("button").onclick=()=>harvest(p.id);
+  }box.appendChild(div);
+ });
 }
-
 function renderAnimals(type){
-  const box = document.getElementById(type==="chicken"?"chickens":"cows");
-  const animals = game.animals.filter(a=>a.type===type);
-  box.innerHTML = "";
-
-  if(!animals.length){
-    box.innerHTML = `<div class="card"><div class="emoji">${ANIMALS[type].emoji}</div><p>Пока никого нет. Купи первое животное, чтобы начать производство.</p></div>`;
-    return;
-  }
-
-  animals.forEach(animal=>{
-    const data = ANIMALS[type];
-    const period = productionPeriod(animal);
-    const elapsed = Date.now()-animal.lastProducedAt;
-    const count = Math.floor(elapsed/period);
-    const remaining = period-(elapsed%period);
-    const fed = animal.fedUntil>Date.now();
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <div class="emoji">${data.emoji}</div>
-      <h3>${data.name} №${animal.id} ${fed?"🌿":""}</h3>
-      <p>${count>0?"Готово продукции: "+count:"Следующая через "+formatTime(remaining)}<br>
-      ${fed?"Сыто, производство ускорено":"Можно покормить для ускорения"}</p>
-      <button class="action" ${count>0?"":"disabled"}>${count>0?"🧺 Собрать "+data.productName:"⌛ Ожидание"}</button>`;
-    div.querySelector("button").onclick=()=>collectAnimal(animal.id);
-    box.appendChild(div);
-  });
+ const box=document.getElementById(type==="chicken"?"chickens":"cows"),arr=game.animals.filter(a=>a.type===type);box.innerHTML="";
+ if(!arr.length){box.innerHTML=`<div class="card"><div class="emoji">${ANIMALS[type].emoji}</div><p>Пока никого нет. Купи первое животное, чтобы начать производство.</p></div>`;return;}
+ arr.forEach(a=>{
+  const d=ANIMALS[type],period=productionPeriod(a),elapsed=Date.now()-a.lastProducedAt,count=Math.floor(elapsed/period),remaining=period-elapsed%period,fed=a.fedUntil>Date.now(),div=document.createElement("div");div.className="card";
+  div.innerHTML=`<div class="emoji">${d.emoji}</div><h3>${d.name} №${a.id} ${fed?"🌿":""}</h3><p>${count>0?"Готово продукции: "+count:"Следующая через "+formatTime(remaining)}<br>${fed?"Сыто, производство ускорено":"Можно покормить для ускорения"}</p><button class="action" ${count>0?"":"disabled"}>${count>0?"🧺 Собрать "+d.productName:"⌛ Ожидание"}</button>`;
+  div.querySelector("button").onclick=()=>collectAnimal(a.id);box.appendChild(div);
+ });
 }
-
 function renderInventory(){
-  const box = document.getElementById("inventory");
-  box.innerHTML = "";
-
-  for(const [key,name] of Object.entries(PRODUCT_NAMES)){
-    const chip = document.createElement("div");
-    chip.className = "chip";
-    chip.textContent = name+": "+(game.inventory[key]||0);
-    box.appendChild(chip);
-  }
+ const box=document.getElementById("inventory");box.innerHTML="";
+ for(const [key,name] of Object.entries(PRODUCT_NAMES)){const chip=document.createElement("div");chip.className="chip";chip.textContent=name+": "+(game.inventory[key]||0);box.appendChild(chip);}
+ const items=game.inventory._items||[];
+ if(items.length){const grouped={};items.forEach(i=>{const k=i.key+"|"+i.rarity+"|"+(i.mutation||"");grouped[k]=(grouped[k]||0)+1;});
+  for(const [k,n] of Object.entries(grouped)){const [crop,rarity,mutation]=k.split("|");const r=RARITIES.find(x=>x.key===rarity);const chip=document.createElement("div");chip.className="chip";chip.textContent=(CROPS[crop]?.emoji||"🌱")+" "+CROPS[crop]?.name+" · "+r.name+(mutation?" · "+MUTATIONS[mutation].emoji+" "+MUTATIONS[mutation].name:"")+" ×"+n;box.appendChild(chip);}
+ }
 }
-
 function renderQuests(){
-  const box = document.getElementById("quests");
-  box.innerHTML = "";
-  let done = 0;
-
-  game.quests.forEach(quest=>{
-    if(quest.done) done++;
-    const div = document.createElement("div");
-    div.className = "quest"+(quest.done?" done":"");
-    div.innerHTML = `
-      <div class="quest-top"><b>${quest.done?"✓ ":""}${quest.title}</b><span>${Math.min(quest.progress,quest.goal)}/${quest.goal}</span></div>
-      <div class="progress"><span style="width:${Math.min(100,quest.progress/quest.goal*100)}%"></span></div>
-      <div class="quest-top"><small>Награда: ${quest.reward} 🪙 и ${quest.xp} XP</small>
-      <button class="smallbtn" style="padding:5px 8px" ${quest.done||quest.progress<quest.goal?"disabled":""}>${quest.done?"Получено":"Забрать"}</button></div>`;
-    div.querySelector("button").onclick=()=>claimQuest(quest.id);
-    box.appendChild(div);
-  });
-
-  document.getElementById("questSummary").innerHTML =
-    done+"/3 <span class=\"chev\">⌄</span>";
+ const box=document.getElementById("quests");box.innerHTML="";let done=0;
+ game.quests.forEach(q=>{
+  if(q.done)done++;const div=document.createElement("div");div.className="quest"+(q.done?" done":"");
+  div.innerHTML=`<div class="quest-top"><b>${q.done?"✓ ":""}${q.title}</b><span>${Math.min(q.progress,q.goal)}/${q.goal}</span></div><div class="progress"><span style="width:${Math.min(100,q.progress/q.goal*100)}%"></span></div><div class="quest-top"><small>Награда: ${q.reward} 🪙 и ${q.xp} XP</small><button class="smallbtn" style="padding:5px 8px" ${q.done||q.progress<q.goal?"disabled":""}>${q.done?"Получено":"Забрать"}</button></div>`;
+  div.querySelector("button").onclick=()=>claimQuest(q.id);box.appendChild(div);
+ });
+ document.getElementById("questSummary").innerHTML=done+"/3 <span class=\"chev\">⌄</span>";
 }
-
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,char=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[char]);
+function renderMutationBook(){
+ const box=document.getElementById("mutationBook");box.innerHTML="";
+ document.getElementById("mutationSummary").innerHTML=game.discoveries.length+"/"+Object.keys(MUTATIONS).length+" открыто <span class=\"chev\">⌄</span>";
+ for(const [key,m] of Object.entries(MUTATIONS)){
+  const found=game.discoveries.includes(key),div=document.createElement("div");div.className="card";
+  div.innerHTML=`<div class="emoji">${found?m.emoji:"❔"}</div><h3>${found?m.name:"Неизвестная мутация"}</h3><p>${found?m.desc:"Условия: "+m.events.map(t=>eventData(t).name).join(", ")+". Найди её во время подходящего события."}<br>${found?"Цена ×"+m.mult:"Пока не обнаружена"}</p>`;
+  box.appendChild(div);
+ }
 }
-
+function renderAchievements(){
+ const a=game.achievements,items=[
+ ["firstHarvest","🌱 Первый урожай","Собери первое растение."],
+ ["farmer","🧑‍🌾 Трудолюбивый фермер","Собери 10 растений."],
+ ["mutant","✨ Коллекционер мутаций","Найди 5 мутаций."],
+ ["collector","📚 Исследователь","Открой все мутации."],
+ ["rich","🪙 Богач","Накопи 1000 монет одновременно."]
+ ];
+ if(game.discoveries.length===Object.keys(MUTATIONS).length)a.collector=true;
+ const box=document.getElementById("achievements");box.innerHTML="";
+ items.forEach(([key,title,desc])=>{const div=document.createElement("div");div.className="quest"+(a[key]?" done":"");div.innerHTML=`<b>${a[key]?"✅":"🔒"} ${title}</b><p class="muted">${desc}</p>`;box.appendChild(div);});
+ const div=document.createElement("div");div.className="quest";div.innerHTML=`<b>🔥 Серия сборов: ${game.combo}</b><p class="muted">Лучшая серия: ${game.bestCombo}. Каждый урожай увеличивает серию. Продажа товаров её не сбрасывает.</p>`;box.appendChild(div);
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function render(){
-  document.getElementById("coins").textContent=game.coins;
-  document.getElementById("level").textContent=game.level;
-  document.getElementById("xpBar").style.width=Math.min(100,game.xp/xpNeed()*100)+"%";
-  document.getElementById("xpText").textContent=game.xp+" / "+xpNeed()+" опыта до следующего уровня";
-  document.getElementById("plotCount").textContent=game.plots.length+"/"+MAX_PLOTS;
-  document.getElementById("animalCount").textContent=game.animals.length+"/20";
-  document.getElementById("plotsSummary").innerHTML=game.plots.length+" участков <span class=\"chev\">⌄</span>";
-  document.getElementById("chickenSummary").innerHTML=animalCount("chicken")+"/10 <span class=\"chev\">⌄</span>";
-  document.getElementById("cowSummary").innerHTML=animalCount("cow")+"/10 <span class=\"chev\">⌄</span>";
-  document.getElementById("plotPrice").textContent=40+(game.plots.length-3)*25;
-  document.getElementById("farmMood").textContent =
-    game.level<3 ? "Развивай хозяйство, чтобы открыть редкие культуры." :
-    game.level<5 ? "Ферма растёт. Уже доступны более ценные растения." :
-    "Опытный фермер знает: прибыль любит терпение.";
-
-  document.getElementById("eventBox").textContent =
-    game.event.until>Date.now()
-      ? game.event.label
-      : "Погода спокойная. Скоро появится новое событие.";
-
-  renderShop();
-  renderPlots();
-  renderAnimals("chicken");
-  renderAnimals("cow");
-  renderInventory();
-  renderQuests();
-  document.getElementById("log").innerHTML=game.log.map(escapeHtml).join("<br>");
-  saveQuietly();
+ document.getElementById("coins").textContent=game.coins;document.getElementById("level").textContent=game.level;
+ document.getElementById("xpBar").style.width=Math.min(100,game.xp/xpNeed()*100)+"%";
+ document.getElementById("xpText").textContent=game.xp+" / "+xpNeed()+" опыта до следующего уровня";
+ document.getElementById("plotCount").textContent=game.plots.length+"/"+MAX_PLOTS;document.getElementById("animalCount").textContent=game.animals.length+"/20";
+ document.getElementById("plotsSummary").innerHTML=game.plots.length+" участков <span class=\"chev\">⌄</span>";
+ document.getElementById("chickenSummary").innerHTML=animalCount("chicken")+"/10 <span class=\"chev\">⌄</span>";
+ document.getElementById("cowSummary").innerHTML=animalCount("cow")+"/10 <span class=\"chev\">⌄</span>";
+ document.getElementById("plotPrice").textContent=game.plots.length>=MAX_PLOTS?"MAX":40+(game.plots.length-3)*25;
+ document.getElementById("farmMood").textContent=game.level<3?"Развивай хозяйство, чтобы открыть редкие культуры.":game.level<5?"Ферма растёт. Следи за событиями и мутациями.":"Опытный фермер знает: удача любит подготовленных.";
+ document.getElementById("eventBox").textContent=game.event.until>Date.now()?game.event.label:"Событие закончилось. Скоро мир снова начнёт чудить.";
+ renderShop();renderPlots();renderAnimals("chicken");renderAnimals("cow");renderInventory();renderQuests();renderMutationBook();renderAchievements();
+ document.getElementById("log").innerHTML=game.log.map(escapeHtml).join("<br>");saveQuietly();
 }
-
 document.getElementById("homeLink").href="../home/index.html"+location.search;
-
-if(!game.quests.length) game.quests=makeQuests(game.questSet||0);
-rollEvent();
+if(!game.quests.length)game.quests=makeQuests(game.questSet||0);
+if(!game.event.until||game.event.until<Date.now())rollEvent();
 render();
-
-setInterval(()=>{
-  if(game.event.until<=Date.now()) rollEvent();
-  render();
-},1000);
-
+setInterval(()=>{if(game.event.until<=Date.now())rollEvent();render();},1000);
 window.addEventListener("beforeunload",saveQuietly);
 </script>
 </body>
