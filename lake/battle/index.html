@@ -7,55 +7,49 @@
 <title>Сражение — Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--bg:#101014;--panel:rgba(25,24,30,.96);--line:#45404b;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779;--gold2:#8e7040;--red:#d65d63;--green:#77b98b}
+:root{--panel:rgba(25,24,30,.96);--line:#45404b;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779;--red:#d65d63;--green:#77b98b}
 *{box-sizing:border-box}
-html{min-height:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,rgba(111,76,132,.23),transparent 50%),linear-gradient(rgba(10,9,14,.82),rgba(10,9,14,.96)),url('../IMG_20261020_125409.jpg') center/cover fixed no-repeat,var(--bg);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+html{min-height:100%;background:#101014}
+body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,#6f4c843b,transparent 50%),linear-gradient(#0a090ed1,#0a090ef5),url('../IMG_20261020_125409.jpg') center/cover fixed no-repeat,#101014;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
 button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}
-.wrap{max-width:520px;margin:0 auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
+.wrap{max-width:520px;margin:auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
 .head{display:flex;align-items:center;gap:10px;padding:7px 0 14px}
-.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:rgba(25,24,30,.85);font-size:12px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#19181de0;font-size:12px}
 .headTitle{min-width:0;flex:1}.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
 .headTitle h1{font-size:19px;line-height:1.25;margin:3px 0 0;font-weight:800}
-.statusPill{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:10px;color:var(--muted);background:rgba(25,24,30,.75)}
-.statusPill.live{color:var(--green);border-color:#42644e}.statusPill.busy{color:var(--gold);border-color:var(--gold2)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px rgba(0,0,0,.17)}
+.statusPill{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:10px;color:var(--muted);background:#19181dc9}
+.statusPill.live{color:var(--green);border-color:#42644e}.statusPill.busy{color:var(--gold);border-color:#8e7040}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px #0002}
 .arena{position:relative;overflow:hidden;padding:13px}
-.arena:before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+.arena:before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,#8e7040,transparent)}
 .arenaTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .sectionLabel{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}.roundLabel{font-size:10px;color:var(--gold)}
-.fighters{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);gap:7px;align-items:start}
+.fighters{display:grid;grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);gap:7px;align-items:start}
 .fighter{min-width:0;text-align:center}
-.portraitFrame{position:relative;width:100%;max-width:150px;aspect-ratio:1;margin:0 auto 9px;padding:4px;border:1px solid #514653;border-radius:15px;background:linear-gradient(145deg,#38303e,#15141a);overflow:hidden;transition:transform .2s,border-color .2s,filter .2s}
-.portraitFrame:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.10),transparent 42%,rgba(0,0,0,.25))}
+.portraitFrame{position:relative;width:100%;max-width:150px;aspect-ratio:1;margin:0 auto 9px;padding:4px;border:1px solid #514653;border-radius:15px;background:linear-gradient(145deg,#38303e,#15141a);overflow:hidden}
 .portraitFrame img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px;background:#19171e}
 .fighterName{font-weight:800;font-size:13px;overflow-wrap:anywhere;min-height:18px}.fighterRole{font-size:10px;color:var(--muted);margin-top:2px;min-height:14px}
 .hpNumbers{display:flex;justify-content:space-between;gap:4px;margin-top:11px;font-size:10px;color:var(--muted)}
 .hpNumbers strong{color:var(--text);font-size:11px;font-variant-numeric:tabular-nums}
 .bar{height:9px;margin-top:5px;border-radius:999px;overflow:hidden;background:#302b35;border:1px solid #403742}
-.bar i{display:block;width:0;height:100%;border-radius:999px;transition:width .4s ease}
+.bar i{display:block;width:0;height:100%;border-radius:999px;transition:width .35s}
 .bar.hp i{background:linear-gradient(90deg,#8c333d,#e46a72)}.bar.enemyHp i{background:linear-gradient(90deg,#8d4c2c,#e2a05d)}
 .hpCaption{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:#847c8b}
-.vs{align-self:start;margin-top:37px;text-align:center;font-weight:900;font-size:13px;color:var(--gold);letter-spacing:1px;text-shadow:0 0 15px rgba(214,183,121,.3)}
-.fighter.player .portraitFrame{border-color:#5b526a}.fighter.enemy .portraitFrame{border-color:#71484a}
-.fighter.hit .portraitFrame{animation:hit .36s ease}.fighter.attack .portraitFrame{animation:attack .32s ease}
-@keyframes hit{0%,100%{transform:translateX(0);filter:none}25%{transform:translateX(-5px);filter:brightness(1.9) sepia(.3)}65%{transform:translateX(4px);filter:brightness(1.4)}}
-@keyframes attack{0%,100%{transform:scale(1)}45%{transform:scale(1.055);filter:brightness(1.5)}}
-.battleMessage{margin-top:14px;padding:11px 12px;border:1px solid #39333f;border-radius:12px;background:rgba(10,10,14,.48);display:flex;gap:9px;align-items:flex-start}
-.messageIcon{font-size:17px;line-height:1.2}.messageBody{min-width:0;flex:1}.messageTitle{font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
+.vs{margin-top:37px;text-align:center;font-weight:900;font-size:13px;color:var(--gold)}
+.battleMessage{margin-top:14px;padding:11px 12px;border:1px solid #39333f;border-radius:12px;background:#0a0a0e7d;display:flex;gap:9px;align-items:flex-start}
+.messageIcon{font-size:17px}.messageBody{min-width:0;flex:1}.messageTitle{font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
 #battleText{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;font-size:12px;color:#d1c8d6}
 .logCard{padding:12px}.logHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
 .logTitle{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}.logCount{font-size:10px;color:#77717d}
 #battleLog{display:flex;flex-direction:column;gap:6px}
-.logEntry{font-size:11px;line-height:1.45;padding:8px 10px;border-left:2px solid #55475e;background:rgba(255,255,255,.025);border-radius:0 7px 7px 0;overflow-wrap:anywhere}
-.logEntry.good{border-color:var(--green)}.logEntry.bad{border-color:var(--red)}.logEntry.info{border-color:var(--gold)}.logEntry:first-child{color:var(--text)}
+.logEntry{font-size:11px;line-height:1.45;padding:8px 10px;border-left:2px solid #55475e;background:#ffffff08;border-radius:0 7px 7px 0;overflow-wrap:anywhere}
+.logEntry.good{border-color:var(--green)}.logEntry.bad{border-color:var(--red)}.logEntry.info{border-color:var(--gold)}
 .skillCard{padding:13px}.skillHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .skillHeader h2{font-size:12px;letter-spacing:1.5px;margin:0}.skillHeader span{font-size:10px;color:var(--muted)}
 .skillGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.skill{position:relative;min-height:77px;text-align:left;padding:11px 10px;border-radius:12px;border:1px solid #514456;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer;transition:transform .12s,border-color .15s,opacity .15s;overflow:hidden}
-.skill:active:not(:disabled){transform:scale(.98)}.skill:disabled{cursor:default;opacity:.52}
-.skill.basic{background:linear-gradient(145deg,#292c31,#1d1d23);border-color:#41434a}.skill.escape{background:linear-gradient(145deg,#30252a,#211c22);border-color:#684248}
-.skillName{font-weight:750;font-size:12px;padding-right:21px;line-height:1.4}.skillDesc{font-size:10px;color:var(--muted);line-height:1.35;margin-top:5px}
+.skill{position:relative;min-height:77px;text-align:left;padding:11px 10px;border-radius:12px;border:1px solid #514456;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer;overflow:hidden}
+.skill:disabled{cursor:default;opacity:.52}.skill.basic{background:linear-gradient(145deg,#292c31,#1d1d23);border-color:#41434a}.skill.escape{background:linear-gradient(145deg,#30252a,#211c22);border-color:#684248}
+.skillName{font-weight:750;font-size:12px;line-height:1.4}.skillDesc{font-size:10px;color:var(--muted);line-height:1.35;margin-top:5px}
 .skillIcon{font-size:17px;float:left;margin-right:7px;line-height:1.2}
 .cooldown{position:absolute;right:7px;top:7px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#f1d5a0;background:#5a462a;font-size:10px;font-weight:800;padding:0 4px}
 .skillFoot{display:flex;align-items:center;gap:7px;margin-top:10px;color:var(--muted);font-size:10px;line-height:1.4}
@@ -70,666 +64,229 @@ button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}
 .resultActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
 .actionBtn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 9px;background:#29252f;color:var(--text);text-decoration:none;font-weight:750;font-size:12px;cursor:pointer}
 .actionBtn.primary{color:#20190f;background:linear-gradient(135deg,#e4ca91,#b28c4d);border-color:#d4b779}
-.actionBtn:disabled{opacity:.5}.defeatCard{border-color:#783b42;background:linear-gradient(155deg,rgba(52,25,32,.98),rgba(24,22,28,.98))}
-.defeatCard .resultTitle{color:#f08b8b}.victoryCard{border-color:#79603b;background:linear-gradient(155deg,rgba(48,39,26,.98),rgba(24,22,28,.98))}
+.actionBtn:disabled{opacity:.5}.defeatCard{border-color:#783b42;background:linear-gradient(155deg,#341920f5,#18161cf5)}
+.defeatCard .resultTitle{color:#f08b8b}.victoryCard{border-color:#79603b;background:linear-gradient(155deg,#30271af5,#18161cf5)}
 .victoryCard .resultTitle{color:var(--gold)}.errorBox{border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.5}
-.loading{opacity:.7;pointer-events:none}
-.floatDamage{position:absolute;z-index:4;left:50%;top:25%;transform:translateX(-50%);font-size:24px;font-weight:900;color:#ff8989;text-shadow:0 2px 8px #000;pointer-events:none;animation:floatUp .8s ease forwards}
-.floatDamage.good{color:#d7c18b}
-@keyframes floatUp{0%{opacity:0;transform:translate(-50%,8px) scale(.7)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-32px) scale(1.1)}}
+.loading{opacity:.72;pointer-events:none}
 @media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.card{padding:11px}.fighters{grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:5px}.fighterName{font-size:12px}.skill{padding:9px 8px;min-height:75px}.skillName{font-size:11px}.headTitle h1{font-size:16px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header class="head">
-  <a class="back" id="backHome" href="../index.html">← Озёра</a>
-  <div class="headTitle"><div class="eyebrow">Lord of the Mysteries</div><h1>Сражение</h1></div>
-  <div class="statusPill" id="statusPill">Загрузка</div>
+<a class="back" id="backHome" href="../index.html">← Озёра</a>
+<div class="headTitle"><div class="eyebrow">Lord of the Mysteries</div><h1>Сражение</h1></div>
+<div class="statusPill" id="statusPill">Загрузка</div>
 </header>
-
 <main>
-<section class="card arena" id="arena">
-  <div class="arenaTop"><span class="sectionLabel">Поле боя</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
-  <div class="fighters">
-    <div class="fighter player" id="playerFighter">
-      <div class="portraitFrame"><img id="playerImg" src="../../i-72.jpeg" alt="Портрет игрока" onerror="this.onerror=null;this.src='../../i-72.jpeg'"></div>
-      <div class="fighterName" id="playerName">Путешественник</div>
-      <div class="fighterRole" id="playerPath">Путь неизвестен</div>
-      <div class="hpNumbers"><span>❤️ Здоровье</span><strong id="playerHp">—</strong></div>
-      <div class="bar hp"><i id="playerHpBar"></i></div>
-      <div class="hpCaption"><span id="playerHpPercent">—</span><span id="playerHpState">В строю</span></div>
-    </div>
-    <div class="vs">VS</div>
-    <div class="fighter enemy" id="enemyFighter">
-      <div class="portraitFrame"><img id="enemyImg" src="./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png" alt="Портрет противника" onerror="this.onerror=null;this.src='./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png'"></div>
-      <div class="fighterName" id="enemyLabel">Противник</div>
-      <div class="fighterRole" id="enemyRole">Враждебная сущность</div>
-      <div class="hpNumbers"><span>🩸 Здоровье</span><strong id="enemyHp">—</strong></div>
-      <div class="bar enemyHp"><i id="enemyHpBar"></i></div>
-      <div class="hpCaption"><span id="enemyHpPercent">—</span><span id="enemyHpState">Опасен</span></div>
-    </div>
-  </div>
-  <div class="battleMessage"><div class="messageIcon" id="messageIcon">📜</div><div class="messageBody"><div class="messageTitle" id="messageTitle">ХОД СРАЖЕНИЯ</div><div id="battleText" aria-live="polite">Подготавливаем поле боя…</div></div></div>
-</section>
-
-<section class="card logCard">
-  <div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div>
-  <div id="battleLog"><div class="logEntry info">Туман скрывает очертания противника.</div></div>
-</section>
-
-<section class="card skillCard" id="skillCard">
-  <div class="skillHeader"><h2>ТВОИ ДЕЙСТВИЯ</h2><span id="skillPathLabel">Способности пути</span></div>
-  <div class="skillGrid" id="battleSkills"></div>
-  <div class="skillFoot"><span class="dot"></span><span>Перезарядка и результат действия определяются игровой системой.</span></div>
-</section>
-
-<section class="card resultCard victoryCard hidden" id="victoryCard">
-  <div class="resultSymbol">✦</div><div class="resultTitle">ПОБЕДА</div>
-  <div class="resultText">Противник повержен. Туман на мгновение расступается, оставляя тебе награду за выживание.</div>
-  <div class="rewardGrid">
-    <div class="reward"><div class="rewardValue">+<span id="vTenge">1</span></div><div class="rewardLabel">£ Тенге</div></div>
-    <div class="reward"><div class="rewardValue">+<span id="vExp">1</span></div><div class="rewardLabel">✨ Опыт</div></div>
-  </div>
-  <div class="resultActions">
-    <button class="actionBtn primary" id="exploreAgainBtn" type="button">⌕ Исследовать снова</button>
-    <button class="actionBtn" id="victoryCloseBtn" type="button">Закрыть</button>
-  </div>
-</section>
-
-<section class="card resultCard defeatCard hidden" id="defeatCard">
-  <div class="resultSymbol">☠</div><div class="resultTitle">ПОРАЖЕНИЕ</div>
-  <div class="resultText" id="defeatText">Силы иссякли. Тебе придётся дождаться воскрешения.</div>
-  <div class="reward"><div class="rewardValue">10:00</div><div class="rewardLabel">Время до воскрешения, согласно игровой системе</div></div>
-  <div class="resultActions">
-    <button class="actionBtn primary" id="defeatCloseBtn" type="button">← К Озёрам</button>
-    <button class="actionBtn" id="defeatRetryBtn" type="button">Обновить данные</button>
-  </div>
-</section>
-
-<section class="card errorBox hidden" id="errorBox" role="alert">
-  <div id="errorText">Не удалось выполнить действие.</div>
-  <button class="actionBtn" id="retryBtn" type="button" style="margin-top:10px">Повторить загрузку</button>
-</section>
-</main>
-<div class="bottomNote">Последовательность боя и игровые награды обрабатываются сервером.<br>Не каждый туманный силуэт обязан быть дружелюбным.</div>
+<section class="card arena">
+<div class="arenaTop"><span class="sectionLabel">Поле боя</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
+<div class="fighters">
+<div class="fighter" id="playerFighter">
+<div class="portraitFrame"><img id="playerImg" src="../../i-72.jpeg" alt="Игрок"></div>
+<div class="fighterName" id="playerName">Путешественник</div><div class="fighterRole" id="playerPath">Путь неизвестен</div>
+<div class="hpNumbers"><span>❤️ Здоровье</span><strong id="playerHp">—</strong></div><div class="bar hp"><i id="playerHpBar"></i></div><div class="hpCaption"><span id="playerHpPercent">—</span><span id="playerHpState">—</span></div>
 </div>
-
+<div class="vs">VS</div>
+<div class="fighter" id="enemyFighter">
+<div class="portraitFrame"><img id="enemyImg" src="./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png" alt="Противник"></div>
+<div class="fighterName" id="enemyLabel">Противник</div><div class="fighterRole" id="enemyRole">Враждебная сущность</div>
+<div class="hpNumbers"><span>🩸 Здоровье</span><strong id="enemyHp">—</strong></div><div class="bar enemyHp"><i id="enemyHpBar"></i></div><div class="hpCaption"><span id="enemyHpPercent">—</span><span id="enemyHpState">—</span></div>
+</div>
+</div>
+<div class="battleMessage"><div class="messageIcon" id="messageIcon">📜</div><div class="messageBody"><div class="messageTitle" id="messageTitle">ХОД СРАЖЕНИЯ</div><div id="battleText" aria-live="polite">Подготавливаем поле боя…</div></div></div>
+</section>
+<section class="card logCard"><div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div><div id="battleLog"><div class="logEntry info">Туман скрывает очертания противника.</div></div></section>
+<section class="card skillCard" id="skillCard"><div class="skillHeader"><h2>ТВОИ ДЕЙСТВИЯ</h2><span id="skillPathLabel">Способности пути</span></div><div class="skillGrid" id="battleSkills"></div><div class="skillFoot"><span class="dot"></span><span>Перезарядка и результат определяются игровой системой.</span></div></section>
+<section class="card resultCard victoryCard hidden" id="victoryCard">
+<div class="resultSymbol">✦</div><div class="resultTitle">ПОБЕДА</div><div class="resultText">Противник повержен. Туман расступается, оставляя награду.</div>
+<div class="rewardGrid"><div class="reward"><div class="rewardValue">+<span id="vTenge">1</span></div><div class="rewardLabel">£ Тенге</div></div><div class="reward"><div class="rewardValue">+<span id="vExp">1</span></div><div class="rewardLabel">✨ Опыт</div></div></div>
+<div class="resultActions"><button class="actionBtn primary" id="exploreAgainBtn" type="button">⌕ Исследовать снова</button><button class="actionBtn" id="victoryCloseBtn" type="button">Закрыть</button></div>
+</section>
+<section class="card resultCard defeatCard hidden" id="defeatCard">
+<div class="resultSymbol">☠</div><div class="resultTitle">ПОРАЖЕНИЕ</div><div class="resultText" id="defeatText">Силы иссякли. Дождись воскрешения.</div>
+<div class="resultActions"><button class="actionBtn primary" id="defeatCloseBtn" type="button">← К озёрам</button><button class="actionBtn" id="defeatRetryBtn" type="button">Обновить данные</button></div>
+</section>
+<section class="card errorBox hidden" id="errorBox" role="alert"><div id="errorText"></div><button class="actionBtn" id="retryBtn" type="button" style="margin-top:10px">Повторить загрузку</button></section>
+</main>
+<div class="bottomNote">Ход боя и награды обрабатываются сервером.<br>Не каждый силуэт в тумане дружелюбен.</div>
+</div>
 <script>
 "use strict";
-
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  try { tg.setHeaderColor("#101014"); } catch(e) {}
-}
-
-const qs = new URLSearchParams(location.search);
-const uid = qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489";
-const p_enc = qs.get("p_enc") || qs.get("p") || "";
-const a_enc = qs.get("a_enc") || qs.get("a") || "";
-
-let PROFILE_URL = p_enc ? "https://api.telebotcreator.com/new-webhook?data=" + p_enc : "";
-let ACTION_URL = a_enc ? "https://api.telebotcreator.com/new-webhook?data=" + a_enc : "";
-
-const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
-
-const pics = {
-  "Утопленник": "./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png",
-  "Жаба": "./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#101014")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"7320193489");
+const pEnc=qs.get("p_enc")||qs.get("p")||"",aEnc=qs.get("a_enc")||qs.get("a")||"";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
+let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastPlayerHp=null,lastEnemyHp=null,lastCds={};
+const $=id=>document.getElementById(id);
+const skillInfo={
+ divination:{icon:"🔮",name:"Гадание",desc:"Попробуй повлиять на ход столкновения."},
+ boomerang:{icon:"🪃",name:"Бумеранг",desc:"Атакующее умение пути Шута."},
+ acting:{icon:"🎭",name:"Актёрство",desc:"Фирменная способность пути Шута."},
+ sailor_hit:{icon:"👊",name:"Сильный удар",desc:"Мощная атака пути Тирана."},
+ sailor_drink:{icon:"🍺",name:"Перепить",desc:"Способность пути Тирана."},
+ sailor_pray:{icon:"⚡",name:"Гнев",desc:"Сила пути Тирана."},
+ hunter_dagger:{icon:"🔥",name:"Берсерк",desc:"Атакующее умение охотника."},
+ hunter_trap:{icon:"🪤",name:"Ловушка",desc:"Тактическое умение охотника."},
+ hunter_boost:{icon:"😤",name:"Провокация",desc:"Способность пути охотника."},
+ basic:{icon:"⚔️",name:"Базовая атака",desc:"Обычная атака."},
+ flee:{icon:"🏃",name:"Отступить",desc:"Попробовать покинуть сражение."}
 };
+const pics={"Утопленник":"./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png","Жаба":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png","Лягушка":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"};
 
-const skillInfo = {
-  divination:{icon:"🔮",name:"Гадание",desc:"Попробуй повлиять на ход столкновения."},
-  boomerang:{icon:"🪃",name:"Бумеранг",desc:"Атакующее умение пути Шута."},
-  acting:{icon:"🎭",name:"Актёрство",desc:"Фирменная способность пути Шута."},
-  sailor_hit:{icon:"👊",name:"Сильный удар",desc:"Мощная атака пути Тирана."},
-  sailor_drink:{icon:"🍺",name:"Перепить",desc:"Способность пути Тирана."},
-  sailor_pray:{icon:"⚡",name:"Гнев",desc:"Сила пути Тирана."},
-  hunter_dagger:{icon:"🔥",name:"Берсерк",desc:"Атакующее умение охотника."},
-  hunter_trap:{icon:"🪤",name:"Ловушка",desc:"Тактическое умение охотника."},
-  hunter_boost:{icon:"😤",name:"Провокация",desc:"Способность пути охотника."},
-  basic:{icon:"⚔️",name:"Базовая атака",desc:"Обычное действие в бою."},
-  flee:{icon:"🏃",name:"Отступить",desc:"Попробовать покинуть сражение."}
-};
-
-let PLAYER_PATH = "";
-let busy = false;
-let ended = false;
-let initialized = false;
-let logEntries = [];
-let lastPlayerHp = null;
-let lastEnemyHp = null;
-let lastCds = {};
-
-const $ = id => document.getElementById(id);
-
-function unwrap(j) {
-  return j && j.result && typeof j.result === "object" ? j.result : j;
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+function txt(obj,keys,fallback=""){for(const k of keys){if(typeof obj?.[k]==="string"&&obj[k].trim())return obj[k];if(typeof obj?.[k]==="number")return String(obj[k])}return fallback}
+function setStatus(text,kind=""){const e=$("statusPill");e.textContent=text;e.className="statusPill"+(kind?" "+kind:"")}
+function setMessage(text,title="ХОД СРАЖЕНИЯ",icon="📜"){$("battleText").textContent=text||"Туман скрывает дальнейшие события.";$("messageTitle").textContent=title;$("messageIcon").textContent=icon}
+function showError(text){$("errorText").textContent=text||"Не удалось связаться с игровой системой.";$("errorBox").classList.remove("hidden")}
+function hideError(){$("errorBox").classList.add("hidden")}
+function setBusy(value,label){busy=value;document.body.classList.toggle("loading",value);if(value)setStatus(label||"Обработка…","busy");else if(!ended)setStatus("В бою","live");document.querySelectorAll("#battleSkills button").forEach(b=>b.disabled=value||ended||b.dataset.cooldown==="true");$("exploreAgainBtn").disabled=value}
+function safePercent(value,max){const n=Number(value),m=Number(max);return !Number.isFinite(n)||!Number.isFinite(m)||m<=0?0:Math.max(0,Math.min(100,n/m*100))}
+function setHealth(side,hp,maxHp){
+ const p=side==="player",hpEl=$(p?"playerHp":"enemyHp"),bar=$(p?"playerHpBar":"enemyHpBar"),percent=$(p?"playerHpPercent":"enemyHpPercent"),state=$(p?"playerHpState":"enemyHpState");
+ const n=Number(hp),m=Number(maxHp);
+ if(hp==null||maxHp==null||!Number.isFinite(n)||!Number.isFinite(m)||m<=0){hpEl.textContent="—";bar.style.width="0%";percent.textContent="—";state.textContent="Неизвестно";return}
+ hpEl.textContent=n+"/"+m;const pc=safePercent(n,m);bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
+ state.textContent=n<=0?(p?"Пал":"Повержен"):pc<=25?"Критически мало":pc<=55?"Ранен":p?"В строю":"Опасен";
 }
-
-function setStatus(text, kind="") {
-  const el = $("statusPill");
-  el.textContent = text;
-  el.className = "statusPill" + (kind ? " " + kind : "");
+function addLog(text,kind="info"){
+ if(!text||!String(text).trim())return;
+ logEntries.unshift({text:String(text),kind});if(logEntries.length>8)logEntries.length=8;
+ const log=$("battleLog");log.replaceChildren();
+ logEntries.forEach(e=>{const div=document.createElement("div");div.className="logEntry "+e.kind;div.textContent=e.text;log.appendChild(div)});
+ const n=logEntries.length;$("logCount").textContent=n+" "+(n===1?"запись":n>=2&&n<=4?"записи":"записей");
 }
-
-function setMessage(text, title="ХОД СРАЖЕНИЯ", icon="📜") {
-  $("battleText").textContent = text || "Туман скрывает дальнейшее развитие событий.";
-  $("messageTitle").textContent = title;
-  $("messageIcon").textContent = icon;
+function setImageForEnemy(enemy){
+ const img=$("enemyImg");img.onerror=function(){this.onerror=null;this.src="./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"};
+ img.src=pics[enemy]||pics["Утопленник"];
 }
+function lakeUrl(){const p=new URLSearchParams(location.search);p.delete("enemy");p.delete("event_data");const q=p.toString();return "../index.html"+(q?"?"+q:"")}
+function goLake(){location.href=lakeUrl()}
+function battleUrl(enemy){const p=new URLSearchParams(location.search);p.set("enemy",enemy);p.delete("event_data");return "./index.html?"+p.toString()}
+function openEvent(data){const p=new URLSearchParams(location.search);p.delete("enemy");p.set("event_data",JSON.stringify(data));location.href="../event/index.html?"+p.toString()}
 
-function showError(text) {
-  $("errorText").textContent = text || "Не удалось связаться с игровой системой. Проверь соединение и попробуй снова.";
-  $("errorBox").classList.remove("hidden");
+async function ensure(){
+ if(PROFILE_URL&&ACTION_URL)return true;
+ if(handshakePromise)return handshakePromise;
+ handshakePromise=(async()=>{
+  const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+  if(!r.ok)throw new Error("Не удалось подключиться к игровой системе (HTTP "+r.status+").");
+  const j=unwrap(await r.json()),p=j?.profile_url||j?.PROFILE_URL,a=j?.action_url||j?.ACTION_URL;
+  if(typeof p!=="string"||!p||typeof a!=="string"||!a)throw new Error("Сервер не вернул адреса профиля и действий.");
+  const pu=new URL(p),au=new URL(a);if(pu.protocol!=="https:"||au.protocol!=="https:")throw new Error("Некорректные адреса API.");
+  PROFILE_URL=pu.href;ACTION_URL=au.href;return true;
+ })();
+ try{return await handshakePromise}finally{handshakePromise=null}
 }
-
-function hideError() {
-  $("errorBox").classList.add("hidden");
+async function api(payload){
+ await ensure();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Сервер вернул некорректный ответ.");return d;
 }
-
-function setBusy(value, label) {
-  busy = value;
-  document.body.classList.toggle("loading", value);
-  if (value) setStatus(label || "Обработка…", "busy");
-  else if (!ended) setStatus("В бою", "live");
-
-  document.querySelectorAll("#battleSkills button").forEach(b => {
-    b.disabled = value || ended || b.dataset.cooldown === "true";
-  });
-
-  $("exploreAgainBtn").disabled = value;
+async function loadProfile(){
+ await ensure();
+ const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"});
+ if(!r.ok)throw new Error("Не удалось загрузить профиль (HTTP "+r.status+").");
+ const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Профиль игрока не получен.");return d;
 }
-
-function safePercent(value, max) {
-  const n = Number(value), m = Number(max);
-  if (!Number.isFinite(n) || !Number.isFinite(m) || m <= 0) return 0;
-  return Math.max(0, Math.min(100, n / m * 100));
+function getEnemyName(serverEnemy){let e=qs.get("enemy")||serverEnemy||"Утопленник";if(e==="Лягушка")e="Жаба";return e}
+function renderSkills(cds={}){
+ lastCds=cds||{};const path=PLAYER_PATH,box=$("battleSkills");box.replaceChildren();let acts;
+ if(path.includes("Шут")){acts=[["divination",lastCds.divination||0],["boomerang",lastCds.boomerang||0],["acting",lastCds.acting||0]];$("skillPathLabel").textContent="Путь Шута"}
+ else if(path.includes("Тирана")){acts=[["sailor_hit",lastCds.hit||0],["sailor_drink",lastCds.drink||0],["sailor_pray",lastCds.pray||0]];$("skillPathLabel").textContent="Путь Тирана"}
+ else if(path.includes("Жреца")||path.includes("Красного")){acts=[["hunter_dagger",lastCds.dagger||0],["hunter_trap",lastCds.trap||0],["hunter_boost",lastCds.boost||0]];$("skillPathLabel").textContent="Путь охотника"}
+ else{acts=[["divination",lastCds.divination||0],["boomerang",lastCds.boomerang||0],["acting",lastCds.acting||0]];$("skillPathLabel").textContent=path||"Способности пути"}
+ acts.forEach(([key,cd])=>addSkill(key,cd,""));
+ addSkill("basic",lastCds.basic||0,"basic");addSkill("flee",0,"escape");
 }
-
-function setHealth(side, hp, maxHp) {
-  const isPlayer = side === "player";
-  const hpEl = $(isPlayer ? "playerHp" : "enemyHp");
-  const bar = $(isPlayer ? "playerHpBar" : "enemyHpBar");
-  const percent = $(isPlayer ? "playerHpPercent" : "enemyHpPercent");
-  const state = $(isPlayer ? "playerHpState" : "enemyHpState");
-  const current = Number(hp), maximum = Number(maxHp);
-
-  if (hp == null || maxHp == null || !Number.isFinite(current) || !Number.isFinite(maximum) || maximum <= 0) {
-    hpEl.textContent = "—";
-    bar.style.width = "0%";
-    percent.textContent = "—";
-    state.textContent = "Неизвестно";
-    return;
+function addSkill(key,cd,cls){
+ const info=skillInfo[key],b=document.createElement("button");b.type="button";b.className="skill "+cls;b.dataset.cooldown=Number(cd)>0?"true":"false";b.disabled=busy||ended||Number(cd)>0;
+ const name=document.createElement("div");name.className="skillName";name.textContent=info.icon+" "+info.name;
+ const desc=document.createElement("div");desc.className="skillDesc";desc.textContent=info.desc;b.append(name,desc);
+ if(Number(cd)>0){const badge=document.createElement("span");badge.className="cooldown";badge.textContent=cd;b.appendChild(badge)}
+ else b.addEventListener("click",()=>doBattle(key));
+ $("battleSkills").appendChild(b);
+}
+function showVictory(d){
+ ended=true;setStatus("Победа");$("roundLabel").textContent="✦ Противник повержен";
+ $("vTenge").textContent=Number(d.tenge??1);$("vExp").textContent=Number(d.exp_add??1);
+ $("victoryCard").classList.remove("hidden");$("defeatCard").classList.add("hidden");$("skillCard").classList.add("hidden");hideError();
+ setMessage("Сражение завершено. Награда обработана игровой системой.","ИСХОД СРАЖЕНИЯ","✦");
+ addLog("Победа! Награда: "+Number(d.tenge??1)+" £ и "+Number(d.exp_add??1)+" опыта.","good");
+}
+function showDefeat(d){
+ ended=true;setStatus("Поражение");$("roundLabel").textContent="☠ Силы иссякли";
+ $("defeatCard").classList.remove("hidden");$("victoryCard").classList.add("hidden");$("skillCard").classList.add("hidden");hideError();
+ if(d?.text)$("defeatText").textContent=d.text;
+ setMessage(d?.text||"Ты больше не можешь продолжать бой.","ИСХОД СРАЖЕНИЯ","☠");addLog("Поражение. Сражение окончено.","bad");
+}
+async function refreshBattleState(){const s=await api({action:"battle_state"});if(s?.enemy_hp!=null&&s.enemy_max!=null)setHealth("enemy",s.enemy_hp,s.enemy_max);if(s?.cds)renderSkills(s.cds);return s}
+async function load(){
+ if(busy)return;setBusy(true,"Загрузка…");hideError();
+ try{
+  const profile=await loadProfile();PLAYER_PATH=profile.path||"";
+  $("playerName").textContent=profile.nickname||"Путешественник";$("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
+  setHealth("player",profile.hp,profile.max_hp);
+  const requested=qs.get("enemy");let state=null;
+  try{state=await api({action:"battle_state"})}catch(e){if(!requested)throw e}
+  const enemy=getEnemyName(state?.enemy);$("enemyLabel").textContent=enemy;$("enemyRole").textContent="Враждебная сущность";setImageForEnemy(enemy);
+  if(state?.ok){setHealth("enemy",state.enemy_hp,state.enemy_max);renderSkills(state.cds||{})}
+  else{setHealth("enemy",null,null);renderSkills({})}
+  if(!initialized){addLog("Ты столкнулся с противником: "+enemy+".","info");setMessage("Противник перед тобой. Выбирай действие и следи за перезарядкой.","БОЙ НАЧАЛСЯ","⚔️");initialized=true}
+  lastPlayerHp=Number(profile.hp);lastEnemyHp=state?.enemy_hp==null?null:Number(state.enemy_hp);
+  $("backHome").href=lakeUrl();setStatus("В бою","live");
+ }catch(e){showError(e.message);setStatus("Нет связи");setMessage("Не удалось получить данные сражения.","ОШИБКА СОЕДИНЕНИЯ","⚠️")}
+ finally{setBusy(false)}
+}
+async function doBattle(move){
+ if(busy||ended)return;hideError();setBusy(true,"Ход…");
+ try{
+  const d=await api({action:"battle",move});
+  if(d.error==="cooldown"){if(d.cds)renderSkills(d.cds);setMessage("Эта способность ещё восстанавливается.","ПЕРЕЗАРЯДКА","⌛");return}
+  if(d.error==="dead"){showDefeat(d);return}
+  if(d.error){setMessage(d.text||"Сервер отклонил действие.","ДЕЙСТВИЕ НЕ ВЫПОЛНЕНО","⚠️");addLog(d.text||String(d.error),"bad");return}
+  if(d.type==="event"){openEvent(d);return}
+  if(d.type==="battle_event"||d.type==="event_choice"){openEvent(d);return}
+  if(d.type==="victory"){if(d.enemy_hp!=null)setHealth("enemy",d.enemy_hp,d.enemy_max);showVictory(d);return}
+  if(d.type==="defeat"){if(d.hp!=null)setHealth("player",d.hp,d.max_hp);showDefeat(d);return}
+  if(d.type==="flee"||move==="flee"){setMessage("Ты покидаешь поле боя.","ОТСТУПЛЕНИЕ","🏃");goLake();return}
+  if(d.type==="battle"){
+   if(d.hp!=null&&d.max_hp!=null)setHealth("player",d.hp,d.max_hp);
+   if(d.enemy_hp!=null&&d.enemy_max!=null)setHealth("enemy",d.enemy_hp,d.enemy_max);
+   const playerLog=d.log||"",enemyLog=d.e_log||"",full=[playerLog,enemyLog].filter(Boolean).join("\n");
+   setMessage(full||"Ход завершён. Следи за здоровьем.","РЕЗУЛЬТАТ ХОДА","⚔️");
+   if(playerLog)addLog(playerLog,"good");if(enemyLog)addLog(enemyLog,"bad");
+   if(d.cds)renderSkills(d.cds);else try{await refreshBattleState()}catch(_){}
+   $("roundLabel").textContent="⚔ Сражение продолжается";return;
   }
-
-  hpEl.textContent = current + "/" + maximum;
-  const p = safePercent(current, maximum);
-  bar.style.width = p + "%";
-  percent.textContent = Math.round(p) + "%";
-
-  if (current <= 0) state.textContent = isPlayer ? "Пал" : "Повержен";
-  else if (p <= 25) state.textContent = "Критически мало";
-  else if (p <= 55) state.textContent = "Ранен";
-  else state.textContent = isPlayer ? "В строю" : "Опасен";
+  setMessage(d.text||"Сервер вернул неизвестный результат.","НЕИЗВЕСТНЫЙ РЕЗУЛЬТАТ","❔");
+ }catch(e){showError(e.message||"Ошибка связи при выполнении хода.");setMessage("Не удалось получить подтверждение хода.","ОШИБКА СЕТИ","⚠️")}
+ finally{setBusy(false)}
 }
-
-function animateFighter(side, type) {
-  const el = $(side === "player" ? "playerFighter" : "enemyFighter");
-  el.classList.remove("hit", "attack");
-  void el.offsetWidth;
-  el.classList.add(type);
-  setTimeout(() => el.classList.remove("hit", "attack"), 420);
+async function exploreAgain(){
+ if(busy)return;hideError();setBusy(true,"Поиск…");
+ try{
+  const d=await api({action:"explore_lake"});
+  if(d.type==="battle"){location.href=battleUrl(d.enemy||"Утопленник");return}
+  if(d.type==="event"){openEvent(d);return}
+  if(d.error==="dead"){alert(d.text||"Ты не можешь продолжить исследование.");goLake();return}
+  if(d.error==="cooldown"){alert("⌛ Подожди "+(d.left??"?")+"с");return}
+  if(d.error){showError(d.text||d.message||"Не удалось исследовать берег.");return}
+  goLake();
+ }catch(e){showError(e.message||"Не удалось начать новое исследование.")}
+ finally{setBusy(false)}
 }
-
-function floatText(side, text, good=false) {
-  const frame = $(side === "player" ? "playerFighter" : "enemyFighter");
-  const el = document.createElement("div");
-  el.className = "floatDamage" + (good ? " good" : "");
-  el.textContent = text;
-  frame.appendChild(el);
-  setTimeout(() => el.remove(), 850);
-}
-
-function addLog(text, kind="info") {
-  if (!text || !String(text).trim()) return;
-  logEntries.unshift({text:String(text),kind});
-  if (logEntries.length > 8) logEntries.length = 8;
-
-  const log = $("battleLog");
-  log.replaceChildren();
-
-  logEntries.forEach(entry => {
-    const div = document.createElement("div");
-    div.className = "logEntry " + entry.kind;
-    div.textContent = entry.text;
-    log.appendChild(div);
-  });
-
-  const n = logEntries.length;
-  $("logCount").textContent = n + " " +
-    (n === 1 ? "запись" : n >= 2 && n <= 4 ? "записи" : "записей");
-}
-
-function setImageForEnemy(enemy) {
-  const img = $("enemyImg");
-  img.onerror = function() {
-    this.onerror = null;
-    this.src = "./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png";
-  };
-  img.src = pics[enemy] || "./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png";
-}
-
-function goLake() {
-  const params = new URLSearchParams(location.search);
-  params.delete("enemy");
-  params.delete("event_data");
-  location.href = "../index.html" + (params.toString() ? "?" + params.toString() : "");
-}
-
-function battleUrl(enemy) {
-  const params = new URLSearchParams(location.search);
-  params.set("enemy", enemy);
-  params.delete("event_data");
-  return "./index.html?" + params.toString();
-}
-
-/* Переход на отдельную страницу события с сохранением u, p_enc и a_enc. */
-function openEvent(eventData) {
-  const params = new URLSearchParams(location.search);
-  params.delete("enemy");
-  params.set("event_data", JSON.stringify(eventData));
-  location.href = "../event/index.html?" + params.toString();
-}
-
-async function ensure() {
-  if (PROFILE_URL && ACTION_URL) return true;
-
-  const response = await fetch(HANDSHAKE, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({user_id:String(uid)})
-  });
-
-  if (!response.ok) throw new Error("Не удалось подключиться к игровой системе (HTTP " + response.status + ").");
-
-  const j = unwrap(await response.json());
-  if (!j || !j.profile_url || !j.action_url) {
-    throw new Error("Игровая система не вернула адреса профиля и действий.");
-  }
-
-  PROFILE_URL = j.profile_url;
-  ACTION_URL = j.action_url;
-  return true;
-}
-
-async function api(payload) {
-  if (!ACTION_URL) await ensure();
-
-  const response = await fetch(ACTION_URL, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
-  });
-
-  if (!response.ok) throw new Error("Ошибка игрового сервера (HTTP " + response.status + ").");
-
-  const result = unwrap(await response.json());
-  if (!result || typeof result !== "object") throw new Error("Сервер вернул некорректный ответ.");
-  return result;
-}
-
-async function loadProfile() {
-  if (!PROFILE_URL) await ensure();
-
-  const response = await fetch(PROFILE_URL, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:"{}"
-  });
-
-  if (!response.ok) throw new Error("Не удалось загрузить профиль (HTTP " + response.status + ").");
-
-  const j = unwrap(await response.json());
-  if (!j || typeof j !== "object") throw new Error("Профиль игрока не получен.");
-  return j;
-}
-
-function getEnemyName(serverEnemy) {
-  let enemy = qs.get("enemy") || serverEnemy || "Утопленник";
-  if (enemy === "Лягушка") enemy = "Жаба";
-  return enemy;
-}
-
-function renderSkills(cds={}) {
-  lastCds = cds || {};
-  const path = PLAYER_PATH || "";
-  const skills = $("battleSkills");
-  skills.replaceChildren();
-
-  let acts;
-
-  if (path.includes("Шута") || path.includes("Шут")) {
-    acts = [["divination",lastCds.divination||0],["boomerang",lastCds.boomerang||0],["acting",lastCds.acting||0]];
-    $("skillPathLabel").textContent = "Путь Шута";
-  } else if (path.includes("Тирана")) {
-    acts = [["sailor_hit",lastCds.hit||0],["sailor_drink",lastCds.drink||0],["sailor_pray",lastCds.pray||0]];
-    $("skillPathLabel").textContent = "Путь Тирана";
-  } else if (path.includes("Жреца") || path.includes("Красного")) {
-    acts = [["hunter_dagger",lastCds.dagger||0],["hunter_trap",lastCds.trap||0],["hunter_boost",lastCds.boost||0]];
-    $("skillPathLabel").textContent = "Путь охотника";
-  } else {
-    acts = [["divination",lastCds.divination||0],["boomerang",lastCds.boomerang||0],["acting",lastCds.acting||0]];
-    $("skillPathLabel").textContent = path || "Способности пути";
-  }
-
-  acts.forEach(([key,cooldown]) => {
-    const info = skillInfo[key] || {icon:"✦",name:key,desc:"Особая способность."};
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "skill";
-    btn.disabled = busy || ended || Number(cooldown) > 0;
-    btn.dataset.cooldown = Number(cooldown) > 0 ? "true" : "false";
-    btn.innerHTML = '<div class="skillName"><span class="skillIcon">' + info.icon + '</span>' + info.name + '</div><div class="skillDesc">' + info.desc + '</div>';
-
-    if (Number(cooldown) > 0) {
-      const badge = document.createElement("span");
-      badge.className = "cooldown";
-      badge.textContent = cooldown;
-      btn.appendChild(badge);
-      btn.title = "Перезарядка: " + cooldown;
-    } else {
-      btn.title = info.name;
-      btn.addEventListener("click", () => doBattle(key));
-    }
-    skills.appendChild(btn);
-  });
-
-  addSkillButton("basic",Number(lastCds.basic||0),"basic");
-  addSkillButton("flee",0,"escape");
-
-  document.querySelectorAll("#battleSkills button").forEach(b => {
-    b.disabled = busy || ended || b.dataset.cooldown === "true";
-  });
-}
-
-function addSkillButton(key,cooldown,className) {
-  const info = skillInfo[key];
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "skill " + className;
-  btn.dataset.cooldown = Number(cooldown) > 0 ? "true" : "false";
-  btn.disabled = busy || ended || Number(cooldown) > 0;
-  btn.innerHTML = '<div class="skillName"><span class="skillIcon">' + info.icon + '</span>' + info.name + '</div><div class="skillDesc">' + info.desc + '</div>';
-
-  if (Number(cooldown) > 0) {
-    const badge = document.createElement("span");
-    badge.className = "cooldown";
-    badge.textContent = cooldown;
-    btn.appendChild(badge);
-  } else {
-    btn.addEventListener("click", () => doBattle(key));
-  }
-
-  $("battleSkills").appendChild(btn);
-}
-
-function showVictory(data) {
-  ended = true;
-  setStatus("Победа");
-  $("roundLabel").textContent = "✦ Противник повержен";
-  $("vTenge").textContent = Number(data.tenge ?? 1);
-  $("vExp").textContent = Number(data.exp_add ?? 1);
-  $("victoryCard").classList.remove("hidden");
-  $("defeatCard").classList.add("hidden");
-  $("skillCard").classList.add("hidden");
-  $("errorBox").classList.add("hidden");
-  setMessage("Сражение завершено. Награда обработана игровой системой.","ИСХОД СРАЖЕНИЯ","✦");
-  addLog("Победа! Награда: " + Number(data.tenge ?? 1) + " £ и " + Number(data.exp_add ?? 1) + " опыта.","good");
-  document.querySelectorAll("#battleSkills button").forEach(b => b.disabled = true);
-}
-
-function showDefeat(data) {
-  ended = true;
-  setStatus("Поражение");
-  $("roundLabel").textContent = "☠ Силы иссякли";
-  $("defeatCard").classList.remove("hidden");
-  $("victoryCard").classList.add("hidden");
-  $("skillCard").classList.add("hidden");
-  $("errorBox").classList.add("hidden");
-  if (data && data.text) $("defeatText").textContent = data.text;
-  setMessage(data?.text || "Ты больше не можешь продолжать бой.","ИСХОД СРАЖЕНИЯ","☠");
-  addLog("Поражение. Сражение окончено.","bad");
-  document.querySelectorAll("#battleSkills button").forEach(b => b.disabled = true);
-}
-
-async function refreshBattleState() {
-  const s = await api({action:"battle_state"});
-  if (!s || !s.ok) return s;
-  if (s.enemy_hp != null && s.enemy_max != null) setHealth("enemy",s.enemy_hp,s.enemy_max);
-  if (s.cds) renderSkills(s.cds);
-  return s;
-}
-
-async function load() {
-  if (busy) return;
-  setBusy(true,"Загрузка…");
-  hideError();
-
-  try {
-    const profile = await loadProfile();
-    PLAYER_PATH = profile.path || "";
-    $("playerName").textContent = profile.nickname || "Путешественник";
-    $("playerPath").textContent = PLAYER_PATH || "Путь неизвестен";
-    setHealth("player",profile.hp,profile.max_hp);
-
-    const requestedEnemy = qs.get("enemy");
-    let state = null;
-
-    try {
-      state = await api({action:"battle_state"});
-    } catch(e) {
-      if (!requestedEnemy) throw e;
-    }
-
-    const enemy = getEnemyName(state?.enemy);
-    $("enemyLabel").textContent = enemy;
-    $("enemyRole").textContent = "Враждебная сущность";
-    setImageForEnemy(enemy);
-
-    if (state?.ok) {
-      if (state.enemy_hp != null && state.enemy_max != null) {
-        setHealth("enemy",state.enemy_hp,state.enemy_max);
-      } else {
-        $("enemyHp").textContent = "—";
-      }
-      renderSkills(state.cds || {});
-    } else {
-      $("enemyHp").textContent = "—";
-      renderSkills({});
-    }
-
-    if (!initialized) {
-      addLog("Ты столкнулся с противником: " + enemy + ".","info");
-      setMessage("Противник перед тобой. Выбирай действие и следи за перезарядкой.","БОЙ НАЧАЛСЯ","⚔️");
-      initialized = true;
-    }
-
-    lastPlayerHp = Number(profile.hp);
-    lastEnemyHp = state?.enemy_hp == null ? null : Number(state.enemy_hp);
-    $("backHome").href = "../index.html" + location.search;
-    setStatus("В бою","live");
-  } catch(e) {
-    showError(e.message);
-    setStatus("Нет связи");
-    setMessage("Не удалось получить данные сражения.","ОШИБКА СОЕДИНЕНИЯ","⚠️");
-  } finally {
-    setBusy(false);
-  }
-}
-
-async function doBattle(move) {
-  if (busy || ended) return;
-
-  hideError();
-  setBusy(true,"Ход…");
-
-  try {
-    const d = await api({action:"battle",move});
-
-    if (d.error === "cooldown") {
-      if (d.cds) renderSkills(d.cds);
-      setMessage("Эта способность ещё восстанавливается. Выбери другое действие.","ПЕРЕЗАРЯДКА","⌛");
-      addLog("Способность пока недоступна: перезарядка не завершена.","info");
-      return;
-    }
-
-    if (d.error === "dead") {
-      showDefeat(d);
-      return;
-    }
-
-    if (d.error) {
-      setMessage(d.text || "Сервер отклонил действие. Попробуй ещё раз.","ДЕЙСТВИЕ НЕ ВЫПОЛНЕНО","⚠️");
-      addLog(d.text || ("Действие отклонено: " + d.error),"bad");
-      return;
-    }
-
-    if (d.type === "victory") {
-      if (d.enemy_hp != null && d.enemy_max != null) setHealth("enemy",d.enemy_hp,d.enemy_max);
-      showVictory(d);
-      return;
-    }
-
-    if (d.type === "defeat") {
-      if (d.hp != null && d.max_hp != null) setHealth("player",d.hp,d.max_hp);
-      showDefeat(d);
-      return;
-    }
-
-    if (d.type === "flee" || move === "flee") {
-      setMessage("Ты покидаешь поле боя.","ОТСТУПЛЕНИЕ","🏃");
-      addLog("Ты попытался отступить.","info");
-      goLake();
-      return;
-    }
-
-    if (d.type === "battle") {
-      const oldPlayerHp = lastPlayerHp;
-      const oldEnemyHp = lastEnemyHp;
-
-      if (d.hp != null && d.max_hp != null) {
-        setHealth("player",d.hp,d.max_hp);
-        const newHp = Number(d.hp);
-        if (Number.isFinite(oldPlayerHp) && newHp < oldPlayerHp) {
-          animateFighter("player","hit");
-          floatText("player","−" + (oldPlayerHp-newHp));
-        }
-        lastPlayerHp = newHp;
-      }
-
-      if (d.enemy_hp != null && d.enemy_max != null) {
-        setHealth("enemy",d.enemy_hp,d.enemy_max);
-        const newEnemyHp = Number(d.enemy_hp);
-        if (Number.isFinite(oldEnemyHp) && newEnemyHp < oldEnemyHp) {
-          animateFighter("enemy","hit");
-          floatText("enemy","−" + (oldEnemyHp-newEnemyHp));
-        } else if (Number.isFinite(oldEnemyHp) && newEnemyHp > oldEnemyHp) {
-          floatText("enemy","+" + (newEnemyHp-oldEnemyHp),true);
-        }
-        lastEnemyHp = newEnemyHp;
-      }
-
-      if (move !== "basic" && move !== "flee") animateFighter("player","attack");
-
-      const playerLog = d.log || "";
-      const enemyLog = d.e_log || "";
-      const fullLog = [playerLog,enemyLog].filter(Boolean).join("\n");
-      setMessage(fullLog || "Ход завершён. Следи за состоянием здоровья.","РЕЗУЛЬТАТ ХОДА","⚔️");
-      if (playerLog) addLog(playerLog,"good");
-      if (enemyLog) addLog(enemyLog,"bad");
-
-      if (d.cds) renderSkills(d.cds);
-      else {
-        try {
-          const s = await refreshBattleState();
-          if (s?.error) addLog("Не удалось обновить перезарядки.","info");
-        } catch(e) {}
-      }
-
-      $("roundLabel").textContent = "⚔ Сражение продолжается";
-      return;
-    }
-
-    setMessage(d.text || "Сервер ответил, но результат действия неизвестен.","НЕИЗВЕСТНЫЙ РЕЗУЛЬТАТ","❔");
-    addLog("Получен неизвестный тип результата боя.","info");
-
-  } catch(e) {
-    showError(e.message || "Ошибка связи при выполнении хода.");
-    setMessage("Не удалось получить подтверждение хода. Проверь соединение перед повторной попыткой.","ОШИБКА СЕТИ","⚠️");
-  } finally {
-    setBusy(false);
-  }
-}
-
-/*
- * Повторное исследование после победы.
- * Важно: проверяем d.type, а не только d.ok,
- * потому что сервер может присылать тип события без флага ok.
- */
-async function exploreAgain() {
-  if (busy) return;
-
-  hideError();
-  setBusy(true,"Поиск…");
-
-  try {
-    const d = await api({action:"explore_lake"});
-
-    if (d.type === "battle") {
-      location.href = battleUrl(d.enemy || "Утопленник");
-      return;
-    }
-
-    if (d.type === "event") {
-      openEvent(d);
-      return;
-    }
-
-    if (d.error === "dead") {
-      alert(d.text || "Ты не можешь продолжить исследование.");
-      goLake();
-      return;
-    }
-
-    if (d.error === "cooldown") {
-      alert("⌛ Подожди " + (d.left ?? "?") + "с");
-      return;
-    }
-
-    if (d.error) {
-      showError(d.text || "Не удалось начать новое исследование.");
-      return;
-    }
-
-    goLake();
-
-  } catch(e) {
-    showError(e.message || "Не удалось начать новое исследование.");
-  } finally {
-    setBusy(false);
-  }
-}
-
 $("exploreAgainBtn").addEventListener("click",exploreAgain);
 $("victoryCloseBtn").addEventListener("click",goLake);
 $("defeatCloseBtn").addEventListener("click",goLake);
 $("defeatRetryBtn").addEventListener("click",load);
 $("retryBtn").addEventListener("click",load);
-
 load();
 </script>
 </body>
