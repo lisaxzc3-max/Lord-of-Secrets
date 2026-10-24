@@ -287,7 +287,7 @@
       hunter_dagger: { icon: "🔥", name: "Берсерк", desc: "Атакующее умение охотника." },
       hunter_trap: { icon: "🪤", name: "Ловушка", desc: "Тактическое умение охотника." },
       hunter_boost: { icon: "😤", name: "Провокация", desc: "Способность пути охотника." },
-      basic: { icon: "⚔️", name: "Базовая а��ака", desc: "Обычная атака." },
+      basic: { icon: "⚔️", name: "Базовая атака", desc: "Обычная атака." },
       flee: { icon: "🏃", name: "Отступить", desc: "Попробовать покинуть сражение." }
     };
 
@@ -320,7 +320,7 @@
     }
 
     function setMessage(text, title = "ХОД СРАЖЕНИЯ", icon = "📜") {
-      $("battleText").textContent = text || "Туман скрывает да��ьнейшие события.";
+      $("battleText").textContent = text || "Туман скрывает дальнейшие события.";
       $("messageTitle").textContent = title;
       $("messageIcon").textContent = icon;
     }
@@ -584,6 +584,7 @@
       const info = skillInfo[key];
       if (!info) return;
 
+      const box = $("battleSkills");
       const button = document.createElement("button");
       button.type = "button";
       button.className = "skill " + className;
@@ -623,7 +624,7 @@
       $("skillCard").classList.add("hidden");
       hideError();
 
-      setMessage("Сражение завершено. Н��града обработана игровой системой.", "ИСХОД СРАЖЕНИЯ", "✦");
+      setMessage("Сражение завершено. Награда обработана игровой системой.", "ИСХОД СРАЖЕНИЯ", "✦");
       addLog("Победа! Награда: " + Number(data.tenge ?? 1) + " £ и " + Number(data.exp_add ?? 1) + " опыта.", "good");
     }
 
@@ -707,7 +708,7 @@
 
     function getEnemySkillList() {
       const name = $("enemyLabel").textContent.trim();
-      return (name === "Жаба" || name === "Лягушка") ? enemySkills["Жаба"] : enemySkills["Утопленник"]; 
+      return (name === "Жаба" || name === "Лягушка") ? enemySkills["Жаба"] : enemySkills["Утопленник"];
     }
 
     function syncVisualPlayerHp(serverHp, serverMaxHp) {
@@ -729,7 +730,7 @@
 
         if (data.error === "cooldown") {
           if (data.cds) renderSkills(data.cds);
-          setMessage("Эта способность ещё восстанавливается.", "ПЕРЕЗАРЯДКА", "⌛");
+          setMessage("Эта спос��бность ещё восстанавливается.", "ПЕРЕЗАРЯДКА", "⌛");
           return;
         }
 
