@@ -68,11 +68,6 @@ button{font:inherit}
 
     <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
 
-    <div class="note">
-      В тумане можно встретить жабу, утопленника или обнаружить событие.
-      <br>Каждое исследование обращается к игровому серверу.
-    </div>
-
     <div id="message" class="message" aria-live="polite"></div>
 
     <div id="errorBox" class="error hidden" role="alert">
@@ -110,33 +105,12 @@ let ACTION_URL = aEnc
   : "";
 
 let handshakePromise = null;
-let busy = false;
 let profile = null;
 let deadUntil = null;
 let regenUntil = null;
 let intervalId = null;
 
 const $ = id => document.getElementById(id);
-
-/*
- * Сохраняем параметры игры при переходе между страницами.
- * Оба варианта параметров оставлены для совместимости.
- */
-function buildGameParams() {
-  const params = new URLSearchParams(location.search);
-
-  if (pEnc) {
-    params.set("p_enc", pEnc);
-    params.set("p", pEnc);
-  }
-
-  if (aEnc) {
-    params.set("a_enc", aEnc);
-    params.set("a", aEnc);
-  }
-
-  return params;
-}
 
 function showError(message) {
   $("errorText").textContent = message || "Не удалось подключиться.";
@@ -151,28 +125,10 @@ function setMessage(text) {
   $("message").textContent = text || "";
 }
 
-function cloneData(value) {
-  if (value === null || value === undefined) return value;
-
-  if (typeof value === "object") {
-    if (Array.isArray(value)) return value.map(cloneData);
-
-    return Object.fromEntries(
-      Object.entries(value).map(([k, v]) => [k, cloneData(v)])
-    );
-  }
-
-  return value;
-}
-
 function unwrap(value) {
   let out = value;
 
-  for (
-    let i = 0;
-    i < 4 && out && typeof out === "object" && "result" in out;
-    i++
-  ) {
+  for (let i = 0; i < 4 && out && typeof out === "object" && "result" in out; i++) {
     out = out.result;
   }
 
@@ -192,24 +148,16 @@ async function ensure() {
     });
 
     if (!resp.ok) {
-      throw new Error(
-        "Не удалось подключиться к игровой системе (HTTP " +
-        resp.status + ")."
-      );
+      throw new Error("Ошибка подключения (HTTP " + resp.status + ").");
     }
 
     const data = unwrap(await resp.json());
 
-    const profileUrl =
-      data?.profile_url || data?.PROFILE_URL || "";
-
-    const actionUrl =
-      data?.action_url || data?.ACTION_URL || "";
+    const profileUrl = data?.profile_url || data?.PROFILE_URL || "";
+    const actionUrl = data?.action_url || data?.ACTION_URL || "";
 
     if (!profileUrl || !actionUrl) {
-      throw new Error(
-        "Сервер не вернул ссылки профиля и действий."
-      );
+      throw new Error("Ссылки игрового сервера не получены.");
     }
 
     PROFILE_URL = String(profileUrl);
@@ -225,31 +173,6 @@ async function ensure() {
   }
 }
 
-async function api(payload) {
-  await ensure();
-
-  const response = await fetch(ACTION_URL, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload),
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      "Ошибка игрового сервера (HTTP " + response.status + ")."
-    );
-  }
-
-  const data = unwrap(await response.json());
-
-  if (!data || typeof data !== "object") {
-    throw new Error("Сервер вернул некорректный ответ.");
-  }
-
-  return cloneData(data);
-}
-
 async function loadProfile() {
   await ensure();
 
@@ -261,30 +184,23 @@ async function loadProfile() {
   });
 
   if (!response.ok) {
-    throw new Error(
-      "Не удалось загрузить профиль (HTTP " +
-      response.status + ")."
-    );
+    throw new Error("Ошибка загрузки профиля (HTTP " + response.status + ").");
   }
 
   const data = unwrap(await response.json());
 
   if (!data || typeof data !== "object") {
-    throw new Error("Профиль игрока не получен.");
+    throw new Error("Профиль не получен.");
   }
 
-  return cloneData(data);
+  return data;
 }
 
 function clampHp(hp, maxHp) {
   const current = Number(hp);
   const max = Number(maxHp);
 
-  if (
-    !Number.isFinite(current) ||
-    !Number.isFinite(max) ||
-    max <= 0
-  ) {
+  if (!Number.isFinite(current) || !Number.isFinite(max) || max <= 0) {
     return 0;
   }
 
@@ -293,11 +209,8 @@ function clampHp(hp, maxHp) {
 
 function setHpVisual(hp, maxHp) {
   const current = clampHp(hp, maxHp);
-  const max = Number(maxHp) || 1;
-  const percent = Math.max(
-    0,
-    Math.min(100, (current / max) * 100)
-  );
+  const max = Number(maxHp) || 100;
+  const percent = Math.max(0, Math.min(100, current / max * 100));
 
   $("hp").textContent = current + " / " + max;
   $("hpbar").style.width = percent + "%";
@@ -309,56 +222,30 @@ function updateTimers() {
   if (deadUntil && now >= deadUntil) {
     deadUntil = null;
     $("deadBox").classList.add("hidden");
-    $("deadTimer").textContent = "--:--";
   } else if (deadUntil) {
-    const total = Math.max(
-      0,
-      Math.ceil((deadUntil - now) / 1000)
-    );
-
-    const min = String(Math.floor(total / 60)).padStart(2, "0");
-    const sec = String(total % 60).padStart(2, "0");
-
-    $("deadTimer").textContent = min + ":" + sec;
+    const total = Math.max(0, Math.ceil((deadUntil - now) / 1000));
+    $("deadTimer").textContent =
+      String(Math.floor(total / 60)).padStart(2, "0") + ":" +
+      String(total % 60).padStart(2, "0");
   }
 
   if (regenUntil && now >= regenUntil) {
     regenUntil = null;
     $("regenBox").classList.add("hidden");
-    $("regenTimer").textContent = "--:--";
-    $("regenHp").textContent = "—";
   } else if (regenUntil) {
-    const total = Math.max(
-      0,
-      Math.ceil((regenUntil - now) / 1000)
-    );
-
-    const min = String(Math.floor(total / 60)).padStart(2, "0");
-    const sec = String(total % 60).padStart(2, "0");
-
-    $("regenTimer").textContent = min + ":" + sec;
+    const total = Math.max(0, Math.ceil((regenUntil - now) / 1000));
+    $("regenTimer").textContent =
+      String(Math.floor(total / 60)).padStart(2, "0") + ":" +
+      String(total % 60).padStart(2, "0");
   }
 }
 
-function startClock() {
-  if (intervalId) clearInterval(intervalId);
-  intervalId = setInterval(updateTimers, 1000);
-}
-
 function hasTrueFlag(value) {
-  return (
-    value === true ||
-    value === 1 ||
-    value === "1" ||
-    value === "true"
-  );
+  return value === true || value === 1 || value === "1" || value === "true";
 }
 
 function isProfileDead(data) {
-  return (
-    hasTrueFlag(data?.dead) ||
-    hasTrueFlag(data?.dead_now)
-  );
+  return hasTrueFlag(data?.dead) || hasTrueFlag(data?.dead_now);
 }
 
 function getHp(data) {
@@ -366,152 +253,57 @@ function getHp(data) {
 }
 
 function renderState(data) {
-  if (!data || typeof data !== "object") return;
+  profile = Object.assign({}, profile || {}, data);
 
-  const previousProfile = profile || {};
-  profile = Object.assign({}, previousProfile, data);
-
-  const rawHp = getHp(data) ?? getHp(previousProfile);
-  const rawMaxHp = data.max_hp ?? previousProfile.max_hp ?? 100;
-  const max = Number(rawMaxHp) || 100;
-
-  const hpKnown =
-    rawHp !== undefined &&
-    rawHp !== null &&
-    rawHp !== "";
-
+  const rawHp = getHp(data) ?? getHp(profile);
+  const max = Number(data.max_hp ?? profile.max_hp ?? 100) || 100;
+  const hpKnown = rawHp !== undefined && rawHp !== null && rawHp !== "";
   const hp = hpKnown ? clampHp(rawHp, max) : null;
 
   if (hpKnown) {
     setHpVisual(hp, max);
-  } else {
-    $("hp").textContent = "— / " + max;
-    $("hpbar").style.width = "0%";
   }
 
-  $("mad").textContent = Number(
-    data.mad ?? previousProfile.mad ?? 0
-  );
+  $("mad").textContent = Number(data.mad ?? profile.mad ?? 0);
+  $("exp").textContent = Number(data.exp ?? profile.exp ?? 0);
 
-  $("exp").textContent = Number(
-    data.exp ?? previousProfile.exp ?? 0
-  );
-
-  const isDead = isProfileDead(data);
-
-  $("exploreBtn").disabled =
-    isDead || (hpKnown && hp <= 0);
-
-  if ((hpKnown && hp <= 0) || isDead) {
-    const secs = Number(
-      data.dead_after || previousProfile.dead_after || 60
-    );
-
+  if ((hpKnown && hp <= 0) || isProfileDead(data)) {
+    const secs = Number(data.dead_after || profile.dead_after || 60);
     deadUntil = Date.now() + secs * 1000;
     $("deadBox").classList.remove("hidden");
-
-    $("deadTimer").textContent =
-      "00:" + String(Math.max(0, secs)).padStart(2, "0");
-
-    setMessage("Ты погиб. Нужно переждать воскрешение.");
+    $("deadTimer").textContent = "00:" + String(Math.max(0, secs)).padStart(2, "0");
   } else {
-    $("deadBox").classList.add("hidden");
-    $("deadTimer").textContent = "--:--";
     deadUntil = null;
+    $("deadBox").classList.add("hidden");
   }
 
-  const regenHp = Number(
-    data.regen_hp ?? previousProfile.regen_hp ?? 0
-  );
+  const regenHp = Number(data.regen_hp ?? profile.regen_hp ?? 0);
 
   if (regenHp > 0) {
-    const wait = Number(
-      data.regen_time ?? previousProfile.regen_time ?? 0
-    ) || 0;
-
+    const wait = Number(data.regen_time ?? profile.regen_time ?? 0) || 0;
     regenUntil = Date.now() + wait * 1000;
-
     $("regenBox").classList.remove("hidden");
     $("regenHp").textContent = regenHp;
-
-    $("regenTimer").textContent =
-      "00:" + String(Math.max(0, wait)).padStart(2, "0");
   } else {
-    $("regenBox").classList.add("hidden");
-    $("regenHp").textContent = "—";
-    $("regenTimer").textContent = "--:--";
     regenUntil = null;
+    $("regenBox").classList.add("hidden");
   }
-}
-
-function updateExploreButton() {
-  const rawHp = getHp(profile);
-
-  const hpKnown =
-    rawHp !== undefined &&
-    rawHp !== null &&
-    rawHp !== "";
-
-  const hp = hpKnown ? Number(rawHp) : NaN;
-  const dead = isProfileDead(profile);
-
-  $("exploreBtn").disabled =
-    dead ||
-    (hpKnown && Number.isFinite(hp) && hp <= 0);
 }
 
 async function refreshLake() {
-  busy = true;
   hideError();
-
-  $("exploreBtn").disabled = true;
-  setMessage("Проверяем состояние персонажа…");
 
   try {
     const data = await loadProfile();
-
     renderState(data);
-
-    if (!isProfileDead(data)) {
-      setMessage(
-        data.message ||
-        "Похоже, туман сегодня особенно плотный."
-      );
-    }
+    setMessage(data.message || "");
   } catch (error) {
-    showError(
-      error.message || "Не удалось загрузить состояние озера."
-    );
-  } finally {
-    busy = false;
-    updateExploreButton();
+    showError(error.message || "Не удалось загрузить профиль.");
   }
 }
 
-/*
- * ИСПРАВЛЕНИЕ:
- * Просто открываем файл боя.
- * Не запускаем исследование через API и не ждём ответа сервера.
- * Сохраняем параметры подключения и игрока.
- */
 function exploreLake() {
-  const params = new URLSearchParams(window.location.search);
-
-  if (pEnc) {
-    params.set("p_enc", pEnc);
-    params.set("p", pEnc);
-  }
-
-  if (aEnc) {
-    params.set("a_enc", aEnc);
-    params.set("a", aEnc);
-  }
-
-  params.set("enemy", "Утопленник");
-  params.delete("event_data");
-
-  window.location.href =
-    "./battle/index.html?" + params.toString();
+  window.location.href = "./battle/index.html";
 }
 
 $("exploreBtn").addEventListener("click", exploreLake);
@@ -519,8 +311,7 @@ $("retryBtn").addEventListener("click", refreshLake);
 
 window.addEventListener("DOMContentLoaded", () => {
   $("backHome").href = "../index.html" + location.search;
-
-  startClock();
+  intervalId = setInterval(updateTimers, 1000);
   refreshLake();
 });
 </script>
