@@ -2,345 +2,343 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050a0e">
-<title>Озёра — Повелитель Тайн</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b0f">
+<title>Озёра · Топи | Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(rgba(6,14,18,.35),rgba(6,14,18,.86)),url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat,#050a0e;color:#b8b5ad;min-height:100vh;font-family:Inter,Arial,sans-serif}
-.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
-.head{padding:10px 0;display:flex;gap:10px;align-items:center}
-.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:8px 10px;font-size:13px}
-.head b{font-size:15px}
-.card{background:rgba(22,22,26,.93);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
-.btn{display:block;width:100%;border:1px solid #3a3a3e;background:rgba(38,38,42,.95);border-radius:10px;padding:13px 12px;text-align:center;margin:8px 0;cursor:pointer;color:#b8b5ad;font:inherit;user-select:none}
-.btn.gold{background:linear-gradient(135deg,#51452f,#353039);color:#e4d2a8;font-weight:700;border-color:#776344}
-.btn:disabled,.btn.dis{opacity:.45;pointer-events:none}
-.timerRow{display:flex;gap:8px;margin:8px 0}
-.timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
-.timerBox.dead{background:rgba(60,20,20,.92);border:1px solid #6a2a2a}
-.timerBox.regen{background:rgba(20,55,20,.92);border:1px solid #2a6a2a}
+:root{color-scheme:dark;--panel:rgba(22,22,27,.94);--line:#403c46;--text:#ded9d0;--muted:#9b96a2;--gold:#d4b579}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-serif;background:#080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(#090c11aa,#09090df2)}
+button,a{-webkit-tap-highlight-color:transparent}
+button{font:inherit}
+.wrap{max-width:480px;margin:auto;padding:12px 12px calc(32px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:11px;padding:8px 0 14px}
+.back{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#19181de8;white-space:nowrap}
+.heading{font-size:16px;font-weight:800}
+.subheading{font-size:10px;letter-spacing:2px;color:var(--gold);margin-top:3px}
+.card{border:1px solid var(--line);border-radius:17px;padding:15px;background:var(--panel);box-shadow:0 10px 28px #0003;margin-bottom:12px}
+.stats{font-size:13px;line-height:1.7}
+.bar{height:7px;background:#333039;border-radius:9px;overflow:hidden;margin:8px 0 13px}
+.bar i{display:block;height:100%;width:0;background:#a65353;transition:width .25s}
+.button{display:block;width:100%;padding:14px 12px;margin-top:9px;border:1px solid #5b4b36;border-radius:11px;background:linear-gradient(135deg,#51442f,#302832);color:#e7d5ae;font-weight:800;cursor:pointer}
+.button:disabled{opacity:.55;cursor:wait}
+.button.secondary{background:#242229;border-color:var(--line);color:var(--text)}
+.note{text-align:center;font-size:11px;color:var(--muted);line-height:1.6;margin-top:12px}
+.timerRow{display:flex;gap:8px;margin-bottom:10px}
+.timerBox{flex:1;padding:10px;border:1px solid var(--line);border-radius:11px;background:#17151bea}
+.timerBox.dead{border-color:#743c43}
+.timerBox.regen{border-color:#376544}
+.timerTitle{font-size:10px;color:var(--muted);margin-top:3px}
 .hidden{display:none!important}
-.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:7px 0;overflow:hidden}
-.bar i{display:block;height:100%;transition:width .3s ease;background:#8d4545}
-.status{font-size:12px;line-height:1.6}
-.note{font-size:11px;opacity:.72;text-align:center;line-height:1.6;margin-top:10px}
-#message{white-space:pre-wrap;font-size:12px;line-height:1.6;margin-top:10px;overflow-wrap:anywhere}
-.loading{opacity:.65;pointer-events:none}
-.error{color:#e7a0a0;border:1px solid #713b42;border-radius:10px;padding:10px;font-size:12px;line-height:1.5;margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.error{margin-top:12px;padding:11px;border:1px solid #783b42;border-radius:10px;color:#f0a3a3;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.5}
+.message{margin-top:10px;font-size:12px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="head">
-    <a id="backHome" href="../index.html">← Зал</a>
-    <b>🌊 Озёра · Топи</b>
-  </div>
+  <header class="head">
+    <a class="back" id="backHome" href="../index.html">← Зал</a>
+    <div>
+      <div class="heading">🌊 Озёра · Топи</div>
+      <div class="subheading">LORD OF THE MYSTERIES</div>
+    </div>
+  </header>
 
   <div class="timerRow">
     <div id="deadBox" class="timerBox dead hidden">
-      💀 <span id="deadTimer">10:00</span>
-      <div style="font-size:10px;opacity:.7">воскрешение</div>
+      <strong>💀 <span id="deadTimer">--:--</span></strong>
+      <div class="timerTitle">Время до воскрешения</div>
     </div>
     <div id="regenBox" class="timerBox regen hidden">
-      🩹 <span id="regenTimer">10:00</span>
-      <div style="font-size:10px;opacity:.7">реген <span id="regenHp">0/50</span></div>
+      <strong>🩹 <span id="regenTimer">--:--</span></strong>
+      <div class="timerTitle">Восстановление · <span id="regenHp">—</span></div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="status">
-      ❤️ <span id="hp">-</span>
-      · 🌀 <span id="mad">-</span>%
-      · ⭐ <span id="exp">-</span>
+  <section class="card">
+    <div class="stats">
+      ❤️ Здоровье: <span id="hp">—</span>
+      <br>🌀 Безумие: <span id="mad">—</span>%
+      · ⭐ Опыт: <span id="exp">—</span>
     </div>
-    <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
-    <button class="btn gold" id="btnExplore" type="button">🔍 Исследовать берег</button>
+    <div class="bar"><i id="hpbar"></i></div>
+
+    <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
+
     <div class="note">
-      Жаба · Утопленник · события 🐸 📦
-      <br>Исследуй берег, чтобы встретить противника или найти событие.
+      В тумане можно встретить жабу, утопленника или обнаружить событие.
+      <br>Каждое исследование обращается к игровому серверу.
     </div>
-    <div id="message" aria-live="polite"></div>
+
+    <div id="message" class="message" aria-live="polite"></div>
     <div id="errorBox" class="error hidden" role="alert">
       <div id="errorText"></div>
-      <button id="retryBtn" class="btn" type="button">Повторить загрузку</button>
+      <button class="button secondary" id="retryBtn" type="button">Повторить подключение</button>
     </div>
-  </div>
+  </section>
 </div>
 
 <script>
 "use strict";
 
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  try { tg.setHeaderColor("#050a0e"); } catch (e) {}
-}
+const tg = window.Telegram?.WebApp || null;
+try {
+  tg?.ready();
+  tg?.expand();
+  tg?.setHeaderColor("#080b0f");
+} catch (_) {}
 
 const qs = new URLSearchParams(location.search);
-const telegramUserId = tg?.initDataUnsafe?.user?.id;
-const uid = String(qs.get("u") || telegramUserId || "7320193489");
-const p_enc = qs.get("p_enc") || qs.get("p") || "";
-const a_enc = qs.get("a_enc") || qs.get("a") || "";
+const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
 
-let PROFILE_URL = p_enc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(p_enc)
+const pEnc = qs.get("p_enc") || qs.get("p") || "";
+const aEnc = qs.get("a_enc") || qs.get("a") || "";
+
+const HANDSHAKE =
+  "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+
+let PROFILE_URL = pEnc
+  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(pEnc)
   : "";
 
-let ACTION_URL = a_enc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(a_enc)
+let ACTION_URL = aEnc
+  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc)
   : "";
 
-const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 let busy = false;
 let handshakePromise = null;
 
 const $ = id => document.getElementById(id);
 
-function unwrap(value) {
-  if (value && value.result && typeof value.result === "object") {
-    return value.result;
+function unwrap(data) {
+  let result = data;
+  for (let i = 0; i < 3; i++) {
+    if (result && result.result && typeof result.result === "object") {
+      result = result.result;
+    } else {
+      break;
+    }
   }
-  return value;
+  return result;
 }
 
 function setMessage(text) {
   $("message").textContent = text || "";
 }
 
-function showError(message) {
-  $("errorText").textContent = message || "Не удалось загрузить данные. Проверь соединение.";
+function showError(text) {
+  $("errorText").textContent = text || "Не удалось подключиться к игре.";
   $("errorBox").classList.remove("hidden");
 }
 
-function clearError() {
+function hideError() {
   $("errorBox").classList.add("hidden");
 }
 
 function setBusy(value) {
   busy = value;
-  const button = $("btnExplore");
-  button.classList.toggle("loading", value);
-  button.disabled = value || button.classList.contains("dis");
-  button.textContent = value ? "⏳ Исследуем..." : "🔍 Исследовать берег";
+  $("exploreBtn").disabled = value || $("exploreBtn").dataset.dead === "true";
+  $("exploreBtn").textContent = value
+    ? "⏳ Исследуем берег..."
+    : "🔍 Исследовать берег";
 }
 
-function preserveQuery(url) {
+function urlWithQuery(path, removeKeys = []) {
   const params = new URLSearchParams(location.search);
-  params.delete("event_data");
+  for (const key of removeKeys) params.delete(key);
   const query = params.toString();
-  return url + (query ? "?" + query : "");
+  return path + (query ? "?" + query : "");
 }
 
-$("backHome").href = preserveQuery("../index.html");
+$("backHome").href = urlWithQuery("../index.html", ["event_data", "enemy"]);
 
-async function ensureUrls(force = false) {
-  if (!force && PROFILE_URL && ACTION_URL) return true;
+async function ensureUrls() {
+  if (PROFILE_URL && ACTION_URL) return true;
   if (handshakePromise) return handshakePromise;
 
   handshakePromise = (async () => {
-    try {
-      const response = await fetch(HANDSHAKE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: uid }),
-        cache: "no-store"
-      });
-
-      if (!response.ok) {
-        throw new Error("Ошибка подключения Telebot Creator: HTTP " + response.status);
-      }
-
-      const raw = await response.json();
-      const data = unwrap(raw);
-
-      const profile = data?.profile_url || data?.PROFILE_URL;
-      const action = data?.action_url || data?.ACTION_URL;
-
-      if (typeof profile !== "string" || !profile ||
-          typeof action !== "string" || !action) {
-        throw new Error("Ответ подключения не содержит адресов profile_url и action_url.");
-      }
-
-      const profileParsed = new URL(profile);
-      const actionParsed = new URL(action);
-
-      if (profileParsed.protocol !== "https:" || actionParsed.protocol !== "https:") {
-        throw new Error("Игровой сервер вернул некорректный адрес API.");
-      }
-
-      PROFILE_URL = profileParsed.href;
-      ACTION_URL = actionParsed.href;
-      return true;
-    } finally {
-      handshakePromise = null;
-    }
-  })();
-
-  return handshakePromise;
-}
-
-async function fetchJson(url, body, timeoutMs = 15000) {
-  if (!url) throw new Error("Адрес API не настроен.");
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const response = await fetch(url, {
+    const response = await fetch(HANDSHAKE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      cache: "no-store",
-      signal: controller.signal
+      body: JSON.stringify({ user_id: uid }),
+      cache: "no-store"
     });
 
     if (!response.ok) {
-      throw new Error("Ошибка игрового сервера: HTTP " + response.status);
+      throw new Error("Ошибка подключения к игровому серверу: HTTP " + response.status);
     }
 
-    return unwrap(await response.json());
-  } catch (error) {
-    if (error.name === "AbortError") {
-      throw new Error("Сервер не ответил за 15 секунд.");
+    const data = unwrap(await response.json());
+    const profile = data?.profile_url || data?.PROFILE_URL;
+    const action = data?.action_url || data?.ACTION_URL;
+
+    if (typeof profile !== "string" || typeof action !== "string" || !profile || !action) {
+      throw new Error("Сервер не вернул адреса игрового профиля и действий.");
     }
-    throw error;
+
+    const profileUrl = new URL(profile);
+    const actionUrl = new URL(action);
+
+    if (profileUrl.protocol !== "https:" || actionUrl.protocol !== "https:") {
+      throw new Error("Сервер вернул некорректный адрес подключения.");
+    }
+
+    PROFILE_URL = profileUrl.href;
+    ACTION_URL = actionUrl.href;
+    return true;
+  })();
+
+  try {
+    return await handshakePromise;
   } finally {
-    clearTimeout(timeout);
+    handshakePromise = null;
   }
+}
+
+async function postJson(url, body) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error("Игровой сервер вернул HTTP " + response.status);
+  }
+
+  const data = unwrap(await response.json());
+  if (!data || typeof data !== "object") {
+    throw new Error("Игровой сервер вернул пустой или некорректный ответ.");
+  }
+  return data;
 }
 
 async function api(payload) {
-  if (!ACTION_URL) await ensureUrls();
-  return await fetchJson(ACTION_URL, payload);
+  await ensureUrls();
+  return postJson(ACTION_URL, payload);
 }
 
 async function loadProfile() {
-  if (!PROFILE_URL) await ensureUrls();
-  return await fetchJson(PROFILE_URL, {});
+  await ensureUrls();
+  return postJson(PROFILE_URL, {});
 }
 
 function formatTime(seconds) {
-  const total = Math.max(0, Number(seconds) || 0);
-  return String(Math.floor(total / 60)).padStart(2, "0") + ":" +
-    String(Math.floor(total % 60)).padStart(2, "0");
+  const value = Math.max(0, Number(seconds) || 0);
+  const minutes = Math.floor(value / 60);
+  const secs = Math.floor(value % 60);
+  return String(minutes).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
 }
 
-function setProfileValue(j) {
-  const hp = Number(j.hp) || 0;
-  const maxHp = Math.max(1, Number(j.max_hp) || 50);
-  const madness = Number(j.madness) || 0;
-  const exp = Number(j.exp) || 0;
+function renderProfile(profile) {
+  const hp = Number(profile.hp ?? 0);
+  const maxHp = Math.max(1, Number(profile.max_hp ?? 50));
+  const madness = Number(profile.madness ?? 0);
+  const exp = Number(profile.exp ?? 0);
 
   $("hp").textContent = hp + "/" + maxHp;
-  $("hpbar").style.width = Math.max(0, Math.min(100, hp / maxHp * 100)) + "%";
   $("mad").textContent = madness;
   $("exp").textContent = exp;
+  $("hpbar").style.width = Math.max(0, Math.min(100, hp / maxHp * 100)) + "%";
 
-  const deadBox = $("deadBox");
-  const regenBox = $("regenBox");
-  const exploreButton = $("btnExplore");
+  const dead = Boolean(profile.dead);
+  $("deadBox").classList.toggle("hidden", !dead);
+  $("regenBox").classList.toggle("hidden", !(dead || (profile.regen_left && hp < maxHp)));
 
-  if (j.dead) {
-    deadBox.classList.remove("hidden");
-    $("deadTimer").textContent = j.dead_mmss || formatTime(j.dead_left);
-    exploreButton.classList.add("dis");
-  } else {
-    deadBox.classList.add("hidden");
-    exploreButton.classList.remove("dis");
+  if (dead) {
+    $("deadTimer").textContent = profile.dead_mmss || formatTime(profile.dead_left);
   }
 
-  if (j.dead) {
-    regenBox.classList.remove("hidden");
-    $("regenTimer").textContent = $("deadTimer").textContent;
+  if (dead || (profile.regen_left && hp < maxHp)) {
+    $("regenTimer").textContent = profile.regen_mmss ||
+      formatTime(profile.regen_left ?? profile.dead_left);
     $("regenHp").textContent = hp + "/" + maxHp;
-  } else if (j.regen_left && hp < maxHp) {
-    regenBox.classList.remove("hidden");
-    $("regenTimer").textContent = j.regen_mmss || formatTime(j.regen_left);
-    $("regenHp").textContent = hp + "/" + maxHp;
-  } else {
-    regenBox.classList.add("hidden");
   }
 
-  exploreButton.disabled = busy || exploreButton.classList.contains("dis");
+  $("exploreBtn").dataset.dead = dead ? "true" : "false";
+  $("exploreBtn").disabled = busy || dead;
+  if (dead) {
+    setMessage("Персонаж не может исследовать берег, пока не восстановится.");
+  }
 }
 
 async function load() {
-  clearError();
+  hideError();
   try {
     const profile = await loadProfile();
-    setProfileValue(profile);
+    renderProfile(profile);
   } catch (error) {
-    console.error("Lake profile loading error:", error);
-    showError("Не удалось загрузить игровой профиль.\n" +
-      (error.message || "Проверь соединение и повтори попытку."));
+    console.error("Lake profile error:", error);
+    showError("Не удалось подключиться к игровому профилю.\n" +
+      (error.message || "Проверь подключение и попробуй снова."));
   }
 }
 
-function openEvent(eventData) {
-  const params = new URLSearchParams(location.search);
-  params.delete("enemy");
-  params.set("event_data", JSON.stringify(eventData));
-  location.href = "event/index.html?" + params.toString();
-}
-
-function openBattle(enemy) {
+function goBattle(enemy) {
   const params = new URLSearchParams(location.search);
   params.delete("event_data");
   params.set("enemy", enemy || "Утопленник");
   location.href = "battle/index.html?" + params.toString();
 }
 
-async function doExplore() {
-  if (busy || $("btnExplore").classList.contains("dis")) return;
+function goEvent(data) {
+  const params = new URLSearchParams(location.search);
+  params.delete("enemy");
+  params.set("event_data", JSON.stringify(data));
+  location.href = "event/index.html?" + params.toString();
+}
 
-  clearError();
+async function explore() {
+  if (busy || $("exploreBtn").dataset.dead === "true") return;
+
+  hideError();
   setMessage("");
   setBusy(true);
 
   try {
-    const d = await api({ action: "explore_lake" });
+    const data = await api({ action: "explore_lake" });
 
-    if (d?.error === "dead") {
-      alert(d.text || "Персонаж не может исследовать берег.");
+    if (data.error === "dead") {
+      setMessage(data.text || "Персонаж не может продолжить исследование.");
       await load();
       return;
     }
 
-    if (d?.error === "cooldown") {
-      alert("⌛ Подожди " + (d.left ?? "?") + "с");
+    if (data.error === "cooldown") {
+      setMessage("⌛ Подожди " + (data.left ?? "?") + " секунд.");
       return;
     }
 
-    if (d?.type === "battle") {
-      openBattle(d.enemy);
+    if (data.type === "battle") {
+      goBattle(data.enemy || "Утопленник");
       return;
     }
 
-    if (d?.type === "event") {
-      openEvent(d);
+    if (data.type === "event") {
+      goEvent(data);
       return;
     }
 
-    if (d?.error) {
-      setMessage(d.text || "Не удалось исследовать берег.");
+    if (data.error) {
+      setMessage(data.text || data.message || "Не удалось исследовать берег.");
       return;
     }
 
-    setMessage(d?.text || "Берег затихает. Здесь пока ничего не произошло.");
+    setMessage(data.text || data.message || "Берег затихает. Ничего нового не произошло.");
     await load();
   } catch (error) {
-    console.error("Lake exploration error:", error);
+    console.error("Lake explore error:", error);
     showError("Не удалось исследовать берег.\n" +
-      (error.message || "Проверь соединение и попробуй снова."));
+      (error.message || "Проверь подключение и попробуй снова."));
   } finally {
     setBusy(false);
   }
 }
 
-$("btnExplore").addEventListener("click", doExplore);
+$("exploreBtn").addEventListener("click", explore);
 $("retryBtn").addEventListener("click", load);
 
 load();
