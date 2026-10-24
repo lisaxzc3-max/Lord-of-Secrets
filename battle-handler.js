@@ -3,8 +3,9 @@
 
 /*
  * Движок боя «Повелитель тайн».
- * Важно: вызывающий серверный обработчик должен сохранить возвращённое
- * состояние боя в хранилище после каждого хода.
+ *
+ * Экспортируется для подключения к серверу через require("./battle-handler").
+ * Сервер должен сохранять возвращённое состояние боя после каждого хода.
  */
 
 const MONSTER_SKILLS = {
@@ -15,7 +16,7 @@ const MONSTER_SKILLS = {
       chance: 0.30,
       cooldown: 2,
       multiplier: 1.5,
-      text: "Утопленник обрушил тяжёлый удар!"
+      text: "Утопленник обрушивает тяжёлый удар!"
     },
     {
       id: "deadly_embrace",
@@ -25,7 +26,7 @@ const MONSTER_SKILLS = {
       minDamage: 5,
       maxDamage: 10,
       stun: 1,
-      text: "Утопленник схватил тебя ледяными руками!"
+      text: "Утопленник хватает тебя ледяными руками!"
     },
     {
       id: "drowning_poison",
@@ -34,7 +35,7 @@ const MONSTER_SKILLS = {
       cooldown: 3,
       poisonPercent: 0.05,
       poisonTurns: 2,
-      text: "Утопленник выплеснул на тебя заражённую воду!"
+      text: "Утопленник выплёскивает заражённую воду!"
     }
   ],
 
@@ -46,7 +47,7 @@ const MONSTER_SKILLS = {
       cooldown: 2,
       minDamage: 10,
       maxDamage: 20,
-      text: "Жаба выпустила мощную струю воды!"
+      text: "Жаба выпускает мощную струю воды!"
     },
     {
       id: "leap_attack",
@@ -54,7 +55,7 @@ const MONSTER_SKILLS = {
       chance: 0.25,
       cooldown: 3,
       multiplier: 1.6,
-      text: "Жаба выскочила из тумана и ударила!"
+      text: "Жаба выскакивает из тумана и наносит удар!"
     }
   ],
 
@@ -66,7 +67,7 @@ const MONSTER_SKILLS = {
       cooldown: 2,
       minDamage: 10,
       maxDamage: 20,
-      text: "Лягушка выпустила мощную струю воды!"
+      text: "Лягушка выпускает мощную струю воды!"
     },
     {
       id: "leap_attack",
@@ -74,48 +75,78 @@ const MONSTER_SKILLS = {
       chance: 0.25,
       cooldown: 3,
       multiplier: 1.6,
-      text: "Лягушка выскочила из тумана и ударила!"
+      text: "Лягушка выскакивает из тумана и наносит удар!"
     }
   ]
 };
 
+/*
+ * ВАЖНО:
+ * Ключи ниже совпадают с теми, которые отправляет интерфейс:
+ * sailor_hit, sailor_drink, sailor_pray,
+ * hunter_dagger, hunter_trap, hunter_boost.
+ */
+
 const PLAYER_SKILLS = {
   tyrant: {
-    strong_strike: {
+    sailor_hit: {
       name: "Сильный удар",
       cooldown: 2,
       damage: state =>
-        Math.max(1, Math.floor(10 + getPlayerStat(state, "strength") * 0.4))
+        Math.max(1, Math.floor(10 + getStat(state, "strength") * 0.4))
     },
-    drink: {
+
+    sailor_drink: {
       name: "Перепить",
       cooldown: 3,
-      stun: 2
+      stun: 1
     },
-    rage: {
+
+    sailor_pray: {
       name: "Гнев",
       cooldown: 2,
       multiplier: 2
     }
   },
 
-  priest: {
-    berserk: {
+  hunter: {
+    hunter_dagger: {
       name: "Берсерк",
       cooldown: 2,
-      costHp: 25,
-      damage: state =>
-        Math.max(1, Math.floor(getPlayerStat(state, "strength")))
+      costHp: 5,
+      multiplier: 2
     },
-    trap: {
+
+    hunter_trap: {
       name: "Ловушка",
       cooldown: 3,
-      stun: 2
+      stun: 1
     },
-    provoke: {
+
+    hunter_boost: {
       name: "Провокация",
-      cooldown: 1,
-      accuracyDebuff: 25
+      cooldown: 2,
+      accuracyDebuff: 35
+    }
+  },
+
+  fool: {
+    divination: {
+      name: "Гадание",
+      cooldown: 2,
+      accuracyDebuff: 20
+    },
+
+    boomerang: {
+      name: "Бумеранг",
+      cooldown: 2,
+      multiplier: 1.5
+    },
+
+    acting: {
+      name: "Актёрство",
+      cooldown: 3,
+      healPercent: 0.10
     }
   }
 };
@@ -140,26 +171,36 @@ function normalizePath(path) {
     value.includes("tyrant") ||
     value.includes("sailor") ||
     value.includes("тиран") ||
-    value.includes("море") ||
-    value.includes("моряк")
+    value.includes("моряк") ||
+    value.includes("море")
   ) {
     return "tyrant";
   }
 
   if (
-    value.includes("priest") ||
     value.includes("hunter") ||
+    value.includes("охотник") ||
     value.includes("жрец") ||
-    value.includes("охотник")
+    value.includes("priest") ||
+    value.includes("красный")
   ) {
-    return "priest";
+    return "hunter";
+  }
+
+  if (
+    value.includes("fool") ||
+    value.includes("шут") ||
+    value.includes("дурак")
+  ) {
+    return "fool";
   }
 
   return "";
 }
 
-function getPlayerStat(state, name) {
+function getStat(state, name) {
   const stats = state.player_stats || state.stats || {};
+
   const aliases = {
     strength: ["strength", "str", "сила"],
     agility: ["agility", "agi", "ловкость", "ловк"],
@@ -196,29 +237,18 @@ function ensureBattleState(state) {
     state.enemy_max_hp ?? state.monster_max_hp ?? state.enemy_hp
   );
 
+  state.path = state.path || state.player_path || "";
+  state.round = Number(state.round || 0);
+  state.ended = Boolean(state.ended);
+
   state.player_madness = Number(
     state.player_madness ?? state.madness ?? 0
   );
 
-  state.round = Number(state.round || 0);
-
-  state.path = state.path || state.player_path || "";
-
-  if (!state.monster_cds || typeof state.monster_cds !== "object") {
-    state.monster_cds = {};
-  }
-
-  if (!state.player_cds || typeof state.player_cds !== "object") {
-    state.player_cds = {};
-  }
-
-  if (!state.player_effects || typeof state.player_effects !== "object") {
-    state.player_effects = {};
-  }
-
-  if (!state.enemy_effects || typeof state.enemy_effects !== "object") {
-    state.enemy_effects = {};
-  }
+  state.player_cds ||= {};
+  state.monster_cds ||= {};
+  state.player_effects ||= {};
+  state.enemy_effects ||= {};
 
   state.player_hp = clamp(
     state.player_hp,
@@ -237,14 +267,81 @@ function ensureBattleState(state) {
   return state;
 }
 
+function addLog(logs, kind, text) {
+  logs.push({ kind, text });
+}
+
 function tickCooldowns(cooldowns) {
-  for (const id of Object.keys(cooldowns)) {
-    cooldowns[id] = Math.max(0, Number(cooldowns[id] || 0) - 1);
+  for (const key of Object.keys(cooldowns)) {
+    cooldowns[key] = Math.max(0, Number(cooldowns[key] || 0) - 1);
   }
 }
 
-function addLog(logs, kind, text) {
-  logs.push({ kind, text });
+function getSkillCooldown(state, move) {
+  const aliases = {
+    sailor_hit: ["sailor_hit", "hit"],
+    sailor_drink: ["sailor_drink", "drink"],
+    sailor_pray: ["sailor_pray", "pray"],
+    hunter_dagger: ["hunter_dagger", "dagger"],
+    hunter_trap: ["hunter_trap", "trap"],
+    hunter_boost: ["hunter_boost", "boost"],
+    divination: ["divination"],
+    boomerang: ["boomerang"],
+    acting: ["acting"],
+    basic: ["basic"]
+  };
+
+  const keys = aliases[move] || [move];
+
+  for (const key of keys) {
+    if (state.player_cds[key] != null) {
+      return Number(state.player_cds[key]) || 0;
+    }
+  }
+
+  return 0;
+}
+
+function setSkillCooldown(state, move, value) {
+  state.player_cds[move] = value;
+
+  const aliases = {
+    sailor_hit: "hit",
+    sailor_drink: "drink",
+    sailor_pray: "pray",
+    hunter_dagger: "dagger",
+    hunter_trap: "trap",
+    hunter_boost: "boost"
+  };
+
+  const alias = aliases[move];
+  if (alias) state.player_cds[alias] = value;
+}
+
+function getFrontendCooldowns(state) {
+  return {
+    ...state.player_cds,
+    hit: state.player_cds.sailor_hit || state.player_cds.hit || 0,
+    drink: state.player_cds.sailor_drink || state.player_cds.drink || 0,
+    pray: state.player_cds.sailor_pray || state.player_cds.pray || 0,
+    dagger: state.player_cds.hunter_dagger || state.player_cds.dagger || 0,
+    trap: state.player_cds.hunter_trap || state.player_cds.trap || 0,
+    boost: state.player_cds.hunter_boost || state.player_cds.boost || 0
+  };
+}
+
+function chooseMonsterSkill(state) {
+  const skills = MONSTER_SKILLS[state.enemy] || [];
+
+  const available = skills.filter(
+    skill => Number(state.monster_cds[skill.id] || 0) <= 0
+  );
+
+  for (const skill of available) {
+    if (Math.random() < skill.chance) return skill;
+  }
+
+  return null;
 }
 
 function applyPlayerEffects(state, logs) {
@@ -262,30 +359,22 @@ function applyPlayerEffects(state, logs) {
     addLog(
       logs,
       "bad",
-      "Яд наносит " + damage + " урона. Осталось ходов: " +
-        effects.poison.turns + "."
+      "Яд наносит " + damage + " урона."
     );
 
     if (effects.poison.turns <= 0) {
       delete effects.poison;
-    }
-  }
-}
-
-function chooseMonsterSkill(state) {
-  const skills = MONSTER_SKILLS[state.enemy] || [];
-
-  const available = skills.filter(
-    skill => Number(state.monster_cds[skill.id] || 0) <= 0
-  );
-
-  for (const skill of available) {
-    if (Math.random() < skill.chance) {
-      return skill;
+      addLog(logs, "info", "Действие яда заканчивается.");
     }
   }
 
-  return null;
+  if (effects.accuracy_debuff && effects.accuracy_debuff.turns > 0) {
+    effects.accuracy_debuff.turns -= 1;
+
+    if (effects.accuracy_debuff.turns <= 0) {
+      delete effects.accuracy_debuff;
+    }
+  }
 }
 
 function runMonsterTurn(rawState) {
@@ -296,7 +385,7 @@ function runMonsterTurn(rawState) {
     return {
       damage: 0,
       skill_used: null,
-      e_log: state.enemy + " больше не может продолжать бой.",
+      e_log: "",
       logs
     };
   }
@@ -328,6 +417,7 @@ function runMonsterTurn(rawState) {
         Number(state.player_effects.stun_turns || 0),
         skill.stun
       );
+      text += " Ты оглушён!";
     }
 
     if (skill.poisonPercent) {
@@ -341,14 +431,29 @@ function runMonsterTurn(rawState) {
         turns: skill.poisonTurns || 2
       };
 
-      text += " Яд наносит " + poisonDamage + " урона за ход.";
+      text += " Наложено отравление.";
+    }
+  }
+
+  if (state.player_effects.accuracy_debuff) {
+    const chance = clamp(
+      Number(state.player_effects.accuracy_debuff.amount || 0),
+      0,
+      90
+    );
+
+    if (Math.random() < chance / 100) {
+      damage = 0;
+      text += " Ты уклоняешься от атаки благодаря эффекту.";
     }
   }
 
   damage = Math.min(state.player_hp, damage);
   state.player_hp = Math.max(0, state.player_hp - damage);
 
-  text += " Получено урона: " + damage + ".";
+  if (damage > 0) {
+    text += " Получено урона: " + damage + ".";
+  }
 
   addLog(logs, "bad", text);
 
@@ -370,43 +475,60 @@ function runMonsterTurn(rawState) {
 
 function usePlayerSkill(state, move, logs) {
   const path = normalizePath(state.path);
-  const skills = PLAYER_SKILLS[path];
-
-  if (!skills) {
-    addLog(
-      logs,
-      "info",
-      "Путь персонажа не определён. Выполнена обычная атака."
-    );
-    return { damage: randomInt(5, 10), skill_used: null };
-  }
-
+  const skills = PLAYER_SKILLS[path] || {};
   const skill = skills[move];
 
-  if (!skill) {
-    return null;
-  }
+  if (!skill) return null;
 
-  if (Number(state.player_cds[move] || 0) > 0) {
+  const cooldown = getSkillCooldown(state, move);
+
+  if (cooldown > 0) {
     addLog(
       logs,
       "info",
-      "Навык «" + skill.name + "» перезаряжается: " +
-        state.player_cds[move] + " ход."
+      "Навык «" + skill.name + "» перезаряжается. Осталось ходов: " +
+        cooldown + "."
     );
-    return { error: true };
+
+    return { error: "cooldown", skill };
   }
 
   if (skill.costHp && state.player_hp <= skill.costHp) {
-    addLog(logs, "info", "Недостаточно здоровья для навыка «" + skill.name + "».");
-    return { error: true };
+    addLog(
+      logs,
+      "info",
+      "Недостаточно здоровья для навыка «" + skill.name + "»."
+    );
+
+    return { error: "health", skill };
   }
 
-  state.player_cds[move] = skill.cooldown;
+  setSkillCooldown(state, move, skill.cooldown);
 
   if (skill.costHp) {
     state.player_hp -= skill.costHp;
-    addLog(logs, "bad", "Берсерк: потрачено " + skill.costHp + " HP.");
+    addLog(
+      logs,
+      "bad",
+      "Навык «" + skill.name + "»: потрачено " + skill.costHp + " HP."
+    );
+  }
+
+  if (skill.healPercent) {
+    const heal = Math.min(
+      state.player_max_hp - state.player_hp,
+      Math.max(1, Math.floor(state.player_max_hp * skill.healPercent))
+    );
+
+    state.player_hp += heal;
+
+    addLog(
+      logs,
+      "good",
+      "Ты используешь «" + skill.name + "» и восстанавливаешь " + heal + " HP."
+    );
+
+    return { damage: 0, skill_used: move };
   }
 
   if (skill.stun) {
@@ -415,8 +537,17 @@ function usePlayerSkill(state, move, logs) {
       skill.stun
     );
 
-    addLog(logs, "good", "Ты применяешь «" + skill.name + "». Противник оглушён.");
-    return { damage: 0, skill_used: move, skipEnemyTurn: true };
+    addLog(
+      logs,
+      "good",
+      "Ты используешь «" + skill.name + "». Противник оглушён!"
+    );
+
+    return {
+      damage: 0,
+      skill_used: move,
+      skipEnemyTurn: true
+    };
   }
 
   if (skill.accuracyDebuff) {
@@ -428,8 +559,9 @@ function usePlayerSkill(state, move, logs) {
     addLog(
       logs,
       "good",
-      "Ты применяешь «" + skill.name +
-        "». Меткость противника снижена на " + skill.accuracyDebuff + "% на 2 хода."
+      "Ты используешь «" + skill.name +
+        "». Меткость противника снижена на " +
+        skill.accuracyDebuff + "%."
     );
 
     return { damage: 0, skill_used: move };
@@ -440,24 +572,19 @@ function usePlayerSkill(state, move, logs) {
   if (skill.damage) {
     damage = skill.damage(state);
   } else if (skill.multiplier) {
-    damage = Math.max(
-      1,
-      Math.floor(
-        randomInt(5, 10) *
-          skill.multiplier
-      )
-    );
+    damage = Math.floor(randomInt(5, 10) * skill.multiplier);
   } else {
     damage = randomInt(5, 10);
   }
 
-  damage = Math.min(state.enemy_hp, damage);
+  damage = Math.max(1, Math.min(state.enemy_hp, damage));
   state.enemy_hp = Math.max(0, state.enemy_hp - damage);
 
   addLog(
     logs,
     "good",
-    "Ты применяешь «" + skill.name + "» и наносишь " + damage + " урона."
+    "Ты используешь «" + skill.name + "» и наносишь " +
+      damage + " урона."
   );
 
   return {
@@ -467,22 +594,24 @@ function usePlayerSkill(state, move, logs) {
   };
 }
 
-function makeResponse(state, extra) {
+function makeResponse(state, extra = {}) {
   return {
     ...extra,
     hp: state.player_hp,
     max_hp: state.player_max_hp,
     player_hp: state.player_hp,
     player_max_hp: state.player_max_hp,
-    enemy_hp: state.enemy_hp,
-    enemy_max_hp: state.enemy_max_hp,
     enemy: state.enemy,
+    enemy_hp: state.enemy_hp,
+    enemy_max: state.enemy_max_hp,
+    enemy_max_hp: state.enemy_max_hp,
     round: state.round,
-    player_madness: state.player_madness,
-    monster_cds: { ...state.monster_cds },
+    cds: getFrontendCooldowns(state),
     player_cds: { ...state.player_cds },
+    monster_cds: { ...state.monster_cds },
     player_effects: { ...state.player_effects },
     enemy_effects: { ...state.enemy_effects },
+    player_madness: state.player_madness,
     ended: Boolean(state.ended)
   };
 }
@@ -496,7 +625,8 @@ function handleBattleMove(rawState, move) {
 
     return makeResponse(state, {
       ok: false,
-      error: "Этот бой уже завершён.",
+      error: "dead",
+      text: "Этот бой уже завершён.",
       log: "",
       e_log: "",
       logs
@@ -511,6 +641,7 @@ function handleBattleMove(rawState, move) {
 
     return makeResponse(state, {
       ok: true,
+      type: "flee",
       escaped: true,
       log: text,
       e_log: "",
@@ -518,10 +649,57 @@ function handleBattleMove(rawState, move) {
     });
   }
 
-  state.round += 1;
-  tickCooldowns(state.player_cds);
+  const path = normalizePath(state.path);
+  const knownMoves = [
+    "basic",
+    ...Object.keys(PLAYER_SKILLS.tyrant),
+    ...Object.keys(PLAYER_SKILLS.hunter),
+    ...Object.keys(PLAYER_SKILLS.fool)
+  ];
 
-  // Оглушённый игрок теряет действие, но монстр всё равно ходит.
+  if (!knownMoves.includes(move)) {
+    return makeResponse(state, {
+      ok: false,
+      error: "unknown_move",
+      text: "Неизвестное действие: " + String(move),
+      log: "",
+      e_log: "",
+      logs
+    });
+  }
+
+  const skillMap = PLAYER_SKILLS[path] || {};
+
+  if (move !== "basic" && !skillMap[move]) {
+    return makeResponse(state, {
+      ok: false,
+      error: "wrong_path",
+      text: "Этот навык недоступен для твоего пути.",
+      log: "",
+      e_log: "",
+      logs
+    });
+  }
+
+  if (move !== "basic" && getSkillCooldown(state, move) > 0) {
+    const skill = skillMap[move];
+
+    return makeResponse(state, {
+      ok: false,
+      error: "cooldown",
+      text: "Навык «" + skill.name + "» ещё перезаряжается.",
+      log: "",
+      e_log: "",
+      logs
+    });
+  }
+
+  state.round += 1;
+
+  // Перезарядка уменьшается после проверки, чтобы ход не обходил cooldown.
+  tickCooldowns(state.player_cds);
+  tickCooldowns(state.enemy_effects);
+
   if (Number(state.player_effects.stun_turns || 0) > 0) {
     state.player_effects.stun_turns -= 1;
 
@@ -538,37 +716,46 @@ function handleBattleMove(rawState, move) {
 
     return makeResponse(state, {
       ok: true,
+      type: state.player_hp <= 0 ? "defeat" : "battle",
       lost: state.player_hp <= 0,
-      log: "",
+      log: logs.filter(x => x.kind !== "bad").map(x => x.text).join("\n"),
       e_log: logs.filter(x => x.kind === "bad").map(x => x.text).join("\n"),
       logs
     });
   }
 
-  const skillResult = usePlayerSkill(state, move, logs);
+  let skillResult;
 
-  if (skillResult && skillResult.error) {
-    state.round -= 1;
-
-    return makeResponse(state, {
-      ok: false,
-      log: "",
-      e_log: "",
-      logs
-    });
-  }
-
-  const isSkill = Boolean(skillResult);
-
-  if (!isSkill) {
+  if (move === "basic") {
     const damage = Math.min(state.enemy_hp, randomInt(5, 10));
     state.enemy_hp = Math.max(0, state.enemy_hp - damage);
 
     addLog(
       logs,
       "good",
-      "Ты наносишь " + damage + " урона противнику."
+      "Ты наносишь обычной атакой " + damage + " урона."
     );
+
+    skillResult = {
+      damage,
+      skill_used: "basic",
+      skipEnemyTurn: state.enemy_hp <= 0
+    };
+  } else {
+    skillResult = usePlayerSkill(state, move, logs);
+
+    if (skillResult && skillResult.error) {
+      state.round -= 1;
+
+      return makeResponse(state, {
+        ok: false,
+        error: skillResult.error,
+        text: logs.map(x => x.text).join("\n"),
+        log: "",
+        e_log: "",
+        logs
+      });
+    }
   }
 
   if (state.enemy_hp <= 0) {
@@ -576,6 +763,7 @@ function handleBattleMove(rawState, move) {
 
     return makeResponse(state, {
       ok: true,
+      type: "victory",
       won: true,
       log: logs.filter(x => x.kind === "good").map(x => x.text).join("\n"),
       e_log: "",
@@ -583,7 +771,6 @@ function handleBattleMove(rawState, move) {
     });
   }
 
-  // Оглушение монстра блокирует его ближайшее действие.
   if (Number(state.enemy_effects.stun_turns || 0) > 0) {
     state.enemy_effects.stun_turns -= 1;
     addLog(logs, "good", state.enemy + " оглушён и пропускает ход.");
@@ -594,14 +781,38 @@ function handleBattleMove(rawState, move) {
 
   applyPlayerEffects(state, logs);
 
-  if (state.player_hp <= 0 || state.enemy_hp <= 0) {
+  if (state.player_hp <= 0) {
     state.ended = true;
+
+    return makeResponse(state, {
+      ok: true,
+      type: "defeat",
+      lost: true,
+      text: "Здоровье закончилось. Сражение окончено.",
+      log: logs.filter(x => x.kind === "good").map(x => x.text).join("\n"),
+      e_log: logs.filter(x => x.kind === "bad").map(x => x.text).join("\n"),
+      logs
+    });
+  }
+
+  if (state.enemy_hp <= 0) {
+    state.ended = true;
+
+    return makeResponse(state, {
+      ok: true,
+      type: "victory",
+      won: true,
+      log: logs.filter(x => x.kind === "good").map(x => x.text).join("\n"),
+      e_log: logs.filter(x => x.kind === "bad").map(x => x.text).join("\n"),
+      logs
+    });
   }
 
   return makeResponse(state, {
     ok: true,
-    won: state.enemy_hp <= 0,
-    lost: state.player_hp <= 0,
+    type: "battle",
+    won: false,
+    lost: false,
     log: logs
       .filter(x => x.kind === "good" || x.kind === "info")
       .map(x => x.text)
