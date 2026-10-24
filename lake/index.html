@@ -90,10 +90,8 @@ try { tg?.ready(); tg?.expand(); tg?.setHeaderColor("#080b0f"); } catch (_) {}
 
 const qs = new URLSearchParams(location.search);
 const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
-
 const pEnc = qs.get("p_enc") || qs.get("p") || "";
 const aEnc = qs.get("a_enc") || qs.get("a") || "";
-
 const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 
 let PROFILE_URL = pEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(pEnc) : "";
@@ -107,6 +105,25 @@ let regenUntil = null;
 let intervalId = null;
 
 const $ = id => document.getElementById(id);
+
+function buildGameParams() {
+  const params = new URLSearchParams(location.search);
+  if (pEnc) {
+    params.set("p_enc", pEnc);
+    params.set("p", pEnc);
+  } else {
+    params.delete("p_enc");
+    params.delete("p");
+  }
+  if (aEnc) {
+    params.set("a_enc", aEnc);
+    params.set("a", aEnc);
+  } else {
+    params.delete("a_enc");
+    params.delete("a");
+  }
+  return params;
+}
 
 function showError(message) {
   const box = $("errorBox");
@@ -326,6 +343,21 @@ async function exploreLake() {
     const data = await api({ action: "explore" });
     const response = unwrap(data);
 
+    if (response?.type === "battle") {
+      const enemy = response.enemy || response.enemy_name || "Утопленник";
+      const params = buildGameParams();
+      params.set("enemy", enemy);
+      location.href = "./battle/index.html?" + params.toString();
+      return;
+    }
+
+    if (response?.type === "event" || response?.type === "event_choice" || response?.type === "battle_event") {
+      const params = buildGameParams();
+      params.set("event_data", JSON.stringify(response));
+      location.href = "./event/index.html?" + params.toString();
+      return;
+    }
+
     if (response?.dead || Number(response?.hp || 0) <= 0) {
       renderState({
         hp: 0,
@@ -336,14 +368,6 @@ async function exploreLake() {
         dead_after: Number(response?.dead_after || 60),
         message: response?.message || "Ты погиб и ждёшь воскрешения."
       });
-      return;
-    }
-
-    if (response?.type === "battle") {
-      const enemy = response.enemy || response.enemy_name || "Утопленник";
-      const params = new URLSearchParams(location.search);
-      params.set("enemy", enemy);
-      location.href = "./battle/index.html?" + params.toString();
       return;
     }
 
