@@ -1,4 +1,3 @@
-
 function normalizeBattleText(value) {
   if (value == null) return "";
 
@@ -22,6 +21,8 @@ function normalizeBattleText(value) {
       "log",
       "player_log",
       "playerLog",
+      "player_text",
+      "playerText",
       "enemy_log",
       "enemyLog",
       "e_log",
@@ -36,7 +37,10 @@ function normalizeBattleText(value) {
       if (text) return text;
     }
 
-    const fallback = Object.values(value).map(item => normalizeBattleText(item)).filter(Boolean);
+    const fallback = Object.values(value)
+      .map(item => normalizeBattleText(item))
+      .filter(Boolean);
+
     return fallback.join("\n");
   }
 
@@ -52,17 +56,20 @@ function getBattleLogs(data) {
       safeData.log ??
       safeData.player_log ??
       safeData.playerLog ??
+      safeData.player_text ??
+      safeData.playerText ??
       safeData.text ??
-      safeData.playerText
+      ""
     ),
     enemy: normalizeBattleText(
       safeData.e_log ??
       safeData.enemy_log ??
       safeData.enemyLog ??
-      safeData.enemy_message ??
-      safeData.enemyText ??
       safeData.enemy_text ??
-      safeData.attack_log
+      safeData.enemyText ??
+      safeData.enemy_message ??
+      safeData.attack_log ??
+      ""
     )
   };
 }
@@ -84,7 +91,6 @@ async function doBattle(move) {
         "ПЕРЕЗАРЯДКА",
         "⌛"
       );
-
       return;
     }
 
@@ -200,7 +206,7 @@ async function doBattle(move) {
     }
 
     setMessage(
-      data.text || "Сервер вернул неизвест��ый результат.",
+      data.text || "Сервер вернул неизвестный результат.",
       "НЕИЗВЕСТНЫЙ РЕЗУЛЬТАТ",
       "❔"
     );
