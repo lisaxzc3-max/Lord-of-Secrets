@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -108,6 +109,7 @@ const $ = id => document.getElementById(id);
 
 function buildGameParams() {
   const params = new URLSearchParams(location.search);
+
   if (pEnc) {
     params.set("p_enc", pEnc);
     params.set("p", pEnc);
@@ -115,6 +117,7 @@ function buildGameParams() {
     params.delete("p_enc");
     params.delete("p");
   }
+
   if (aEnc) {
     params.set("a_enc", aEnc);
     params.set("a", aEnc);
@@ -122,14 +125,13 @@ function buildGameParams() {
     params.delete("a_enc");
     params.delete("a");
   }
+
   return params;
 }
 
 function showError(message) {
-  const box = $("errorBox");
-  const text = $("errorText");
-  text.textContent = message || "Не удалось подключиться.";
-  box.classList.remove("hidden");
+  $("errorText").textContent = message || "Не удалось подключиться.";
+  $("errorBox").classList.remove("hidden");
 }
 
 function hideError() {
@@ -142,18 +144,24 @@ function setMessage(text) {
 
 function cloneData(value) {
   if (value === null || value === undefined) return value;
+
   if (typeof value === "object") {
     if (Array.isArray(value)) return value.map(cloneData);
-    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, cloneData(v)]));
+    return Object.fromEntries(
+      Object.entries(value).map(([k, v]) => [k, cloneData(v)])
+    );
   }
+
   return value;
 }
 
 function unwrap(value) {
   let out = value;
+
   for (let i = 0; i < 4 && out && typeof out === "object" && "result" in out; i++) {
     out = out.result;
   }
+
   return out;
 }
 
@@ -169,16 +177,21 @@ async function ensure() {
       cache: "no-store"
     });
 
-    if (!resp.ok) throw new Error("Не удалось подключиться к игровой системе (HTTP " + resp.status + ").");
+    if (!resp.ok) {
+      throw new Error("Не удалось подключиться к игровой системе (HTTP " + resp.status + ").");
+    }
 
     const data = unwrap(await resp.json());
     const profileUrl = data?.profile_url || data?.PROFILE_URL || "";
     const actionUrl = data?.action_url || data?.ACTION_URL || "";
 
-    if (!profileUrl || !actionUrl) throw new Error("Сервер не вернул ссылки профиля и действий.");
+    if (!profileUrl || !actionUrl) {
+      throw new Error("Сервер не вернул ссылки профиля и действий.");
+    }
 
     PROFILE_URL = String(profileUrl);
     ACTION_URL = String(actionUrl);
+
     return true;
   })();
 
@@ -191,6 +204,7 @@ async function ensure() {
 
 async function api(payload) {
   await ensure();
+
   const response = await fetch(ACTION_URL, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -198,14 +212,22 @@ async function api(payload) {
     cache: "no-store"
   });
 
-  if (!response.ok) throw new Error("Ошибка игрового сервера (HTTP " + response.status + ").");
+  if (!response.ok) {
+    throw new Error("Ошибка игрового сервера (HTTP " + response.status + ").");
+  }
+
   const data = unwrap(await response.json());
-  if (!data || typeof data !== "object") throw new Error("Сервер вернул некорректный ответ.");
+
+  if (!data || typeof data !== "object") {
+    throw new Error("Сервер вернул некорректный ответ.");
+  }
+
   return cloneData(data);
 }
 
 async function loadProfile() {
   await ensure();
+
   const response = await fetch(PROFILE_URL, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -213,16 +235,27 @@ async function loadProfile() {
     cache: "no-store"
   });
 
-  if (!response.ok) throw new Error("Не удалось загрузить профиль (HTTP " + response.status + ").");
+  if (!response.ok) {
+    throw new Error("Не удалось загрузить профиль (HTTP " + response.status + ").");
+  }
+
   const data = unwrap(await response.json());
-  if (!data || typeof data !== "object") throw new Error("Профиль игрока не получен.");
+
+  if (!data || typeof data !== "object") {
+    throw new Error("Профиль игрока не получен.");
+  }
+
   return cloneData(data);
 }
 
 function clampHp(hp, maxHp) {
   const current = Number(hp);
   const max = Number(maxHp);
-  if (!Number.isFinite(current) || !Number.isFinite(max) || max <= 0) return 0;
+
+  if (!Number.isFinite(current) || !Number.isFinite(max) || max <= 0) {
+    return 0;
+  }
+
   return Math.max(0, Math.min(max, current));
 }
 
@@ -230,6 +263,7 @@ function setHpVisual(hp, maxHp) {
   const current = clampHp(hp, maxHp);
   const max = Number(maxHp) || 1;
   const percent = Math.max(0, Math.min(100, (current / max) * 100));
+
   $("hp").textContent = current + " / " + max;
   $("hpbar").style.width = percent + "%";
 }
@@ -242,8 +276,7 @@ function updateTimers() {
     $("deadBox").classList.add("hidden");
     $("deadTimer").textContent = "--:--";
   } else if (deadUntil) {
-    const ms = deadUntil - now;
-    const total = Math.max(0, Math.ceil(ms / 1000));
+    const total = Math.max(0, Math.ceil((deadUntil - now) / 1000));
     const min = String(Math.floor(total / 60)).padStart(2, "0");
     const sec = String(total % 60).padStart(2, "0");
     $("deadTimer").textContent = min + ":" + sec;
@@ -255,8 +288,7 @@ function updateTimers() {
     $("regenTimer").textContent = "--:--";
     $("regenHp").textContent = "—";
   } else if (regenUntil) {
-    const ms = regenUntil - now;
-    const total = Math.max(0, Math.ceil(ms / 1000));
+    const total = Math.max(0, Math.ceil((regenUntil - now) / 1000));
     const min = String(Math.floor(total / 60)).padStart(2, "0");
     const sec = String(total % 60).padStart(2, "0");
     $("regenTimer").textContent = min + ":" + sec;
@@ -268,21 +300,46 @@ function startClock() {
   intervalId = setInterval(updateTimers, 1000);
 }
 
+function hasTrueFlag(value) {
+  return value === true || value === 1 || value === "1" || value === "true";
+}
+
+function isProfileDead(data) {
+  return hasTrueFlag(data?.dead) || hasTrueFlag(data?.dead_now);
+}
+
+function getHp(data) {
+  return data?.hp ?? data?.health ?? data?.current_hp;
+}
+
 function renderState(data) {
   if (!data || typeof data !== "object") return;
 
-  profile = data;
-  const hp = clampHp(data.hp, data.max_hp || 100);
-  const max = Number(data.max_hp) || 100;
+  const previousProfile = profile || {};
+  profile = Object.assign({}, previousProfile, data);
 
-  setHpVisual(hp, max);
-  $("mad").textContent = Number(data.mad || 0);
-  $("exp").textContent = Number(data.exp || 0);
+  const rawHp = getHp(data) ?? getHp(previousProfile);
+  const rawMaxHp = data.max_hp ?? previousProfile.max_hp ?? 100;
+  const max = Number(rawMaxHp) || 100;
+  const hpKnown = rawHp !== undefined && rawHp !== null && rawHp !== "";
+  const hp = hpKnown ? clampHp(rawHp, max) : null;
 
-  $("exploreBtn").disabled = Number(hp) <= 0 || !!data.dead || !!data.dead_now;
+  if (hpKnown) {
+    setHpVisual(hp, max);
+  } else {
+    $("hp").textContent = "— / " + max;
+    $("hpbar").style.width = "0%";
+  }
 
-  if (Number(hp) <= 0 || data.dead) {
-    const secs = Number(data.dead_after || 60);
+  $("mad").textContent = Number(data.mad ?? previousProfile.mad ?? 0);
+  $("exp").textContent = Number(data.exp ?? previousProfile.exp ?? 0);
+
+  const isDead = isProfileDead(data);
+  $("exploreBtn").disabled = isDead || (hpKnown && hp <= 0);
+
+  if ((hpKnown && hp <= 0) || isDead) {
+    const secs = Number(data.dead_after || previousProfile.dead_after || 60);
+
     deadUntil = Date.now() + secs * 1000;
     $("deadBox").classList.remove("hidden");
     $("deadTimer").textContent = "00:" + String(Math.max(0, secs)).padStart(2, "0");
@@ -293,11 +350,14 @@ function renderState(data) {
     deadUntil = null;
   }
 
-  if (Number(data.regen_hp || 0) > 0) {
-    const wait = Number(data.regen_time || 0) || 0;
+  const regenHp = Number(data.regen_hp ?? previousProfile.regen_hp ?? 0);
+
+  if (regenHp > 0) {
+    const wait = Number(data.regen_time ?? previousProfile.regen_time ?? 0) || 0;
+
     regenUntil = Date.now() + wait * 1000;
     $("regenBox").classList.remove("hidden");
-    $("regenHp").textContent = Number(data.regen_hp || 0);
+    $("regenHp").textContent = regenHp;
     $("regenTimer").textContent = "00:" + String(Math.max(0, wait)).padStart(2, "0");
   } else {
     $("regenBox").classList.add("hidden");
@@ -307,113 +367,172 @@ function renderState(data) {
   }
 }
 
+function updateExploreButton() {
+  const rawHp = getHp(profile);
+  const hpKnown = rawHp !== undefined && rawHp !== null && rawHp !== "";
+  const hp = hpKnown ? Number(rawHp) : NaN;
+  const dead = isProfileDead(profile);
+
+  $("exploreBtn").disabled =
+    dead || (hpKnown && Number.isFinite(hp) && hp <= 0);
+}
+
 async function refreshLake() {
   busy = true;
   hideError();
   $("exploreBtn").disabled = true;
+  setMessage("Проверяем состояние персонажа…");
 
   try {
     const data = await loadProfile();
     renderState(data);
-    setMessage(data.message || "Похоже, туман сегодня особенно плотный.");
+
+    if (!isProfileDead(data)) {
+      setMessage(data.message || "Похоже, туман сегодня особенно плотный.");
+    }
   } catch (error) {
     showError(error.message || "Не удалось загрузить состояние озера.");
   } finally {
     busy = false;
-    if (profile && Number(profile.hp || 0) > 0) {
-      $("exploreBtn").disabled = false;
-    }
+    updateExploreButton();
   }
+}
+
+function getEncounterType(response) {
+  const raw =
+    response?.type ??
+    response?.action_type ??
+    response?.encounter_type ??
+    response?.event_type ??
+    response?.kind ??
+    response?.result?.type ??
+    response?.data?.type ??
+    "";
+
+  return String(raw).trim().toLowerCase();
+}
+
+function isBattleResponse(response, type) {
+  if (["battle", "combat", "fight"].includes(type)) return true;
+
+  if (
+    response?.battle === true ||
+    response?.combat === true ||
+    response?.result?.battle === true
+  ) return true;
+
+  return !!(
+    response?.enemy ||
+    response?.enemy_name ||
+    response?.result?.enemy ||
+    response?.result?.enemy_name
+  );
+}
+
+function isEventResponse(response, type) {
+  if (["event", "event_choice", "battle_event", "encounter_event"].includes(type)) {
+    return true;
+  }
+
+  if (
+    response?.event &&
+    typeof response.event === "object"
+  ) return true;
+
+  return false;
 }
 
 async function exploreLake() {
   if (busy) return;
 
-  const hp = Number(profile?.hp || 0);
-  if (!profile || hp <= 0) {
-    setMessage("Ты мёртв. Сначала дождись воскрешения.");
+  const rawHp = getHp(profile);
+  const hpKnown = rawHp !== undefined && rawHp !== null && rawHp !== "";
+  const hp = hpKnown ? Number(rawHp) : NaN;
+
+  if (
+    !profile ||
+    isProfileDead(profile) ||
+    (hpKnown && Number.isFinite(hp) && hp <= 0)
+  ) {
+    setMessage("Персонаж мёртв. Сначала дождись воскрешения.");
     return;
   }
 
   busy = true;
   hideError();
   $("exploreBtn").disabled = true;
+  setMessage("Ты пробираешься сквозь туман…");
 
   try {
     const data = await api({ action: "explore" });
     const response = unwrap(data);
 
-    if (response?.type === "battle") {
-      const enemy = response.enemy || response.enemy_name || "Утопленник";
+    if (!response || typeof response !== "object") {
+      throw new Error("Сервер вернул пустой ответ на исследование.");
+    }
+
+    const type = getEncounterType(response);
+
+    if (isBattleResponse(response, type)) {
+      const enemy =
+        response.enemy ||
+        response.enemy_name ||
+        response.result?.enemy ||
+        response.result?.enemy_name ||
+        "Утопленник";
+
       const params = buildGameParams();
-      params.set("enemy", enemy);
+      params.set("enemy", typeof enemy === "string" ? enemy : JSON.stringify(enemy));
+
       location.href = "./battle/index.html?" + params.toString();
       return;
     }
 
-    if (response?.type === "event" || response?.type === "event_choice" || response?.type === "battle_event") {
+    if (isEventResponse(response, type)) {
       const params = buildGameParams();
       params.set("event_data", JSON.stringify(response));
+
       location.href = "./event/index.html?" + params.toString();
       return;
     }
 
-    /*
-     * ИСПРАВЛЕНИЕ:
-     * Отсутствующее поле hp не означает, что игрок погиб.
-     * Смерть фиксируем только при явном признаке от сервера
-     * или если сервер действительно вернул hp <= 0.
-     */
     const responseHasHp =
-      response &&
       Object.prototype.hasOwnProperty.call(response, "hp") &&
       response.hp !== null &&
       response.hp !== "";
 
     const responseHp = responseHasHp ? Number(response.hp) : NaN;
 
-    const serverSaysDead =
-      response?.dead === true ||
-      response?.dead === 1 ||
-      response?.dead === "1" ||
-      response?.dead === "true" ||
-      response?.dead_now === true ||
-      response?.dead_now === 1 ||
-      response?.dead_now === "1" ||
-      response?.dead_now === "true";
-
     if (
-      serverSaysDead ||
-      (responseHasHp &&
-        Number.isFinite(responseHp) &&
-        responseHp <= 0)
+      isProfileDead(response) ||
+      (responseHasHp && Number.isFinite(responseHp) && responseHp <= 0)
     ) {
       renderState({
         hp: 0,
-        max_hp: Number(response?.max_hp || profile?.max_hp || 100),
-        mad: response?.mad ?? profile?.mad ?? 0,
-        exp: response?.exp ?? profile?.exp ?? 0,
+        max_hp: Number(response.max_hp || profile.max_hp || 100),
+        mad: response.mad ?? profile.mad ?? 0,
+        exp: response.exp ?? profile.exp ?? 0,
         dead: true,
-        dead_after: Number(response?.dead_after || 60),
-        message: response?.message || "Ты погиб и ждёшь воскрешения."
+        dead_after: Number(response.dead_after || 60),
+        message: response.message || "Ты погиб и ждёшь воскрешения."
       });
+
       return;
     }
 
-    /*
-     * Если ответ исследования не содержит hp,
-     * сохраняем прежнее здоровье из профиля.
-     */
-    const next = Object.assign({}, profile, response || {});
+    const next = Object.assign({}, profile, response);
     renderState(next);
-    setMessage(response?.message || "Ты осматриваешь берег и слушаешь туман.");
+    setMessage(
+      response.message ||
+      "Ты осматриваешь берег, но ничего необычного пока не происходит."
+    );
+
   } catch (error) {
     showError(error.message || "Ошибка исследования.");
+    setMessage("Исследование не завершено.");
   } finally {
     busy = false;
-    if (profile && Number(profile.hp || 0) > 0) {
-      $("exploreBtn").disabled = false;
-    }
+    updateExploreButton();
   }
 }
 
@@ -421,8 +540,7 @@ $("exploreBtn").addEventListener("click", exploreLake);
 $("retryBtn").addEventListener("click", refreshLake);
 
 window.addEventListener("DOMContentLoaded", () => {
-  const back = document.getElementById("backHome");
-  if (back) back.href = "../index.html" + location.search;
+  $("backHome").href = "../index.html" + location.search;
   startClock();
   refreshLake();
 });
