@@ -90,10 +90,15 @@ try { tg?.ready(); tg?.expand(); tg?.setHeaderColor("#080b0f"); } catch (_) {}
 
 const qs = new URLSearchParams(location.search);
 const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
+
+const pEnc = qs.get("p_enc") || qs.get("p") || "";
+const aEnc = qs.get("a_enc") || qs.get("a") || "";
+
 const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 
-let PROFILE_URL = "";
-let ACTION_URL = "";
+let PROFILE_URL = pEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(pEnc) : "";
+let ACTION_URL = aEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc) : "";
+
 let handshakePromise = null;
 let busy = false;
 let profile = null;
@@ -143,7 +148,7 @@ async function ensure() {
     const resp = await fetch(HANDSHAKE, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ user_id: uid }),
+      body: JSON.stringify({ user_id: String(uid) }),
       cache: "no-store"
     });
 
@@ -154,6 +159,7 @@ async function ensure() {
     const actionUrl = data?.action_url || data?.ACTION_URL || "";
 
     if (!profileUrl || !actionUrl) throw new Error("Сервер не вернул ссылки профиля и действий.");
+
     PROFILE_URL = String(profileUrl);
     ACTION_URL = String(actionUrl);
     return true;
@@ -358,6 +364,8 @@ $("exploreBtn").addEventListener("click", exploreLake);
 $("retryBtn").addEventListener("click", refreshLake);
 
 window.addEventListener("DOMContentLoaded", () => {
+  const back = document.getElementById("backHome");
+  if (back) back.href = "../index.html" + location.search;
   startClock();
   refreshLake();
 });
