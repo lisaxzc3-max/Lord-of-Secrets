@@ -86,6 +86,7 @@ button{font:inherit}
 "use strict";
 
 const tg = window.Telegram?.WebApp || null;
+
 try {
   tg?.ready();
   tg?.expand();
@@ -488,20 +489,28 @@ async function refreshLake() {
 }
 
 /*
- * ИСПРАВЛЕНО:
- * Кнопка напрямую открывает страницу боя.
- * Переход больше не зависит от ответа API исследования.
- * Параметры игрока и подключения сохраняются.
+ * ИСПРАВЛЕНИЕ:
+ * Просто открываем файл боя.
+ * Не запускаем исследование через API и не ждём ответа сервера.
+ * Сохраняем параметры подключения и игрока.
  */
 function exploreLake() {
-  if (busy) return;
+  const params = new URLSearchParams(window.location.search);
 
-  const params = buildGameParams();
+  if (pEnc) {
+    params.set("p_enc", pEnc);
+    params.set("p", pEnc);
+  }
+
+  if (aEnc) {
+    params.set("a_enc", aEnc);
+    params.set("a", aEnc);
+  }
 
   params.set("enemy", "Утопленник");
   params.delete("event_data");
 
-  location.href =
+  window.location.href =
     "./battle/index.html?" + params.toString();
 }
 
