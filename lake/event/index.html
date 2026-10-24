@@ -4,343 +4,478 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101014">
-<title>Событие — Повелитель Тайн</title>
+<title>Событие · Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{--bg:#101014;--panel:rgba(25,24,30,.96);--line:#45404b;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779}
 *{box-sizing:border-box}
 html{min-height:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,sans-serif;background:radial-gradient(ellipse at 50% -10%,rgba(111,76,132,.24),transparent 50%),linear-gradient(rgba(10,9,14,.78),rgba(10,9,14,.96)),url('../IMG_20261020_125409.jpg') center/cover fixed no-repeat,var(--bg);font-size:14px}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#6f4c843d,transparent 50%),linear-gradient(#0a090ec7,#0a090ef5),url('../IMG_20261020_125409.jpg') center/cover fixed no-repeat,var(--bg)}
 button,a{-webkit-tap-highlight-color:transparent}
 button{font:inherit}
-.wrap{max-width:520px;margin:0 auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
-.head{display:flex;align-items:center;gap:10px;padding:7px 0 14px}
-.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:rgba(25,24,30,.85);font-size:12px}
-.headTitle{min-width:0;flex:1}
+.wrap{max-width:520px;margin:auto;padding:12px 12px calc(32px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:6px 0 15px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#19181de8;font-size:12px}
+.heading{min-width:0;flex:1}
 .eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-h1{font-size:19px;line-height:1.25;margin:3px 0 0;font-weight:850}
-.pill{flex-shrink:0;border:1px solid #62503a;border-radius:999px;padding:6px 9px;font-size:10px;color:var(--gold);background:rgba(25,24,30,.75)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px rgba(0,0,0,.17)}
-.scene{position:relative;overflow:hidden;padding:0}
-.sceneTop{padding:16px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1{font-size:20px;margin:4px 0 0;line-height:1.2}
+.pill{flex-shrink:0;border:1px solid #62503a;border-radius:999px;padding:7px 9px;color:var(--gold);font-size:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;box-shadow:0 10px 30px #0003}
+.scene{overflow:hidden}
+.sceneTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px 16px 0}
 .label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.eventType{font-size:10px;color:var(--gold);text-align:right}
-.artWrap{position:relative;margin:13px 13px 0;overflow:hidden;border-radius:13px;border:1px solid #514653;background:radial-gradient(ellipse at 50% 30%,#38303e,#17151c 75%);min-height:160px}
-.art{display:block;width:100%;height:220px;object-fit:cover}
-.artFallback{height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:radial-gradient(ellipse at 50% 40%,rgba(183,155,232,.18),transparent 60%)}
-.symbol{font-size:64px;filter:drop-shadow(0 0 18px rgba(214,183,121,.25))}
-.caption{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;text-align:center}
-.sceneBody{padding:15px 16px 17px}
-.sceneTitle{font-size:21px;line-height:1.25;font-weight:850;margin:0 0 10px}
-.sceneText{font-size:13px;line-height:1.7;color:#d1c8d6;white-space:pre-wrap;overflow-wrap:anywhere}
-.divider{height:1px;background:linear-gradient(90deg,transparent,#4b414f,transparent);margin:15px 0}
-.prompt{font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:9px;text-transform:uppercase}
+.type{font-size:10px;color:var(--gold);text-align:right}
+.artWrap{position:relative;min-height:190px;margin:13px 13px 0;overflow:hidden;border:1px solid #514653;border-radius:13px;background:radial-gradient(ellipse at 50% 30%,#38303e,#17151c 75%)}
+.art{display:block;width:100%;height:235px;object-fit:cover}
+.fallback{height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;background:radial-gradient(ellipse at 50% 40%,#b79be82e,transparent 65%)}
+.symbol{font-size:65px;filter:drop-shadow(0 0 18px #d6b77940)}
+.caption{font-size:10px;letter-spacing:3px;color:var(--muted);text-align:center}
+.body{padding:16px}
+.sceneTitle{font-size:22px;line-height:1.25;font-weight:850;margin:0 0 10px}
+.sceneText{font-size:14px;line-height:1.7;color:#d1c8d6;white-space:pre-wrap;overflow-wrap:anywhere}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#4b414f,transparent);margin:16px 0}
+.prompt{font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:10px;text-transform:uppercase}
 .actions{display:grid;grid-template-columns:1fr;gap:8px}
 .action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 12px;border:1px solid #514456;border-radius:12px;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer}
 .action:active:not(:disabled){transform:scale(.99)}
 .action:disabled{opacity:.5;cursor:default}
-.actionIcon{width:35px;height:35px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(214,183,121,.10);font-size:18px}
+.actionIcon{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#d6b77919;font-size:19px}
 .actionCopy{min-width:0;flex:1}
-.actionName{font-size:12px;font-weight:800;line-height:1.4}
-.actionDesc{font-size:10px;line-height:1.45;color:var(--muted);margin-top:3px}
-.chevron{color:var(--gold);font-size:20px}
-.result{border-color:#665238;background:linear-gradient(155deg,rgba(48,39,26,.98),rgba(24,22,28,.98))}
-.resultBadge{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:8px}
-.resultTitle{font-size:19px;font-weight:900;letter-spacing:1px;margin-bottom:9px}
-.resultText{font-size:12px;line-height:1.7;color:#d1c8d6;white-space:pre-wrap;overflow-wrap:anywhere}
-.btn{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 10px;background:#29252f;color:var(--text);font-size:12px;font-weight:800;cursor:pointer}
+.actionName{font-size:13px;font-weight:800;line-height:1.4}
+.actionDesc{font-size:11px;line-height:1.45;color:var(--muted);margin-top:3px}
+.arrow{color:var(--gold);font-size:21px}
+.btn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 10px;background:#29252f;color:var(--text);font-size:12px;font-weight:800;cursor:pointer}
 .btn.primary{color:#20190f;background:linear-gradient(135deg,#e4ca91,#b28c4d);border-color:#d4b779}
-.btn:disabled{opacity:.5}
-.note{text-align:center;color:#827b89;font-size:10px;line-height:1.6;padding:0 12px 12px}
+.btn:disabled{opacity:.5;cursor:wait}
+.result{padding:16px;border-color:#665238;background:linear-gradient(155deg,#30271af5,#18161cf5)}
+.resultBadge{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:8px}
+.resultTitle{font-size:20px;font-weight:900;margin-bottom:9px}
+.resultText{font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.result .btn{margin-top:14px}
+.error{padding:13px;border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.error .btn{margin-top:10px}
+.note{text-align:center;color:#827b89;font-size:11px;line-height:1.7;padding:0 10px 12px}
 .hidden{display:none!important}
-.error{border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.loading{opacity:.72;pointer-events:none}
-@media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.sceneTitle{font-size:19px}.art{height:185px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.sceneTitle{font-size:20px}.art{height:195px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header class="head">
-<a class="back" id="backLake" href="../index.html">← Озёра</a>
-<div class="headTitle"><div class="eyebrow">Lord of the Mysteries</div><h1>Событие</h1></div>
-<div class="pill" id="eventPill">Неизвестность</div>
+  <a class="back" id="backLake" href="../index.html">← Озёра</a>
+  <div class="heading">
+    <div class="eyebrow">Lord of the Mysteries</div>
+    <h1>Событие</h1>
+  </div>
+  <div class="pill" id="pill">Неизвестность</div>
 </header>
+
 <main>
-<section class="card scene">
-<div class="sceneTop"><span class="label">Неожиданная встреча</span><span class="eventType" id="eventType">Событие у озера</span></div>
-<div class="artWrap">
-<div class="artFallback" id="artFallback"><div class="symbol" id="artSymbol">🌫️</div><div class="caption">Туман скрывает детали</div></div>
-<img class="art hidden" id="eventImg" alt="Иллюстрация события">
-</div>
-<div class="sceneBody">
-<h2 class="sceneTitle" id="eventTitle">Загрузка события…</h2>
-<div class="sceneText" id="eventText" aria-live="polite">Туман скрывает происходящее.</div>
-<div class="divider"></div>
-<div class="prompt" id="choicePrompt">Твой следующий шаг</div>
-<div class="actions" id="eventBtns"></div>
-</div>
-</section>
-<section class="card result hidden" id="resultCard">
-<div class="resultBadge">◆ РЕЗУЛЬТАТ ВЫБОРА ◆</div>
-<div class="resultTitle" id="resultTitle">Выбор сделан</div>
-<div class="resultText" id="resultText"></div>
-<button class="btn primary" id="closeResult" type="button" style="margin-top:15px">Вернуться к озеру</button>
-</section>
-<section class="card error hidden" id="errorCard" role="alert">
-<div id="errorText">Не удалось выполнить действие.</div>
-<button class="btn" id="retryBtn" type="button" style="margin-top:10px">Повторить действие</button>
-<button class="btn" id="returnErrorBtn" type="button" style="margin-top:8px">Вернуться к озеру</button>
-</section>
+  <section class="card scene">
+    <div class="sceneTop">
+      <span class="label">Неожиданная встреча</span>
+      <span class="type" id="eventType">Событие у озера</span>
+    </div>
+
+    <div class="artWrap">
+      <div class="fallback" id="fallback">
+        <div class="symbol" id="symbol">🌫️</div>
+        <div class="caption">Туман скрывает детали</div>
+      </div>
+      <img class="art hidden" id="eventImage" alt="Иллюстрация события">
+    </div>
+
+    <div class="body">
+      <h2 class="sceneTitle" id="eventTitle">Загадка в тумане</h2>
+      <div class="sceneText" id="eventText" aria-live="polite">Загрузка события…</div>
+      <div class="divider"></div>
+      <div class="prompt" id="prompt">Твой следующий шаг</div>
+      <div class="actions" id="actions"></div>
+    </div>
+  </section>
+
+  <section class="card result hidden" id="resultCard">
+    <div class="resultBadge">◆ ПОСЛЕДСТВИЯ ◆</div>
+    <div class="resultTitle" id="resultTitle">Выбор сделан</div>
+    <div class="resultText" id="resultText"></div>
+    <button class="btn primary" id="returnResult" type="button">Вернуться к озеру</button>
+  </section>
+
+  <section class="card error hidden" id="errorCard" role="alert">
+    <div id="errorText"></div>
+    <button class="btn" id="retry" type="button">Повторить действие</button>
+    <button class="btn" id="returnError" type="button">Вернуться к озеру</button>
+  </section>
 </main>
-<div class="note">Встреча может принести награду, опасность или нечто куда менее понятное.<br>В тумане бесплатных решений почти не бывает.</div>
+
+<div class="note">
+  Встреча может принести награду, опасность или нечто куда менее понятное.
+  <br>В тумане бесплатных решений почти не бывает.
 </div>
+</div>
+
 <script>
 "use strict";
 
-const tg=window.Telegram?.WebApp;
-if(tg){tg.ready();tg.expand();try{tg.setHeaderColor("#101014")}catch(e){}}
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#101014")}catch(_){}
 
 const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"7320193489");
 const pEnc=qs.get("p_enc")||qs.get("p")||"";
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
-
-let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+pEnc:"";
-let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+aEnc:"";
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 
-const $=id=>document.getElementById(id);
-let eventData=null,busy=false,completed=false,lastAction=null;
+let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
+let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 let handshakePromise=null;
+let busy=false;
+let completed=false;
+let lastAction=null;
+let eventData=null;
 
-const meta={
- frog:{title:"🐸 Царевна-жаба",type:"Странная встреча",symbol:"🐸",image:"../bb815f12-35ad-403b-bb70-b9395bb2c7ee.png"},
- chest:{title:"📦 Сундук в омуте",type:"Находка",symbol:"📦",image:"../15d1db07-2ef7-450e-ac08-524dd6a53d03.png"}
-};
+const $=id=>document.getElementById(id);
 
 function unwrap(value){
- if(value&&value.result&&typeof value.result==="object")return value.result;
- return value;
-}
-function firstText(obj,keys,fallback=""){
- for(const key of keys){
-  if(typeof obj?.[key]==="string"&&obj[key].trim())return obj[key];
- }
- return fallback;
-}
-function getActions(d){
- const candidates=[d?.actions,d?.choices,d?.options,d?.moves,d?.event?.actions,d?.event?.choices];
- for(const candidate of candidates){
-  if(Array.isArray(candidate)){
-   return candidate.map((a,i)=>{
-    if(typeof a==="string")return {id:a,label:a};
-    if(!a||typeof a!=="object")return null;
-    const id=a.id??a.move??a.action??a.value??a.key??i;
-    const label=a.label??a.title??a.name??a.text??a.description??("Вариант "+(i+1));
-    return {...a,id:String(id),label:String(label)};
-   }).filter(a=>a&&a.id!==""&&a.id!=="undefined");
+  let v=value;
+  for(let i=0;i<3;i++){
+    if(v&&v.result&&typeof v.result==="object")v=v.result;
+    else break;
   }
- }
- return [];
+  return v;
 }
-function getKind(d){
- const raw=d?.event_type??d?.event??d?.kind??d?.type??d?.event_id??"";
- if(raw&&typeof raw==="object"){
-  return String(raw.id??raw.name??raw.type??"");
- }
- return String(raw);
+
+function textOf(obj,keys,fallback=""){
+  for(const key of keys){
+    const v=obj?.[key];
+    if(typeof v==="string"&&v.trim())return v;
+    if(typeof v==="number")return String(v);
+  }
+  return fallback;
 }
-function setBusy(v){
- busy=v;
- document.body.classList.toggle("loading",v);
- document.querySelectorAll("#eventBtns button,#closeResult,#retryBtn").forEach(b=>b.disabled=v||completed);
+
+function normalizeKind(data){
+  const raw=data?.event_type??data?.event_kind??data?.kind??data?.event_id??data?.event??data?.type??"";
+  const value=typeof raw==="object"?(raw.id??raw.name??raw.type??""):raw;
+  const s=String(value).toLowerCase();
+  if(/frog|жаб/.test(s))return "frog";
+  if(/chest|сундук|treasure|сокров/.test(s))return "chest";
+  return "unknown";
 }
-function showError(msg){
- $("errorText").textContent=msg||"Не удалось выполнить действие.";
- $("errorCard").classList.remove("hidden");
+
+const eventMeta={
+  frog:{
+    title:"🐸 Царевна-жаба",
+    type:"Странная встреча",
+    symbol:"🐸",
+    images:[
+      "../bb815f12-35ad-403b-bb70-b9395bb2c7ee.png",
+      "../frog.png",
+      "../images/frog.png"
+    ]
+  },
+  chest:{
+    title:"📦 Сундук в омуте",
+    type:"Таинственная находка",
+    symbol:"📦",
+    images:[
+      "../15d1db07-2ef7-450e-ac08-524dd6a53d03.png",
+      "../chest.png",
+      "../images/chest.png"
+    ]
+  },
+  unknown:{
+    title:"🌫️ Событие у озера",
+    type:"Неизвестная встреча",
+    symbol:"🌫️",
+    images:[]
+  }
+};
+
+function cleanLakeUrl(){
+  const params=new URLSearchParams(location.search);
+  params.delete("event_data");
+  params.delete("enemy");
+  const query=params.toString();
+  return "../index.html"+(query?"?"+query:"");
+}
+function goLake(){location.href=cleanLakeUrl()}
+$("backLake").href=cleanLakeUrl();
+
+function showError(message){
+  $("errorText").textContent=message||"Не удалось выполнить действие.";
+  $("errorCard").classList.remove("hidden");
 }
 function hideError(){$("errorCard").classList.add("hidden")}
 
-async function ensure(){
- if(PROFILE_URL&&ACTION_URL)return true;
- if(handshakePromise)return handshakePromise;
-
- handshakePromise=(async()=>{
-  const response=await fetch(HANDSHAKE,{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({user_id:uid}),
-   cache:"no-store"
-  });
-  if(!response.ok)throw new Error("Не удалось подключиться к игровой системе (HTTP "+response.status+").");
-  const raw=await response.json();
-  const data=unwrap(raw);
-  const profile=data?.profile_url||data?.PROFILE_URL;
-  const action=data?.action_url||data?.ACTION_URL;
-  if(typeof profile!=="string"||!profile||typeof action!=="string"||!action){
-   throw new Error("Сервер не вернул адреса игрового профиля и действий.");
-  }
-  const p=new URL(profile),a=new URL(action);
-  if(p.protocol!=="https:"||a.protocol!=="https:")throw new Error("Сервер вернул некорректные адреса API.");
-  PROFILE_URL=p.href;
-  ACTION_URL=a.href;
-  return true;
- })();
-
- try{return await handshakePromise}
- finally{handshakePromise=null}
+function setBusy(value){
+  busy=value;
+  document.querySelectorAll("#actions button,#retry").forEach(b=>b.disabled=value||completed);
 }
+function makeButton(label,cls,handler){
+  const b=document.createElement("button");
+  b.type="button";
+  b.className=cls;
+  b.textContent=label;
+  b.addEventListener("click",handler);
+  return b;
+}
+
+async function ensureUrls(){
+  if(PROFILE_URL&&ACTION_URL)return true;
+  if(handshakePromise)return handshakePromise;
+
+  handshakePromise=(async()=>{
+    const response=await fetch(HANDSHAKE,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({user_id:uid}),
+      cache:"no-store"
+    });
+    if(!response.ok)throw new Error("Ошибка подключения к игровому серверу: HTTP "+response.status);
+
+    const data=unwrap(await response.json());
+    const profile=data?.profile_url||data?.PROFILE_URL;
+    const action=data?.action_url||data?.ACTION_URL;
+    if(typeof profile!=="string"||!profile||typeof action!=="string"||!action){
+      throw new Error("Сервер не вернул адреса игрового профиля и действий.");
+    }
+    const p=new URL(profile),a=new URL(action);
+    if(p.protocol!=="https:"||a.protocol!=="https:")throw new Error("Сервер вернул некорректный адрес API.");
+    PROFILE_URL=p.href;
+    ACTION_URL=a.href;
+    return true;
+  })();
+
+  try{return await handshakePromise}
+  finally{handshakePromise=null}
+}
+
 async function api(payload){
- if(!ACTION_URL)await ensure();
- const response=await fetch(ACTION_URL,{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body:JSON.stringify(payload),
-  cache:"no-store"
- });
- if(!response.ok)throw new Error("Ошибка игрового сервера (HTTP "+response.status+").");
- const data=unwrap(await response.json());
- if(!data||typeof data!=="object")throw new Error("Сервер вернул некорректный ответ.");
- return data;
+  await ensureUrls();
+  const response=await fetch(ACTION_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload),
+    cache:"no-store"
+  });
+  if(!response.ok)throw new Error("Ошибка игрового сервера: HTTP "+response.status);
+  const data=unwrap(await response.json());
+  if(!data||typeof data!=="object")throw new Error("Игровой сервер вернул некорректный ответ.");
+  return data;
 }
 
-function setArt(kind){
- const m=meta[kind]||{symbol:"🌫️",image:""};
- $("artSymbol").textContent=m.symbol;
- const img=$("eventImg"),fallback=$("artFallback");
- img.classList.add("hidden");
- fallback.classList.remove("hidden");
- img.onload=()=>{img.classList.remove("hidden");fallback.classList.add("hidden")};
- img.onerror=()=>{img.classList.add("hidden");fallback.classList.remove("hidden")};
- if(m.image)img.src=m.image;
- else img.removeAttribute("src");
-}
-function actionIcon(action,index){
- const id=String(action.id||"").toLowerCase();
- const label=String(action.label||"").toLowerCase();
- if(/frog|жаб/.test(id+" "+label))return "🐸";
- if(/chest|сундук|open|loot|take|взять|открыть/.test(id+" "+label))return "📦";
- if(/leave|run|ignore|уйти|отказ|бежать/.test(id+" "+label))return "🚶";
- if(/attack|fight|атак|сраж/.test(id+" "+label))return "⚔️";
- if(/talk|speak|диалог|говор/.test(id+" "+label))return "💬";
- return ["🔍","🕯️","🖐️","🌀"][index%4];
-}
-function renderEvent(d){
- eventData=d;
- const kind=getKind(d).toLowerCase();
- const normalizedKind=kind.includes("frog")||kind.includes("жаб")?"frog":
-  kind.includes("chest")||kind.includes("сундук")?"chest":kind;
- const m=meta[normalizedKind]||{title:"🌫️ Событие у озера",type:"Неизвестная встреча",symbol:"🌫️"};
- const title=firstText(d,["title","event_title","name"],"");
- const description=firstText(d,["text","description","desc","message","story","event_text"],"");
- $("eventTitle").textContent=title||m.title;
- $("eventType").textContent=m.type;
- $("eventPill").textContent=normalizedKind==="frog"?"Встреча":normalizedKind==="chest"?"Находка":"Событие";
- $("eventText").textContent=description||"Ты замечаешь движение в тумане.";
- setArt(normalizedKind);
-
- const box=$("eventBtns");
- box.replaceChildren();
- const actions=getActions(d);
- if(!actions.length){
-  $("choicePrompt").textContent="Данные события";
-  $("eventText").textContent+=(description?"\n\n":"")+"Сервер не передал варианты выбора. Вернись к озеру и попробуй исследовать берег ещё раз.";
-  const b=document.createElement("button");
-  b.type="button";b.className="btn primary";b.textContent="Вернуться к озеру";b.addEventListener("click",goLake);
-  box.appendChild(b);
-  return;
- }
-
- $("choicePrompt").textContent="Как поступишь?";
- for(const [i,a] of actions.entries()){
-  const b=document.createElement("button");
-  b.type="button";b.className="action";
-  const icon=document.createElement("div");icon.className="actionIcon";icon.textContent=actionIcon(a,i);
-  const copy=document.createElement("div");copy.className="actionCopy";
-  const name=document.createElement("div");name.className="actionName";name.textContent=a.label;
-  const desc=document.createElement("div");desc.className="actionDesc";
-  desc.textContent=firstText(a,["description","desc","hint"],"Последствия этого решения неизвестны.");
-  const arrow=document.createElement("span");arrow.className="chevron";arrow.textContent="›";
-  copy.append(name,desc);b.append(icon,copy,arrow);
-  b.addEventListener("click",()=>choose(a));
-  box.appendChild(b);
- }
-}
-async function choose(action){
- if(busy||completed)return;
- lastAction=action;hideError();setBusy(true);
- try{
-  const result=await api({action:"event_choice",move:action.id});
-  if(result.error){
-   showError(result.text||result.message||"Событие не приняло твой выбор.");
-   return;
+function parseActions(data){
+  const candidates=[
+    data?.actions,data?.choices,data?.options,data?.moves,
+    data?.event?.actions,data?.event?.choices,data?.event?.options,
+    data?.result?.actions
+  ];
+  for(const arr of candidates){
+    if(!Array.isArray(arr))continue;
+    return arr.map((item,index)=>{
+      if(typeof item==="string")return {id:item,label:item,description:""};
+      if(!item||typeof item!=="object")return null;
+      const id=item.id??item.move??item.action??item.value??item.key??item.callback_data;
+      const label=item.label??item.title??item.name??item.text??item.description??("Вариант "+(index+1));
+      if(id===undefined||id===null)return null;
+      return {raw:item,id:String(id),label:String(label),description:textOf(item,["hint","desc","description"],"")};
+    }).filter(Boolean);
   }
-  completed=true;
-  const text=firstText(result,["text","message","description","result"],"Твой выбор изменил ход событий.");
-  $("eventText").textContent=text;
-  $("choicePrompt").textContent="Последствия";
-  $("eventBtns").replaceChildren();
-  $("resultTitle").textContent=firstText(result,["title","result_title"],"Выбор сделан");
-  $("resultText").textContent=text;
-  $("resultCard").classList.remove("hidden");
-  $("eventPill").textContent="Завершено";
-  $("eventType").textContent="Последствия выбора";
-  if(result.event_image||result.image_url)setCustomArt(result.event_image||result.image_url);
- }catch(error){
-  showError(error.message||"Не удалось выполнить выбор.");
- }finally{
-  setBusy(false);
- }
-}
-function setCustomArt(src){
- if(typeof src!=="string"||!/^https?:\/\//i.test(src))return;
- const img=$("eventImg"),fallback=$("artFallback");
- img.onload=()=>{img.classList.remove("hidden");fallback.classList.add("hidden")};
- img.onerror=()=>{img.classList.add("hidden");fallback.classList.remove("hidden")};
- img.src=src;
-}
-function cleanLakeUrl(){
- const p=new URLSearchParams(location.search);
- p.delete("event_data");
- return "../index.html"+(p.toString()?"?"+p.toString():"");
-}
-function goLake(){location.href=cleanLakeUrl()}
-function readEvent(){
- const raw=qs.get("event_data");
- if(!raw)return null;
- try{
-  const data=JSON.parse(raw);
-  if(data&&typeof data==="object")return data;
- }catch(error){
-  console.error("Invalid event_data:",error);
- }
- return null;
-}
-function retry(){
- hideError();
- if(lastAction)choose(lastAction);
- else{
-  showError("У события нет вариантов для повтора. Вернись к озеру и начни исследование заново.");
- }
+  return [];
 }
 
-$("closeResult").addEventListener("click",goLake);
-$("retryBtn").addEventListener("click",retry);
-$("returnErrorBtn").addEventListener("click",goLake);
-$("backLake").href=cleanLakeUrl();
-
-eventData=readEvent();
-if(eventData)renderEvent(eventData);
-else{
- $("eventTitle").textContent="Событие не найдено";
- $("eventText").textContent="Данные встречи не были переданы странице. Вернись к озеру и запусти исследование заново.";
- $("eventBtns").replaceChildren();
- const b=document.createElement("button");
- b.type="button";b.className="btn primary";b.textContent="Вернуться к озеру";b.addEventListener("click",goLake);
- $("eventBtns").appendChild(b);
- setArt("");
+function tryImageList(images,index=0){
+  const img=$("eventImage");
+  const fallback=$("fallback");
+  if(index>=images.length){
+    img.classList.add("hidden");
+    img.removeAttribute("src");
+    fallback.classList.remove("hidden");
+    return;
+  }
+  img.onload=()=>{
+    img.classList.remove("hidden");
+    fallback.classList.add("hidden");
+  };
+  img.onerror=()=>tryImageList(images,index+1);
+  img.src=images[index];
 }
+
+function setEventImage(kind,data){
+  const meta=eventMeta[kind]||eventMeta.unknown;
+  $("symbol").textContent=meta.symbol;
+  $("fallback").classList.remove("hidden");
+  $("eventImage").classList.add("hidden");
+
+  const supplied=[
+    data?.image_url,data?.image,data?.photo_url,data?.photo,
+    data?.event?.image_url,data?.event?.image
+  ].filter(v=>typeof v==="string"&&v.trim());
+
+  const validSupplied=supplied.filter(v=>/^https?:\/\//i.test(v)||v.startsWith("../")||v.startsWith("./"));
+  tryImageList([...validSupplied,...meta.images]);
+}
+
+function renderEvent(data){
+  eventData=data;
+  const kind=normalizeKind(data);
+  const meta=eventMeta[kind];
+
+  const nested=(data.event&&typeof data.event==="object")?data.event:{};
+  const title=textOf(data,["title","event_title","name","heading"],"")||
+    textOf(nested,["title","name"],"")||meta.title;
+  const description=textOf(data,["text","description","desc","message","story","event_text","narrative"],"")||
+    textOf(nested,["text","description","desc","message"],"");
+
+  $("eventTitle").textContent=title;
+  $("eventType").textContent=meta.type;
+  $("pill").textContent=kind==="frog"?"Встреча":kind==="chest"?"Находка":"Событие";
+  $("eventText").textContent=description||"Ты замечаешь движение в тумане.";
+  setEventImage(kind,data);
+
+  const container=$("actions");
+  container.replaceChildren();
+  const actions=parseActions(data);
+
+  if(!actions.length){
+    $("prompt").textContent="Событие не получило варианты";
+    $("eventText").textContent+="\n\nСервер не передал список решений. Чтобы не отправлять случайный выбор, вернись к озеру и попробуй исследовать берег снова.";
+    container.appendChild(makeButton("Вернуться к озеру","btn primary",goLake));
+    return;
+  }
+
+  $("prompt").textContent="Твой следующий шаг";
+
+  actions.forEach((action,index)=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="action";
+
+    const icon=document.createElement("div");
+    icon.className="actionIcon";
+    icon.textContent=actionIcon(action,index);
+
+    const copy=document.createElement("div");
+    copy.className="actionCopy";
+
+    const name=document.createElement("div");
+    name.className="actionName";
+    name.textContent=action.label;
+
+    copy.appendChild(name);
+
+    if(action.description){
+      const desc=document.createElement("div");
+      desc.className="actionDesc";
+      desc.textContent=action.description;
+      copy.appendChild(desc);
+    }
+
+    const arrow=document.createElement("span");
+    arrow.className="arrow";
+    arrow.textContent="›";
+
+    b.append(icon,copy,arrow);
+    b.addEventListener("click",()=>chooseAction(action));
+    container.appendChild(b);
+  });
+}
+
+function actionIcon(action,index){
+  const value=(action.id+" "+action.label).toLowerCase();
+  if(/frog|жаб/.test(value))return "🐸";
+  if(/chest|сундук|open|treasure|открыть/.test(value))return "📦";
+  if(/leave|run|уйти|бежать|отказ/.test(value))return "🚶";
+  if(/attack|fight|атак|сраж/.test(value))return "⚔️";
+  if(/talk|speak|говор|диалог/.test(value))return "💬";
+  return ["🔍","🕯️","🖐️","🌀"][index%4];
+}
+
+async function chooseAction(action){
+  if(busy||completed)return;
+  lastAction=action;
+  hideError();
+  setBusy(true);
+
+  try{
+    const result=await api({action:"event_choice",move:action.id});
+
+    if(result.error){
+      showError(textOf(result,["text","message","error"],"Сервер не принял этот выбор."));
+      return;
+    }
+
+    completed=true;
+    const message=textOf(result,["text","message","description","result","result_text"],"Твой выбор изменил ход событий.");
+    $("eventText").textContent=message;
+    $("prompt").textContent="Последствия выбора";
+    $("actions").replaceChildren();
+    $("pill").textContent="Завершено";
+    $("eventType").textContent="Последствия";
+    $("resultTitle").textContent=textOf(result,["title","result_title"],"Выбор сделан");
+    $("resultText").textContent=message;
+    $("resultCard").classList.remove("hidden");
+
+    const reward=result.reward??result.rewards;
+    if(reward!==undefined){
+      const rewardText=typeof reward==="string"?reward:JSON.stringify(reward);
+      $("resultText").textContent+="\n\nНаграда: "+rewardText;
+    }
+
+    if(result.image_url||result.image||result.photo_url){
+      setEventImage(normalizeKind(eventData),{
+        image_url:result.image_url||result.image||result.photo_url
+      });
+    }
+  }catch(error){
+    console.error("Event choice error:",error);
+    showError(error.message||"Не удалось выполнить выбор.");
+  }finally{
+    setBusy(false);
+  }
+}
+
+function loadEventFromUrl(){
+  const raw=qs.get("event_data");
+  if(!raw){
+    $("eventTitle").textContent="Событие не найдено";
+    $("eventText").textContent="Страница открыта без данных встречи. Вернись к озеру и нажми «Исследовать берег».";
+    $("pill").textContent="Нет данных";
+    $("actions").replaceChildren();
+    $("actions").appendChild(makeButton("Вернуться к озеру","btn primary",goLake));
+    setEventImage("unknown",{});
+    return;
+  }
+
+  try{
+    const parsed=JSON.parse(raw);
+    const data=unwrap(parsed);
+    if(!data||typeof data!=="object")throw new Error("Некорректный формат события.");
+    renderEvent(data);
+  }catch(error){
+    console.error("Event data parsing error:",error);
+    $("eventTitle").textContent="Не удалось прочитать событие";
+    $("eventText").textContent="Данные встречи повреждены или имеют неизвестный формат. Вернись к озеру и начни исследование заново.";
+    $("pill").textContent="Ошибка данных";
+    $("actions").replaceChildren();
+    $("actions").appendChild(makeButton("Вернуться к озеру","btn primary",goLake));
+    setEventImage("unknown",{});
+  }
+}
+
+$("returnResult").addEventListener("click",goLake);
+$("returnError").addEventListener("click",goLake);
+$("retry").addEventListener("click",()=>{
+  if(lastAction)chooseAction(lastAction);
+  else{
+    hideError();
+    showError("Невозможно повторить действие: выбор события не был определён. Вернись к озеру и начни новое исследование.");
+  }
+});
+
+loadEventFromUrl();
 </script>
 </body>
- </html>
+</html>
