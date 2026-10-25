@@ -52,7 +52,7 @@ button{font:inherit}
 .messageTitle{font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
 #battleText{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;font-size:12px;color:#d1c8d6}
 #battleText.pop{animation:msgPop .35s ease-out}
-.logCard{padding:12px}
+.logCard{padding:12px;margin-top:4px}
 .logHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
 .logTitle{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .logCount{font-size:10px;color:#77717d}
@@ -194,17 +194,10 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <div class="hpCaption"><span id="enemyHpPercent">—</span><span id="enemyHpState">—</span></div>
 </div>
 </div>
-<div class="battleMessage">
+<div class="battleMessage hidden" id="battleMessage">
 <div class="messageIcon" id="messageIcon">📜</div>
-<div class="messageBody"><div class="messageTitle" id="messageTitle">ХОД СРАЖЕНИЯ</div><div id="battleText" aria-live="polite">Подготавливаем поле боя…</div></div>
+<div class="messageBody"><div class="messageTitle" id="messageTitle">ХОД СРАЖЕНИЯ</div><div id="battleText" aria-live="polite"></div></div>
 </div>
-</section>
-<section class="card logCard">
-<div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div>
-<details class="logDisclosure" id="logDisclosure">
-<summary><span>📜 Показать события боя</span><span class="logSummarySub" id="logSummarySub">Хроника свёрнута</span></summary>
-<div id="battleLog"><div class="logEntry info">Туман скрывает очертания противника.</div></div>
-</details>
 </section>
 <section class="card skillCard" id="skillCard">
 <div class="skillHeader"><h2>ТВОИ ДЕЙСТВИЯ</h2><span id="skillPathLabel">Способности пути</span></div>
@@ -227,6 +220,13 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 </section>
 <section class="card errorBox hidden" id="errorBox" role="alert">
 <div id="errorText"></div><button class="actionBtn" id="retryBtn" type="button" style="margin-top:10px">Повторить загрузку</button>
+</section>
+<section class="card logCard">
+<div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div>
+<details class="logDisclosure" id="logDisclosure">
+<summary><span>📜 Показать события боя</span><span class="logSummarySub" id="logSummarySub">Хроника свёрнута</span></summary>
+<div id="battleLog"><div class="logEntry info">Туман скрывает очертания противника.</div></div>
+</details>
 </section>
 </main>
 <div class="bottomNote">Ход боя и награды обрабатываются сервером.<br>Не каждый силуэт в тумане дружелюбен.</div>
@@ -380,6 +380,7 @@ function setStatus(text,kind=""){
 const el=$("statusPill");el.textContent=text;el.className="statusPill"+(kind?" "+kind:"");
 }
 function setMessage(text,title="ХОД СРАЖЕНИЯ",icon="📜"){
+$("battleMessage").classList.remove("hidden");
 const el=$("battleText");
 el.textContent=text||"Туман скрывает дальнейшие события.";
 el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");
@@ -413,11 +414,11 @@ hpEl.textContent="—";bar.style.width="0%";percent.textContent="—";state.text
 hpEl.textContent=current+"/"+maximum;
 const pc=safePercent(current,maximum);
 const oldPc=parseFloat(bar.style.width)||0;
-const barBox=bar.parentElement.querySelector(".bar")||bar.parentElement;
+const barBox=bar.parentElement;
 let ghost=barBox.querySelector(".ghost");
 if(!ghost){ghost=document.createElement("b");ghost.className="ghost";barBox.prepend(ghost)}
 ghost.style.transition=pc<oldPc?"width .9s ease .45s":"none";
-ghost.style.width=(pc<oldPc?pc:pc)+"%";
+ghost.style.width=pc+"%";
 bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
 state.textContent=current<=0?(player?"Пал":"Повержен"):pc<=25?"Критически мало":pc<=55?"Ранен":player?"В строю":"Опасен";
 const old=prevHp[side];prevHp[side]=current;
@@ -591,8 +592,6 @@ addLog("Ты столкнулся с противником: "+enemy+(state?.ene
 if(state?.boss){
 setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
 setTimeout(()=>{banner("БОСС: ЗМЕЙ","#c45a6a");shakeScreen()},500);
-}else{
-setMessage("Противник перед тобой. Выбирай действие и следи за перезарядкой.","БОЙ НАЧАЛСЯ","⚔️");
 }
 initialized=true;
 }
