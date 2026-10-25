@@ -7,9 +7,7 @@
 <title>Озёра · Топи</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 :root {
   color-scheme: dark;
@@ -35,18 +33,8 @@ body::before {
   background: linear-gradient(#090c11aa, #09090df2);
 }
 
-.wrap {
-  max-width: 480px;
-  margin: auto;
-  padding: 12px 12px 32px;
-}
-
-.head {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 8px 0 14px;
-}
+.wrap { max-width: 480px; margin: auto; padding: 12px 12px 32px; }
+.head { display: flex; align-items: center; gap: 11px; padding: 8px 0 14px; }
 
 .back {
   color: var(--text);
@@ -57,17 +45,8 @@ body::before {
   background: #19181de8;
 }
 
-.heading {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.subheading {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--gold);
-  margin-top: 3px;
-}
+.heading { font-size: 16px; font-weight: 800; }
+.subheading { font-size: 10px; letter-spacing: 2px; color: var(--gold); margin-top: 3px; }
 
 .card {
   border: 1px solid var(--line);
@@ -91,9 +70,17 @@ body::before {
   cursor: pointer;
 }
 
-.button:active {
-  transform: scale(.99);
+.button:active { transform: scale(.99); }
+.button:disabled { opacity: .5; }
+
+#msg {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d1c8d6;
+  min-height: 18px;
 }
+#msg.err { color: #f0a3a3; }
 </style>
 </head>
 
@@ -108,17 +95,90 @@ body::before {
   </header>
 
   <section class="card">
-    <button class="button" id="exploreBtn" type="button">
-      🔍 Исследовать берег
-    </button>
+    <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
+    <div id="msg"></div>
   </section>
 </div>
 
 <script>
 "use strict";
 
-document.getElementById("exploreBtn").addEventListener("click", function () {
-  window.location.href = "./battle/index.html" + window.location.search;
+/* Если в вашем боте действие называется иначе — поменяйте только это слово */
+const EXPLORE_ACTION = "explore";
+
+const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+const tg = window.Telegram?.WebApp || null;
+const qs = new URLSearchParams(location.search);
+const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
+const aEnc = qs.get("a_enc") || qs.get("a") || "";
+let ACTION_URL = aEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc) : "";
+
+const btn = document.getElementById("exploreBtn");
+const msg = document.getElementById("msg");
+
+function unwrap(v) {
+  for (let i = 0; i < 3; i++) {
+    if (v && v.result && typeof v.result === "object") v = v.result; else break;
+  }
+  return v;
+}
+
+function say(text, isError) {
+  msg.textContent = text || "";
+  msg.className = isError ? "err" : "";
+}
+
+async function ensure() {
+  if (ACTION_URL) return;
+  const r = await fetch(HANDSHAKE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: uid }),
+    cache: "no-store"
+  });
+  if (!r.ok) throw new Error("Не удалось подключиться к игре (HTTP " + r.status + ").");
+  const d = unwrap(await r.json());
+  const action = d?.action_url || d?.ACTION_URL;
+  if (typeof action !== "string" || !action) throw new Error("Сервер не вернул адрес действий.");
+  ACTION_URL = new URL(action).href;
+}
+
+async function api(payload) {
+  await ensure();
+  const r = await fetch(ACTION_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    cache: "no-store"
+  });
+  if (!r.ok) throw new Error("Ошибка игрового сервера (HTTP " + r.status + ").");
+  const d = unwrap(await r.json());
+  if (!d || typeof d !== "object") throw new Error("Сервер вернул некорректный ответ.");
+  return d;
+}
+
+btn.addEventListener("click", async function () {
+  if (btn.disabled) return;
+  btn.disabled = true;
+  say("Вы всматриваетесь в туман…", false);
+  try {
+    const data = await api({ action: EXPLORE_ACTION });
+
+    if (data.error || data.ok === false) {
+      say(String(data.text || data.error || "Сейчас ничего не найдено."), true);
+      btn.disabled = false;
+      return;
+    }
+
+    const params = new URLSearchParams(location.search);
+    const enemy = data.enemy || data.enemy_name || data.name || "";
+    if (enemy) params.set("enemy", enemy);
+    const q = params.toString();
+    location.href = "./battle/index.html" + (q ? "?" + q : "");
+  } catch (e) {
+    say(e.message || "Ошибка связи.", true);
+    btn.disabled = false;
+  }
 });
 </script>
 </body>
