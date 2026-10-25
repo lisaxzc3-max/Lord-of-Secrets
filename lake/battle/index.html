@@ -39,17 +39,19 @@ button{font:inherit}
 .fighterRole.boss{color:#e58a96}
 .hpNumbers{display:flex;justify-content:space-between;gap:4px;margin-top:11px;font-size:10px;color:var(--muted)}
 .hpNumbers strong{color:var(--text);font-size:11px;font-variant-numeric:tabular-nums}
-.bar{height:9px;margin-top:5px;border-radius:999px;overflow:hidden;background:#302b35;border:1px solid #403742}
-.bar i{display:block;width:0;height:100%;border-radius:999px;transition:width .35s}
+.bar{position:relative;height:9px;margin-top:5px;border-radius:999px;overflow:hidden;background:#302b35;border:1px solid #403742}
+.bar i{position:relative;z-index:1;display:block;width:0;height:100%;border-radius:999px;transition:width .35s}
+.bar .ghost{position:absolute;left:0;top:0;bottom:0;width:0;background:#ffffffa8;border-radius:999px}
 .bar.hp i{background:linear-gradient(90deg,#8c333d,#e46a72)}
 .bar.enemyHp i{background:linear-gradient(90deg,#8d4c2c,#e2a05d)}
 .hpCaption{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:#847c8b}
-.vs{margin-top:37px;text-align:center;font-weight:900;font-size:13px;color:var(--gold)}
+.vs{margin-top:37px;text-align:center;font-weight:900;font-size:13px;color:var(--gold);animation:vsPulse 2.2s ease-in-out infinite}
 .battleMessage{margin-top:14px;padding:11px 12px;border:1px solid #39333f;border-radius:12px;background:#0a0a0e7d;display:flex;gap:9px;align-items:flex-start}
 .messageIcon{font-size:17px}
 .messageBody{min-width:0;flex:1}
 .messageTitle{font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
 #battleText{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;font-size:12px;color:#d1c8d6}
+#battleText.pop{animation:msgPop .35s ease-out}
 .logCard{padding:12px}
 .logHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
 .logTitle{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
@@ -71,7 +73,8 @@ button{font:inherit}
 .skillHeader h2{font-size:12px;letter-spacing:1.5px;margin:0}
 .skillHeader span{font-size:10px;color:var(--muted)}
 .skillGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.skill{position:relative;min-height:77px;text-align:left;padding:11px 10px;border-radius:12px;border:1px solid #514456;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer}
+.skill{position:relative;min-height:77px;text-align:left;padding:11px 10px;border-radius:12px;border:1px solid #514456;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer;transition:transform .12s,box-shadow .2s}
+.skill:not(:disabled):active{transform:scale(.96);box-shadow:0 0 16px #b48cff55}
 .skill:disabled{cursor:default;opacity:.52}
 .skill.basic{background:linear-gradient(145deg,#292c31,#1d1d23);border-color:#41434a}
 .skill.escape{background:linear-gradient(145deg,#30252a,#211c22);border-color:#684248}
@@ -83,6 +86,7 @@ button{font:inherit}
 .bottomNote{font-size:10px;color:#827b89;text-align:center;line-height:1.6;padding:0 12px 12px}
 .hidden{display:none!important}
 .resultCard{position:relative;overflow:hidden;text-align:center;padding:22px 16px}
+.resultCard:not(.hidden){animation:cardIn .5s ease-out}
 .resultSymbol{font-size:36px;margin-bottom:8px}
 .resultTitle{font-size:19px;letter-spacing:3px;font-weight:900}
 .resultText{font-size:12px;color:var(--muted);line-height:1.6;margin:8px auto 15px;max-width:290px}
@@ -97,9 +101,65 @@ button{font:inherit}
 .defeatCard{border-color:#783b42;background:linear-gradient(155deg,#341920f5,#18161cf5)}
 .defeatCard .resultTitle{color:#f08b8b}
 .victoryCard{border-color:#79603b;background:linear-gradient(155deg,#30271af5,#18161cf5)}
-.victoryCard .resultTitle{color:var(--gold)}
+.victoryCard .resultTitle{color:var(--gold);animation:titleGlow 2s ease-in-out infinite}
 .errorBox{border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.5}
 .loading{opacity:.72;pointer-events:none}
+
+/* ===== АНИМАЦИИ БОЯ ===== */
+.fighter:first-child{animation:inL .6s ease-out backwards}
+.fighter:last-child{animation:inR .6s ease-out .12s backwards}
+.portraitFrame{animation:idle 3.4s ease-in-out infinite}
+.fighter:last-child .portraitFrame{animation-delay:-1.7s}
+.arena.boss .fighter:last-child .portraitFrame{border-color:#c45a6a;box-shadow:0 0 18px #c45a6a66;animation:idle 3.4s ease-in-out -1.7s infinite,bossAura 2.2s ease-in-out infinite}
+.hit{animation:hitShake .45s!important}
+.lungeR{animation:lungeR .42s ease-out!important}
+.lungeL{animation:lungeL .42s ease-out!important}
+.coil{animation:coil 1.7s ease-in-out!important}
+.poison{animation:poison 1s ease-in-out!important}
+.flashR img{animation:flashR .45s}
+.flashW img{animation:flashW .4s}
+.healGlow img{animation:healG .8s}
+body.shake .wrap{animation:screenShake .45s}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+.float{position:absolute;left:50%;top:28%;font-weight:900;font-size:24px;pointer-events:none;text-shadow:0 2px 8px #000,0 0 12px #000;animation:floatUp 1.15s ease-out forwards;z-index:7;white-space:nowrap}
+.float.dmg{color:#ff6b73}
+.float.heal{color:#7be3a0}
+.fxSlash{position:absolute;width:120px;height:5px;margin:-2px 0 0 -60px;border-radius:5px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 14px #fff,0 0 30px var(--c,#d6b779);transform:rotate(var(--rot,-35deg)) scaleX(0);animation:slash .4s ease-out forwards}
+.fxRing{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid var(--c,#fff);box-shadow:0 0 18px var(--c),inset 0 0 14px var(--c);animation:ringA .95s ease-out forwards}
+.fxEmoji{position:absolute;font-size:32px;margin:-16px 0 0 -16px;filter:drop-shadow(0 0 8px var(--c,#fff));animation:emojiPop 1s ease-out forwards}
+.fxDrop{position:absolute;font-size:34px;margin:-17px 0 0 -17px;filter:drop-shadow(0 0 8px var(--c,#fff));animation:dropIn .7s cubic-bezier(.3,1.4,.5,1) forwards}
+.fxBoom{position:absolute;font-size:32px;margin:-16px 0 0 -16px;filter:drop-shadow(0 0 8px #d6b779);animation:boom 1s ease-in-out forwards}
+.fxFlash{position:absolute;inset:0;background:#fff;animation:flashOv .55s ease-out forwards}
+.banner{position:absolute;left:0;right:0;top:40%;text-align:center;font-weight:900;font-size:24px;letter-spacing:5px;color:#fff;text-shadow:0 0 20px var(--c,#c45a6a),0 0 4px #000;animation:banner 1.7s ease-out forwards;z-index:8}
+.spark{position:absolute;top:-12px;width:6px;height:11px;background:var(--c);opacity:.95;animation:fall var(--t) linear forwards;pointer-events:none}
+body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:radial-gradient(ellipse at center,transparent 45%,#7a0f1acc);animation:vig 2.6s ease-in-out infinite}
+@keyframes idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes inL{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
+@keyframes inR{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
+@keyframes vsPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.25);opacity:1;text-shadow:0 0 12px #d6b779}}
+@keyframes msgPop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 0 #d6b779}50%{text-shadow:0 0 18px #d6b779}}
+@keyframes hitShake{0%{transform:translateX(0)}15%{transform:translateX(-10px) rotate(-3deg)}35%{transform:translateX(9px) rotate(2deg)}55%{transform:translateX(-6px)}75%{transform:translateX(3px)}100%{transform:translateX(0)}}
+@keyframes lungeR{0%{transform:none}35%{transform:translateX(36px) scale(1.08)}100%{transform:none}}
+@keyframes lungeL{0%{transform:none}35%{transform:translateX(-36px) scale(1.08)}100%{transform:none}}
+@keyframes coil{0%,100%{transform:scale(1);box-shadow:0 0 0 #4cff8800}50%{transform:scale(.9) rotate(-2deg);box-shadow:0 0 30px #4cff88bb}}
+@keyframes poison{0%,100%{box-shadow:0 0 0 #6dff7a00}50%{box-shadow:0 0 24px #6dff7acc}}
+@keyframes bossAura{0%,100%{box-shadow:0 0 14px #c45a6a55}50%{box-shadow:0 0 30px #c45a6add}}
+@keyframes flashR{0%,100%{filter:none}30%{filter:brightness(1.7) saturate(3) hue-rotate(-20deg) drop-shadow(0 0 10px #f33)}}
+@keyframes flashW{0%,100%{filter:none}30%{filter:brightness(2.3)}}
+@keyframes healG{0%,100%{filter:none}40%{filter:brightness(1.3) drop-shadow(0 0 12px #7be3a0)}}
+@keyframes screenShake{0%,100%{transform:translate(0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,-4px) scale(1.3)}100%{opacity:0;transform:translate(-50%,-58px) scale(1)}}
+@keyframes slash{0%{transform:rotate(var(--rot,-35deg)) scaleX(0);opacity:1}60%{transform:rotate(var(--rot,-35deg)) scaleX(1.2);opacity:1}100%{transform:rotate(var(--rot,-35deg)) scaleX(1.45);opacity:0}}
+@keyframes ringA{from{transform:scale(.3);opacity:1}to{transform:scale(3.6);opacity:0}}
+@keyframes emojiPop{0%{transform:translateY(8px) scale(.4);opacity:0}25%{opacity:1;transform:translateY(-8px) scale(1.3)}100%{transform:translateY(-50px) scale(1);opacity:0}}
+@keyframes dropIn{0%{transform:translateY(-80px);opacity:0}60%{opacity:1}100%{transform:translateY(0);opacity:.9}}
+@keyframes boom{0%{transform:translate(0,0) rotate(0);opacity:1}50%{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:1}100%{transform:translate(0,0) rotate(1080deg);opacity:0}}
+@keyframes flashOv{0%{opacity:.85}100%{opacity:0}}
+@keyframes banner{0%{opacity:0;transform:scale(1.9)}15%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(.96)}}
+@keyframes fall{to{transform:translateY(380px) rotate(600deg);opacity:0}}
+@keyframes vig{0%,100%{opacity:.9}50%{opacity:.45}}
 @media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.card{padding:11px}.fighters{grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:5px}.fighterName{font-size:12px}.skill{padding:9px 8px;min-height:75px}.skillName{font-size:11px}.headTitle h1{font-size:16px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
@@ -113,6 +173,7 @@ button{font:inherit}
 </header>
 <main>
 <section class="card arena" id="arena">
+<div class="fx" id="fx"></div>
 <div class="arenaTop"><span class="sectionLabel">Поле боя</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
 <div class="fighters">
 <div class="fighter">
@@ -206,6 +267,111 @@ const pics={
 "Змей":"../i-86.jpeg"
 };
 
+/* ===== ЭФФЕКТЫ ===== */
+const prevHp={player:null,enemy:null};
+const framePlayer=()=>$("playerImg").closest(".portraitFrame");
+const frameEnemy=()=>$("enemyImg").closest(".portraitFrame");
+function addTemp(el,cls,ms){
+if(!el)return;
+el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);
+setTimeout(()=>el.classList.remove(cls),ms);
+}
+function arenaPos(el){
+const a=$("arena").getBoundingClientRect(),r=el.getBoundingClientRect();
+return{x:r.left-a.left+r.width/2,y:r.top-a.top+r.height/2};
+}
+function spawn(cls,x,y,vars,ms,text){
+const d=document.createElement("div");
+d.className=cls;d.style.left=x+"px";d.style.top=y+"px";
+if(vars)for(const k in vars)d.style.setProperty(k,vars[k]);
+if(text)d.textContent=text;
+$("fx").appendChild(d);
+setTimeout(()=>d.remove(),ms);
+return d;
+}
+function slashAt(el,color,rot){const p=arenaPos(el);spawn("fxSlash",p.x,p.y,{"--c":color,"--rot":rot},520)}
+function ringAt(el,color){const p=arenaPos(el);spawn("fxRing",p.x,p.y,{"--c":color},1000)}
+function emojiAt(el,emoji,color,cls){const p=arenaPos(el);spawn(cls||"fxEmoji",p.x,p.y,{"--c":color},1050,emoji)}
+function shakeScreen(){addTemp(document.body,"shake",480)}
+function banner(text,color){
+const b=document.createElement("div");
+b.className="banner";b.textContent=text;
+if(color)b.style.setProperty("--c",color);
+$("fx").appendChild(b);setTimeout(()=>b.remove(),1750);
+}
+function flashScreen(){
+const f=document.createElement("div");f.className="fxFlash";
+$("fx").appendChild(f);setTimeout(()=>f.remove(),600);
+}
+function floatNum(frame,text,kind){
+const f=document.createElement("div");
+f.className="float "+kind;f.textContent=text;
+frame.appendChild(f);setTimeout(()=>f.remove(),1200);
+}
+function sparks(box){
+const colors=["#e4ca91","#d6b779","#fff3c4","#b28c4d"];
+for(let i=0;i<46;i++){
+const s=document.createElement("i");s.className="spark";
+s.style.left=(Math.random()*100)+"%";
+s.style.setProperty("--c",colors[i%colors.length]);
+s.style.setProperty("--t",(1.6+Math.random()*1.6).toFixed(2)+"s");
+s.style.animationDelay=(Math.random()*.7).toFixed(2)+"s";
+box.appendChild(s);
+setTimeout(()=>s.remove(),3800);
+}
+}
+function hpFx(side,delta,max){
+const frame=side==="player"?framePlayer():frameEnemy();
+const abs=Math.abs(delta);
+if(delta<0){
+if(side==="player"){
+setTimeout(()=>addTemp(frameEnemy(),"lungeL",420),250);
+setTimeout(()=>{
+addTemp(frame,"hit",450);addTemp(frame,"flashR",450);
+floatNum(frame,"−"+abs,"dmg");
+if(abs>=max*0.25)shakeScreen();
+},450);
+}else{
+setTimeout(()=>{
+addTemp(frame,"hit",450);addTemp(frame,"flashW",420);
+floatNum(frame,"−"+abs,"dmg");
+if(abs>=max*0.3)shakeScreen();
+},200);
+}
+}else{
+setTimeout(()=>{
+floatNum(frame,"+"+abs,"heal");addTemp(frame,"healGlow",850);
+},side==="player"?500:250);
+}
+}
+function playSkillFx(move){
+const P=framePlayer(),E=frameEnemy();
+const lunge=()=>addTemp(P,"lungeR",420);
+switch(move){
+case "basic":lunge();setTimeout(()=>slashAt(E,"#d6b779","-35deg"),180);break;
+case "boomerang":{
+lunge();
+const a=arenaPos(P),b=arenaPos(E);
+spawn("fxBoom",a.x,a.y,{"--dx":(b.x-a.x)+"px","--dy":(b.y-a.y)+"px"},1050,"🪃");
+break;}
+case "sailor_hit":lunge();setTimeout(()=>{slashAt(E,"#ff9b5e","-35deg");slashAt(E,"#ff9b5e","30deg");shakeScreen()},180);break;
+case "hunter_dagger":lunge();setTimeout(()=>{slashAt(E,"#ff5d3a","-40deg");emojiAt(E,"🔥","#ff7a3a")},180);break;
+case "divination":ringAt(P,"#7aa8ff");emojiAt(P,"🔮","#7aa8ff");break;
+case "acting":ringAt(P,"#c48cff");emojiAt(P,"🎭","#c48cff");break;
+case "sailor_drink":ringAt(P,"#7be3a0");emojiAt(P,"🍺","#7be3a0");break;
+case "sailor_pray":ringAt(P,"#ff5d5d");emojiAt(P,"⚡","#ffd84a");break;
+case "hunter_trap":emojiAt(E,"🪤","#d6b779","fxDrop");break;
+case "hunter_boost":ringAt(P,"#ffb04a");emojiAt(P,"😤","#ffb04a");break;
+}
+}
+function bossFx(text){
+if(!text)return;
+if(/ЛИНЬКА/.test(text)){flashScreen();banner("ЛИНЬКА","#7be3a0");shakeScreen()}
+if(/кольца/.test(text))addTemp(frameEnemy(),"coil",1700);
+if(/Удушение/.test(text)){banner("УДУШЕНИЕ","#f08b8b");shakeScreen()}
+if(/Яд/.test(text))addTemp(framePlayer(),"poison",1000);
+}
+
 function unwrap(value){
 for(let i=0;i<3;i++){if(value&&value.result&&typeof value.result==="object")value=value.result;else break}
 return value;
@@ -214,7 +380,9 @@ function setStatus(text,kind=""){
 const el=$("statusPill");el.textContent=text;el.className="statusPill"+(kind?" "+kind:"");
 }
 function setMessage(text,title="ХОД СРАЖЕНИЯ",icon="📜"){
-$("battleText").textContent=text||"Туман скрывает дальнейшие события.";
+const el=$("battleText");
+el.textContent=text||"Туман скрывает дальнейшие события.";
+el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");
 $("messageTitle").textContent=title;$("messageIcon").textContent=icon;
 }
 function showError(text){
@@ -243,8 +411,17 @@ if(hp==null||maxHp==null||!Number.isFinite(current)||!Number.isFinite(maximum)||
 hpEl.textContent="—";bar.style.width="0%";percent.textContent="—";state.textContent="Неизвестно";return;
 }
 hpEl.textContent=current+"/"+maximum;
-const pc=safePercent(current,maximum);bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
+const pc=safePercent(current,maximum);
+const oldPc=parseFloat(bar.style.width)||0;
+const barBox=bar.parentElement.querySelector(".bar")||bar.parentElement;
+let ghost=barBox.querySelector(".ghost");
+if(!ghost){ghost=document.createElement("b");ghost.className="ghost";barBox.prepend(ghost)}
+ghost.style.transition=pc<oldPc?"width .9s ease .45s":"none";
+ghost.style.width=(pc<oldPc?pc:pc)+"%";
+bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
 state.textContent=current<=0?(player?"Пал":"Повержен"):pc<=25?"Критически мало":pc<=55?"Ранен":player?"В строю":"Опасен";
+const old=prevHp[side];prevHp[side]=current;
+if(old!=null&&current!==old)hpFx(side,current-old,maximum);
 }
 function setEnemyLevel(level,boss,phase){
 const parts=[];
@@ -372,6 +549,7 @@ $("victoryCard").classList.remove("hidden");$("defeatCard").classList.add("hidde
 $("skillCard").classList.add("hidden");hideError();
 setMessage("Сражение завершено. Награда обработана игровой системой.","ИСХОД СРАЖЕНИЯ","✦");
 addLog("Победа! Сражение завершено.","good");
+sparks($("victoryCard"));
 }
 function showDefeat(data){
 ended=true;setStatus("Поражение");$("roundLabel").textContent="☠ Силы иссякли";
@@ -380,6 +558,7 @@ $("skillCard").classList.add("hidden");hideError();
 if(data?.text)$("defeatText").textContent=cleanBattleText(data.text);
 setMessage(cleanBattleText(data?.text||"Ты больше не можешь продолжать бой."),"ИСХОД СРАЖЕНИЯ","☠");
 addLog("Поражение. Сражение окончено.","bad");
+document.body.classList.add("defeatFx");
 }
 async function refreshBattleState(){
 const state=await api({action:"battle_state"});
@@ -391,6 +570,7 @@ return state;
 }
 async function load(){
 if(busy)return;
+document.body.classList.remove("defeatFx");
 setBusy(true,"Загрузка…");hideError();
 try{
 const profile=await loadProfile();
@@ -410,6 +590,7 @@ if(!initialized){
 addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 if(state?.boss){
 setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
+setTimeout(()=>{banner("БОСС: ЗМЕЙ","#c45a6a");shakeScreen()},500);
 }else{
 setMessage("Противник перед тобой. Выбирай действие и следи за перезарядкой.","БОЙ НАЧАЛСЯ","⚔️");
 }
@@ -448,6 +629,7 @@ enemy:normalizeBattleText(data.e_log??data.enemy_log??data.enemyLog??data.enemy_
 async function doBattle(move){
 if(busy||ended)return;
 hideError();setBusy(true,"Ход…");
+playSkillFx(move);
 try{
 const data=await api({action:"battle",move});
 if(data.error==="cooldown"){
@@ -478,6 +660,7 @@ setMessage(fullLog||"Сервер обработал ход, но не верн�
 if(logs.player)addLog(logs.player,"good");
 if(logs.enemy)addLog(logs.enemy,"bad");
 if(!logs.player&&!logs.enemy&&data.text)addLog(data.text,"info");
+bossFx(fullLog);
 if(data.cds)renderSkills(data.cds);
 else{
 try{await refreshBattleState()}catch(_){}
@@ -527,4 +710,4 @@ $("retryBtn").addEventListener("click",load);
 window.addEventListener("DOMContentLoaded",load);
 </script>
 </body>
-  </html>
+</html>
