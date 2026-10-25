@@ -1,992 +1,128 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v118 Main Full + Settings</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b0f">
+<title>Озёра · Топи</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
-body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.92)),url('./i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
-.wrap{max-width:440px;margin:0 auto;padding:10px 10px 70px}
-.top{display:flex;gap:10px;background:rgba(22,22,26,.88);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:10px;align-items:center}
-.avatar{width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;color:#b8b5ad;font-size:20px;cursor:pointer}
-.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:3px 0;overflow:hidden}
-.bar i{display:block;height:100%;transition:width .3s}
-.bar.hp i{background:#5a3a3a}.bar.mn i{background:#4a4e5a}.bar.exp i{background:#6a6560}
-.card{background:rgba(22,22,26,.86);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
-.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;font-size:13px;margin:4px 0;cursor:pointer;color:#b8b5ad}
-.btn.gold{background:#3a3a3e;border-color:#4a4a4e;color:#d4d0c3;font-weight:600}
-.btn.act{background:#4a4a4e;border-color:#5a5a62;color:#fff;font-weight:700}
-.btn.red{background:#2b2b2e;border-color:#4a4a4e;color:#d4d0c3;font-weight:700}
-.btn.big{padding:14px;font-size:15px;border-radius:14px}
-.btn.dis{opacity:.45;pointer-events:none}
-.btn:active{transform:scale(.97)}
-.tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto}
-.tab{flex:1;padding:8px;text-align:center;border-radius:10px;background:rgba(30,30,34,.85);border:1px solid #3a3a3e;font-size:11px;cursor:pointer;white-space:nowrap;color:#9a9690}
-.tab.active{background:#3a3a3e;color:#d4d0c3;border-color:#4a4a4e}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,16,.96);backdrop-filter:blur(10px);border-top:1px solid #2a2a2e;display:flex;justify-content:space-around;padding:8px 0;z-index:10}
-.nav a{font-size:11px;color:#8a867e;text-decoration:none;cursor:pointer}
-.hidden{display:none!important}
-.item{border:1px solid #2a2a2e;border-radius:10px;padding:8px;margin:4px 0;background:rgba(28,28,32,.85);display:flex;justify-content:space-between;align-items:center;gap:8px}
-.district{margin:6px 0;border:1px solid #2a2a2e;border-radius:12px;overflow:hidden;background:rgba(28,28,32,.6)}
-.districtHead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;cursor:pointer;background:rgba(38,38,42,.9);font-size:13px;font-weight:600;color:#c9c5b8}
-.districtBody{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px;background:rgba(22,22,26,.6)}
-.districtBody.hidden{display:none!important}
-.quote{margin:10px 0;background:rgba(28,28,32,.9);border:1px solid #2a2a2e;border-radius:12px;padding:10px;font-size:12px;line-height:1.4}
-.startInput{width:100%;background:#1a1a1e;border:1px solid #3a3a3e;border-radius:10px;padding:12px;text-align:center;color:#d4d0c3;font-size:16px;outline:none}
-.startHint{display:flex;justify-content:space-between;font-size:10px;opacity:.5;margin:4px 2px}
-.pathCard{border:1px solid #2a2a2e;border-radius:12px;padding:10px;background:rgba(28,28,32,.85);cursor:pointer}
-.pathCard.sel{border-color:#5a5a62;background:#3a3a3e}
-.genderRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
-small{opacity:.6;font-size:10px;white-space:pre-wrap}
-h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
-.timerRow{display:flex;gap:8px;margin:8px 0}
-.timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
-.timerBox.dead{background:rgba(60,20,20,.92);border:1px solid #6a2a2a}
-.timerBox.regen{background:rgba(20,55,20,.92);border:1px solid #2a6a2a}
-.gear{width:32px;height:32px;border-radius:8px;background:rgba(38,38,42,.9);border:1px solid #3a3a3e;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
-.status{font-size:12px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+* { box-sizing: border-box; }
+:root { color-scheme: dark; --panel: rgba(22,22,27,.94); --line: #403c46; --text: #ded9d0; --gold: #d4b579; }
+body { margin: 0; min-height: 100vh; color: var(--text); font: 14px Inter, Arial, sans-serif;
+  background: #080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat; }
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: linear-gradient(#090c11aa, #09090df2); }
+.wrap { max-width: 480px; margin: auto; padding: 12px 12px 32px; }
+.head { display: flex; align-items: center; gap: 11px; padding: 8px 0 14px; }
+.back { color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #19181de8; }
+.heading { font-size: 16px; font-weight: 800; }
+.subheading { font-size: 10px; letter-spacing: 2px; color: var(--gold); margin-top: 3px; }
+.card { border: 1px solid var(--line); border-radius: 17px; padding: 15px; background: var(--panel); box-shadow: 0 10px 28px #0003; }
+.button { display: block; width: 100%; padding: 14px 12px; margin-top: 9px; border: 1px solid #5b4b36; border-radius: 11px;
+  background: linear-gradient(135deg, #51442f, #302832); color: #e7d5ae; font: inherit; font-weight: 800; cursor: pointer; }
+.button:active { transform: scale(.99); }
+.button:disabled { opacity: .5; }
+#msg { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #d1c8d6; min-height: 18px; }
+#msg.err { color: #f0a3a3; }
 </style>
 </head>
 <body>
 <div class="wrap">
-
-<div class="top">
-  <div class="avatar" onclick="openProfile()">𓂀</div>
-  <div style="flex:1;cursor:pointer" onclick="openProfile()">
-    <div style="font-size:13px">
-      <b id="nick">Загрузка…</b> · Ур.<span id="lvl">—</span>
-      <span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">—</span>
+  <header class="head">
+    <a class="back" id="backHome" href="../index.html">← Зал</a>
+    <div>
+      <div class="heading">🌊 Озёра · Топи</div>
+      <div class="subheading">LORD OF THE MYSTERIES</div>
     </div>
-    <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
-    <div style="font-size:10px">
-      ❤️ <span id="hp">—</span> · £ <span id="pounds">—</span>
-      · ⭐ <span id="exp">—</span> · 🧪 <span id="potion">—</span>
-    </div>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
-    <div class="gear" onclick="openSettings(event)">⚙️</div>
-    <div style="font-size:10px;opacity:.6">UID <span id="uid">—</span></div>
-  </div>
-</div>
-
-<div id="loadError" class="card hidden" role="status">
-  <div id="loadErrorText" class="status">Не удалось загрузить игру.</div>
-  <button type="button" class="btn gold" id="retryLoad" style="width:100%;margin-top:8px">
-    Повторить загрузку
-  </button>
-</div>
-
-<div class="timerRow">
-  <div id="deadBox" class="timerBox dead hidden">
-    <div style="font-weight:700;font-size:18px">💀 <span id="deadTimer">10:00</span></div>
-    <div style="font-size:10px;opacity:.6">воскрешение</div>
-  </div>
-  <div id="regenBox" class="timerBox regen hidden">
-    <div style="font-weight:700;font-size:18px">🩹 <span id="regenTimer">10:00</span></div>
-    <div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div>
-  </div>
-</div>
-
-<div class="tabs">
-  <div class="tab active" id="t-hall" onclick="showTab('hall')">◈ Зал</div>
-  <div class="tab" id="t-travel" onclick="showTab('travel')">🧭 Поход</div>
-  <div class="tab" id="t-city" onclick="showTab('city')">⌖ Город</div>
-  <div class="tab" id="t-bag" onclick="showTab('bag')">🎒 Сумка</div>
-</div>
-
-<div id="hall" class="card">
-  <div id="startInHall" class="hidden">
-    <div style="display:flex;gap:10px;align-items:center">
-      <div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:18px">🦉</div>
-      <div>
-        <div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div>
-        <div style="font-size:10px;opacity:.5;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div>
-      </div>
-    </div>
-    <div class="quote" id="startQuote">«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы.»</div>
-
-    <div id="step1">
-      <div style="font-size:12px;margin:6px 0">📜 Твоё имя</div>
-      <input id="startNick" class="startInput" maxlength="16" value="Путник123">
-      <div class="startHint"><span>до 16 символов</span><span id="nickCnt">9/16</span></div>
-      <div style="color:#e63946;font-size:11px" id="nickErr"></div>
-      <button type="button" class="btn gold" style="width:100%;margin-top:8px" onclick="startCheckNick()">Далее ›</button>
-    </div>
-
-    <div id="step2" class="hidden">
-      <div style="margin:6px 0">⟡ Избери Путь</div>
-      <div style="display:grid;gap:6px">
-        <div class="pathCard" id="card-seer" onclick="pickPath('seer')">
-          <b>𓂀 Путь Шута · Провидец</b>
-          <div style="font-size:11px;opacity:.6">🔮 Гадание · 🪃 Бумеранг · 🎭 Актёрство</div>
-        </div>
-        <div class="pathCard" id="card-sailor" onclick="pickPath('sailor')">
-          <b>⚔ Путь Тирана · Матрос</b>
-          <div style="font-size:11px;opacity:.6">👊 Сильный удар · 🍺 Перепить · 😡 Гнев</div>
-        </div>
-        <div class="pathCard" id="card-hunter" onclick="pickPath('hunter')">
-          <b>🏹 Путь Жреца · Охотник</b>
-          <div style="font-size:11px;opacity:.6">🔥 Берсерк · 🪤 Ловушка · 😤 Провокация</div>
-        </div>
-      </div>
-      <div style="color:#e63946;font-size:11px" id="pathErr"></div>
-      <button type="button" class="btn gold" style="width:100%;margin-top:8px" onclick="startConfirmPath()">Далее ›</button>
-    </div>
-
-    <div id="step3" class="hidden">
-      <div class="genderRow">
-        <div class="btn" id="g-male" onclick="pickGender('male')">♂ Мужчина</div>
-        <div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div>
-      </div>
-      <div style="color:#e63946;font-size:11px" id="genderErr"></div>
-      <button type="button" class="btn gold" style="width:100%" onclick="startFinish()">🎮 Начать игру</button>
-    </div>
-  </div>
-
-  <div id="hallProfileHint" class="hidden" style="text-align:center;padding:20px 0;opacity:.6">
-    Нажми на <b>𓂀</b> для профиля или <b>⚙️</b> для настроек →
-  </div>
-</div>
-
-<div id="travel" class="card hidden">
-  <h3>🧭 Поход</h3>
-  <button type="button" class="btn gold big" style="width:100%" onclick="openLake()">🌊 Озёра — Топи (открыть локацию)</button>
-  <div style="font-size:11px;opacity:.6;margin-top:6px;text-align:center">Боёвка теперь в lake/ и lake/battle/ на фоне топи</div>
-  <div style="font-size:11px;margin-top:8px">❤️ <span id="hp2">—</span> · 🌀 <span id="madTxt">—</span>%</div>
-  <div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
-  <div class="bar mn"><i id="madBar" style="width:0%"></i></div>
-</div>
-
-<div id="city" class="card hidden">
-  <h3>⌖ Тинген</h3>
-  <div style="font-size:11px;opacity:.5;margin-bottom:8px">Нажми на район чтобы развернуть ›</div>
-  <div id="cityBtns"></div>
-  <div id="locInfo" style="font-size:12px;margin-top:8px;white-space:pre-wrap"></div>
-  <div id="locBtns"></div>
-</div>
-
-<div id="bag" class="card hidden">
-  <h3>🎒 Инвентарь <span id="bagCnt" style="font-size:11px;opacity:.6"></span></h3>
-  <div id="invList"></div>
-  <h3 style="margin-top:10px">⬢ Надето</h3>
-  <div id="eqList"></div>
-</div>
-
-<div id="eventCard" class="card hidden">
-  <h3 id="eventTitle">Событие</h3>
-  <div id="eventText" style="font-size:12px;white-space:pre-wrap"></div>
-  <div id="eventBtns"></div>
-</div>
-</div>
-
-<div class="nav">
-  <a onclick="showTab('hall')">◈ Зал</a>
-  <a onclick="showTab('travel')">🧭 Поход</a>
-  <a onclick="showTab('city')">⌖ Город</a>
-  <a onclick="showTab('bag')">🎒 Сумка</a>
+  </header>
+  <section class="card">
+    <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
+    <div id="msg"></div>
+  </section>
 </div>
 
 <script>
 "use strict";
-
-/* Безопасная инициализация Telegram WebApp */
 const tg = window.Telegram?.WebApp || null;
-
-try {
-  tg?.ready();
-  tg?.expand();
-} catch (error) {
-  console.warn("Telegram WebApp init:", error);
-}
+try { tg?.ready(); tg?.expand(); } catch (_) {}
 
 const qs = new URLSearchParams(location.search);
-const telegramUserId = tg?.initDataUnsafe?.user?.id;
-const uid = String(qs.get("u") || telegramUserId || "7320193489");
-
-document.getElementById("uid").textContent = uid;
-
-const p_enc = qs.get("p_enc") || qs.get("p") || "";
-const a_enc = qs.get("a_enc") || qs.get("a") || "";
-
-let PROFILE_URL = p_enc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(p_enc)
-  : "";
-
-let ACTION_URL = a_enc
-  ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(a_enc)
-  : "";
-
+const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
+const aEnc = qs.get("a_enc") || qs.get("a") || "";
 const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+let ACTION_URL = aEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc) : "";
 
-function unwrap(value) {
-  if (value && value.result && typeof value.result === "object") {
-    return value.result;
-  }
-  return value;
+const btn = document.getElementById("exploreBtn");
+const msg = document.getElementById("msg");
+
+// ссылка «назад» сохраняет параметры игрока
+document.getElementById("backHome").href = "../index.html" + (location.search || "");
+
+function unwrap(v) {
+  for (let i = 0; i < 3; i++) { if (v && v.result && typeof v.result === "object") v = v.result; else break; }
+  return v;
 }
+function say(text, isError) { msg.textContent = text || ""; msg.className = isError ? "err" : ""; }
 
-function byId(id) {
-  return document.getElementById(id);
+async function ensure() {
+  if (ACTION_URL) return;
+  const r = await fetch(HANDSHAKE, { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: uid }), cache: "no-store" });
+  if (!r.ok) throw new Error("Не удалось подключиться к игре (HTTP " + r.status + ").");
+  const d = unwrap(await r.json());
+  const action = d?.action_url || d?.ACTION_URL;
+  if (typeof action !== "string" || !action) throw new Error("Сервер не вернул адрес действий.");
+  ACTION_URL = new URL(action).href;
 }
-
-function clamp(value, min, max) {
-  const number = Number(value);
-  return Number.isFinite(number)
-    ? Math.max(min, Math.min(max, number))
-    : min;
-}
-
-function setWidth(id, percent) {
-  const element = byId(id);
-  if (element) {
-    element.style.width = clamp(percent, 0, 100) + "%";
-  }
-}
-
-function showLoadError(message) {
-  byId("loadErrorText").textContent =
-    message || "Не удалось загрузить данные игры. Проверь соединение и повтори попытку.";
-  byId("loadError").classList.remove("hidden");
-}
-
-function clearLoadError() {
-  byId("loadError").classList.add("hidden");
-}
-
-let handshakePromise = null;
-
-async function ensureUrls(force = false) {
-  if (!force && PROFILE_URL && ACTION_URL) return true;
-  if (handshakePromise) return handshakePromise;
-
-  handshakePromise = (async () => {
-    try {
-      const response = await fetch(HANDSHAKE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: uid }),
-        cache: "no-store"
-      });
-
-      if (!response.ok) {
-        throw new Error("Handshake HTTP " + response.status);
-      }
-
-      const raw = await response.json();
-      const data = unwrap(raw);
-
-      const profile = data?.profile_url || data?.PROFILE_URL;
-      const action = data?.action_url || data?.ACTION_URL;
-
-      if (
-        typeof profile !== "string" ||
-        typeof action !== "string" ||
-        !profile ||
-        !action
-      ) {
-        throw new Error("Ответ подключения не содержит profile_url/action_url");
-      }
-
-      const profileParsed = new URL(profile);
-      const actionParsed = new URL(action);
-
-      if (
-        profileParsed.protocol !== "https:" ||
-        actionParsed.protocol !== "https:"
-      ) {
-        throw new Error("API вернул небезопасный URL");
-      }
-
-      PROFILE_URL = profileParsed.href;
-      ACTION_URL = actionParsed.href;
-
-      return true;
-    } catch (error) {
-      console.error("Не удалось получить адреса API:", error);
-      PROFILE_URL = "";
-      ACTION_URL = "";
-      return false;
-    } finally {
-      handshakePromise = null;
-    }
-  })();
-
-  return handshakePromise;
-}
-
-async function fetchJson(url, body, timeoutMs = 15000) {
-  if (!url) throw new Error("Адрес API не настроен");
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      cache: "no-store",
-      signal: controller.signal
-    });
-
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
-    }
-
-    const text = await response.text();
-    let parsed;
-
-    try {
-      parsed = JSON.parse(text);
-    } catch (_) {
-      throw new Error("API вернул ответ не в формате JSON");
-    }
-
-    const data = unwrap(parsed);
-
-    if (!data || typeof data !== "object") {
-      throw new Error("Пустой или неверный ответ API");
-    }
-
-    if (data.error && data.ok !== true) {
-      throw new Error(String(data.error));
-    }
-
-    return data;
-  } catch (error) {
-    if (error.name === "AbortError") {
-      throw new Error("Превышено время ожидания ответа API");
-    }
-    throw error;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-let profilePromise = null;
-
-async function loadProfile() {
-  if (profilePromise) return profilePromise;
-
-  profilePromise = (async () => {
-    if (!await ensureUrls()) {
-      throw new Error("Не удалось подключиться к игровому серверу");
-    }
-
-    const data = await fetchJson(PROFILE_URL, {});
-
-    const hp = Number(data.hp);
-    const maxHp = Number(data.max_hp);
-
-    if (
-      !Number.isFinite(hp) ||
-      !Number.isFinite(maxHp) ||
-      maxHp < 0
-    ) {
-      throw new Error("Сервер вернул некорректные характеристики персонажа");
-    }
-
-    byId("nick").textContent = data.nickname || "Без имени";
-    byId("lvl").textContent = data.level ?? "—";
-    byId("hp").textContent = hp + "/" + maxHp;
-    byId("hp2").textContent = hp + "/" + maxHp;
-
-    const hpPercent = maxHp > 0
-      ? clamp(hp / maxHp * 100, 0, 100)
-      : 0;
-
-    setWidth("hpbar", hpPercent);
-    setWidth("hpbar2", hpPercent);
-
-    const madness = clamp(data.madness ?? 0, 0, 100);
-
-    byId("madTxt").textContent = madness;
-    setWidth("madBar", madness);
-
-    byId("pounds").textContent = data.pounds ?? 0;
-    byId("exp").textContent = data.exp ?? 0;
-    byId("potion").textContent = data.potion ?? 0;
-    byId("path").textContent = data.path || "—";
-
-    if (data.dead) {
-      setDeadUI(true, data.dead_left);
-      setRegenUI(data.regen_left, hp, maxHp);
-    } else {
-      setDeadUI(false, 0);
-      setRegenUI(data.regen_left || 0, hp, maxHp);
-    }
-
-    maybeShowStart(data);
-    renderBagFromJ(data);
-    clearLoadError();
-
-    return data;
-  })();
-
-  try {
-    return await profilePromise;
-  } finally {
-    profilePromise = null;
-  }
-}
-
-let retrySequence = 0;
-
-async function loadProfileWithRetry(showError = true) {
-  const sequence = ++retrySequence;
-  let lastError;
-
-  for (let attempt = 0; attempt < 4; attempt++) {
-    try {
-      await loadProfile();
-
-      if (sequence === retrySequence) {
-        clearLoadError();
-      }
-
-      return true;
-    } catch (error) {
-      lastError = error;
-      console.error(
-        "Загрузка профиля, попытка " + (attempt + 1) + ":",
-        error
-      );
-
-      if (attempt < 3) {
-        await new Promise(resolve =>
-          setTimeout(resolve, 700 * (attempt + 1))
-        );
-      }
-    }
-  }
-
-  if (showError && sequence === retrySequence) {
-    showLoadError(
-      "Не удалось загрузить игру после 4 попыток. " +
-      (lastError?.message || "Проверь соединение.") +
-      "\nНажми «Повторить загрузку»."
-    );
-  }
-
-  return false;
-}
-
-function showTab(id) {
-  const allowed = ["hall", "travel", "city", "bag"];
-  if (!allowed.includes(id)) return;
-
-  document.querySelectorAll(".tab").forEach(element => {
-    element.classList.remove("active");
-  });
-
-  byId("t-" + id)?.classList.add("active");
-
-  allowed.forEach(tab => {
-    byId(tab).classList.toggle("hidden", tab !== id);
-  });
-
-  if (id === "bag") renderBag();
-}
-
-function buildPageUrl(path) {
-  const params = new URLSearchParams(location.search);
-
-  if (!params.has("p_enc") && p_enc) {
-    params.set("p_enc", p_enc);
-  }
-
-  if (!params.has("a_enc") && a_enc) {
-    params.set("a_enc", a_enc);
-  }
-
-  if (!params.has("u")) {
-    params.set("u", uid);
-  }
-
-  return path + "?" + params.toString();
-}
-
-function openProfile() {
-  location.href = buildPageUrl("./profileprofile/index.html");
-}
-
-function openLake() {
-  location.href = buildPageUrl("./lake/index.html");
-}
-
-function openSettings(event) {
-  event?.stopPropagation();
-  location.href = buildPageUrl("./settings/index.html");
-}
-
-let G = {
-  inv: [],
-  eq: {},
-  path: "",
-  hp: 50,
-  max: 50,
-  level: 1,
-  exp: 0,
-  lastLoc: "lake",
-  dead: false,
-  deadLeft: 0
-};
-
-let deadTimer = null;
-let regenTimer = null;
-
-function formatTime(seconds) {
-  const total = Math.max(0, Math.floor(Number(seconds) || 0));
-
-  return String(Math.floor(total / 60)).padStart(2, "0") +
-    ":" +
-    String(total % 60).padStart(2, "0");
-}
-
-function setDeadUI(isDead, left) {
-  G.dead = !!isDead;
-  G.deadLeft = Math.max(0, Number(left) || 0);
-
-  const box = byId("deadBox");
-
-  if (deadTimer) {
-    clearInterval(deadTimer);
-    deadTimer = null;
-  }
-
-  if (!isDead) {
-    box.classList.add("hidden");
-    return;
-  }
-
-  box.classList.remove("hidden");
-  byId("deadTimer").textContent = formatTime(G.deadLeft);
-
-  deadTimer = setInterval(() => {
-    G.deadLeft = Math.max(0, G.deadLeft - 1);
-    byId("deadTimer").textContent = formatTime(G.deadLeft);
-
-    if (G.deadLeft <= 0) {
-      clearInterval(deadTimer);
-      deadTimer = null;
-      setDeadUI(false, 0);
-      loadProfileWithRetry();
-    }
-  }, 1000);
-}
-
-function setRegenUI(left, hp, maxHp) {
-  let remaining = Math.max(0, Number(left) || 0);
-  const currentHp = Number(hp) || 0;
-  const maximumHp = Number(maxHp) || 0;
-  const box = byId("regenBox");
-
-  if (regenTimer) {
-    clearInterval(regenTimer);
-    regenTimer = null;
-  }
-
-  if (remaining <= 0 || currentHp >= maximumHp) {
-    box.classList.add("hidden");
-    return;
-  }
-
-  box.classList.remove("hidden");
-  byId("regenHp").textContent = currentHp + "/" + maximumHp;
-  byId("regenTimer").textContent = formatTime(remaining);
-
-  regenTimer = setInterval(() => {
-    remaining = Math.max(0, remaining - 1);
-    byId("regenTimer").textContent = formatTime(remaining);
-
-    if (remaining <= 0) {
-      clearInterval(regenTimer);
-      regenTimer = null;
-      loadProfileWithRetry();
-    }
-  }, 1000);
-}
-
-let START = {
-  nick: "",
-  path: "",
-  gender: ""
-};
-
-byId("startNick").addEventListener("input", event => {
-  byId("nickCnt").textContent = event.target.value.length + "/16";
-  byId("nickErr").textContent = "";
-});
-
-function pickPath(path) {
-  START.path = path;
-
-  document.querySelectorAll(".pathCard").forEach(card => {
-    card.classList.remove("sel");
-  });
-
-  byId("card-" + path)?.classList.add("sel");
-  byId("pathErr").textContent = "";
-}
-
-function pickGender(gender) {
-  START.gender = gender;
-
-  byId("g-male").className =
-    gender === "male" ? "btn act" : "btn";
-
-  byId("g-female").className =
-    gender === "female" ? "btn act" : "btn";
-
-  byId("genderErr").textContent = "";
-}
-
-async function startCheckNick() {
-  const nick = byId("startNick").value.trim();
-
-  if (!nick || nick.length > 16) {
-    byId("nickErr").textContent =
-      "Имя должно содержать от 1 до 16 символов.";
-    return;
-  }
-
-  START.nick = nick;
-
-  try {
-    const data = await api({
-      action: "set_nickname",
-      nick
-    });
-
-    if (!data.ok) {
-      byId("nickErr").textContent =
-        data.error || "Не удалось сохранить имя.";
-      return;
-    }
-
-    byId("step1").classList.add("hidden");
-    byId("step2").classList.remove("hidden");
-    byId("startStep").textContent = "2/3";
-  } catch (error) {
-    byId("nickErr").textContent = "Ошибка связи: " + error.message;
-  }
-}
-
-async function startConfirmPath() {
-  if (!START.path) {
-    byId("pathErr").textContent = "Сначала выбери путь.";
-    return;
-  }
-
-  try {
-    const data = await api({
-      action: "confirm_path",
-      choice: START.path
-    });
-
-    if (!data.ok) {
-      byId("pathErr").textContent =
-        data.error || "Не удалось выбрать путь.";
-      return;
-    }
-
-    byId("step2").classList.add("hidden");
-    byId("step3").classList.remove("hidden");
-    byId("startStep").textContent = "3/3";
-  } catch (error) {
-    byId("pathErr").textContent = "Ошибка связи: " + error.message;
-  }
-}
-
-async function startFinish() {
-  if (!START.gender) {
-    byId("genderErr").textContent = "Выбери пол персонажа.";
-    return;
-  }
-
-  try {
-    const data = await api({
-      action: "set_gender",
-      gender: START.gender
-    });
-
-    if (data && data.ok) {
-      byId("startInHall").classList.add("hidden");
-      byId("hallProfileHint").classList.remove("hidden");
-      await loadProfileWithRetry();
-    } else {
-      byId("genderErr").textContent =
-        data?.error || "Не удалось завершить создание персонажа.";
-    }
-  } catch (error) {
-    byId("genderErr").textContent = "Ошибка связи: " + error.message;
-  }
-}
-
-function maybeShowStart(data) {
-  const needsStart =
-    !data ||
-    !data.nickname ||
-    data.nickname === "Без имени" ||
-    !data.path ||
-    data.path === "—";
-
-  byId("startInHall").classList.toggle("hidden", !needsStart);
-  byId("hallProfileHint").classList.toggle("hidden", needsStart);
-}
-
-function renderBagFromJ(data) {
-  G.inv = Array.isArray(data.inventory) ? data.inventory : [];
-
-  G.eq = data.equipped && typeof data.equipped === "object"
-    ? data.equipped
-    : {};
-
-  const invList = byId("invList");
-  invList.replaceChildren();
-
-  if (G.inv.length === 0) {
-    const empty = document.createElement("small");
-    empty.textContent = "Пусто";
-    invList.appendChild(empty);
-  } else {
-    G.inv.forEach((item, index) => {
-      const row = document.createElement("div");
-      row.className = "item";
-
-      const info = document.createElement("div");
-
-      const name = document.createElement("b");
-      name.textContent = String(item?.name ?? "Предмет");
-
-      const bonus = document.createElement("small");
-      bonus.textContent = String(item?.bonus ?? "");
-
-      info.append(name, bonus);
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "btn gold";
-      button.textContent = "Надеть";
-      button.addEventListener("click", () => doEquip(index));
-
-      row.append(info, button);
-      invList.appendChild(row);
-    });
-  }
-
-  byId("bagCnt").textContent = "(" + G.inv.length + "/50)";
-
-  const eqList = byId("eqList");
-  eqList.replaceChildren();
-
-  [
-    "head",
-    "face",
-    "body",
-    "weapon",
-    "legs",
-    "necklace",
-    "ring"
-  ].forEach(slot => {
-    const row = document.createElement("div");
-    row.className = "item";
-
-    const item = G.eq[slot];
-
-    if (item) {
-      const info = document.createElement("div");
-
-      const name = document.createElement("b");
-      name.textContent = String(item.name ?? "Предмет");
-
-      const label = document.createElement("small");
-      label.textContent = slot;
-
-      info.append(name, label);
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "btn";
-      button.textContent = "Снять";
-      button.addEventListener("click", () => doUnequip(slot));
-
-      row.append(info, button);
-    } else {
-      row.style.opacity = ".4";
-      row.textContent = slot + " — пусто";
-    }
-
-    eqList.appendChild(row);
-  });
-}
-
-function renderBag() {
-  // Инвентарь обновляется при каждом успешном ответе профиля.
-}
-
-let actionBusy = false;
 
 async function api(payload) {
-  if (actionBusy) {
-    throw new Error("Предыдущее действие ещё выполняется. Подожди немного.");
-  }
+  await ensure();
+  const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload), cache: "no-store" });
+  if (!r.ok) throw new Error("Ошибка игрового сервера (HTTP " + r.status + ").");
+  const d = unwrap(await r.json());
+  if (!d || typeof d !== "object") throw new Error("Сервер вернул некорректный ответ.");
+  return d;
+}
 
-  actionBusy = true;
-
+btn.addEventListener("click", async function () {
+  if (btn.disabled) return;
+  btn.disabled = true;
+  say("Вы всматриваетесь в туман…", false);
   try {
-    if (!ACTION_URL && !await ensureUrls()) {
-      throw new Error("Не удалось подключиться к игровому серверу");
+    const data = await api({ action: "explore_lake" });
+
+    if (data.error === "cooldown") {
+      say("Подожди ещё " + (data.left || 5) + " сек.", true);
+      btn.disabled = false; return;
+    }
+    if (data.ok === false || data.error) {
+      say(String(data.text || data.error || "Сейчас ничего не найдено."), true);
+      btn.disabled = false; return;
     }
 
-    return await fetchJson(ACTION_URL, payload);
-  } finally {
-    actionBusy = false;
-  }
-}
+    const params = new URLSearchParams(location.search);
 
-async function doEquip(index) {
-  try {
-    const data = await api({
-      action: "equip",
-      idx: index
-    });
-
-    if (data.ok) {
-      await loadProfileWithRetry();
-    } else {
-      showLoadError(data.error || "Не удалось надеть предмет.");
+    if (data.type === "event") {
+      params.set("event_data", JSON.stringify(data));
+      location.href = "./event/index.html?" + params.toString();
+      return;
     }
-  } catch (error) {
-    showLoadError("Не удалось надеть предмет: " + error.message);
-  }
-}
 
-async function doUnequip(slot) {
-  try {
-    const data = await api({
-      action: "unequip",
-      slot
-    });
-
-    if (data.ok) {
-      await loadProfileWithRetry();
-    } else {
-      showLoadError(data.error || "Не удалось снять предмет.");
+    if (data.type === "battle") {
+      if (data.enemy) params.set("enemy", data.enemy);
+      params.delete("event_data");
+      location.href = "./battle/index.html?" + params.toString();
+      return;
     }
-  } catch (error) {
-    showLoadError("Не удалось снять предмет: " + error.message);
-  }
-}
 
-const cityData = {
-  "Центр": [
-    "Ратуша 🏛",
-    "Площадь 👥",
-    "Церковь Ночи 🌙"
-  ],
-  "Север": [
-    "Рынок 🍎 — 🧺 Торговец",
-    "Таверна 🐉 — 🍺 Бармен"
-  ],
-  "Восток": [
-    "Дома 🏠 — Подвал",
-    "Лечебница 🏥"
-  ],
-  "Запад": [
-    "Бульвар 🌳",
-    "Банк 🏦"
-  ]
-};
-
-function toggleDistrict(district) {
-  const body = byId("body-" + district);
-  const chevron = byId("ch-" + district);
-
-  if (!body) return;
-
-  const willOpen = body.classList.contains("hidden");
-  body.classList.toggle("hidden", !willOpen);
-
-  if (chevron) {
-    chevron.textContent = willOpen ? "⌄" : "›";
-  }
-}
-
-(function renderCity() {
-  const container = byId("cityBtns");
-
-  Object.entries(cityData).forEach(([district, places]) => {
-    const section = document.createElement("div");
-    section.className = "district";
-
-    const head = document.createElement("div");
-    head.className = "districtHead";
-
-    const title = document.createElement("span");
-    title.textContent = "▸ " + district;
-
-    const chevron = document.createElement("span");
-    chevron.id = "ch-" + district;
-    chevron.style.opacity = ".6";
-    chevron.textContent = "›";
-
-    head.append(title, chevron);
-    head.addEventListener("click", () => toggleDistrict(district));
-
-    const body = document.createElement("div");
-    body.id = "body-" + district;
-    body.className = "districtBody hidden";
-
-    places.forEach(place => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "btn";
-      button.textContent = place;
-
-      let key = "";
-
-      if (place.includes("Рынок")) key = "market";
-      else if (place.includes("Таверна")) key = "dragon_tavern";
-      else if (place.includes("Дома")) key = "houses";
-
-      if (key) {
-        button.addEventListener("click", () => openLoc(key));
-      } else {
-        button.style.opacity = ".5";
-        button.disabled = true;
-      }
-
-      body.appendChild(button);
-    });
-
-    section.append(head, body);
-    container.appendChild(section);
-  });
-})();
-
-function openLoc(id) {
-  byId("locInfo").textContent = id;
-}
-
-byId("retryLoad").addEventListener("click", () => {
-  loadProfileWithRetry();
-});
-
-window.addEventListener("online", () => {
-  loadProfileWithRetry();
-});
-
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    loadProfileWithRetry(false);
+    say("Сервер вернул неожиданный ответ.", true);
+    btn.disabled = false;
+  } catch (e) {
+    say(e.message || "Ошибка связи.", true);
+    btn.disabled = false;
   }
 });
-
-loadProfileWithRetry();
 </script>
 </body>
 </html>
