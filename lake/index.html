@@ -5,95 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080b0f">
 <title>Озёра · Топи</title>
-
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 * { box-sizing: border-box; }
-
-:root {
-  color-scheme: dark;
-  --panel: rgba(22,22,27,.94);
-  --line: #403c46;
-  --text: #ded9d0;
-  --gold: #d4b579;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: var(--text);
-  font: 14px Inter, Arial, sans-serif;
-  background: #080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(#090c11aa, #09090df2);
-}
-
+:root { color-scheme: dark; --panel: rgba(22,22,27,.94); --line: #403c46; --text: #ded9d0; --gold: #d4b579; }
+body { margin: 0; min-height: 100vh; color: var(--text); font: 14px Inter, Arial, sans-serif;
+  background: #080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat; }
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: linear-gradient(#090c11aa, #09090df2); }
 .wrap { max-width: 480px; margin: auto; padding: 12px 12px 32px; }
 .head { display: flex; align-items: center; gap: 11px; padding: 8px 0 14px; }
-
-.back {
-  color: var(--text);
-  text-decoration: none;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 10px 12px;
-  background: #19181de8;
-}
-
+.back { color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #19181de8; }
 .heading { font-size: 16px; font-weight: 800; }
 .subheading { font-size: 10px; letter-spacing: 2px; color: var(--gold); margin-top: 3px; }
-
-.card {
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  padding: 15px;
-  background: var(--panel);
-  box-shadow: 0 10px 28px #0003;
-}
-
-.button {
-  display: block;
-  width: 100%;
-  padding: 14px 12px;
-  margin-top: 9px;
-  border: 1px solid #5b4b36;
-  border-radius: 11px;
-  background: linear-gradient(135deg, #51442f, #302832);
-  color: #e7d5ae;
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
+.card { border: 1px solid var(--line); border-radius: 17px; padding: 15px; background: var(--panel); box-shadow: 0 10px 28px #0003; }
+.button { display: block; width: 100%; padding: 14px 12px; margin-top: 9px; border: 1px solid #5b4b36; border-radius: 11px;
+  background: linear-gradient(135deg, #51442f, #302832); color: #e7d5ae; font: inherit; font-weight: 800; cursor: pointer; }
 .button:active { transform: scale(.99); }
 .button:disabled { opacity: .5; }
-
-#msg {
-  margin-top: 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #d1c8d6;
-  min-height: 18px;
-}
+#msg { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #d1c8d6; min-height: 18px; }
 #msg.err { color: #f0a3a3; }
 </style>
 </head>
-
 <body>
 <div class="wrap">
   <header class="head">
-    <a class="back" href="../index.html">← Зал</a>
+    <a class="back" id="backHome" href="../index.html">← Зал</a>
     <div>
       <div class="heading">🌊 Озёра · Топи</div>
       <div class="subheading">LORD OF THE MYSTERIES</div>
     </div>
   </header>
-
   <section class="card">
     <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
     <div id="msg"></div>
@@ -102,40 +43,31 @@ body::before {
 
 <script>
 "use strict";
-
-/* Если в вашем боте действие называется иначе — поменяйте только это слово */
-const EXPLORE_ACTION = "explore";
-
-const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 const tg = window.Telegram?.WebApp || null;
+try { tg?.ready(); tg?.expand(); } catch (_) {}
+
 const qs = new URLSearchParams(location.search);
 const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
 const aEnc = qs.get("a_enc") || qs.get("a") || "";
+const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 let ACTION_URL = aEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc) : "";
 
 const btn = document.getElementById("exploreBtn");
 const msg = document.getElementById("msg");
 
+// ссылка «назад» сохраняет параметры игрока
+document.getElementById("backHome").href = "../index.html" + (location.search || "");
+
 function unwrap(v) {
-  for (let i = 0; i < 3; i++) {
-    if (v && v.result && typeof v.result === "object") v = v.result; else break;
-  }
+  for (let i = 0; i < 3; i++) { if (v && v.result && typeof v.result === "object") v = v.result; else break; }
   return v;
 }
-
-function say(text, isError) {
-  msg.textContent = text || "";
-  msg.className = isError ? "err" : "";
-}
+function say(text, isError) { msg.textContent = text || ""; msg.className = isError ? "err" : ""; }
 
 async function ensure() {
   if (ACTION_URL) return;
-  const r = await fetch(HANDSHAKE, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ user_id: uid }),
-    cache: "no-store"
-  });
+  const r = await fetch(HANDSHAKE, { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: uid }), cache: "no-store" });
   if (!r.ok) throw new Error("Не удалось подключиться к игре (HTTP " + r.status + ").");
   const d = unwrap(await r.json());
   const action = d?.action_url || d?.ACTION_URL;
@@ -145,12 +77,8 @@ async function ensure() {
 
 async function api(payload) {
   await ensure();
-  const r = await fetch(ACTION_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    cache: "no-store"
-  });
+  const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload), cache: "no-store" });
   if (!r.ok) throw new Error("Ошибка игрового сервера (HTTP " + r.status + ").");
   const d = unwrap(await r.json());
   if (!d || typeof d !== "object") throw new Error("Сервер вернул некорректный ответ.");
@@ -162,19 +90,34 @@ btn.addEventListener("click", async function () {
   btn.disabled = true;
   say("Вы всматриваетесь в туман…", false);
   try {
-    const data = await api({ action: EXPLORE_ACTION });
+    const data = await api({ action: "explore_lake" });
 
-    if (data.error || data.ok === false) {
+    if (data.error === "cooldown") {
+      say("Подожди ещё " + (data.left || 5) + " сек.", true);
+      btn.disabled = false; return;
+    }
+    if (data.ok === false || data.error) {
       say(String(data.text || data.error || "Сейчас ничего не найдено."), true);
-      btn.disabled = false;
-      return;
+      btn.disabled = false; return;
     }
 
     const params = new URLSearchParams(location.search);
-    const enemy = data.enemy || data.enemy_name || data.name || "";
-    if (enemy) params.set("enemy", enemy);
-    const q = params.toString();
-    location.href = "./battle/index.html" + (q ? "?" + q : "");
+
+    if (data.type === "event") {
+      params.set("event_data", JSON.stringify(data));
+      location.href = "./event/index.html?" + params.toString();
+      return;
+    }
+
+    if (data.type === "battle") {
+      if (data.enemy) params.set("enemy", data.enemy);
+      params.delete("event_data");
+      location.href = "./battle/index.html?" + params.toString();
+      return;
+    }
+
+    say("Сервер вернул неожиданный ответ.", true);
+    btn.disabled = false;
   } catch (e) {
     say(e.message || "Ошибка связи.", true);
     btn.disabled = false;
