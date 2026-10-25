@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0a14">
+<title>Гадательный клуб</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--panel:rgba(24,19,32,.92);--line:#4a3d58;--text:#e6dfd2;--muted:#a99dba;--gold:#d6b779;--glow:#b48cff}
+*{box-sizing:border-box}
+html{min-height:100%;background:#0d0a14}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-serif;background:radial-gradient(ellipse at 50% 0%,#3b2a5a66,transparent 55%),radial-gradient(ellipse at 50% 100%,#5a2a3a44,transparent 55%),#0d0a14;overflow-x:hidden}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:7px 0 12px}
+.back{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#19141fe0;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.head h1{font-size:18px;margin:3px 0 0;font-weight:800}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px #0004}
+
+/* гадалка */
+.teller{display:flex;gap:12px;align-items:center}
+.orb{position:relative;flex-shrink:0;width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8,#b48cff55 30%,#4a2c80 70%,#1b1030);box-shadow:0 0 22px #9a6bff88,inset 0 0 18px #0009;animation:pulse 3s ease-in-out infinite}
+.orb:after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid #b48cff55;animation:ring 3s ease-in-out infinite}
+.orb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;filter:drop-shadow(0 0 6px #fff9)}
+@keyframes pulse{0%,100%{box-shadow:0 0 18px #9a6bff77,inset 0 0 18px #0009}50%{box-shadow:0 0 34px #b48cffcc,inset 0 0 14px #0009}}
+@keyframes ring{0%,100%{transform:scale(.96);opacity:.5}50%{transform:scale(1.12);opacity:1}}
+.tname{font-weight:800;font-size:13px}
+.trole{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+#speech{margin-top:8px;font-size:12px;line-height:1.55;color:#d9cfe8;min-height:38px}
+#speech:after{content:"▌";opacity:.5;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* сцена */
+.stage{position:relative;height:178px;margin:6px 0 2px}
+.scard{position:absolute;left:50%;top:26px;width:70px;height:108px;margin-left:-35px;border-radius:9px;animation:shuf 1.7s ease-in-out infinite;animation-delay:calc(var(--i)*-110ms)}
+@keyframes shuf{
+0%{transform:translateX(0) rotate(0)}
+25%{transform:translateX(calc(var(--d)*52px)) rotate(calc(var(--d)*9deg))}
+50%{transform:translateX(calc(var(--d)*-34px)) translateY(-12px) rotate(calc(var(--d)*-6deg))}
+75%{transform:translateX(calc(var(--d)*22px)) rotate(calc(var(--d)*4deg))}
+100%{transform:translateX(0) rotate(0)}}
+.fan{position:relative;height:100%}
+.fcard{position:absolute;left:50%;bottom:6px;width:64px;height:100px;margin-left:-32px;border-radius:9px;transform-origin:50% 200%;transform:rotate(calc((var(--i) - 4)*8deg));cursor:pointer;transition:transform .25s,opacity .45s,filter .25s;animation:spread .8s backwards;animation-delay:calc(var(--i)*55ms)}
+@keyframes spread{from{transform:rotate(0) translateY(14px);opacity:0}to{transform:rotate(calc((var(--i) - 4)*8deg));opacity:1}}
+.fcard:hover,.fcard:active{transform:rotate(calc((var(--i) - 4)*8deg)) translateY(-14px);filter:brightness(1.3) drop-shadow(0 0 8px #b48cff)}
+.fcard.gone{opacity:0;pointer-events:none;transform:rotate(calc((var(--i) - 4)*8deg)) translateY(-70px) scale(.8)}
+.back-face{background:
+ radial-gradient(circle at 50% 50%,#d6b77922 0 8px,transparent 9px),
+ repeating-linear-gradient(45deg,#ffffff0a 0 4px,transparent 4px 8px),
+ linear-gradient(145deg,#4a2c80,#241540 60%,#150c26);
+ border:1px solid #8e7bb0;box-shadow:0 4px 10px #0007}
+.back-face:after{content:"𓂀";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#d6b779;font-size:20px;text-shadow:0 0 8px #d6b77988}
+
+/* слоты */
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slot{text-align:center}
+.slotLabel{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.slotBox{position:relative;width:96px;height:150px;margin:0 auto;border:1px dashed #4a3d58;border-radius:11px;perspective:700px}
+.c3d{position:absolute;inset:0;opacity:0}
+.c3d.deal{opacity:1;animation:deal .55s cubic-bezier(.2,.8,.3,1)}
+@keyframes deal{from{transform:translateY(-130px) rotate(-18deg) scale(.6);opacity:0}to{transform:none;opacity:1}}
+.inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.3,.7,.2,1)}
+.c3d.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:11px}
+.face.front{transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px;background:radial-gradient(circle at 50% 35%,#4a3a2a,#241a2c 70%,#150f1c);border:1px solid #d6b779;box-shadow:0 0 0 1px #0008 inset}
+.c3d.flipped .face.front{animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 8px #d6b77955,0 0 0 1px #0008 inset}50%{box-shadow:0 0 22px #b48cffcc,0 0 0 1px #0008 inset}}
+.ic{font-size:38px;filter:drop-shadow(0 0 8px #d6b779aa)}
+.ic.rev{transform:rotate(180deg)}
+.nm{font-size:11px;font-weight:800;color:var(--gold);text-align:center;line-height:1.2}
+.rv{font-size:8px;letter-spacing:1px;color:#f0a3a3;text-transform:uppercase;min-height:10px}
+
+/* предсказания */
+.readings{display:grid;gap:8px}
+.reading{border-left:2px solid var(--glow);background:#ffffff08;border-radius:0 9px 9px 0;padding:9px 11px;font-size:12px;line-height:1.55;animation:fadeUp .5s}
+.reading b{display:block;font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:3px}
+.verdict{margin-top:10px;font-size:12px;line-height:1.6;color:#d9cfe8;text-align:center;font-style:italic;min-height:18px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.btn{display:block;width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 10px;background:#2a2234;color:var(--text);font:inherit;font-weight:750;font-size:13px;cursor:pointer;text-align:center;text-decoration:none}
+.btn.primary{color:#20190f;background:linear-gradient(135deg,#e4ca91,#b28c4d);border-color:#d4b779;box-shadow:0 0 18px #d6b77944}
+.btn:active{transform:scale(.98)}
+.hidden{display:none!important}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:360px){.slotBox{width:84px;height:132px}.ic{font-size:32px}}
+</style>
+</head>
+<body>
+<canvas id="dust"></canvas>
+<div class="wrap">
+<header class="head">
+<a class="back" id="back" href="../index.html">← Город</a>
+<div><div class="eyebrow">Север · Тинген</div><h1>🔮 Гадательный клуб</h1></div>
+</header>
+
+<section class="card">
+<div class="teller">
+<div class="orb"><span>🔮</span></div>
+<div><div class="tname" id="tname">Мадам Нира</div><div class="trole">Гадалка</div></div>
+</div>
+<div id="speech"></div>
+</section>
+
+<section class="card">
+<div class="stage" id="stage"></div>
+<div class="slots" id="slots"></div>
+</section>
+
+<section class="card hidden" id="readCard">
+<div class="readings" id="readings"></div>
+<div class="verdict" id="verdict"></div>
+</section>
+
+<div class="actions">
+<button class="btn primary" id="startBtn" type="button">🃏 Погадать</button>
+<button class="btn primary hidden" id="againBtn" type="button">🔮 Погадать ещё</button>
+<a class="btn hidden" id="cityBtn" href="../index.html">← Вернуться в город</a>
+</div>
+</div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0d0a14")}catch(_){}
+const $=id=>document.getElementById(id);
+const TELLER="Мадам Нира";
+$("tname").textContent=TELLER;
+const home="../index.html"+location.search;
+$("back").href=home;$("cityBtn").href=home;
+
+const POS=["Прошлое","Настоящее","Будущее"];
+const CARDS=[
+{n:"Шут",i:"🃏",a:"Случай подбросил монету в твою пользу. Улыбнись удаче.",b:"Лёгкость обманчива: не принимай шутку за правду."},
+{n:"Солнце",i:"☀️",a:"Свет найдёт тебя даже в топях.",b:"Чей-то яркий обман слепит глаза."},
+{n:"Луна",i:"🌙",a:"Тени скажут то, о чём молчат люди.",b:"Не верь отражениям: вода лжёт."},
+{n:"Повешенный",i:"🪢",a:"Остановись, и увидишь дорогу иначе.",b:"Ты жертвуешь многим, а выигрыш мал."},
+{n:"Башня",i:"🗼",a:"Старое рухнет. На обломках проще строить.",b:"Беда рядом, но ты успеешь отойти."},
+{n:"Звезда",i:"⭐",a:"Надежда не гаснет в самый тёмный час.",b:"Ты ждёшь знака, а он уже был."},
+{n:"Смерть",i:"💀",a:"Конец одной главы — начало другой.",b:"Ты цепляешься за то, что давно мертво."},
+{n:"Колесо Судьбы",i:"🎡",a:"Колесо повернулось, и оно в твою пользу.",b:"Удача уходит, но вернётся с новым оборотом."},
+{n:"Правосудие",i:"⚖️",a:"Каждый поступок вернётся к тебе с процентами.",b:"Кто-то уходит от ответа. Это ненадолго."},
+{n:"Отшельник",i:"🏮",a:"Ответ внутри. Побудь в тишине.",b:"Одиночество затянулось, пора к людям."},
+{n:"Императрица",i:"👑",a:"Щедрость вернётся сторицей.",b:"Не трать силы на тех, кто не ценит."},
+{n:"Император",i:"🏛️",a:"Порядок и воля дадут тебе опору.",b:"Не командуй там, где можно договориться."},
+{n:"Жрица",i:"🌌",a:"Тайна совсем близко. Слушай шёпот.",b:"Секрет, который ты хранишь, тяготит."},
+{n:"Влюблённые",i:"💞",a:"Выбор сердца будет верным.",b:"Сомнения разрывают тебя надвое."},
+{n:"Колесница",i:"🛞",a:"Победа за теми, кто не сворачивает.",b:"Ты мчишься, но куда? Притормози."},
+{n:"Сила",i:"🦁",a:"Твоя тихая воля сильнее чужого крика.",b:"Страх шепчет громче, чем стоит."},
+{n:"Умеренность",i:"🏺",a:"Золотая середина спасёт от беды.",b:"Перекос в делах. Верни равновесие."},
+{n:"Дьявол",i:"🔥",a:"Искушение близко, а цена высока.",b:"Цепи слабее, чем кажутся. Сбрось их."},
+{n:"Суд",i:"📯",a:"Тебя призовут, и ты будешь готов.",b:"Прошлое просит пересмотра, не отмахивайся."},
+{n:"Мир",i:"🌍",a:"Круг замкнулся, пора праздновать.",b:"Осталось лишь последнее усилие."},
+{n:"Маг",i:"🪄",a:"У тебя есть всё, чтобы начать.",b:"Ловкость рук не заменит честности."},
+{n:"Иерофант",i:"📜",a:"Совет старшего окажется верным.",b:"Правила тесны, но сейчас лучше их соблюсти."}
+];
+const CLOSING=[
+"Нити сплетены. Что будет дальше — решаешь ты.",
+"Карты сказали своё. Остальное допишет твоя рука.",
+"Судьба лишь подсказывает. Идти тебе.",
+"Туман расступился ненадолго. Береги это знание.",
+"Три карты — три тропы. Выбирай, по какой пойдёшь."
+];
+const INTRO=[
+"Садись, путник. Нити судьбы уже дрожат у тебя на плечах…",
+"Ах, новое лицо. Карты давно ждут того, кто спросит.",
+"Тише. Шар помутнел — значит, тебе есть что узнать."
+];
+
+let order=[],picks=0,busy=false,queue=Promise.resolve(),runId=0,sayTok=0,started=false;
+const rnd=n=>Math.floor(Math.random()*n);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function haptic(){try{tg?.HapticFeedback?.impactOccurred("light")}catch(_){}}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+
+async function typeInto(el,text,rid,speed=24){
+el.textContent="";
+for(let i=0;i<text.length;i++){
+if(rid!==runId)return;
+el.textContent+=text[i];
+await sleep(speed);
+}
+}
+async function say(text){
+const tok=++sayTok;
+const el=$("speech");el.textContent="";
+for(let i=0;i<text.length;i++){
+if(tok!==sayTok)return;
+el.textContent+=text[i];
+await sleep(22);
+}
+}
+
+function showStack(){
+const st=$("stage");st.replaceChildren();
+for(let i=0;i<8;i++){
+const c=document.createElement("div");c.className="scard back-face";
+c.style.setProperty("--i",i);c.style.setProperty("--d",i%2?1:-1);
+st.appendChild(c);
+}
+}
+function showFan(){
+const st=$("stage");st.replaceChildren();
+const fan=document.createElement("div");fan.className="fan";
+for(let i=0;i<9;i++){
+const c=document.createElement("div");c.className="fcard back-face";
+c.style.setProperty("--i",i);
+c.addEventListener("click",()=>pick(i,c));
+fan.appendChild(c);
+}
+st.appendChild(fan);
+}
+function buildSlots(){
+const box=$("slots");box.replaceChildren();
+POS.forEach((p,k)=>{
+const s=document.createElement("div");s.className="slot";
+s.innerHTML='<div class="slotLabel"></div><div class="slotBox"><div class="c3d" id="c'+k+'"><div class="inner"><div class="face back-face" style="position:absolute"></div><div class="face front"><div class="ic"></div><div class="nm"></div><div class="rv"></div></div></div></div></div>';
+s.querySelector(".slotLabel").textContent=p;
+box.appendChild(s);
+});
+}
+
+function pick(i,el){
+if(busy||picks>=3||el.classList.contains("gone"))return;
+busy=true;haptic();
+el.classList.add("gone");
+const k=picks++;
+const item=order[i];
+revealSlot(k,item);
+setTimeout(()=>{busy=false},700);
+}
+
+function revealSlot(k,item){
+const rid=runId;
+const c=$("c"+k),card=item.c;
+c.querySelector(".ic").textContent=card.i;
+c.querySelector(".ic").classList.toggle("rev",item.rev);
+c.querySelector(".nm").textContent=card.n;
+c.querySelector(".rv").textContent=item.rev?"перевёрнута":"";
+c.classList.add("deal");
+setTimeout(()=>{if(rid!==runId)return;c.classList.add("flipped");haptic()},500);
+
+queue=queue.then(async()=>{
+if(rid!==runId)return;
+await sleep(950);
+if(rid!==runId)return;
+$("readCard").classList.remove("hidden");
+const d=document.createElement("div");d.className="reading";
+const b=document.createElement("b");b.textContent=POS[k]+" · "+card.n+(item.rev?" (перевёрнута)":"");
+const sp=document.createElement("span");
+d.append(b,sp);$("readings").appendChild(d);
+await typeInto(sp,item.rev?card.b:card.a,rid,20);
+if(rid!==runId)return;
+if(k===2){
+await sleep(500);
+if(rid!==runId)return;
+await typeInto($("verdict"),CLOSING[rnd(CLOSING.length)],rid,26);
+if(rid!==runId)return;
+$("againBtn").classList.remove("hidden");$("cityBtn").classList.remove("hidden");
+say("Хочешь спросить судьбу ещё раз? Карты не устают.");
+}
+});
+}
+
+async function start(){
+runId++;const rid=runId;
+picks=0;busy=true;queue=Promise.resolve();
+$("startBtn").classList.add("hidden");
+$("againBtn").classList.add("hidden");$("cityBtn").classList.add("hidden");
+$("readings").replaceChildren();$("verdict").textContent="";$("readCard").classList.add("hidden");
+buildSlots();
+showStack();
+say("Карты тасуются… Не отводи взгляд.");
+haptic();
+await sleep(2100);
+if(rid!==runId)return;
+order=shuffle(CARDS).slice(0,9).map(c=>({c,rev:Math.random()<0.3}));
+showFan();
+say("Выбери три карты. Доверься руке, а не глазам.");
+busy=false;
+}
+
+$("startBtn").addEventListener("click",start);
+$("againBtn").addEventListener("click",start);
+buildSlots();
+say(INTRO[rnd(INTRO.length)]);
+
+/* мерцающая пыль на фоне */
+(function(){
+const cv=$("dust"),ctx=cv.getContext("2d");
+let w=0,h=0,dots=[];
+function resize(){w=cv.width=innerWidth;h=cv.height=innerHeight;dots=Array.from({length:42},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.6+.4,s:Math.random()*.25+.05,p:Math.random()*6}))}
+resize();addEventListener("resize",resize);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function frame(t){
+ctx.clearRect(0,0,w,h);
+for(const d of dots){
+d.y-=d.s;if(d.y<-4){d.y=h+4;d.x=Math.random()*w}
+const a=.25+.35*Math.sin(t/900+d.p);
+ctx.beginPath();ctx.arc(d.x+Math.sin(t/1500+d.p)*8,d.y,d.r,0,6.283);
+ctx.fillStyle="rgba(214,183,121,"+a.toFixed(2)+")";ctx.fill();
+}
+if(!reduce&&!document.hidden)requestAnimationFrame(frame);
+else if(!reduce)setTimeout(()=>requestAnimationFrame(frame),500);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+  </html>
