@@ -170,9 +170,6 @@ button{font:inherit}
 <script>
 "use strict";
 
-/* Если в вашем боте действие называется иначе — поменяйте только это слово */
-const EXPLORE_ACTION="explore";
-
 const tg=window.Telegram?.WebApp||null;
 try{tg?.ready();tg?.expand();tg?.setHeaderColor("#101014")}catch(_){}
 
@@ -480,24 +477,26 @@ async function exploreAgain(){
 if(busy)return;
 hideError();setBusy(true,"Поиск…");
 try{
-const found=await api({action:EXPLORE_ACTION});
-if(found?.error||found?.ok===false){
-setMessage(cleanBattleText(found.text||found.error||"Сейчас ничего не найдено."),"ПОИСК ПРОТИВНИКА","⚠️");
+const data=await api({action:"explore_lake"});
+if(data.error==="cooldown"){
+setMessage("Подожди ещё "+(data.left||5)+" сек.","ПОИСК ПРОТИВНИКА","⌛");
 return;
 }
-const enemyFromServer=found?.enemy||found?.enemy_name||found?.name||"";
-if(enemyFromServer){
-const p=new URLSearchParams(location.search);p.set("enemy",enemyFromServer);
-history.replaceState(null,"",location.pathname+"?"+p.toString());
-qs.set("enemy",enemyFromServer);
+if(data.ok===false||data.error){
+setMessage(cleanBattleText(data.text||data.error||"Сейчас ничего не найдено."),"ПОИСК ПРОТИВНИКА","⚠️");
+return;
 }
-ended=false;initialized=false;logEntries=[];
-$("victoryCard").classList.add("hidden");$("defeatCard").classList.add("hidden");
-$("skillCard").classList.remove("hidden");
-$("battleLog").replaceChildren();
-}catch(error){showError(error.message||"Не удалось начать новый бой.");setBusy(false);return}
-setBusy(false);
-await load();
+const params=new URLSearchParams(location.search);
+if(data.type==="event"){
+params.delete("enemy");params.set("event_data",JSON.stringify(data));
+location.href="../event/index.html?"+params.toString();
+return;
+}
+params.delete("event_data");
+if(data.enemy)params.set("enemy",data.enemy);
+location.href="./index.html?"+params.toString();
+}catch(error){showError(error.message||"Не удалось начать новый бой.")}
+finally{setBusy(false)}
 }
 $("exploreAgainBtn").addEventListener("click",exploreAgain);
 $("victoryCloseBtn").addEventListener("click",goLake);
@@ -507,4 +506,4 @@ $("retryBtn").addEventListener("click",load);
 window.addEventListener("DOMContentLoaded",load);
 </script>
 </body>
-</html>
+                                                                                                                      </html>
