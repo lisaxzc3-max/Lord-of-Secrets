@@ -242,6 +242,9 @@ hpEl.textContent=current+"/"+maximum;
 const pc=safePercent(current,maximum);bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
 state.textContent=current<=0?(player?"Пал":"Повержен"):pc<=25?"Критически мало":pc<=55?"Ранен":player?"В строю":"Опасен";
 }
+function setEnemyLevel(level){
+$("enemyRole").textContent=(level?"Ур. "+level+" · ":"")+"Враждебная сущность";
+}
 function cleanBattleText(value){
 const text=String(value??"").trim();
 const messages={
@@ -386,12 +389,12 @@ let state=null;
 try{state=await api({action:"battle_state"})}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
 const enemy=getEnemyName(state?.enemy);
-$("enemyLabel").textContent=enemy;$("enemyRole").textContent="Враждебная сущность";setImageForEnemy(enemy);
+$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level);setImageForEnemy(enemy);
 if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 else setHealth("enemy",null,null);
 renderSkills(state?.cds||{});
 if(!initialized){
-addLog("Ты столкнулся с противником: "+enemy+".","info");
+addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 setMessage("Противник перед тобой. Выбирай действие и следи за перезарядкой.","БОЙ НАЧАЛСЯ","⚔️");
 initialized=true;
 }
@@ -452,6 +455,7 @@ if(data.type==="flee"||move==="flee"){setMessage("Ты покидаешь пол
 if(data.type==="battle"){
 if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
 if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
+if(data.enemy_level)setEnemyLevel(data.enemy_level);
 const logs=getBattleLogs(data),fullLog=[logs.player,logs.enemy].filter(Boolean).join("\n");
 setMessage(fullLog||"Сервер обработал ход, но не вернул описание события.","РЕЗУЛЬТАТ ХОДА","⚔️");
 if(logs.player)addLog(logs.player,"good");
@@ -506,4 +510,4 @@ $("retryBtn").addEventListener("click",load);
 window.addEventListener("DOMContentLoaded",load);
 </script>
 </body>
-                                                                                                                      </html>
+</html>
