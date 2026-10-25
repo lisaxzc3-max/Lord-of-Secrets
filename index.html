@@ -2,51 +2,289 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Повелитель Тайн v118 Main Full + Settings</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b12">
+<title>Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
-body{background:linear-gradient(rgba(10,10,14,.72),rgba(10,10,14,.92)),url('./i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
-.wrap{max-width:440px;margin:0 auto;padding:10px 10px 70px}
-.top{display:flex;gap:10px;background:rgba(22,22,26,.88);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:10px;align-items:center}
-.avatar{width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;color:#b8b5ad;font-size:20px;cursor:pointer}
-.bar{height:7px;background:rgba(30,30,34,.9);border-radius:8px;margin:3px 0;overflow:hidden}
-.bar i{display:block;height:100%;transition:width .3s}
-.bar.hp i{background:#5a3a3a}.bar.mn i{background:#4a4e5a}.bar.exp i{background:#6a6560}
-.card{background:rgba(22,22,26,.86);backdrop-filter:blur(8px);border:1px solid #3a3a3e;border-radius:16px;padding:12px;margin:8px 0}
-.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:10px;text-align:center;font-size:13px;margin:4px 0;cursor:pointer;color:#b8b5ad}
-.btn.gold{background:#3a3a3e;border-color:#4a4a4e;color:#d4d0c3;font-weight:600}
-.btn.act{background:#4a4a4e;border-color:#5a5a62;color:#fff;font-weight:700}
-.btn.red{background:#2b2b2e;border-color:#4a4a4e;color:#d4d0c3;font-weight:700}
-.btn.big{padding:14px;font-size:15px;border-radius:14px}
+:root{
+  --bg:#080b12;
+  --panel:rgba(13,19,29,.94);
+  --panel2:rgba(19,27,39,.94);
+  --line:rgba(190,157,99,.27);
+  --gold:#c8a66b;
+  --gold2:#f0d9a6;
+  --text:#e5dfd3;
+  --muted:#9698a4;
+  --red:#b94350;
+  --blue:#548eb9;
+  --green:#538b72;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{min-height:100%;background:var(--bg);scroll-behavior:smooth}
+body{
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    linear-gradient(180deg,rgba(5,8,14,.56),rgba(5,8,14,.9) 48%,#080b12 100%),
+    url('./i-72.jpeg') center top/auto 650px no-repeat,
+    var(--bg);
+  background-attachment:scroll;
+  color:var(--text);
+  min-height:100vh;
+  min-height:100dvh;
+  font-size:14px;
+  -webkit-tap-highlight-color:transparent;
+}
+button,input{font:inherit}
+button{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+.wrap{
+  width:100%;
+  max-width:480px;
+  margin:0 auto;
+  padding:12px 13px calc(100px + env(safe-area-inset-bottom));
+}
+.top{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:13px 12px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(24,32,44,.97),rgba(9,13,22,.96));
+  box-shadow:0 8px 30px #0005,inset 0 1px #fff08;
+  overflow:hidden;
+}
+.top:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:3px;
+  background:linear-gradient(180deg,var(--gold2),#806039,transparent);
+}
+.avatar{
+  width:49px;height:49px;flex-shrink:0;
+  border-radius:15px;
+  border:1px solid #b79a65a8;
+  background:linear-gradient(145deg,#344155,#111722);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold2);font-size:25px;
+  cursor:pointer;
+  box-shadow:inset 0 0 18px #0008,0 0 15px #c8a66b0b;
+}
+.topInfo{flex:1;min-width:0;cursor:pointer}
+.topName{
+  display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+  font-size:12px;color:var(--text);line-height:1.6;
+}
+.topName b{font-size:14px;overflow-wrap:anywhere}
+#path{
+  font-size:10px!important;
+  color:var(--gold2);
+  border:1px solid var(--line)!important;
+  border-radius:6px!important;
+  padding:1px 6px!important;
+  background:#c8a66b0b;
+}
+.bar{
+  height:7px;
+  background:#080c13;
+  border:1px solid #ffffff0b;
+  border-radius:20px;
+  margin:5px 0;
+  overflow:hidden;
+}
+.bar i{
+  display:block;height:100%;width:0;
+  transition:width .4s ease;
+  border-radius:20px;
+}
+.bar.hp i{background:linear-gradient(90deg,#792c3b,var(--red),#e16b71)}
+.bar.mn i{background:linear-gradient(90deg,#294b7c,var(--blue),#8dc7e8)}
+.bar.exp i{background:linear-gradient(90deg,#77603c,var(--gold),#f4dba3)}
+.topStats{font-size:10px;color:#c4c4cc;line-height:1.6}
+.topActions{display:flex;flex-direction:column;gap:7px;align-items:center}
+.gear{
+  width:35px;height:35px;border-radius:11px;
+  background:linear-gradient(145deg,#263142,#111722);
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;flex-shrink:0;
+}
+.uid{font-size:9px;color:#777e8b}
+.card{
+  position:relative;
+  background:linear-gradient(145deg,rgba(19,27,39,.96),rgba(10,15,24,.96));
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:14px;
+  margin:11px 0;
+  box-shadow:0 7px 22px #0002,inset 0 1px #ffffff05;
+}
+.card h3{
+  font-size:15px;
+  font-weight:650;
+  letter-spacing:.2px;
+  margin-bottom:11px;
+  color:var(--gold2);
+}
+.card h3:first-letter{color:var(--gold)}
+.btn{
+  position:relative;
+  border:1px solid #394355;
+  background:linear-gradient(145deg,#202b3a,#111925);
+  border-radius:11px;
+  padding:11px 12px;
+  text-align:center;
+  font-size:12px;
+  line-height:1.35;
+  margin:4px 0;
+  cursor:pointer;
+  color:#d0d1d9;
+  transition:transform .15s,border-color .15s,filter .15s;
+  box-shadow:inset 0 1px #ffffff08;
+}
+.btn:active{transform:scale(.975);filter:brightness(1.2)}
+.btn.gold{
+  background:linear-gradient(135deg,#66543b,#382e25 58%,#25232a);
+  border-color:#b99a63;
+  color:#f5e6c5;
+  font-weight:650;
+  box-shadow:inset 0 1px #ffffff18,0 3px 12px #0003;
+}
+.btn.act{
+  background:linear-gradient(135deg,#5b3341,#33202d);
+  border-color:#b86d79;
+  color:#ffe4e6;font-weight:700;
+}
+.btn.red{
+  background:linear-gradient(135deg,#562b36,#281921);
+  border-color:#82404c;color:#ffdce0;font-weight:700;
+}
+.btn.big{padding:15px 13px;font-size:14px;border-radius:13px}
 .btn.dis{opacity:.45;pointer-events:none}
-.btn:active{transform:scale(.97)}
-.tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto}
-.tab{flex:1;padding:8px;text-align:center;border-radius:10px;background:rgba(30,30,34,.85);border:1px solid #3a3a3e;font-size:11px;cursor:pointer;white-space:nowrap;color:#9a9690}
-.tab.active{background:#3a3a3e;color:#d4d0c3;border-color:#4a4a4e}
-.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,16,.96);backdrop-filter:blur(10px);border-top:1px solid #2a2a2e;display:flex;justify-content:space-around;padding:8px 0;z-index:10}
-.nav a{font-size:11px;color:#8a867e;text-decoration:none;cursor:pointer}
+.tabs{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;margin:12px 0;
+}
+.tab{
+  min-width:0;padding:11px 3px;
+  text-align:center;border-radius:11px;
+  background:#101722eF;
+  border:1px solid #293344;
+  font-size:11px;cursor:pointer;
+  white-space:nowrap;color:#a5a9b4;
+  transition:.2s;
+}
+.tab.active{
+  background:linear-gradient(145deg,#493d2d,#24242a);
+  color:var(--gold2);
+  border-color:#aa8c5b;
+  box-shadow:inset 0 1px #ffffff0c,0 3px 10px #0003;
+}
+.nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(8,12,19,.96);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-top:1px solid #b99a6338;
+  display:flex;justify-content:space-around;
+  padding:9px 4px calc(9px + env(safe-area-inset-bottom));
+  z-index:10;
+}
+.nav a{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:0;padding:3px 5px;
+  font-size:10px;color:#8f96a4;
+  text-decoration:none;cursor:pointer;
+  transition:color .2s;
+}
+.nav a:active{color:var(--gold2)}
 .hidden{display:none!important}
-.item{border:1px solid #2a2a2e;border-radius:10px;padding:8px;margin:4px 0;background:rgba(28,28,32,.85);display:flex;justify-content:space-between;align-items:center;gap:8px}
-.district{margin:6px 0;border:1px solid #2a2a2e;border-radius:12px;overflow:hidden;background:rgba(28,28,32,.6)}
-.districtHead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;cursor:pointer;background:rgba(38,38,42,.9);font-size:13px;font-weight:600;color:#c9c5b8}
-.districtBody{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px;background:rgba(22,22,26,.6)}
+.item{
+  border:1px solid #303b4c;
+  border-radius:12px;
+  padding:10px;margin:6px 0;
+  background:linear-gradient(110deg,#192331d9,#101722eF);
+  display:flex;justify-content:space-between;align-items:center;gap:9px;
+}
+.item b{display:block;color:#e2ddcf;font-size:12px;overflow-wrap:anywhere}
+.item small{display:block;margin-top:3px}
+.item .btn{flex-shrink:0;margin:0;padding:8px 10px}
+.district{
+  margin:7px 0;border:1px solid #344052;
+  border-radius:13px;overflow:hidden;
+  background:#10172299;
+}
+.districtHead{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px;background:linear-gradient(110deg,#202b3a,#141c28);
+  cursor:pointer;font-size:13px;font-weight:600;color:#e2d5b7;
+}
+.districtBody{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  padding:8px;background:#0b111b;
+}
+.districtBody .btn{margin:0;min-height:44px}
 .districtBody.hidden{display:none!important}
-.quote{margin:10px 0;background:rgba(28,28,32,.9);border:1px solid #2a2a2e;border-radius:12px;padding:10px;font-size:12px;line-height:1.4}
-.startInput{width:100%;background:#1a1a1e;border:1px solid #3a3a3e;border-radius:10px;padding:12px;text-align:center;color:#d4d0c3;font-size:16px;outline:none}
-.startHint{display:flex;justify-content:space-between;font-size:10px;opacity:.5;margin:4px 2px}
-.pathCard{border:1px solid #2a2a2e;border-radius:12px;padding:10px;background:rgba(28,28,32,.85);cursor:pointer}
-.pathCard.sel{border-color:#5a5a62;background:#3a3a3e}
-.genderRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
-small{opacity:.6;font-size:10px;white-space:pre-wrap}
-h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
-.timerRow{display:flex;gap:8px;margin:8px 0}
-.timerBox{flex:1;border-radius:12px;padding:10px;text-align:center}
-.timerBox.dead{background:rgba(60,20,20,.92);border:1px solid #6a2a2a}
-.timerBox.regen{background:rgba(20,55,20,.92);border:1px solid #2a6a2a}
-.gear{width:32px;height:32px;border-radius:8px;background:rgba(38,38,42,.9);border:1px solid #3a3a3e;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
-.status{font-size:12px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+.quote{
+  margin:12px 0;
+  background:linear-gradient(120deg,#1e2938,#111823);
+  border:1px solid #a68b5b4d;
+  border-left:3px solid var(--gold);
+  border-radius:11px;
+  padding:13px;
+  font-size:12px;line-height:1.6;color:#d6d0c5;
+}
+.startInput{
+  width:100%;background:#0c121d;
+  border:1px solid #465064;border-radius:11px;
+  padding:13px;text-align:center;color:#f0e4cb;
+  font-size:16px;outline:none;
+}
+.startInput:focus{border-color:var(--gold)}
+.startHint{display:flex;justify-content:space-between;font-size:10px;color:#8991a0;margin:5px 2px}
+.pathCard{
+  border:1px solid #354052;border-radius:12px;
+  padding:12px;background:linear-gradient(120deg,#1b2635,#111824);
+  cursor:pointer;transition:.2s;
+}
+.pathCard b{font-size:12px;color:#e7dcc4}
+.pathCard div{margin-top:5px;line-height:1.6}
+.pathCard.sel{
+  border-color:var(--gold);
+  background:linear-gradient(120deg,#443a2c,#242530);
+  box-shadow:inset 0 0 0 1px #c8a66b20;
+}
+.genderRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+small{color:#9299a7;font-size:10px;white-space:pre-wrap}
+.timerRow{display:flex;gap:8px;margin:10px 0}
+.timerBox{
+  flex:1;border-radius:13px;padding:12px;text-align:center;
+  box-shadow:inset 0 1px #ffffff08;
+}
+.timerBox.dead{background:linear-gradient(135deg,#3b202c,#17131d);border:1px solid #81404d}
+.timerBox.regen{background:linear-gradient(135deg,#19352f,#111d22);border:1px solid #3e7865}
+.status{font-size:12px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+#startInHall{padding:2px 0}
+#hallProfileHint{color:#a8adba!important;line-height:1.8}
+#eventText{line-height:1.7;color:#c9cbd3}
+#locInfo{line-height:1.6;color:#c9cbd3}
+#loadError{border-color:#9a4551;background:#26151d}
+#loadErrorText{color:#f2c7cc}
+button:disabled{opacity:.4;cursor:not-allowed}
+@media(min-width:500px){
+  body{background-size:auto 760px,auto}
+  .wrap{padding-top:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important}
+}
 </style>
 </head>
 <body>
@@ -54,20 +292,21 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 
 <div class="top">
   <div class="avatar" onclick="openProfile()">𓂀</div>
-  <div style="flex:1;cursor:pointer" onclick="openProfile()">
-    <div style="font-size:13px">
-      <b id="nick">Загрузка…</b> · Ур.<span id="lvl">—</span>
-      <span id="path" style="font-size:10px;border:1px solid #4a4a4e;border-radius:6px;padding:1px 5px">—</span>
+  <div class="topInfo" onclick="openProfile()">
+    <div class="topName">
+      <b id="nick">Загрузка…</b>
+      <span>· Ур.<span id="lvl">—</span></span>
+      <span id="path">—</span>
     </div>
     <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
-    <div style="font-size:10px">
+    <div class="topStats">
       ❤️ <span id="hp">—</span> · £ <span id="pounds">—</span>
       · ⭐ <span id="exp">—</span> · 🧪 <span id="potion">—</span>
     </div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
-    <div class="gear" onclick="openSettings(event)">⚙️</div>
-    <div style="font-size:10px;opacity:.6">UID <span id="uid">—</span></div>
+  <div class="topActions">
+    <div class="gear" onclick="openSettings(event)">⚙</div>
+    <div class="uid">UID <span id="uid">—</span></div>
   </div>
 </div>
 
@@ -81,11 +320,11 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 <div class="timerRow">
   <div id="deadBox" class="timerBox dead hidden">
     <div style="font-weight:700;font-size:18px">💀 <span id="deadTimer">10:00</span></div>
-    <div style="font-size:10px;opacity:.6">воскрешение</div>
+    <div style="font-size:10px;color:#c5a1a8;margin-top:4px">Воскрешение</div>
   </div>
   <div id="regenBox" class="timerBox regen hidden">
     <div style="font-weight:700;font-size:18px">🩹 <span id="regenTimer">10:00</span></div>
-    <div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div>
+    <div style="font-size:10px;color:#a3c5b7;margin-top:4px">Регенерация · <span id="regenHp">0/50</span></div>
   </div>
 </div>
 
@@ -98,41 +337,41 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 
 <div id="hall" class="card">
   <div id="startInHall" class="hidden">
-    <div style="display:flex;gap:10px;align-items:center">
-      <div style="width:44px;height:44px;border-radius:12px;background:#2b2b2e;border:1px solid #4a4a4e;display:flex;align-items:center;justify-content:center;font-size:18px">🦉</div>
+    <div style="display:flex;gap:11px;align-items:center">
+      <div class="avatar" style="width:47px;height:47px;cursor:default">🦉</div>
       <div>
-        <div style="font-weight:700;font-size:13px">ДАЛИЯ «ВЕСТНИЦА»</div>
-        <div style="font-size:10px;opacity:.5;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div>
+        <div style="font-weight:750;font-size:13px;color:var(--gold2)">ДАЛИЯ «ВЕСТНИЦА»</div>
+        <div style="font-size:10px;color:#9698a4;letter-spacing:1px;margin-top:4px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div>
       </div>
     </div>
     <div class="quote" id="startQuote">«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы.»</div>
 
     <div id="step1">
-      <div style="font-size:12px;margin:6px 0">📜 Твоё имя</div>
+      <div style="font-size:12px;margin:8px 0;color:var(--gold2)">📜 Твоё имя</div>
       <input id="startNick" class="startInput" maxlength="16" value="Путник123">
-      <div class="startHint"><span>до 16 символов</span><span id="nickCnt">9/16</span></div>
-      <div style="color:#e63946;font-size:11px" id="nickErr"></div>
-      <button type="button" class="btn gold" style="width:100%;margin-top:8px" onclick="startCheckNick()">Далее ›</button>
+      <div class="startHint"><span>До 16 символов</span><span id="nickCnt">9/16</span></div>
+      <div style="color:#e68c98;font-size:11px" id="nickErr"></div>
+      <button type="button" class="btn gold" style="width:100%;margin-top:9px" onclick="startCheckNick()">Далее ›</button>
     </div>
 
     <div id="step2" class="hidden">
-      <div style="margin:6px 0">⟡ Избери Путь</div>
-      <div style="display:grid;gap:6px">
+      <div style="margin:8px 0;color:var(--gold2)">⟡ Избери Путь</div>
+      <div style="display:grid;gap:8px">
         <div class="pathCard" id="card-seer" onclick="pickPath('seer')">
           <b>𓂀 Путь Шута · Провидец</b>
-          <div style="font-size:11px;opacity:.6">🔮 Гадание · 🪃 Бумеранг · 🎭 Актёрство</div>
+          <div style="font-size:11px;color:#a8afbd">🔮 Гадание · 🪃 Бумеранг · 🎭 Актёрство</div>
         </div>
         <div class="pathCard" id="card-sailor" onclick="pickPath('sailor')">
           <b>⚔ Путь Тирана · Матрос</b>
-          <div style="font-size:11px;opacity:.6">👊 Сильный удар · 🍺 Перепить · 😡 Гнев</div>
+          <div style="font-size:11px;color:#a8afbd">👊 Сильный удар · 🍺 Перепить · 😡 Гнев</div>
         </div>
         <div class="pathCard" id="card-hunter" onclick="pickPath('hunter')">
           <b>🏹 Путь Жреца · Охотник</b>
-          <div style="font-size:11px;opacity:.6">🔥 Берсерк · 🪤 Ловушка · 😤 Провокация</div>
+          <div style="font-size:11px;color:#a8afbd">🔥 Берсерк · 🪤 Ловушка · 😤 Провокация</div>
         </div>
       </div>
-      <div style="color:#e63946;font-size:11px" id="pathErr"></div>
-      <button type="button" class="btn gold" style="width:100%;margin-top:8px" onclick="startConfirmPath()">Далее ›</button>
+      <div style="color:#e68c98;font-size:11px" id="pathErr"></div>
+      <button type="button" class="btn gold" style="width:100%;margin-top:9px" onclick="startConfirmPath()">Далее ›</button>
     </div>
 
     <div id="step3" class="hidden">
@@ -140,37 +379,37 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
         <div class="btn" id="g-male" onclick="pickGender('male')">♂ Мужчина</div>
         <div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div>
       </div>
-      <div style="color:#e63946;font-size:11px" id="genderErr"></div>
+      <div style="color:#e68c98;font-size:11px" id="genderErr"></div>
       <button type="button" class="btn gold" style="width:100%" onclick="startFinish()">🎮 Начать игру</button>
     </div>
   </div>
 
-  <div id="hallProfileHint" class="hidden" style="text-align:center;padding:20px 0;opacity:.6">
-    Нажми на <b>𓂀</b> для профиля или <b>⚙️</b> для настроек →
+  <div id="hallProfileHint" class="hidden" style="text-align:center;padding:24px 0">
+    Нажми на <b style="color:var(--gold2)">𓂀</b> для профиля или <b style="color:var(--gold2)">⚙</b> для настроек.
   </div>
 </div>
 
 <div id="travel" class="card hidden">
   <h3>🧭 Поход</h3>
-  <button type="button" class="btn gold big" style="width:100%" onclick="openLake()">🌊 Озёра — Топи (открыть локацию)</button>
-  <div style="font-size:11px;opacity:.6;margin-top:6px;text-align:center">Боёвка теперь в lake/ и lake/battle/ на фоне топи</div>
-  <div style="font-size:11px;margin-top:8px">❤️ <span id="hp2">—</span> · 🌀 <span id="madTxt">—</span>%</div>
+  <button type="button" class="btn gold big" style="width:100%" onclick="openLake()">🌊 Озёра — Топи</button>
+  <div style="font-size:11px;color:#939ba9;margin-top:9px;text-align:center;line-height:1.5">Туман скрывает путь. Каждый шаг может привести к открытию или опасности.</div>
+  <div style="font-size:11px;margin-top:15px">❤️ <span id="hp2">—</span> · 🌀 Безумие: <span id="madTxt">—</span>%</div>
   <div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
   <div class="bar mn"><i id="madBar" style="width:0%"></i></div>
 </div>
 
 <div id="city" class="card hidden">
   <h3>⌖ Тинген</h3>
-  <div style="font-size:11px;opacity:.5;margin-bottom:8px">Нажми на район чтобы развернуть ›</div>
+  <div style="font-size:11px;color:#9698a4;margin-bottom:10px">Город хранит множество тайн. Выбери район.</div>
   <div id="cityBtns"></div>
   <div id="locInfo" style="font-size:12px;margin-top:8px;white-space:pre-wrap"></div>
   <div id="locBtns"></div>
 </div>
 
 <div id="bag" class="card hidden">
-  <h3>🎒 Инвентарь <span id="bagCnt" style="font-size:11px;opacity:.6"></span></h3>
+  <h3>🎒 Инвентарь <span id="bagCnt" style="font-size:11px;color:#9698a4"></span></h3>
   <div id="invList"></div>
-  <h3 style="margin-top:10px">⬢ Надето</h3>
+  <h3 style="margin-top:16px">⬢ Экипировка</h3>
   <div id="eqList"></div>
 </div>
 
@@ -182,10 +421,10 @@ h3{font-size:14px;margin-bottom:6px;color:#c9c5b8}
 </div>
 
 <div class="nav">
-  <a onclick="showTab('hall')">◈ Зал</a>
-  <a onclick="showTab('travel')">🧭 Поход</a>
-  <a onclick="showTab('city')">⌖ Город</a>
-  <a onclick="showTab('bag')">🎒 Сумка</a>
+  <a onclick="showTab('hall')"><span>◈</span><span>Зал</span></a>
+  <a onclick="showTab('travel')"><span>🧭</span><span>Поход</span></a>
+  <a onclick="showTab('city')"><span>⌖</span><span>Город</span></a>
+  <a onclick="showTab('bag')"><span>🎒</span><span>Сумка</span></a>
 </div>
 
 <script>
@@ -196,6 +435,8 @@ const tg = window.Telegram?.WebApp || null;
 try {
   tg?.ready();
   tg?.expand();
+  tg?.setHeaderColor?.("#080b12");
+  tg?.setBackgroundColor?.("#080b12");
 } catch (error) {
   console.warn("Telegram WebApp init:", error);
 }
@@ -220,9 +461,7 @@ let ACTION_URL = a_enc
 const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 
 function unwrap(value) {
-  if (value && value.result && typeof value.result === "object") {
-    return value.result;
-  }
+  if (value && value.result && typeof value.result === "object") return value.result;
   return value;
 }
 
@@ -232,16 +471,12 @@ function byId(id) {
 
 function clamp(value, min, max) {
   const number = Number(value);
-  return Number.isFinite(number)
-    ? Math.max(min, Math.min(max, number))
-    : min;
+  return Number.isFinite(number) ? Math.max(min, Math.min(max, number)) : min;
 }
 
 function setWidth(id, percent) {
   const element = byId(id);
-  if (element) {
-    element.style.width = clamp(percent, 0, 100) + "%";
-  }
+  if (element) element.style.width = clamp(percent, 0, 100) + "%";
 }
 
 function showLoadError(message) {
@@ -269,38 +504,26 @@ async function ensureUrls(force = false) {
         cache: "no-store"
       });
 
-      if (!response.ok) {
-        throw new Error("Handshake HTTP " + response.status);
-      }
+      if (!response.ok) throw new Error("Handshake HTTP " + response.status);
 
       const raw = await response.json();
       const data = unwrap(raw);
-
       const profile = data?.profile_url || data?.PROFILE_URL;
       const action = data?.action_url || data?.ACTION_URL;
 
-      if (
-        typeof profile !== "string" ||
-        typeof action !== "string" ||
-        !profile ||
-        !action
-      ) {
+      if (typeof profile !== "string" || typeof action !== "string" || !profile || !action) {
         throw new Error("Ответ подключения не содержит profile_url/action_url");
       }
 
       const profileParsed = new URL(profile);
       const actionParsed = new URL(action);
 
-      if (
-        profileParsed.protocol !== "https:" ||
-        actionParsed.protocol !== "https:"
-      ) {
+      if (profileParsed.protocol !== "https:" || actionParsed.protocol !== "https:") {
         throw new Error("API вернул небезопасный URL");
       }
 
       PROFILE_URL = profileParsed.href;
       ACTION_URL = actionParsed.href;
-
       return true;
     } catch (error) {
       console.error("Не удалось получить адреса API:", error);
@@ -330,9 +553,7 @@ async function fetchJson(url, body, timeoutMs = 15000) {
       signal: controller.signal
     });
 
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
-    }
+    if (!response.ok) throw new Error("HTTP " + response.status);
 
     const text = await response.text();
     let parsed;
@@ -344,20 +565,12 @@ async function fetchJson(url, body, timeoutMs = 15000) {
     }
 
     const data = unwrap(parsed);
-
-    if (!data || typeof data !== "object") {
-      throw new Error("Пустой или неверный ответ API");
-    }
-
-    if (data.error && data.ok !== true) {
-      throw new Error(String(data.error));
-    }
+    if (!data || typeof data !== "object") throw new Error("Пустой или неверный ответ API");
+    if (data.error && data.ok !== true) throw new Error(String(data.error));
 
     return data;
   } catch (error) {
-    if (error.name === "AbortError") {
-      throw new Error("Превышено время ожидания ответа API");
-    }
+    if (error.name === "AbortError") throw new Error("Превышено время ожидания ответа API");
     throw error;
   } finally {
     clearTimeout(timeout);
@@ -370,20 +583,13 @@ async function loadProfile() {
   if (profilePromise) return profilePromise;
 
   profilePromise = (async () => {
-    if (!await ensureUrls()) {
-      throw new Error("Не удалось подключиться к игровому серверу");
-    }
+    if (!await ensureUrls()) throw new Error("Не удалось подключиться к игровому серверу");
 
     const data = await fetchJson(PROFILE_URL, {});
-
     const hp = Number(data.hp);
     const maxHp = Number(data.max_hp);
 
-    if (
-      !Number.isFinite(hp) ||
-      !Number.isFinite(maxHp) ||
-      maxHp < 0
-    ) {
+    if (!Number.isFinite(hp) || !Number.isFinite(maxHp) || maxHp < 0) {
       throw new Error("Сервер вернул некорректные характеристики персонажа");
     }
 
@@ -392,15 +598,11 @@ async function loadProfile() {
     byId("hp").textContent = hp + "/" + maxHp;
     byId("hp2").textContent = hp + "/" + maxHp;
 
-    const hpPercent = maxHp > 0
-      ? clamp(hp / maxHp * 100, 0, 100)
-      : 0;
-
+    const hpPercent = maxHp > 0 ? clamp(hp / maxHp * 100, 0, 100) : 0;
     setWidth("hpbar", hpPercent);
     setWidth("hpbar2", hpPercent);
 
     const madness = clamp(data.madness ?? 0, 0, 100);
-
     byId("madTxt").textContent = madness;
     setWidth("madBar", madness);
 
@@ -420,7 +622,6 @@ async function loadProfile() {
     maybeShowStart(data);
     renderBagFromJ(data);
     clearLoadError();
-
     return data;
   })();
 
@@ -440,23 +641,13 @@ async function loadProfileWithRetry(showError = true) {
   for (let attempt = 0; attempt < 4; attempt++) {
     try {
       await loadProfile();
-
-      if (sequence === retrySequence) {
-        clearLoadError();
-      }
-
+      if (sequence === retrySequence) clearLoadError();
       return true;
     } catch (error) {
       lastError = error;
-      console.error(
-        "Загрузка профиля, попытка " + (attempt + 1) + ":",
-        error
-      );
-
+      console.error("Загрузка профиля, попытка " + (attempt + 1) + ":", error);
       if (attempt < 3) {
-        await new Promise(resolve =>
-          setTimeout(resolve, 700 * (attempt + 1))
-        );
+        await new Promise(resolve => setTimeout(resolve, 700 * (attempt + 1)));
       }
     }
   }
@@ -468,7 +659,6 @@ async function loadProfileWithRetry(showError = true) {
       "\nНажми «Повторить загрузку»."
     );
   }
-
   return false;
 }
 
@@ -476,14 +666,15 @@ function showTab(id) {
   const allowed = ["hall", "travel", "city", "bag"];
   if (!allowed.includes(id)) return;
 
-  document.querySelectorAll(".tab").forEach(element => {
-    element.classList.remove("active");
-  });
-
+  document.querySelectorAll(".tab").forEach(element => element.classList.remove("active"));
   byId("t-" + id)?.classList.add("active");
 
   allowed.forEach(tab => {
     byId(tab).classList.toggle("hidden", tab !== id);
+  });
+
+  document.querySelectorAll(".nav a").forEach((link, index) => {
+    link.style.color = allowed[index] === id ? "var(--gold2)" : "";
   });
 
   if (id === "bag") renderBag();
@@ -491,19 +682,9 @@ function showTab(id) {
 
 function buildPageUrl(path) {
   const params = new URLSearchParams(location.search);
-
-  if (!params.has("p_enc") && p_enc) {
-    params.set("p_enc", p_enc);
-  }
-
-  if (!params.has("a_enc") && a_enc) {
-    params.set("a_enc", a_enc);
-  }
-
-  if (!params.has("u")) {
-    params.set("u", uid);
-  }
-
+  if (!params.has("p_enc") && p_enc) params.set("p_enc", p_enc);
+  if (!params.has("a_enc") && a_enc) params.set("a_enc", a_enc);
+  if (!params.has("u")) params.set("u", uid);
   return path + "?" + params.toString();
 }
 
@@ -538,9 +719,7 @@ let regenTimer = null;
 
 function formatTime(seconds) {
   const total = Math.max(0, Math.floor(Number(seconds) || 0));
-
-  return String(Math.floor(total / 60)).padStart(2, "0") +
-    ":" +
+  return String(Math.floor(total / 60)).padStart(2, "0") + ":" +
     String(total % 60).padStart(2, "0");
 }
 
@@ -548,12 +727,12 @@ function setDeadUI(isDead, left) {
   G.dead = !!isDead;
   G.deadLeft = Math.max(0, Number(left) || 0);
 
-  const box = byId("deadBox");
-
   if (deadTimer) {
     clearInterval(deadTimer);
     deadTimer = null;
   }
+
+  const box = byId("deadBox");
 
   if (!isDead) {
     box.classList.add("hidden");
@@ -621,24 +800,15 @@ byId("startNick").addEventListener("input", event => {
 
 function pickPath(path) {
   START.path = path;
-
-  document.querySelectorAll(".pathCard").forEach(card => {
-    card.classList.remove("sel");
-  });
-
+  document.querySelectorAll(".pathCard").forEach(card => card.classList.remove("sel"));
   byId("card-" + path)?.classList.add("sel");
   byId("pathErr").textContent = "";
 }
 
 function pickGender(gender) {
   START.gender = gender;
-
-  byId("g-male").className =
-    gender === "male" ? "btn act" : "btn";
-
-  byId("g-female").className =
-    gender === "female" ? "btn act" : "btn";
-
+  byId("g-male").className = gender === "male" ? "btn act" : "btn";
+  byId("g-female").className = gender === "female" ? "btn act" : "btn";
   byId("genderErr").textContent = "";
 }
 
@@ -646,22 +816,16 @@ async function startCheckNick() {
   const nick = byId("startNick").value.trim();
 
   if (!nick || nick.length > 16) {
-    byId("nickErr").textContent =
-      "Имя должно содержать от 1 до 16 символов.";
+    byId("nickErr").textContent = "Имя должно содержать от 1 до 16 символов.";
     return;
   }
 
   START.nick = nick;
 
   try {
-    const data = await api({
-      action: "set_nickname",
-      nick
-    });
-
+    const data = await api({ action: "set_nickname", nick });
     if (!data.ok) {
-      byId("nickErr").textContent =
-        data.error || "Не удалось сохранить имя.";
+      byId("nickErr").textContent = data.error || "Не удалось сохранить имя.";
       return;
     }
 
@@ -680,14 +844,9 @@ async function startConfirmPath() {
   }
 
   try {
-    const data = await api({
-      action: "confirm_path",
-      choice: START.path
-    });
-
+    const data = await api({ action: "confirm_path", choice: START.path });
     if (!data.ok) {
-      byId("pathErr").textContent =
-        data.error || "Не удалось выбрать путь.";
+      byId("pathErr").textContent = data.error || "Не удалось выбрать путь.";
       return;
     }
 
@@ -706,10 +865,7 @@ async function startFinish() {
   }
 
   try {
-    const data = await api({
-      action: "set_gender",
-      gender: START.gender
-    });
+    const data = await api({ action: "set_gender", gender: START.gender });
 
     if (data && data.ok) {
       byId("startInHall").classList.add("hidden");
@@ -738,17 +894,14 @@ function maybeShowStart(data) {
 
 function renderBagFromJ(data) {
   G.inv = Array.isArray(data.inventory) ? data.inventory : [];
-
-  G.eq = data.equipped && typeof data.equipped === "object"
-    ? data.equipped
-    : {};
+  G.eq = data.equipped && typeof data.equipped === "object" ? data.equipped : {};
 
   const invList = byId("invList");
   invList.replaceChildren();
 
   if (G.inv.length === 0) {
     const empty = document.createElement("small");
-    empty.textContent = "Пусто";
+    empty.textContent = "Инвентарь пуст";
     invList.appendChild(empty);
   } else {
     G.inv.forEach((item, index) => {
@@ -756,13 +909,11 @@ function renderBagFromJ(data) {
       row.className = "item";
 
       const info = document.createElement("div");
-
       const name = document.createElement("b");
       name.textContent = String(item?.name ?? "Предмет");
 
       const bonus = document.createElement("small");
       bonus.textContent = String(item?.bonus ?? "");
-
       info.append(name, bonus);
 
       const button = document.createElement("button");
@@ -792,18 +943,15 @@ function renderBagFromJ(data) {
   ].forEach(slot => {
     const row = document.createElement("div");
     row.className = "item";
-
     const item = G.eq[slot];
 
     if (item) {
       const info = document.createElement("div");
-
       const name = document.createElement("b");
       name.textContent = String(item.name ?? "Предмет");
 
       const label = document.createElement("small");
       label.textContent = slot;
-
       info.append(name, label);
 
       const button = document.createElement("button");
@@ -814,7 +962,7 @@ function renderBagFromJ(data) {
 
       row.append(info, button);
     } else {
-      row.style.opacity = ".4";
+      row.style.opacity = ".45";
       row.textContent = slot + " — пусто";
     }
 
@@ -822,9 +970,7 @@ function renderBagFromJ(data) {
   });
 }
 
-function renderBag() {
-  // Инвентарь обновляется при каждом успешном ответе профиля.
-}
+function renderBag() {}
 
 let actionBusy = false;
 
@@ -848,16 +994,10 @@ async function api(payload) {
 
 async function doEquip(index) {
   try {
-    const data = await api({
-      action: "equip",
-      idx: index
-    });
+    const data = await api({ action: "equip", idx: index });
 
-    if (data.ok) {
-      await loadProfileWithRetry();
-    } else {
-      showLoadError(data.error || "Не удалось надеть предмет.");
-    }
+    if (data.ok) await loadProfileWithRetry();
+    else showLoadError(data.error || "Не удалось надеть предмет.");
   } catch (error) {
     showLoadError("Не удалось надеть предмет: " + error.message);
   }
@@ -865,53 +1005,30 @@ async function doEquip(index) {
 
 async function doUnequip(slot) {
   try {
-    const data = await api({
-      action: "unequip",
-      slot
-    });
+    const data = await api({ action: "unequip", slot });
 
-    if (data.ok) {
-      await loadProfileWithRetry();
-    } else {
-      showLoadError(data.error || "Не удалось снять предмет.");
-    }
+    if (data.ok) await loadProfileWithRetry();
+    else showLoadError(data.error || "Не удалось снять предмет.");
   } catch (error) {
     showLoadError("Не удалось снять предмет: " + error.message);
   }
 }
 
 const cityData = {
-  "Центр": [
-    "Ратуша 🏛",
-    "Площадь 👥",
-    "Церковь Ночи 🌙"
-  ],
-  "Север": [
-    "Рынок 🍎 — 🧺 Торговец",
-    "Таверна 🐉 — 🍺 Бармен"
-  ],
-  "Восток": [
-    "Дома 🏠 — Подвал",
-    "Лечебница 🏥"
-  ],
-  "Запад": [
-    "Бульвар 🌳",
-    "Банк 🏦"
-  ]
+  "Центр": ["Ратуша 🏛", "Площадь 👥", "Церковь Ночи 🌙"],
+  "Север": ["Рынок 🍎 — 🧺 Торговец", "Таверна 🐉 — 🍺 Бармен"],
+  "Восток": ["Дома 🏠 — Подвал", "Лечебница 🏥"],
+  "Запад": ["Бульвар 🌳", "Банк 🏦"]
 };
 
 function toggleDistrict(district) {
   const body = byId("body-" + district);
   const chevron = byId("ch-" + district);
-
   if (!body) return;
 
   const willOpen = body.classList.contains("hidden");
   body.classList.toggle("hidden", !willOpen);
-
-  if (chevron) {
-    chevron.textContent = willOpen ? "⌄" : "›";
-  }
+  if (chevron) chevron.textContent = willOpen ? "⌄" : "›";
 }
 
 (function renderCity() {
@@ -946,14 +1063,12 @@ function toggleDistrict(district) {
       button.textContent = place;
 
       let key = "";
-
       if (place.includes("Рынок")) key = "market";
       else if (place.includes("Таверна")) key = "dragon_tavern";
       else if (place.includes("Дома")) key = "houses";
 
-      if (key) {
-        button.addEventListener("click", () => openLoc(key));
-      } else {
+      if (key) button.addEventListener("click", () => openLoc(key));
+      else {
         button.style.opacity = ".5";
         button.disabled = true;
       }
@@ -970,21 +1085,16 @@ function openLoc(id) {
   byId("locInfo").textContent = id;
 }
 
-byId("retryLoad").addEventListener("click", () => {
-  loadProfileWithRetry();
-});
+byId("retryLoad").addEventListener("click", () => loadProfileWithRetry());
 
-window.addEventListener("online", () => {
-  loadProfileWithRetry();
-});
+window.addEventListener("online", () => loadProfileWithRetry());
 
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    loadProfileWithRetry(false);
-  }
+  if (!document.hidden) loadProfileWithRetry(false);
 });
 
+showTab("hall");
 loadProfileWithRetry();
 </script>
 </body>
-</html>
+    </html>
