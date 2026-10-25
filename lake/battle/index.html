@@ -25,6 +25,8 @@ button{font:inherit}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px #0002}
 .arena{position:relative;overflow:hidden;padding:13px}
 .arena:before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,#8e7040,transparent)}
+.arena.boss{border-color:#6b3b4a}
+.arena.boss:before{background:linear-gradient(90deg,transparent,#c45a6a,transparent)}
 .arenaTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .sectionLabel{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .roundLabel{font-size:10px;color:var(--gold)}
@@ -34,6 +36,7 @@ button{font:inherit}
 .portraitFrame img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px;background:#19171e}
 .fighterName{font-weight:800;font-size:13px;overflow-wrap:anywhere;min-height:18px}
 .fighterRole{font-size:10px;color:var(--muted);margin-top:2px;min-height:14px}
+.fighterRole.boss{color:#e58a96}
 .hpNumbers{display:flex;justify-content:space-between;gap:4px;margin-top:11px;font-size:10px;color:var(--muted)}
 .hpNumbers strong{color:var(--text);font-size:11px;font-variant-numeric:tabular-nums}
 .bar{height:9px;margin-top:5px;border-radius:999px;overflow:hidden;background:#302b35;border:1px solid #403742}
@@ -109,7 +112,7 @@ button{font:inherit}
 <div class="statusPill" id="statusPill">Загрузка</div>
 </header>
 <main>
-<section class="card arena">
+<section class="card arena" id="arena">
 <div class="arenaTop"><span class="sectionLabel">Поле боя</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
 <div class="fighters">
 <div class="fighter">
@@ -199,7 +202,8 @@ flee:{icon:"🏃",name:"Отступить",desc:"Попробовать пок�
 const pics={
 "Утопленник":"./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png",
 "Жаба":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png",
-"Лягушка":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"
+"Лягушка":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png",
+"Змей":"../i-86.jpeg"
 };
 
 function unwrap(value){
@@ -242,8 +246,15 @@ hpEl.textContent=current+"/"+maximum;
 const pc=safePercent(current,maximum);bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
 state.textContent=current<=0?(player?"Пал":"Повержен"):pc<=25?"Критически мало":pc<=55?"Ранен":player?"В строю":"Опасен";
 }
-function setEnemyLevel(level){
-$("enemyRole").textContent=(level?"Ур. "+level+" · ":"")+"Враждебная сущность";
+function setEnemyLevel(level,boss,phase){
+const parts=[];
+if(level)parts.push("Ур. "+level);
+if(boss)parts.push("Фаза "+(Number(phase)||1));
+parts.push(boss?"Босс":"Враждебная сущность");
+const role=$("enemyRole");
+role.textContent=parts.join(" · ");
+role.classList.toggle("boss",!!boss);
+$("arena").classList.toggle("boss",!!boss);
 }
 function cleanBattleText(value){
 const text=String(value??"").trim();
@@ -269,7 +280,8 @@ $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.s
 }
 function setImageForEnemy(enemy){
 const img=$("enemyImg");
-img.onerror=function(){this.onerror=null;this.src="./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png"};
+const fallback="./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png";
+img.onerror=function(){this.onerror=null;if(enemy!=="Змей")this.src=fallback};
 img.src=pics[enemy]||pics["Утопленник"];
 }
 function lakeUrl(){
@@ -373,6 +385,7 @@ async function refreshBattleState(){
 const state=await api({action:"battle_state"});
 if(state?.enemy_hp!=null&&state.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 if(state?.hp!=null&&state.max_hp!=null)setHealth("player",state.hp,state.max_hp);
+if(state?.enemy_level)setEnemyLevel(state.enemy_level,state.boss,state.phase);
 if(state?.cds)renderSkills(state.cds);
 return state;
 }
@@ -389,13 +402,17 @@ let state=null;
 try{state=await api({action:"battle_state"})}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
 const enemy=getEnemyName(state?.enemy);
-$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level);setImageForEnemy(enemy);
+$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
 if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 else setHealth("enemy",null,null);
 renderSkills(state?.cds||{});
 if(!initialized){
 addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
+if(state?.boss){
+setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
+}else{
 setMessage("Противник перед тобой. Выбирай действие и следи за перезарядкой.","БОЙ НАЧАЛСЯ","⚔️");
+}
 initialized=true;
 }
 if(state?.error==="no_battle"||state?.type==="no_battle"){
@@ -455,7 +472,7 @@ if(data.type==="flee"||move==="flee"){setMessage("Ты покидаешь пол
 if(data.type==="battle"){
 if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
 if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
-if(data.enemy_level)setEnemyLevel(data.enemy_level);
+if(data.enemy_level)setEnemyLevel(data.enemy_level,data.boss,data.phase);
 const logs=getBattleLogs(data),fullLog=[logs.player,logs.enemy].filter(Boolean).join("\n");
 setMessage(fullLog||"Сервер обработал ход, но не вернул описание события.","РЕЗУЛЬТАТ ХОДА","⚔️");
 if(logs.player)addLog(logs.player,"good");
@@ -510,4 +527,4 @@ $("retryBtn").addEventListener("click",load);
 window.addEventListener("DOMContentLoaded",load);
 </script>
 </body>
-</html>
+  </html>
