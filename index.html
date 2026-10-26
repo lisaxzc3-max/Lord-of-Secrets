@@ -61,19 +61,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .btn.dis{opacity:.45;pointer-events:none}
 .ripple{position:absolute;border-radius:50%;background:#ffffff55;transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
 
-/* вкладки */
-.tabs{display:flex;gap:6px;margin:12px 0;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{position:relative;flex:1;padding:10px 6px;text-align:center;border-radius:12px;background:rgba(24,19,36,.85);border:1px solid #2f2745;font-size:11px;cursor:pointer;white-space:nowrap;color:var(--muted);transition:all .3s;overflow:hidden}
-.tab.active{color:#f1e3be;border-color:var(--gold2);background:linear-gradient(145deg,#3a2f52,#241b36);box-shadow:0 0 16px #d6b77933}
-.tab.active:after{content:"";position:absolute;left:20%;right:20%;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:glowLine 2s ease-in-out infinite}
-
-/* нижняя панель */
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(12,9,20,.94);border-top:1px solid #2c2540;display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
-.nav a{position:relative;flex:1;text-align:center;font-size:11px;color:#7d7690;text-decoration:none;cursor:pointer;padding:5px 0;transition:color .3s,transform .2s}
-.nav a.active{color:var(--gold);transform:translateY(-2px);text-shadow:0 0 10px #d6b77988}
-.nav a.active:before{content:"";position:absolute;top:-9px;left:30%;right:30%;height:2px;border-radius:2px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
-
 /* зал */
 #hallProfileHint{text-align:center;padding:16px 0;color:var(--muted);font-size:12px}
 .sigil{position:relative;width:96px;height:96px;margin:2px auto 12px}
@@ -134,6 +121,129 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes splashIn{from{opacity:0;transform:scale(1.25);letter-spacing:14px}to{opacity:1;transform:none}}
 @keyframes splashOut{0%,70%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#splash{display:none}}
+
+/* ===== ИГРОВОЙ ИНТЕРФЕЙС ===== */
+.wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+/* HUD */
+.top{position:relative;overflow:hidden;border-color:#6b5a8f;background:linear-gradient(145deg,rgba(44,33,68,.95),rgba(18,13,30,.96))}
+.top:before{content:"";position:absolute;left:-30%;top:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff14,transparent);transform:skewX(-20deg);animation:sweep 6s ease-in-out infinite}
+.chips>span{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 9px;font-weight:700}
+.c-gold{border-color:#7a6230!important;background:linear-gradient(145deg,#3a2e14,#241b0c)!important;color:#ffe9a8!important}
+.c-exp{border-color:#5a4a8a!important}
+.c-pot{border-color:#2a6a5a!important}
+.coin{display:inline-block;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b8,#d6a53a 60%,#8a6418);box-shadow:0 0 6px #ffd24a88;animation:coinSpin 3s linear infinite}
+@keyframes coinSpin{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.25)}}
+.floatGain{position:fixed;z-index:60;font-weight:900;font-size:15px;pointer-events:none;text-shadow:0 2px 8px #000,0 0 10px currentColor;animation:gainUp 1.4s ease-out forwards}
+@keyframes gainUp{0%{opacity:0;transform:translateY(6px) scale(.6)}15%{opacity:1;transform:translateY(-6px) scale(1.25)}100%{opacity:0;transform:translateY(-46px) scale(1)}}
+/* нижняя панель-док */
+.nav{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(420px,calc(100% - 20px));z-index:10;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border-radius:22px;background:linear-gradient(180deg,rgba(34,26,52,.97),rgba(14,10,22,.98));border:1px solid #54456f;box-shadow:0 12px 36px #000b,inset 0 1px 0 #ffffff1a}
+.nav:before{content:"";position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/4);border-radius:16px;background:linear-gradient(145deg,#4a3a6a,#2a2040);border:1px solid var(--gold2);box-shadow:0 0 20px #d6b77944;transform:translateX(calc(var(--i,0)*100%));transition:transform .38s cubic-bezier(.3,1.35,.5,1)}
+.nav a{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 6px;font-size:10px;color:#8d869a;text-decoration:none;cursor:pointer;transition:color .3s;background:none}
+.nav a.active{color:#f1e3be;transform:none;text-shadow:none}
+.nav a.active:before{display:none}
+.nav .ic{font-size:21px;line-height:1.1;transition:transform .35s cubic-bezier(.3,1.5,.5,1),filter .3s}
+.nav a.active .ic{transform:translateY(-3px) scale(1.18);filter:drop-shadow(0 0 8px var(--gold))}
+/* зал: оформление */
+#hall{background:none;border:0;box-shadow:none;padding:0}
+#hall #startInHall{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:13px;box-shadow:0 8px 28px #0006}
+.hero{position:relative;height:236px;border-radius:20px;overflow:hidden;border:1px solid #54456f;background:linear-gradient(#100a22,#2a1636 62%,#3a1f3a);box-shadow:0 10px 34px #0008,inset 0 0 40px #0006;--px:0;--py:0}
+.stars{position:absolute;inset:0}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:tw var(--t) ease-in-out var(--d) infinite}
+@keyframes tw{0%,100%{opacity:.2}50%{opacity:1}}
+.moonBox{position:absolute;top:18px;right:30px;width:46px;height:46px;cursor:pointer;transform:translate(calc(var(--px)*-6px),calc(var(--py)*-4px));filter:drop-shadow(0 0 18px #cfe0ff88)}
+.moonDisc{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 38% 36%,#fffbe8,#d8d2b4 65%,#a49d84)}
+.moonShade{position:absolute;inset:0;border-radius:50%;background:#150c26;transform:translateX(var(--sh,0%))}
+.city{position:absolute;left:0;right:0;bottom:0;width:100%;height:68%}
+.city .ly{transition:transform .25s ease-out}
+.city .l1{transform:translate(calc(var(--px)*-3px),0)}.city .l2{transform:translate(calc(var(--px)*-7px),0)}.city .l3{transform:translate(calc(var(--px)*-13px),0)}
+.hero .city .win{fill:#ffd27a;animation:winf 4s steps(2,end) infinite}
+.hero .city .w2{animation-delay:-1s}.hero .city .w3{animation-delay:-2.2s;fill:#ffb35a}.hero .city .w4{opacity:.25;animation:none}
+@keyframes winf{0%,70%{opacity:1}72%,76%{opacity:.15}78%,100%{opacity:1}}
+.hero .city .lamp{animation:lamp 3.4s ease-in-out infinite}
+@keyframes lamp{0%,100%{opacity:.9}45%{opacity:.6}50%{opacity:1}}
+.hero .clockface{filter:drop-shadow(0 0 4px #f0d88a)}
+.hero .hands{transform-origin:313px 40px;animation:spin 60s linear infinite}
+.mist{position:absolute;left:-50%;width:200%;height:46%;bottom:0;background:radial-gradient(ellipse at center,#b89ad02e,transparent 62%);filter:blur(8px);pointer-events:none}
+.mist.m1{animation:mistMove 24s linear infinite}.mist.m2{bottom:10%;opacity:.7;animation:mistMove 38s linear -15s infinite reverse}
+@keyframes mistMove{from{transform:translateX(0)}to{transform:translateX(25%)}}
+.flyers{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.raven{position:absolute;left:-30px;width:18px;height:8px;animation:fly var(--t) linear forwards}
+.raven svg{width:100%;height:100%;animation:flap .35s ease-in-out infinite alternate;transform-origin:center}
+.shoot{position:absolute;width:70px;height:2px;background:linear-gradient(90deg,#fff,transparent);transform:rotate(25deg);animation:shoot .9s ease-out forwards}
+@keyframes fly{to{transform:translateX(480px) translateY(var(--dy))}}
+@keyframes flap{to{transform:scaleY(.35)}}
+@keyframes shoot{from{opacity:1;transform:translate(0,0) rotate(25deg)}to{opacity:0;transform:translate(120px,56px) rotate(25deg)}}
+.heroText{position:absolute;left:0;right:0;top:14px;padding:0 16px;pointer-events:none}
+.heroText .place{font-size:20px;font-weight:900;letter-spacing:6px;color:var(--gold);text-shadow:0 0 18px #d6b77988,0 2px 6px #000}
+.heroText .sub{font-size:10px;letter-spacing:1.5px;color:#cbbfe0;margin-top:4px;text-shadow:0 1px 4px #000}
+/* шары */
+.orbs{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;margin:12px 4px 6px}
+.orbCol{display:flex;flex-direction:column;align-items:center;gap:6px}
+.orbCol label{font-size:10px;letter-spacing:1px;color:var(--muted)}
+.orb{position:relative;width:84px;height:84px;border-radius:50%;overflow:hidden;border:2px solid #54456f;background:#0f0a1a;box-shadow:0 0 22px var(--oc),inset 0 0 18px #000c}
+.orb.hpOrb{--oc:#e4525c55;--lc:linear-gradient(#ff7b83,#a82a36)}.orb.madOrb{--oc:#8b6bff55;--lc:linear-gradient(#a98cff,#4a2f9a)}
+.liq{position:absolute;left:0;right:0;bottom:0;height:var(--f,0%);background:var(--lc);transition:height .9s cubic-bezier(.3,1,.4,1)}
+.liq:before,.liq:after{content:"";position:absolute;left:-50%;width:200%;height:200%;top:-18px;border-radius:42%;background:inherit;opacity:.55;animation:liqw 6s linear infinite}
+.liq:after{top:-14px;opacity:.4;animation-duration:9s;animation-direction:reverse}
+@keyframes liqw{to{transform:rotate(360deg)}}
+.glass{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 24%,#ffffff55,transparent 34%),radial-gradient(circle at 70% 85%,#ffffff18,transparent 40%)}
+.orb b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;text-shadow:0 1px 6px #000,0 0 6px #000;z-index:2}
+.orb.low{animation:orbLow 1s ease-in-out infinite}
+@keyframes orbLow{50%{box-shadow:0 0 30px #ff2a3acc,inset 0 0 18px #000c}}
+.orbCol.mid{gap:4px}
+.lvBadge{position:relative;width:74px;height:74px;display:flex;align-items:center;justify-content:center}
+.lvBadge i{position:absolute;inset:0;border:2px solid #d6b77966;clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.lvBadge i:nth-child(1){animation:spin 18s linear infinite;border-style:dashed;border-radius:0}
+.lvBadge i:nth-child(2){inset:8px;background:linear-gradient(145deg,#4a3a6a,#1d1530);border-color:var(--gold);box-shadow:0 0 16px #d6b77955;animation:pulseS 3s ease-in-out infinite}
+.lvBadge b{position:relative;font-size:24px;color:#ffe9a8;text-shadow:0 0 14px var(--gold)}
+#orbPath{max-width:110px;text-align:center;color:#cdb8ff;font-size:10px}
+/* кнопка действия */
+.cta{position:relative;overflow:hidden;width:100%;display:flex;align-items:center;gap:12px;margin:12px 0 8px;padding:14px 16px;border:1px solid #d4b779;border-radius:16px;cursor:pointer;color:#20190f;font-weight:900;font-size:15px;background:linear-gradient(135deg,#f0d99b,#b28c4d);box-shadow:0 0 26px #d6b77966,0 6px 18px #0008;animation:ctaGlow 2.6s ease-in-out infinite}
+@keyframes ctaGlow{50%{box-shadow:0 0 38px #d6b779aa,0 6px 18px #0008}}
+.cta:active{transform:scale(.98)}
+.ctaIc{font-size:24px;filter:drop-shadow(0 2px 2px #0006)}
+.ctaTx{flex:1;text-align:left}
+.ctaSh{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff66,transparent);transform:skewX(-20deg);animation:sweep 3.4s ease-in-out infinite}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:13px;border-radius:16px;cursor:pointer;text-align:left;color:#e6dcc4;border:1px solid #4a3f62;background:linear-gradient(145deg,#2c2440,#1a1428);transition:transform .15s,box-shadow .3s}
+.tile:active{transform:scale(.97)}
+.tile:hover{box-shadow:0 0 18px #8b6bff44}
+.tile .tIc{font-size:26px;margin-bottom:4px;filter:drop-shadow(0 0 10px #d6b77966);animation:floatY 4s ease-in-out infinite}
+.tile:nth-child(2) .tIc{animation-delay:-2s}
+.tile b{font-size:13px}.tile small{opacity:.55;font-size:10px;white-space:normal}
+.tip{display:flex;gap:10px;align-items:center;margin-top:10px;padding:11px 13px;border-radius:14px;background:rgba(28,22,42,.9);border:1px solid #3d3550;border-left:3px solid var(--gold);font-size:12px;line-height:1.5;color:#d8cfe8;min-height:58px}
+.tipIc{font-size:22px;flex-shrink:0}
+#tipTxt{transition:opacity .4s}
+/* карточки походов */
+.loc{position:relative;display:flex;width:100%;margin:9px 0;padding:0;overflow:hidden;border-radius:16px;cursor:pointer;text-align:left;color:var(--text);border:1px solid #3f6a7a;background:linear-gradient(145deg,#112a36,#0a1620);transition:transform .15s,box-shadow .3s}
+.loc.forest{border-color:#4f8a5c;background:linear-gradient(145deg,#143a24,#0a160e)}
+.loc:active{transform:scale(.98)}
+.loc:hover{box-shadow:0 0 22px #7fd0dc44}.loc.forest:hover{box-shadow:0 0 22px #7fc58e44}
+.loc:after{content:"";position:absolute;top:0;left:-60%;width:30%;height:100%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:sweep 5s ease-in-out infinite}
+.locArt{flex:0 0 112px;height:112px;overflow:hidden}
+.locArt img{width:100%;height:100%;object-fit:cover;display:block}
+.locBody{flex:1;min-width:0;padding:11px 12px;display:flex;flex-direction:column;gap:5px}
+.locBody b{font-size:14px;color:#f1e3be}.locBody small{opacity:.7;font-size:11px;line-height:1.4;white-space:normal}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
+.tags i{font-style:normal;font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid #ffffff22;background:#ffffff0d}
+.tags i.boss{border-color:#c45a6a;color:#ff9aa8;background:#c45a6a22}
+.vitals{margin-top:12px;font-size:11px}
+/* город */
+.districtHead{font-size:14px;letter-spacing:.4px}
+.districtBody .btn{display:flex;flex-direction:column;gap:3px;padding:14px 8px;font-size:12px;line-height:1.35}
+/* переключение вкладок */
+.card:not(.hidden){animation:tabIn .4s cubic-bezier(.2,.9,.3,1)}
+@keyframes tabIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* новый уровень */
+.lvlUp{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(circle,#d6b77933,transparent 60%);animation:lvlA 2.6s ease forwards}
+.lvlUp b{font-size:30px;letter-spacing:6px;color:#ffe9a8;text-shadow:0 0 30px var(--gold),0 3px 10px #000;animation:lvlT 2.6s ease forwards}
+.lvlUp span{margin-top:8px;font-size:44px;font-weight:900;color:#fff;text-shadow:0 0 26px var(--gold)}
+.lvlUp i{position:absolute;top:-12px;width:7px;height:12px;animation:spk var(--t) linear forwards}
+@keyframes lvlA{0%{opacity:0}12%,80%{opacity:1}100%{opacity:0}}
+@keyframes lvlT{0%{transform:scale(1.8);opacity:0}14%{transform:scale(1);opacity:1}}
+@keyframes spk{to{transform:translateY(110vh) rotate(700deg)}}
+@media(max-width:360px){.orb{width:72px;height:72px}.lvBadge{width:64px;height:64px}.locArt{flex-basis:92px}}
+@media(prefers-reduced-motion:reduce){.hero .city .win,.lamp,.coin,.liq:before,.liq:after{animation:none!important}}
 </style>
 </head>
 <body>
@@ -153,10 +263,10 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
     </div>
     <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
     <div class="chips">
-      <span>❤️ <span id="hp">—</span></span>
-      <span>£ <span id="pounds">—</span></span>
-      <span>⭐ <span id="exp">—</span></span>
-      <span>🧪 <span id="potion">—</span></span>
+      <span class="c-hp">❤️ <span id="hp">—</span></span>
+      <span class="c-gold"><i class="coin"></i><span id="pounds">—</span></span>
+      <span class="c-exp">⭐ <span id="exp">—</span></span>
+      <span class="c-pot">🧪 <span id="potion">—</span></span>
     </div>
   </div>
   <div class="side">
@@ -179,13 +289,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
     <div style="font-weight:700;font-size:18px">🩹 <span id="regenTimer">10:00</span></div>
     <div style="font-size:10px;opacity:.6">реген <span id="regenHp">0/50</span></div>
   </div>
-</div>
-
-<div class="tabs">
-  <div class="tab active" id="t-hall" onclick="showTab('hall')">◈ Зал</div>
-  <div class="tab" id="t-travel" onclick="showTab('travel')">🧭 Поход</div>
-  <div class="tab" id="t-city" onclick="showTab('city')">⌖ Город</div>
-  <div class="tab" id="t-bag" onclick="showTab('bag')">🎒 Сумка</div>
 </div>
 
 <div id="hall" class="card">
@@ -238,18 +341,64 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
   </div>
 
   <div id="hallProfileHint" class="hidden">
-    <div class="sigil"><i></i><i></i><i></i><b>𓂀</b></div>
-    Нажми на <b style="color:var(--gold)">𓂀</b> для профиля или <b>⚙️</b> для настроек
+  <section class="hero" id="hero">
+    <div class="stars" id="stars"></div>
+    <div class="moonBox" id="moonBox" title="Луна над Тингеном"><div class="moonDisc"><i class="moonShade" id="moonShade"></i></div></div>
+    <svg class="city" viewBox="0 0 440 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+<defs><radialGradient id="lg"><stop offset="0" stop-color="#ffd27a" stop-opacity=".85"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs>
+<g class="ly l1"><g fill="#1b1530" class=""><rect x="-10" y="85" width="21" height="67"/><rect x="14" y="81" width="24" height="71"/><path d="M13 81 L26 67 L39 81Z"/><rect x="41" y="81" width="21" height="71"/><rect x="62" y="118" width="14" height="34"/><rect x="67" y="109" width="4" height="10"/><path d="M61 118 L69 104 L77 118Z"/><rect x="77" y="106" width="22" height="46"/><rect x="102" y="103" width="24" height="49"/><rect x="112" y="94" width="4" height="10"/><rect x="126" y="104" width="25" height="48"/><rect x="136" y="95" width="4" height="10"/><path d="M125 104 L138 90 L152 104Z"/><rect x="151" y="96" width="18" height="56"/><rect x="158" y="87" width="4" height="10"/><path d="M150 96 L160 82 L170 96Z"/><rect x="170" y="117" width="17" height="35"/><rect x="189" y="115" width="19" height="37"/><rect x="196" y="106" width="4" height="10"/><path d="M188 115 L198 101 L209 115Z"/><rect x="208" y="117" width="14" height="35"/><rect x="223" y="88" width="21" height="64"/><rect x="231" y="79" width="4" height="10"/><rect x="247" y="107" width="20" height="45"/><rect x="255" y="98" width="4" height="10"/><rect x="269" y="107" width="14" height="45"/><rect x="274" y="98" width="4" height="10"/><rect x="283" y="111" width="14" height="41"/><rect x="288" y="102" width="4" height="10"/><rect x="299" y="96" width="18" height="56"/><rect x="306" y="87" width="4" height="10"/><path d="M298 96 L308 82 L318 96Z"/><rect x="318" y="82" width="14" height="70"/><rect x="323" y="73" width="4" height="10"/><rect x="335" y="80" width="16" height="72"/><rect x="341" y="71" width="4" height="10"/><rect x="352" y="108" width="25" height="44"/><rect x="362" y="99" width="4" height="10"/><rect x="380" y="82" width="21" height="70"/><rect x="388" y="73" width="4" height="10"/><path d="M379 82 L390 68 L402 82Z"/><rect x="404" y="94" width="18" height="58"/><rect x="423" y="85" width="21" height="67"/><rect x="444" y="94" width="18" height="58"/><rect x="451" y="85" width="4" height="10"/><path d="M443 94 L453 80 L463 94Z"/></g><rect class="win w2" x="2" y="103" width="3" height="4"/><rect class="win w1" x="19" y="121" width="3" height="4"/><rect class="win w4" x="68" y="134" width="3" height="4"/><rect class="win w4" x="131" y="116" width="3" height="4"/><rect class="win w2" x="174" y="141" width="3" height="4"/><rect class="win w2" x="193" y="125" width="3" height="4"/><rect class="win w1" x="236" y="118" width="3" height="4"/><rect class="win w2" x="325" y="118" width="3" height="4"/><rect class="win w2" x="391" y="104" width="3" height="4"/><rect class="win w2" x="409" y="104" width="3" height="4"/><rect class="win w1" x="429" y="104" width="3" height="4"/><rect class="win w2" x="452" y="133" width="3" height="4"/></g>
+<g class="ly l2"><g fill="#120d20" class=""><rect x="-10" y="92" width="21" height="60"/><rect x="12" y="98" width="25" height="54"/><rect x="37" y="96" width="23" height="56"/><rect x="61" y="79" width="28" height="73"/><rect x="73" y="70" width="4" height="10"/><rect x="92" y="99" width="28" height="53"/><rect x="120" y="60" width="17" height="92"/><rect x="126" y="51" width="4" height="10"/><rect x="139" y="95" width="25" height="57"/><path d="M138 95 L151 81 L165 95Z"/><rect x="166" y="91" width="20" height="61"/><path d="M165 91 L176 77 L187 91Z"/><rect x="188" y="60" width="19" height="92"/><rect x="195" y="51" width="4" height="10"/><rect x="210" y="63" width="19" height="89"/><path d="M209 63 L219 49 L230 63Z"/><rect x="231" y="90" width="29" height="62"/><rect x="243" y="81" width="4" height="10"/><rect x="263" y="67" width="26" height="85"/><rect x="292" y="96" width="21" height="56"/><rect x="315" y="78" width="25" height="74"/><rect x="325" y="69" width="4" height="10"/><rect x="340" y="93" width="26" height="59"/><rect x="351" y="84" width="4" height="10"/><rect x="366" y="88" width="26" height="64"/><rect x="377" y="79" width="4" height="10"/><rect x="394" y="78" width="28" height="74"/><rect x="425" y="60" width="19" height="92"/><path d="M424 60 L434 46 L445 60Z"/><rect x="446" y="80" width="23" height="72"/><path d="M445 80 L457 66 L470 80Z"/></g><rect class="win w1" x="24" y="106" width="3" height="4"/><rect class="win w1" x="48" y="125" width="3" height="4"/><rect class="win w1" x="113" y="105" width="3" height="4"/><rect class="win w4" x="128" y="115" width="3" height="4"/><rect class="win w1" x="131" y="76" width="3" height="4"/><rect class="win w1" x="157" y="117" width="3" height="4"/><rect class="win w4" x="174" y="139" width="3" height="4"/><rect class="win w4" x="172" y="117" width="3" height="4"/><rect class="win w1" x="218" y="74" width="3" height="4"/><rect class="win w4" x="322" y="109" width="3" height="4"/><rect class="win w2" x="326" y="99" width="3" height="4"/><rect class="win w4" x="369" y="142" width="3" height="4"/><rect class="win w2" x="370" y="105" width="3" height="4"/><rect class="win w2" x="402" y="109" width="3" height="4"/><rect class="win w4" x="409" y="92" width="3" height="4"/><g fill="#0d0916"><rect x="300" y="14" width="26" height="128"/><path d="M297 16 L313 -14 L329 16Z"/><rect x="306" y="-24" width="2" height="12"/></g>
+<circle cx="313" cy="40" r="9" fill="#f0d88a" class="clockface"/><path d="M313 40 V34 M313 40 L317 42" stroke="#2a1a08" stroke-width="1.4" fill="none" class="hands"/></g>
+<g class="ly l3"><g fill="#0a0712" class=""><rect x="-10" y="111" width="24" height="41"/><rect x="16" y="121" width="34" height="31"/><rect x="31" y="112" width="4" height="10"/><rect x="51" y="118" width="28" height="34"/><rect x="80" y="93" width="32" height="59"/><rect x="114" y="113" width="30" height="39"/><rect x="127" y="104" width="4" height="10"/><path d="M113 113 L129 99 L145 113Z"/><rect x="147" y="92" width="18" height="60"/><rect x="168" y="109" width="30" height="43"/><rect x="181" y="100" width="4" height="10"/><rect x="200" y="125" width="22" height="27"/><rect x="209" y="116" width="4" height="10"/><path d="M199 125 L211 111 L223 125Z"/><rect x="222" y="110" width="34" height="42"/><rect x="257" y="93" width="24" height="59"/><rect x="267" y="84" width="4" height="10"/><rect x="283" y="113" width="24" height="39"/><path d="M282 113 L295 99 L308 113Z"/><rect x="308" y="101" width="24" height="51"/><rect x="334" y="114" width="34" height="38"/><rect x="369" y="108" width="23" height="44"/><path d="M368 108 L380 94 L393 108Z"/><rect x="394" y="97" width="30" height="55"/><rect x="407" y="88" width="4" height="10"/><rect x="425" y="97" width="31" height="55"/><rect x="438" y="88" width="4" height="10"/></g><rect class="win w1" x="3" y="125" width="3" height="4"/><rect class="win w1" x="27" y="142" width="3" height="4"/><rect class="win w1" x="21" y="140" width="3" height="4"/><rect class="win w1" x="68" y="139" width="3" height="4"/><rect class="win w3" x="99" y="134" width="3" height="4"/><rect class="win w4" x="125" y="137" width="3" height="4"/><rect class="win w1" x="134" y="122" width="3" height="4"/><rect class="win w4" x="159" y="105" width="3" height="4"/><rect class="win w4" x="152" y="102" width="3" height="4"/><rect class="win w3" x="186" y="131" width="3" height="4"/><rect class="win w1" x="184" y="134" width="3" height="4"/><rect class="win w3" x="207" y="136" width="3" height="4"/><rect class="win w4" x="210" y="132" width="3" height="4"/><rect class="win w2" x="245" y="129" width="3" height="4"/><rect class="win w3" x="271" y="110" width="3" height="4"/><rect class="win w1" x="293" y="123" width="3" height="4"/><rect class="win w4" x="289" y="132" width="3" height="4"/><rect class="win w1" x="322" y="130" width="3" height="4"/><rect class="win w4" x="361" y="137" width="3" height="4"/><rect class="win w2" x="342" y="123" width="3" height="4"/><rect class="win w1" x="382" y="128" width="3" height="4"/><rect class="win w1" x="408" y="103" width="3" height="4"/><g><rect x="46" y="104" width="2.4" height="40" fill="#07050c"/><rect x="43" y="100" width="8.4" height="6" rx="2" fill="#07050c"/><circle class="lamp" cx="47.2" cy="103" r="14" fill="url(#lg)"/><circle cx="47.2" cy="103" r="2.2" fill="#ffe9a8"/></g><g><rect x="168" y="104" width="2.4" height="40" fill="#07050c"/><rect x="165" y="100" width="8.4" height="6" rx="2" fill="#07050c"/><circle class="lamp" cx="169.2" cy="103" r="14" fill="url(#lg)"/><circle cx="169.2" cy="103" r="2.2" fill="#ffe9a8"/></g><g><rect x="262" y="104" width="2.4" height="40" fill="#07050c"/><rect x="259" y="100" width="8.4" height="6" rx="2" fill="#07050c"/><circle class="lamp" cx="263.2" cy="103" r="14" fill="url(#lg)"/><circle cx="263.2" cy="103" r="2.2" fill="#ffe9a8"/></g><g><rect x="388" y="104" width="2.4" height="40" fill="#07050c"/><rect x="385" y="100" width="8.4" height="6" rx="2" fill="#07050c"/><circle class="lamp" cx="389.2" cy="103" r="14" fill="url(#lg)"/><circle cx="389.2" cy="103" r="2.2" fill="#ffe9a8"/></g></g>
+</svg>
+    <div class="mist m1"></div><div class="mist m2"></div>
+    <div class="flyers" id="flyers"></div>
+    <div class="heroText"><div class="place">ТИНГЕН</div><div class="sub" id="heroSub">Ночь · луна</div></div>
+  </section>
+
+  <section class="orbs">
+    <div class="orbCol">
+      <div class="orb hpOrb"><div class="liq" id="orbHp"></div><div class="glass"></div><b id="orbHpTxt">—</b></div>
+      <label>Здоровье</label>
+    </div>
+    <div class="orbCol mid">
+      <div class="lvBadge"><i></i><i></i><b id="orbLv">—</b></div>
+      <label id="orbPath">Путь</label>
+    </div>
+    <div class="orbCol">
+      <div class="orb madOrb"><div class="liq" id="orbMad"></div><div class="glass"></div><b id="orbMadTxt">—</b></div>
+      <label>Безумие</label>
+    </div>
+  </section>
+
+  <button type="button" class="cta" id="ctaGo" onclick="goLast()"><span class="ctaIc">⚔</span><span class="ctaTx" id="ctaTx">Отправиться в поход</span><span class="ctaSh"></span></button>
+
+  <div class="tiles">
+    <button type="button" class="tile" onclick="openFortune()"><span class="tIc">🔮</span><b>Гадалка</b><small>Мадам Нира</small></button>
+    <button type="button" class="tile" onclick="openProfile()"><span class="tIc">📜</span><b>Профиль</b><small>Навыки и путь</small></button>
   </div>
+
+  <div class="tip" id="tipBox"><span class="tipIc">🦉</span><span id="tipTxt">…</span></div>
+</div>
 </div>
 
 <div id="travel" class="card hidden">
-  <h3>🧭 Поход</h3>
-  <button type="button" class="btn gold big" style="width:100%" onclick="openLake()">🌊 Озёра — Топи</button>
-  <button type="button" class="btn gold big" style="width:100%;margin-top:8px;border-color:#4f8a5c;background:linear-gradient(135deg,#1f4a30,#2a2440);color:#cdeccf" onclick="openForest()">🌲 Лес — Чаща</button>
-  <div style="font-size:11px;margin-top:10px">❤️ <span id="hp2">—</span> · 🌀 <span id="madTxt">—</span>%</div>
-  <div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
-  <div class="bar mn"><i id="madBar" style="width:0%"></i></div>
+  <h3>🧭 Куда отправимся?</h3>
+  <button type="button" class="loc lake" onclick="openLake()">
+    <span class="locArt"><img src="./lake/img/serpent.svg" alt="" loading="lazy"></span>
+    <span class="locBody"><b>Озёра · Топи</b><small>Жабы, утопленники и Змей, что просыпается в глубине.</small>
+    <span class="tags"><i>Ур. 1–5</i><i>💀</i><i class="boss">Босс: Змей</i></span></span>
+  </button>
+  <button type="button" class="loc forest" onclick="openForest()">
+    <span class="locArt"><img src="./forest/img/fox.svg" alt="" loading="lazy"></span>
+    <span class="locBody"><b>Лес · Чаща</b><small>Споры, паутина и шёпот. Где-то здесь бродит Лиса.</small>
+    <span class="tags"><i>Ур. 5–10</i><i>💀💀</i><i class="boss">Босс: Лиса</i></span></span>
+  </button>
+  <div class="vitals">
+    <div>❤️ <span id="hp2">—</span> · 🌀 <span id="madTxt">—</span>%</div>
+    <div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
+    <div class="bar mn"><i id="madBar" style="width:0%"></i></div>
+  </div>
 </div>
 
 <div id="city" class="card hidden">
@@ -274,12 +423,12 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 </div>
 </div>
 
-<div class="nav">
-  <a data-tab="hall" class="active" onclick="showTab('hall')">◈<br>Зал</a>
-  <a data-tab="travel" onclick="showTab('travel')">🧭<br>Поход</a>
-  <a data-tab="city" onclick="showTab('city')">⌖<br>Город</a>
-  <a data-tab="bag" onclick="showTab('bag')">🎒<br>Сумка</a>
-</div>
+<nav class="nav" id="nav" style="--i:0">
+  <a data-tab="hall" class="active" onclick="showTab('hall')"><span class="ic">🏰</span>Зал</a>
+  <a data-tab="travel" onclick="showTab('travel')"><span class="ic">🧭</span>Поход</a>
+  <a data-tab="city" onclick="showTab('city')"><span class="ic">🌆</span>Город</a>
+  <a data-tab="bag" onclick="showTab('bag')"><span class="ic">🎒</span>Сумка</a>
+</nav>
 
 <script>
 /* ===== Эффекты оформления (на логику игры не влияют) ===== */
@@ -333,13 +482,85 @@ var m=document.getElementById("hp").textContent.split("/"),a=+m[0],b=+m[1];
 document.getElementById("topCard").classList.toggle("low",b>0&&a/b<=.25);
 });
 
-/* подсветка активной кнопки нижней панели */
-function syncNav(){
-var act=document.querySelector(".tab.active");if(!act)return;
-var id=act.id.replace("t-","");
-document.querySelectorAll(".nav a").forEach(function(a){a.classList.toggle("active",a.dataset.tab===id)});
+/* ===== игровые штуки ===== */
+var $=function(id){return document.getElementById(id)};
+function num(t){var n=parseFloat(String(t).replace(",","."));return isFinite(n)?n:null}
+
+/* шары здоровья и безумия, значок уровня */
+function syncHud(){
+var m=$("hp").textContent.split("/"),a=num(m[0]),b=num(m[1]);
+if(a!=null&&b){var f=Math.max(0,Math.min(100,a/b*100));$("orbHp").style.setProperty("--f",f+"%");$("orbHpTxt").textContent=a+"/"+b;document.querySelector(".hpOrb").classList.toggle("low",f<=25)}
+var md=num($("madTxt").textContent);
+if(md!=null){$("orbMad").style.setProperty("--f",Math.max(0,Math.min(100,md))+"%");$("orbMadTxt").textContent=Math.round(md)+"%"}
+$("orbLv").textContent=$("lvl").textContent;
+var pt=$("path").textContent;$("orbPath").textContent=pt&&pt!=="—"?pt:"Путь";
 }
-document.querySelectorAll(".tab").forEach(function(t){new MutationObserver(syncNav).observe(t,{attributes:true,attributeFilter:["class"]})});
+["hp","madTxt","lvl","path"].forEach(function(id){watch(id,syncHud)});syncHud();
+
+/* всплывающие +N и новый уровень */
+function gain(id,txt,color){
+var el=$(id);if(!el)return;var r=(el.parentElement||el).getBoundingClientRect();
+var f=document.createElement("div");f.className="floatGain";f.textContent=txt;f.style.color=color;
+f.style.left=(r.left+r.width/2-12)+"px";f.style.top=(r.top+4)+"px";document.body.appendChild(f);
+setTimeout(function(){f.remove()},1450);
+}
+var lastV={pounds:null,exp:null,lvl:null};
+function track(id,color,label){
+var el=$(id);watch(id,function(){
+var v=num(el.textContent);if(v==null)return;
+var old=lastV[id];lastV[id]=v;
+if(old!=null&&v!==old){gain(id,(v>old?"+":"")+(v-old)+" "+label,v>old?color:"#ff8a92")}
+});
+}
+track("pounds","#ffd86a","£");track("exp","#b9a0ff","✨");
+function levelUp(n){
+if(reduce)return;
+var o=document.createElement("div");o.className="lvlUp";o.innerHTML="<b>НОВЫЙ УРОВЕНЬ</b><span>"+n+"</span>";
+var cols=["#ffe9a8","#d6b779","#fff","#b9a0ff"];
+for(var i=0;i<40;i++){var p=document.createElement("i");p.style.left=Math.random()*100+"%";p.style.background=cols[i%4];p.style.setProperty("--t",(1.4+Math.random()*1.4).toFixed(2)+"s");p.style.animationDelay=(Math.random()*.6).toFixed(2)+"s";o.appendChild(p)}
+document.body.appendChild(o);setTimeout(function(){o.remove()},2700);
+try{window.Telegram.WebApp.HapticFeedback.notificationOccurred("success")}catch(_){}
+}
+watch("lvl",function(){var v=num($("lvl").textContent);if(v==null)return;var old=lastV.lvl;lastV.lvl=v;if(old!=null&&v>old)levelUp(v)});
+
+/* сцена Тингена: звёзды, луна, вороны, параллакс */
+(function(){
+var hero=$("hero");if(!hero)return;
+var st=$("stars");for(var i=0;i<26;i++){var e=document.createElement("i");e.style.left=Math.random()*100+"%";e.style.top=Math.random()*55+"%";e.style.setProperty("--t",(2+Math.random()*3).toFixed(1)+"s");e.style.setProperty("--d",(-Math.random()*4).toFixed(1)+"s");if(Math.random()<.2){e.style.width=e.style.height="3px"}st.appendChild(e)}
+/* фаза луны */
+var days=(Date.now()-Date.UTC(2000,0,6,18,14))/86400000,ph=((days%29.530588)+29.530588)%29.530588/29.530588;
+var lit=(1-Math.cos(2*Math.PI*ph))/2;
+$("moonShade").style.setProperty("--sh",((ph<.5?-1:1)*lit*100)+"%");
+var name=lit<.06?"новолуние":lit>.94?"полнолуние":ph<.5?"растущая луна":"убывающая луна";
+function clock(){var d=new Date(),h=d.getHours(),m=String(d.getMinutes()).padStart(2,"0");
+var part=h<5?"Глубокая ночь":h<11?"Утренний туман":h<17?"Серый день":h<22?"Вечер, зажигаются лампы":"Ночь";
+$("heroSub").textContent=part+" · "+h+":"+m+" · "+name}
+clock();setInterval(clock,30000);
+if(reduce)return;
+var fl=$("flyers");
+function raven(){
+if(document.hidden)return;
+var r=document.createElement("div");r.className="raven";r.style.top=(20+Math.random()*70)+"px";r.style.setProperty("--t",(7+Math.random()*4).toFixed(1)+"s");r.style.setProperty("--dy",(Math.random()*40-20)+"px");
+r.innerHTML='<svg viewBox="0 0 24 10"><path d="M0 4 Q6 -2 12 5 Q18 -2 24 4 Q18 3 12 9 Q6 3 0 4Z" fill="#05030a"/></svg>';
+fl.appendChild(r);setTimeout(function(){r.remove()},11500);
+}
+setTimeout(raven,1500);setInterval(raven,9000);
+$("moonBox").addEventListener("click",function(){
+var s=document.createElement("i");s.className="shoot";s.style.left=(20+Math.random()*120)+"px";s.style.top=(10+Math.random()*50)+"px";fl.appendChild(s);setTimeout(function(){s.remove()},950);
+try{window.Telegram.WebApp.HapticFeedback.impactOccurred("light")}catch(_){}
+});
+hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect();hero.style.setProperty("--px",((e.clientX-r.left)/r.width*2-1).toFixed(2));hero.style.setProperty("--py",((e.clientY-r.top)/r.height*2-1).toFixed(2))});
+hero.addEventListener("pointerleave",function(){hero.style.setProperty("--px",0);hero.style.setProperty("--py",0)});
+})();
+
+/* подсказки Далии и кнопка «в поход» */
+(function(){
+var tips=["Тинген никогда не спит. Если слышишь шаги за спиной, лучше не оглядываться.","Три пути, три стиля боя: Шут, Тиран и Жрец. Выбирай тот, что по характеру.","Озёра послабее, а в лесу водятся твари посерьёзнее. Лису лучше встречать с полным здоровьем.","В лесу три рыжих следа приведут тебя прямо к Лисе.","Мадам Нира в Гадательном клубе раскрывает карты. Иногда её совет бывает полезнее зелья.","Здоровье восстанавливается со временем. Не лезь в бой, пока оно не вернулось.","Безумие копится от странных встреч. Не слушай голоса в лесу слишком внимательно."];
+var i=Math.floor(Math.random()*tips.length),el=$("tipTxt");
+if(el){el.textContent=tips[i];setInterval(function(){if(document.hidden)return;el.style.opacity=0;setTimeout(function(){i=(i+1)%tips.length;el.textContent=tips[i];el.style.opacity=1},400)},7000)}
+var k="";try{k=localStorage.getItem("lotm_last_loc")||""}catch(_){}
+var tx=$("ctaTx");if(tx)tx.textContent=k==="forest"?"В поход: Лес · Чаща":k==="lake"?"В поход: Озёра · Топи":"Отправиться в поход";
+})();
 })();
 </script>
 
@@ -649,11 +870,11 @@ function showTab(id) {
   const allowed = ["hall", "travel", "city", "bag"];
   if (!allowed.includes(id)) return;
 
-  document.querySelectorAll(".tab").forEach(element => {
-    element.classList.remove("active");
+  document.querySelectorAll(".nav a").forEach(a => {
+    a.classList.toggle("active", a.dataset.tab === id);
   });
-
-  byId("t-" + id)?.classList.add("active");
+  byId("nav")?.style.setProperty("--i", allowed.indexOf(id));
+  try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 
   allowed.forEach(tab => {
     byId(tab).classList.toggle("hidden", tab !== id);
@@ -684,11 +905,25 @@ function openProfile() {
   location.href = buildPageUrl("./profileprofile/index.html");
 }
 
+function rememberLoc(k) {
+  try { localStorage.setItem("lotm_last_loc", k); } catch (_) {}
+}
+
+function goLast() {
+  let k = "";
+  try { k = localStorage.getItem("lotm_last_loc") || ""; } catch (_) {}
+  if (k === "forest") openForest();
+  else if (k === "lake") openLake();
+  else showTab("travel");
+}
+
 function openLake() {
+  rememberLoc("lake");
   location.href = buildPageUrl("./lake/index.html");
 }
 
 function openForest() {
+  rememberLoc("forest");
   location.href = buildPageUrl("./forest/index.html");
 }
 
@@ -1107,7 +1342,7 @@ function toggleDistrict(district) {
     head.className = "districtHead";
 
     const title = document.createElement("span");
-    title.textContent = "▸ " + district;
+    title.textContent = ({ "Центр": "🏛 ", "Север": "❄️ ", "Восток": "🌅 ", "Запад": "🌇 " }[district] || "▸ ") + district;
 
     const chevron = document.createElement("span");
     chevron.id = "ch-" + district;
