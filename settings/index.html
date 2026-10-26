@@ -2,86 +2,202 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Настройки — Повелитель Тайн v118</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Настройки — Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial}
-body{background:linear-gradient(rgba(10,10,14,.82),rgba(10,10,14,.94)),url('../i-72.jpeg') center/cover fixed no-repeat,#0a0a0e;color:#b8b5ad;min-height:100vh}
-.wrap{max-width:440px;margin:0 auto;padding:10px 10px 60px}
-.head{padding:10px 0;display:flex;gap:10px;align-items:center}
-.head a{color:#b8b5ad;text-decoration:none;border:1px solid #3a3a3e;border-radius:8px;padding:4px 8px}
-.card{background:rgba(22,22,26,.92);border:1px solid #3a3a3e;border-radius:16px;padding:14px;margin:10px 0}
-.btn{border:1px solid #3a3a3e;background:rgba(38,38,42,.92);border-radius:10px;padding:12px;text-align:center;margin:6px 0;cursor:pointer;color:#b8b5ad}
-.btn.gold{background:#3a3a3e;color:#d4d0c3;font-weight:700}
-.btn.red{border-color:#6a2a2a;background:rgba(60,20,20,.9);color:#d4c5b8;font-weight:700}
-.btn.dis{opacity:.45;pointer-events:none}
-.btn:active{transform:scale(.97)}
-.input{width:100%;background:#1a1a1e;border:1px solid #3a3a3e;border-radius:10px;padding:12px;color:#d4d0c3;text-align:center;outline:none;font-size:15px}
-.pathCard{border:1px solid #2a2a2e;border-radius:12px;padding:10px;margin:6px 0;background:rgba(28,28,32,.8);cursor:pointer}
-.pathCard.sel{border-color:#5a5a62;background:#3a3a3e}
-.hidden{display:none}
-h3{font-size:14px;color:#c9c5b8;margin-bottom:6px}
-small{opacity:.6;font-size:10px}
+:root{--gold:#d6b779;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.86)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+html{background:#0a0812}
+body{min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,#3a2a6a55,transparent 60%),linear-gradient(#0e0a18,#08060e);overflow-x:hidden}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.5;animation:tw 3s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.8}}
+.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:12px 12px calc(60px + env(safe-area-inset-bottom))}
+.head{display:flex;gap:10px;align-items:center;padding:6px 0 12px}
+.head a{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:7px 11px;background:var(--panel)}
+.head b{font-size:17px;letter-spacing:.04em}
+.head span{margin-left:auto;font-size:10px;opacity:.55}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 8px 28px #0006,inset 0 1px 0 #ffffff10;opacity:0;transform:translateY(14px);animation:in .6s ease forwards}
+.card:nth-of-type(2){animation-delay:.08s}.card:nth-of-type(3){animation-delay:.16s}.card:nth-of-type(4){animation-delay:.24s}
+@keyframes in{to{opacity:1;transform:none}}
+h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
+.sub{font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.me{display:flex;gap:12px;align-items:center}
+.meAv{position:relative;width:76px;height:76px;flex-shrink:0;border-radius:20px;overflow:hidden;padding:3px}
+.meAv:before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,var(--gold),transparent 30%,var(--violet),transparent 70%,var(--gold));animation:spin 6s linear infinite}
+.meAv img{position:relative;width:100%;height:100%;border-radius:17px;display:block;background:#150f20}
+@keyframes spin{to{transform:rotate(360deg)}}
+.meInfo{min-width:0}
+.meNick{font-size:19px;font-weight:800;color:#efe8d8;overflow-wrap:anywhere}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:#ffffff08}
+.chip.g{color:var(--gold);border-color:#6a5a38}
+.input{width:100%;background:#120e1c;border:1px solid var(--line);border-radius:12px;padding:13px;color:#efe8d8;text-align:center;outline:none;font-size:15px;transition:border-color .2s,box-shadow .2s}
+.input:focus{border-color:var(--gold);box-shadow:0 0 16px #d6b77933}
+.err{color:#ff7a86;font-size:11px;min-height:15px;margin-top:5px;text-align:center}
+.btn{position:relative;overflow:hidden;display:block;width:100%;border:1px solid #6a5a38;background:linear-gradient(145deg,#3a2f52,#241b36);color:#efe8d8;border-radius:12px;padding:13px;text-align:center;margin-top:8px;cursor:pointer;font-size:14px;font-weight:700;transition:transform .12s,box-shadow .2s}
+.btn:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffff22 50%,transparent 65%);transform:translateX(-120%);animation:shine 4.5s ease-in-out infinite}
+@keyframes shine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.btn:active{transform:scale(.97);box-shadow:0 0 18px #d6b77955}
+.btn.red{border-color:#7a2a34;background:linear-gradient(145deg,#4a1a22,#2a1016)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.gRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gCard,.pCard{position:relative;border:1px solid var(--line);border-radius:16px;padding:8px;background:#ffffff06;cursor:pointer;text-align:center;transition:transform .15s,border-color .25s,box-shadow .25s}
+.gCard img{display:block;width:100%;aspect-ratio:1;border-radius:12px;background:#150f20}
+.gCard span{display:block;margin-top:7px;font-size:13px;font-weight:700}
+.gCard.sel,.pCard.sel{border-color:var(--gold);box-shadow:0 0 22px #d6b77955;background:linear-gradient(145deg,#3a2f5255,#241b3655)}
+.gCard.sel:before,.pCard.sel:before{content:"✓";position:absolute;right:8px;top:8px;z-index:2;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#241b36;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:13px;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.gCard:active,.pCard:active{transform:scale(.97)}
+.pCard{display:flex;gap:11px;align-items:center;text-align:left;margin-bottom:8px;padding:10px}
+.pCard img{width:64px;height:64px;border-radius:12px;flex-shrink:0;background:#150f20}
+.pCard b{font-size:13px;display:block;margin-bottom:3px}
+.pCard small{font-size:11px;color:var(--muted);line-height:1.5;display:block}
+.pCard.cur:after{content:"сейчас";position:absolute;right:10px;bottom:8px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);opacity:.8}
+/* окно подтверждения и тосты */
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:#000a}
+.modal.on{display:flex;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.mBox{width:100%;max-width:340px;border:1px solid #6a5a38;border-radius:18px;padding:18px;text-align:center;background:linear-gradient(145deg,#2a2040,#150f20);animation:pop .3s cubic-bezier(.2,1.4,.4,1)}
+.mBox h4{color:var(--gold);font-size:16px;margin-bottom:8px}
+.mBox p{font-size:13px;line-height:1.6;margin-bottom:6px}
+.mRow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);z-index:60;max-width:90%;padding:12px 18px;border-radius:14px;background:#241b36;border:1px solid var(--gold);color:#efe8d8;font-size:13px;opacity:0;pointer-events:none;transition:.35s;box-shadow:0 0 24px #d6b77944;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.bad{border-color:#c45a6a;box-shadow:0 0 24px #c45a6a44}
+.burst{position:fixed;left:0;top:0;width:100%;height:0;z-index:70;pointer-events:none}
+.burst i{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:bst 1s ease-out forwards}
+@keyframes bst{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
 </style>
 <script src="../shared/auth.js"></script>
+<script src="../shared/skills.js"></script>
 </head>
 <body>
+<div class="stars" id="stars"></div>
 <div class="wrap">
-<div class="head"><a id="backHome" href="../index.html">← Назад</a><b>⚙️ Настройки</b><span style="margin-left:auto;font-size:11px;opacity:.6">UID <span id="uid">-</span></span></div>
+  <div class="head"><a id="backHome" href="../index.html">← Назад</a><b>⚙️ Настройки</b><span>UID <span id="uid" style="margin:0">-</span></span></div>
 
-<div class="card">
-<div style="font-size:12px;opacity:.7">Текущий: <b id="curNick">-</b> · <span id="curPath">-</span> · Ур.<span id="curLvl">-</span></div>
-<h3 style="margin-top:10px">1. Смена ника</h3>
-<input id="newNick" class="input" maxlength="16" placeholder="Новый ник 2-16 буквы/цифры/_/- без пробелов">
-<div id="nickErr" style="color:#e63946;font-size:11px;min-height:14px;margin-top:4px"></div>
-<div class="btn gold" onclick="changeNick()">Сменить ник</div>
-<div style="font-size:10px;opacity:.5">Ник меняется везде: главная, профиль и бой.</div>
+  <section class="card">
+    <div class="me">
+      <div class="meAv"><img id="meImg" alt=""></div>
+      <div class="meInfo">
+        <div class="meNick" id="curNick">—</div>
+        <div class="chips"><span class="chip g" id="curPath">—</span><span class="chip" id="curGender">—</span><span class="chip">Ур. <span id="curLvl">—</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🖋 Имя</h3>
+    <div class="sub">2–16 символов: буквы, цифры, _ и -. Меняется везде.</div>
+    <input id="newNick" class="input" maxlength="16" placeholder="Новый ник" autocomplete="off">
+    <div class="err" id="nickErr"></div>
+    <div class="btn" onclick="changeNick()">Сменить ник</div>
+  </section>
+
+  <section class="card">
+    <h3>⚥ Облик</h3>
+    <div class="sub">Только внешний вид персонажа. Уровень и прогресс не меняются.</div>
+    <div class="gRow">
+      <div class="gCard" id="g-male" onclick="pickGender('male')"><img id="gi-male" alt=""><span>♂ Мужчина</span></div>
+      <div class="gCard" id="g-female" onclick="pickGender('female')"><img id="gi-female" alt=""><span>♀ Женщина</span></div>
+    </div>
+    <div class="btn" id="gBtn" onclick="saveGender()">Сменить облик</div>
+  </section>
+
+  <section class="card">
+    <h3>🜂 Путь</h3>
+    <div class="sub" id="curPath2">Смена пути сбросит уровень, опыт и навыки.</div>
+    <div class="pCard" id="c-seer" onclick="pickP('seer')"><img id="pi-seer" alt=""><div><b>🃏 Путь Шута · Провидец</b><small>🔮 Гадание · 💨 Воздушная пуля · 📜 Бумажный кинжал · 🎭 Актёрство</small></div></div>
+    <div class="pCard" id="c-sailor" onclick="pickP('sailor')"><img id="pi-sailor" alt=""><div><b>⚔ Путь Тирана · Матрос</b><small>⛈ Удар шторма · 🌊 Морская волна · 🌙 Колыбельная · ⚡ Ярость шторма</small></div></div>
+    <div class="pCard" id="c-hunter" onclick="pickP('hunter')"><img id="pi-hunter" alt=""><div><b>🏹 Путь Красного Жреца · Охотник</b><small>🎯 Меткий выстрел · 🔥 Поджог · 🪤 Ловушка · 😤 Провокация</small></div></div>
+    <div class="btn red" id="pBtn" onclick="changePath()">Сменить путь</div>
+  </section>
 </div>
 
-<div class="card">
-<h3>2. Смена пути <span style="font-size:10px;opacity:.5">сбросит уровень и навыки</span></h3>
-<div id="curPath2" style="font-size:11px;opacity:.6;margin-bottom:6px"></div>
-<div class="pathCard" id="c-seer" onclick="pick('seer')"><b>𓂀 Путь Шута · Провидец</b><div style="font-size:11px;opacity:.7">🔮 Гадание · 💨 Воздушная пуля · 📜 Бумажный кинжал · 🎭 Актёрство · пассив Предчувствие опасности</div></div>
-<div class="pathCard" id="c-sailor" onclick="pick('sailor')"><b>⚔ Путь Тирана · Матрос</b><div style="font-size:11px;opacity:.7">⛈ Удар шторма · 🌊 Морская волна · 🌙 Колыбельная глубин · ⚡ Ярость шторма · пассив Чешуя под кожей</div></div>
-<div class="pathCard" id="c-hunter" onclick="pick('hunter')"><b>🏹 Путь Красного Жреца · Охотник</b><div style="font-size:11px;opacity:.7">🎯 Меткий выстрел · 🔥 Поджог · 🪤 Ловушка · 😤 Провокация · пассив Выслеживание</div></div>
-<div class="btn red" onclick="changePath()">Сменить путь</div>
-<div style="font-size:10px;opacity:.5">Сбросит уровень и опыт, очистит перезарядки и баффы, сменит навыки и аватар.</div>
-</div>
-</div>
+<div class="modal" id="modal"><div class="mBox"><h4 id="mT"></h4><p id="mP"></p><div class="mRow"><div class="btn" onclick="mClose(false)">Отмена</div><div class="btn red" onclick="mClose(true)">Да</div></div></div></div>
+<div class="toast" id="toast"></div>
+<div class="burst" id="burst"></div>
+
 <script>
-const tg=Telegram.WebApp;tg.ready();tg.expand();
+const tg=window.Telegram?.WebApp;try{tg?.ready();tg?.expand()}catch(e){}
 const qs=new URLSearchParams(location.search);
-let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"0";
-document.getElementById('uid').innerText=uid;
-let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
-let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
-let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-/* вход только по личным ссылкам бота */
-function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
-document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
-async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
-async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
-let pickPath="";
-function pick(p){pickPath=p;document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));document.getElementById('c-'+p).classList.add('sel');}
-async function load(){if(!PROFILE_URL) await ensure();const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const j=unwrap(await r.json());document.getElementById('curNick').innerText=j.nickname;document.getElementById('curPath').innerText=j.path;document.getElementById('curLvl').innerText=j.level;document.getElementById('curPath2').innerText="Сейчас: "+j.path+" · Ур."+j.level+" · HP "+j.hp+"/"+j.max_hp;if(j.path_key) pick(j.path_key); document.getElementById('newNick').placeholder=j.nickname;}
+const $=id=>document.getElementById(id);
+$("uid").textContent=qs.get("u")||tg?.initDataUnsafe?.user?.id||"0";
+const p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
+const PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(p_enc):"";
+const ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(a_enc):"";
+const unwrap=j=>j&&j.result&&typeof j.result==="object"?j.result:j;
+$("backHome").href="../index.html"+location.search;
+(function(){const s=$("stars");for(let i=0;i<40;i++){const e=document.createElement("i");e.style.left=Math.random()*100+"%";e.style.top=Math.random()*100+"%";e.style.animationDelay=(Math.random()*3)+"s";s.appendChild(e)}})();
+
+async function post(url,body){if(!url)return needStart();const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store"});return unwrap(await r.json())}
+const api=p=>post(ACTION_URL,p);
+
+let toastT;
+function toast(t,bad){const e=$("toast");e.textContent=t;e.className="toast on"+(bad?" bad":"");clearTimeout(toastT);toastT=setTimeout(()=>e.className="toast",2600)}
+let mRes=null;
+function ask(t,p){return new Promise(res=>{$("mT").textContent=t;$("mP").textContent=p;$("modal").classList.add("on");mRes=res})}
+function mClose(v){$("modal").classList.remove("on");if(mRes){mRes(v);mRes=null}}
+function burst(){const c=["#d6b779","#8b6bff","#fff3c4","#ff8a4a"];const b=$("burst");for(let i=0;i<34;i++){const e=document.createElement("i");const a=Math.random()*6.283,r=90+Math.random()*150;e.style.left="50%";e.style.top="40%";e.style.setProperty("--c",c[i%4]);e.style.setProperty("--dx",Math.cos(a)*r+"px");e.style.setProperty("--dy",Math.sin(a)*r+"px");b.appendChild(e);setTimeout(()=>e.remove(),1000)}}
+
+const NAMES={seer:"Путь Шута",sailor:"Путь Тирана",hunter:"Путь Красного Жреца"};
+let cur={gender:"",pk:"",path:""},selG="",selP="";
+const av=(g,pk)=>"../avatars/"+(g==="female"?"f":"m")+"_"+(pk||"seer")+".svg";
+function paintGender(){
+  const pk=cur.pk||selP||"seer";
+  $("gi-male").src=av("male",pk);$("gi-female").src=av("female",pk);
+  ["male","female"].forEach(g=>$("g-"+g).classList.toggle("sel",selG===g));
+  $("gBtn").toggleAttribute("disabled",!selG||selG===cur.gender);
+}
+function paintPath(){
+  ["seer","sailor","hunter"].forEach(k=>{
+    $("pi-"+k).src=av(cur.gender||selG||"male",k);
+    $("c-"+k).classList.toggle("sel",selP===k);
+    $("c-"+k).classList.toggle("cur",cur.pk===k);
+  });
+  $("pBtn").toggleAttribute("disabled",!selP||selP===cur.pk);
+}
+function pickGender(g){selG=g;paintGender()}
+function pickP(k){selP=k;paintPath()}
+
+async function load(){
+  const j=await post(PROFILE_URL,{});
+  cur={gender:j.gender||"",pk:j.path_key||LOTM_SKILLS.pathKey(j.path),path:j.path||""};
+  $("curNick").textContent=j.nickname||"—";
+  $("curPath").textContent=j.path||"—";
+  $("curGender").textContent=cur.gender==="female"?"♀ Женщина":cur.gender==="male"?"♂ Мужчина":"—";
+  $("curLvl").textContent=j.level??"—";
+  $("newNick").placeholder=j.nickname||"Новый ник";
+  if(cur.gender)$("meImg").src=av(cur.gender,cur.pk);
+  selG=cur.gender;selP=cur.pk;
+  $("curPath2").textContent="Сейчас: "+(j.path||"—")+" · Ур. "+j.level+". Смена пути сбросит уровень, опыт и навыки.";
+  paintGender();paintPath();
+}
 async function changeNick(){
- let v=document.getElementById('newNick').value.trim();
- if(!v){document.getElementById('nickErr').innerText="Введи ник";return;}
- let d=await api({action:"set_nickname",nick:v});
- if(!d.ok){document.getElementById('nickErr').innerText=d.error;return;}
- document.getElementById('nickErr').innerText=""; alert("Ник сменён: "+v+" — виден везде");
- document.getElementById('newNick').value=""; load();
+  const v=$("newNick").value.trim();
+  if(!v){$("nickErr").textContent="Введи ник";return}
+  const d=await api({action:"set_nickname",nick:v});
+  if(!d.ok){$("nickErr").textContent=d.error||"Не удалось";return}
+  $("nickErr").textContent="";$("newNick").value="";burst();toast("Ник сменён: "+v);load();
+}
+async function saveGender(){
+  if(!selG||selG===cur.gender)return;
+  const d=await api({action:"set_gender",gender:selG});
+  if(!d.ok){toast(d.error||"Не удалось",true);return}
+  burst();toast(selG==="female"?"Теперь ты — женщина ♀":"Теперь ты — мужчина ♂");await load();
 }
 async function changePath(){
- if(!pickPath){alert("Выбери путь");return;}
- if(!confirm("Сменить путь на "+pickPath+"? Уровень обнулится до 1 и навыки сменятся!")) return;
- let d=await api({action:"confirm_path",choice:pickPath});
- if(!d.ok){alert(d.error);return;}
- alert("Путь сменён: "+pickPath+" — навыки обновлены в профиле и в бою");
- load();
+  if(!selP||selP===cur.pk)return;
+  const ok=await ask("Сменить путь?","Ты станешь: "+NAMES[selP]+". Уровень обнулится до 1, навыки сменятся.");
+  if(!ok)return;
+  const d=await api({action:"confirm_path",choice:selP});
+  if(!d.ok){toast(d.error||"Не удалось",true);return}
+  burst();toast("Путь сменён: "+NAMES[selP]);await load();
 }
-load();
+load().catch(()=>{});
 </script>
 </body>
-                                                                                       </html>
+</html>
