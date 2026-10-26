@@ -120,10 +120,10 @@ m("tri","🔻");m("dot","🔴 🟤 🟢 🔷 🟡 🟠 🟣 🔵");m("sq","⬛ �
 var KEEP="▶◀▸◂✦✧✓✕✔✖♂♀⚥♪♫➤✺🜂✱✶✷✹✿❖◆◇●○■□▪▫★☆©®™";
 window.LOTM_ICONS={glyphs:G,map:M};
 var css=document.createElement("style");
-css.textContent=".ic{display:inline-block;width:1.08em;height:1.08em;vertical-align:-.17em;color:var(--ic,#cdbf9f);line-height:1;flex:none}"+
-".ic svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;overflow:visible}"+
-".ic.r{color:#c0343e}.ic.g{color:#c9a45e}.ic.ic-glow svg{filter:drop-shadow(0 0 3px currentColor)}"+
-".ie{filter:grayscale(.9) sepia(.35) brightness(.82) contrast(1.05)}";
+css.textContent=".sg{display:inline-block;width:1.08em;height:1.08em;vertical-align:-.17em;color:var(--ic,#cdbf9f);line-height:1;flex:none}"+
+".sg svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;overflow:visible}"+
+".sg.r{color:#c0343e}.sg.g{color:#c9a45e}.sg.ic-glow svg{filter:drop-shadow(0 0 3px currentColor)}"+
+".sge{filter:grayscale(.9) sepia(.35) brightness(.82) contrast(1.05)}";
 document.head.appendChild(css);
 var RX=/\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic}️?|[\u{1F3FB}-\u{1F3FF}])*/gu;
 var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,INPUT:1,OPTION:1,SELECT:1,TITLE:1,NOSCRIPT:1,CODE:1,PRE:1};
@@ -132,16 +132,16 @@ function mk(e){
  var g=M[k]||M[first];
  if(!g){
   if(e.indexOf("️")<0&&KEEP.indexOf(first)>=0)return null;
-  var s=document.createElement("span");s.className="ie";s.textContent=e;s.setAttribute("data-e",e);return s;
+  var s=document.createElement("span");s.className="sge";s.textContent=e;s.setAttribute("data-e",e);return s;
  }
- var sp=document.createElement("span");sp.className="ic"+(RED[g]||first==="❤"||first==="🩸"||first==="🔴"?" r":"")+(GOLD[g]?" g":"");
+ var sp=document.createElement("span");sp.className="sg"+(RED[g]||first==="❤"||first==="🩸"||first==="🔴"?" r":"")+(GOLD[g]?" g":"");
  sp.setAttribute("data-e",e);sp.setAttribute("aria-hidden","true");
  sp.innerHTML='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'+G[g]+'</svg>';
  return sp;
 }
 function okNode(n){
  for(var p=n.parentNode;p&&p.nodeType===1;p=p.parentNode){
-  if(SKIP[p.tagName]||p.classList.contains("ic")||p.classList.contains("ie")||p.classList.contains("chTx")||p.hasAttribute("data-noicon")||p.namespaceURI==="http://www.w3.org/2000/svg")return false;
+  if(SKIP[p.tagName]||p.classList.contains("sg")||p.classList.contains("sge")||p.classList.contains("chTx")||p.hasAttribute("data-noicon")||p.namespaceURI==="http://www.w3.org/2000/svg")return false;
  }
  return true;
 }

@@ -28,7 +28,7 @@
 .spark{width:3px!important;height:3px!important;border-radius:50%!important;background:#8a7a58!important;opacity:.55!important;filter:blur(.4px)}
 /* ambient-частицы */
 .amb-p{filter:saturate(.3) brightness(.8) drop-shadow(0 0 4px #000);color:var(--fx-bone)}
-.amb-p.ic,.amb-p .ic{color:#8a7a58}
+.amb-p.sg,.amb-p .sg{color:#8a7a58}
 /* полосы здоровья */
 .bar.hp i{background:linear-gradient(90deg,#5a1a22,#a3262e)!important}
 .bar.enemyHp i{background:linear-gradient(90deg,#4a3a22,#8a7a58)!important}
@@ -66,3 +66,4 @@ body.defeatFx:after{background:radial-gradient(ellipse at center,transparent 50%
 .fly{background:#b8c4b4!important;box-shadow:0 0 6px 2px #6a7a6a55!important;opacity:.55}
 .spore{background:radial-gradient(#b8bca0,#5a6a4a66)!important;box-shadow:0 0 6px 2px #4a5a4a44!important;opacity:.55}
 .tile.hasNew::after{background:#a3262e!important}
+.btn.gold,.ctaBtn,.cta{background:linear-gradient(135deg,#a89a78,#6a5c40)!important;border-color:#8a7a58!important;box-shadow:0 0 0 1px #0006,0 6px 18px #0008!important}
