@@ -17,7 +17,7 @@ sailor_pray:{path:"sailor",cd:"pray",icon:"⚡",name:"Ярость шторма"
 hunter_shot:{path:"hunter",cd:"s4",icon:"🎯",name:"Меткий выстрел",tag:"КД 2",c:"#ffd27a",desc:"Точный выстрел, 30% бить сильнее.",fx:"arrow"},
 hunter_dagger:{path:"hunter",cd:"dagger",icon:"🔥",name:"Поджог",tag:"КД 2",c:"#ff6a3a",desc:"Огненный удар за 25 HP. Первый удар x2.",fx:"fire"},
 hunter_trap:{path:"hunter",cd:"trap",icon:"🪤",name:"Ловушка",tag:"КД 3",c:"#d6b779",desc:"Оглушает врага на 2 хода.",fx:"trap"},
-hunter_boost:{path:"hunter",cd:"boost",icon:"😤",name:"Провокация",tag:"КД 1",c:"#ff5d5d",desc:"Враг промахивается чаще (-25%) 2 хода.",fx:"taunt"},
+hunter_boost:{path:"hunter",cd:"boost",icon:"😤",name:"Провокация",tag:"КД 1",c:"#ff5d5d",desc:"Враг промахивается чаще (-25%) 2 хода. Лечит 7% здоровья.",fx:"taunt"},
 basic:{path:"",cd:"basic",icon:"⚔️",name:"Базовая атака",tag:"",c:"#d6b779",desc:"Обычная атака.",fx:"slash"},
 flee:{path:"",cd:"",icon:"🏃",name:"Отступить",tag:"",c:"#999",desc:"Покинуть сражение.",fx:""}
 };
