@@ -296,6 +296,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 .footer{text-align:center;color:#756b71;font-size:9px;letter-spacing:1px;padding:20px 0 5px}
 
 /* всплывающие эффекты */
+.resetStats{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #7a4a52;background:linear-gradient(145deg,#2a1519,#170c0f);color:#f0c8cc;font-weight:800;font-size:13px;cursor:pointer}
+.resetStats.arm{border-color:#ff7a86;background:linear-gradient(145deg,#4a1a22,#2a0e13);color:#fff}
+.resetStats:disabled{opacity:.5}
 .toast{
   position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));
   transform:translate(-50%,15px);width:max-content;max-width:calc(100vw - 30px);
@@ -433,6 +436,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
       <span class="points">Свободно: <span id="pts">0</span></span>
     </div>
     <div id="statsList"></div>
+    <button type="button" class="resetStats" id="resetStats" onclick="resetStats()">↺ Сбросить характеристики</button>
     <p class="note">Распределяй очки, чтобы развивать персонажа. Повышение Тела влияет на максимальное здоровье, если это предусмотрено игровой системой.</p>
   </section>
 
@@ -838,6 +842,26 @@ function renderStats(data) {
   });
 }
 
+let resetArm = 0;
+async function resetStats() {
+  const b = $("resetStats");
+  if (!resetArm) {
+    resetArm = setTimeout(() => { resetArm = 0; b.classList.remove("arm"); b.textContent = "↺ Сбросить характеристики"; }, 4000);
+    b.classList.add("arm"); b.textContent = "Точно? Нажми ещё раз";
+    return;
+  }
+  clearTimeout(resetArm); resetArm = 0; b.classList.remove("arm"); b.textContent = "↺ Сбросить характеристики";
+  b.disabled = true;
+  try {
+    const r = await api({action:"reset_stats"});
+    if (r.ok !== true) { showToast(r.text || r.error || "Не удалось сбросить"); return; }
+    haptic("medium");
+    showToast(r.refund ? "Очки возвращены: " + r.refund : "Нечего сбрасывать");
+    await loadProfile();
+  } catch (e) { showToast(e.message || "Ошибка связи с сервером"); }
+  finally { b.disabled = false; }
+}
+
 async function addStat(stat, x, y) {
   try {
     const result = await api({action:"addstat", stat});
@@ -947,14 +971,15 @@ function renderSkills(path) {
   });
 }
 
+const MAX_LEVEL = 20;
 function renderExperience(data) {
   const level = Math.max(1, Math.floor(number(data.level, 1)));
   const exp = Math.max(0, number(data.exp));
-  const nextLevelExp = level < 5 ? 10 * (2 ** (level - 1)) : 1;
-  const percent = level < 5 ? clamp(exp / nextLevelExp * 100) : 100;
+  const nextLevelExp = level < MAX_LEVEL ? 10 * (2 ** (level - 1)) : 1;
+  const percent = level < MAX_LEVEL ? clamp(exp / nextLevelExp * 100) : 100;
 
   setBar("expbar", percent);
-  setText("expPercent", level < 5 ? Math.floor(percent) + "%" : "MAX");
+  setText("expPercent", level < MAX_LEVEL ? Math.floor(percent) + "%" : "MAX");
 }
 
 async function loadProfile() {
