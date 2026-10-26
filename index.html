@@ -206,7 +206,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .ctaIc{font-size:24px;filter:drop-shadow(0 2px 2px #0006)}
 .ctaTx{flex:1;text-align:left}
 .ctaSh{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff66,transparent);transform:skewX(-20deg);animation:sweep 3.4s ease-in-out infinite}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tiles{display:grid;grid-template-columns:1fr;gap:8px}
 .tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:13px;border-radius:16px;cursor:pointer;text-align:left;color:#e6dcc4;border:1px solid #4a3f62;background:linear-gradient(145deg,#2c2440,#1a1428);transition:transform .15s,box-shadow .3s}
 .tile:active{transform:scale(.97)}
 .tile:hover{box-shadow:0 0 18px #8b6bff44}
@@ -381,7 +381,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 
   <div class="tiles">
     <button type="button" class="tile" onclick="openQuests()"><span class="tIc">📋</span><b>Квесты</b><small>Задания дня</small></button>
-    <button type="button" class="tile" onclick="openProfile()"><span class="tIc">📜</span><b>Профиль</b><small>Навыки и путь</small></button>
   </div>
 
   <div class="tip" id="tipBox"><span class="tipIc">🦉</span><span id="tipTxt">…</span></div>
