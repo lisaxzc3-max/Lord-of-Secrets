@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06100b">
+<title>Лес · Чаща</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark;--panel:rgba(14,24,19,.92);--line:#2f4a3a;--text:#dbe6d8;--gold:#d4b579;--moss:#7fc58e}
+html{min-height:100%;background:#06100b}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;
+ background:radial-gradient(ellipse at 50% -10%,#2f7a4a40,transparent 55%),linear-gradient(#07130c,#050a07)}
+/* ---- атмосфера леса ---- */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.trees{position:absolute;left:0;right:0;bottom:0;height:62%;
+ background:
+  linear-gradient(#0000,#030805 85%),
+  repeating-linear-gradient(90deg,#0a1a10 0 14px,#06110a 14px 30px,#0c2014 30px 38px,#050d08 38px 70px);
+ opacity:.85;-webkit-mask-image:linear-gradient(#0000,#000 40%);mask-image:linear-gradient(#0000,#000 40%)}
+.moon{position:absolute;top:7%;right:14%;width:90px;height:90px;border-radius:50%;
+ background:radial-gradient(circle at 40% 40%,#f3f6df,#c9d8b0 60%,#9fb58a);
+ box-shadow:0 0 70px 24px #bfe3b533;animation:moon 8s ease-in-out infinite}
+.ray{position:absolute;top:-10%;width:90px;height:120%;background:linear-gradient(#cfe9c244,#0000 75%);
+ transform:rotate(14deg);filter:blur(8px);opacity:.6;animation:ray 7s ease-in-out infinite}
+.fog{position:absolute;left:-50%;width:200%;height:36%;background:radial-gradient(ellipse at center,#9fc4a62b,transparent 65%);filter:blur(10px)}
+.fog.a{bottom:6%;animation:fog 26s linear infinite}
+.fog.b{bottom:22%;animation:fog 38s linear -14s infinite reverse;opacity:.7}
+.fly{position:absolute;width:5px;height:5px;border-radius:50%;background:#e9ff9a;
+ box-shadow:0 0 10px 3px #d6ff7a99;animation:fly var(--t) ease-in-out var(--d) infinite;opacity:0}
+.leaf{position:absolute;top:-30px;font-size:14px;opacity:.7;animation:leaf var(--t) linear var(--d) infinite}
+@keyframes moon{0%,100%{opacity:.9}50%{opacity:1;transform:scale(1.04)}}
+@keyframes ray{0%,100%{opacity:.35}50%{opacity:.7}}
+@keyframes fog{from{transform:translateX(0)}to{transform:translateX(25%)}}
+@keyframes fly{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}50%{transform:translate(var(--x),var(--y));opacity:.5}85%{opacity:1}100%{opacity:0;transform:translate(calc(var(--x)*-.6),calc(var(--y)*1.4))}}
+@keyframes leaf{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--x),110vh) rotate(540deg)}}
+/* ---- интерфейс ---- */
+.wrap{position:relative;z-index:2;max-width:480px;margin:auto;padding:12px 12px 32px}
+.head{display:flex;align-items:center;gap:11px;padding:8px 0 14px}
+.back{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#0c1a12e8}
+.heading{font-size:17px;font-weight:800}
+.subheading{font-size:10px;letter-spacing:2px;color:var(--moss);margin-top:3px}
+.card{border:1px solid var(--line);border-radius:17px;padding:15px;background:var(--panel);box-shadow:0 10px 28px #0006}
+.lore{font-size:12px;line-height:1.65;color:#b8c9b5;margin:0 0 6px}
+.tracks{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:#9db89f}
+.tracks[hidden]{display:none}
+.paw{font-size:16px;filter:grayscale(1) brightness(.5);transition:.4s}
+.paw.on{filter:drop-shadow(0 0 8px #ff8a3c);animation:pawPulse 1.6s ease-in-out infinite}
+@keyframes pawPulse{50%{transform:scale(1.2)}}
+.button{position:relative;overflow:hidden;display:block;width:100%;padding:15px 12px;margin-top:12px;border:1px solid #4f8a5c;border-radius:12px;
+ background:linear-gradient(135deg,#1f4a30,#2a2440);color:#d9f2d4;font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+.button:after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff30,transparent);transform:skewX(-20deg);animation:sweep 4s ease-in-out infinite}
+@keyframes sweep{0%,60%{left:-60%}100%{left:140%}}
+.button:active{transform:scale(.98)}
+.button:disabled{opacity:.5}
+#msg{margin-top:10px;font-size:12px;line-height:1.5;color:#c9d8c7;min-height:18px}
+#msg.err{color:#f0a3a3}
+.eyes{position:fixed;z-index:1;pointer-events:none;width:26px;height:8px;opacity:0;animation:eyes 9s ease-in-out infinite}
+.eyes:before,.eyes:after{content:"";position:absolute;top:0;width:8px;height:8px;border-radius:50%;background:#ffd24a;box-shadow:0 0 8px 2px #ffb300aa}
+.eyes:before{left:0}.eyes:after{right:0}
+@keyframes eyes{0%,40%,100%{opacity:0}46%,52%{opacity:.95}49%{opacity:0}}
+body.going .wrap{animation:going .9s ease-in forwards}
+body.going:after{content:"";position:fixed;inset:0;z-index:20;background:#020604;animation:fadeBlack .9s ease-in forwards}
+@keyframes going{to{transform:scale(1.08);filter:blur(3px)}}
+@keyframes fadeBlack{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="scene" id="scene" aria-hidden="true">
+  <div class="moon"></div><div class="ray" style="left:12%"></div><div class="ray" style="left:46%;animation-delay:-3s;width:60px"></div>
+  <div class="trees"></div><div class="fog a"></div><div class="fog b"></div>
+</div>
+<div class="eyes" style="left:14%;top:46%"></div>
+<div class="eyes" style="left:78%;top:58%;animation-delay:-4s"></div>
+<div class="wrap">
+  <header class="head">
+    <a class="back" id="backHome" href="../index.html">← Зал</a>
+    <div>
+      <div class="heading">🌲 Лес · Чаща</div>
+      <div class="subheading">LORD OF THE MYSTERIES</div>
+    </div>
+  </header>
+  <section class="card">
+    <p class="lore">Чаща дышит. Каждая тропа ведёт глубже, а за спиной шепчут голоса. Здесь обитают грибы-спорники, пауки, мёртвые деревья, кабаны и костяные волки. А в самой глубине живёт Лиса.</p>
+    <div class="tracks" id="tracks" hidden>Рыжие следы: <span id="paws"></span></div>
+    <button class="button" id="exploreBtn" type="button">🔍 Исследовать лес</button>
+    <div id="msg"></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#06100b")}catch(_){}
+
+const qs=new URLSearchParams(location.search);
+const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"7320193489");
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const btn=document.getElementById("exploreBtn"),msg=document.getElementById("msg");
+document.getElementById("backHome").href="../index.html"+(location.search||"");
+
+/* ---- атмосфера: светлячки и листья ---- */
+(function(){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const sc=document.getElementById("scene"),rnd=(a,b)=>a+Math.random()*(b-a);
+  for(let i=0;i<16;i++){
+    const f=document.createElement("i");f.className="fly";
+    f.style.left=rnd(4,96)+"%";f.style.top=rnd(35,92)+"%";
+    f.style.setProperty("--x",rnd(-60,60)+"px");f.style.setProperty("--y",rnd(-70,20)+"px");
+    f.style.setProperty("--t",rnd(5,10)+"s");f.style.setProperty("--d",rnd(-8,0)+"s");
+    sc.appendChild(f);
+  }
+  for(let i=0;i<9;i++){
+    const l=document.createElement("i");l.className="leaf";l.textContent=["🍂","🍃"][i%2];
+    l.style.left=rnd(0,100)+"%";l.style.setProperty("--x",rnd(-80,80)+"px");
+    l.style.setProperty("--t",rnd(11,20)+"s");l.style.setProperty("--d",rnd(-18,0)+"s");
+    sc.appendChild(l);
+  }
+})();
+
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+function say(t,e){msg.textContent=t||"";msg.className=e?"err":""}
+async function ensure(){
+  if(ACTION_URL)return;
+  const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+  if(!r.ok)throw new Error("Не удалось подключиться к игре (HTTP "+r.status+").");
+  const d=unwrap(await r.json());
+  const a=d?.action_url||d?.ACTION_URL;
+  if(typeof a!=="string"||!a)throw new Error("Сервер не вернул адрес действий.");
+  ACTION_URL=new URL(a).href;
+}
+async function api(payload){
+  await ensure();
+  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+  if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+  const d=unwrap(await r.json());
+  if(!d||typeof d!=="object")throw new Error("Сервер вернул некорректный ответ.");
+  return d;
+}
+function drawTracks(n){
+  n=Number(n)||0;
+  if(n<=0)return;
+  document.getElementById("tracks").hidden=false;
+  const box=document.getElementById("paws");box.replaceChildren();
+  for(let i=0;i<3;i++){const s=document.createElement("span");s.className="paw"+(i<n?" on":"");s.textContent="🐾";box.appendChild(s)}
+}
+try{drawTracks(sessionStorage.getItem("forest_tracks"))}catch(_){}
+
+btn.addEventListener("click",async function(){
+  if(btn.disabled)return;
+  btn.disabled=true;say("Ты углубляешься в чащу…",false);
+  try{
+    const data=await api({action:"explore_forest"});
+    if(data.error==="cooldown"){say("Подожди ещё "+(data.left||3)+" сек.",true);btn.disabled=false;return}
+    if(data.ok===false||data.error){say(String(data.text||data.error||"Лес молчит."),true);btn.disabled=false;return}
+    const params=new URLSearchParams(location.search);
+    document.body.classList.add("going");
+    if(data.type==="event"){
+      try{sessionStorage.setItem("forest_tracks",String(data.tracks||0))}catch(_){}
+      params.set("event_data",JSON.stringify(data));
+      setTimeout(()=>{location.href="./event/index.html?"+params.toString()},650);
+      return;
+    }
+    if(data.type==="battle"){
+      if(data.enemy)params.set("enemy",data.enemy);
+      params.delete("event_data");
+      setTimeout(()=>{location.href="./battle/index.html?"+params.toString()},650);
+      return;
+    }
+    document.body.classList.remove("going");
+    say("Сервер вернул неожиданный ответ.",true);btn.disabled=false;
+  }catch(e){
+    document.body.classList.remove("going");
+    say(e.message||"Ошибка связи.",true);btn.disabled=false;
+  }
+});
+</script>
+</body>
+</html>
