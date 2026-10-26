@@ -247,6 +247,66 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes spk{to{transform:translateY(110vh) rotate(700deg)}}
 @media(max-width:360px){.orb{width:72px;height:72px}.lvBadge{width:64px;height:64px}.locArt{flex-basis:92px}}
 @media(prefers-reduced-motion:reduce){.hero .city .win,.lamp,.coin,.liq:before,.liq:after{animation:none!important}}
+
+/* ===== ГОРОД ===== */
+#city.card{background:none;border:0;box-shadow:none;padding:0;margin-top:6px}
+.ctyHero{position:relative;height:170px;border-radius:20px;overflow:hidden;border:1px solid #4a3a6a;box-shadow:0 10px 30px #000a,inset 0 0 40px #0006}
+.ctySky{position:absolute;inset:0;width:100%;height:100%}
+.ctyMoon{animation:ctyMoonF 7s ease-in-out infinite;transform-origin:286px 38px}
+@keyframes ctyMoonF{50%{transform:translateY(3px) scale(1.04)}}
+.ctyFar{animation:ctyDrift 90s linear infinite alternate}
+.ctyMid{animation:ctyDrift 60s linear infinite alternate-reverse}
+@keyframes ctyDrift{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
+.ctyWin rect{animation:ctyWf 5s steps(2,end) infinite}
+.ctyWin .w2{animation-delay:-1.4s}.ctyWin .w3{animation-delay:-3s}
+@keyframes ctyWf{0%,72%{opacity:1}74%,78%{opacity:.1}80%,100%{opacity:1}}
+.ctyLamps circle{filter:drop-shadow(0 0 5px #ffd27a);animation:ctyLamp 3.2s ease-in-out infinite}
+.ctyLamps circle:nth-child(2){animation-delay:-1s}.ctyLamps circle:nth-child(3){animation-delay:-2s}
+@keyframes ctyLamp{50%{opacity:.55}}
+.ctyHands{transform-origin:197px 78px;animation:spin 40s linear infinite}
+.ctyClock{filter:drop-shadow(0 0 6px #f0d88a)}
+.ctyMist{position:absolute;left:-50%;width:200%;height:55%;bottom:0;background:radial-gradient(ellipse at center,#b89ad03a,transparent 62%);filter:blur(9px);pointer-events:none}
+.ctyMist.m1{animation:mistMove 26s linear infinite}.ctyMist.m2{bottom:12%;opacity:.6;animation:mistMove 40s linear -15s infinite reverse}
+.ctyFly{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.ctyVig{position:absolute;inset:0;pointer-events:none;background:linear-gradient(#0b0814aa,transparent 38%,transparent 62%,#0b0814dd)}
+.ctyTx{position:absolute;left:14px;right:14px;bottom:10px;pointer-events:none}
+.ctyName{font-size:22px;font-weight:900;letter-spacing:9px;color:var(--gold);text-shadow:0 0 20px #d6b779aa,0 2px 6px #000;animation:ctyName 6s ease-in-out infinite}
+@keyframes ctyName{50%{text-shadow:0 0 30px #ffe9a8cc,0 2px 6px #000}}
+.ctySub{font-size:10px;letter-spacing:1.4px;color:#d3c6ea;text-shadow:0 1px 4px #000;margin-top:2px;font-variant-numeric:tabular-nums}
+.ctyHint{font-size:11px;color:var(--muted);text-align:center;margin:10px 0 4px;letter-spacing:.5px}
+.dist{position:relative;margin:10px 0;border-radius:18px;border:1px solid var(--dc2);background:linear-gradient(160deg,var(--dc1),#0f0a1a);overflow:hidden;box-shadow:0 8px 24px #0007;opacity:0;transform:translateY(18px);animation:ctyIn .6s cubic-bezier(.2,.9,.3,1.1) forwards;animation-delay:calc(var(--n)*.12s + .1s)}
+@keyframes ctyIn{to{opacity:1;transform:none}}
+.dist:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 15% 0%,var(--dg),transparent 60%);pointer-events:none;opacity:.8}
+.dHead{position:relative;display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer;overflow:hidden}
+.dMed{position:relative;flex:0 0 46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:23px;background:radial-gradient(circle at 35% 30%,#fff3,var(--dc1) 75%);border:1px solid var(--dc2);box-shadow:0 0 16px var(--dg)}
+.dMed:after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px dashed var(--dc2);opacity:.5;animation:spin 14s linear infinite}
+.dMed i{font-style:normal;animation:floatY 4s ease-in-out infinite}
+.dTx{flex:1;min-width:0}
+.dTx b{display:block;font-size:15px;letter-spacing:.8px;color:#f2e8d0}
+.dTx small{display:block;font-size:11px;color:#b3a8c8;margin-top:1px}
+.dCh{flex:0 0 auto;font-size:18px;color:var(--dc2);transition:transform .35s}
+.dist.open .dCh{transform:rotate(90deg)}
+.dBody{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px;max-height:0;opacity:0;overflow:hidden;transition:max-height .5s cubic-bezier(.2,.8,.2,1),opacity .3s,padding .3s}
+.dist.open .dBody{max-height:520px;opacity:1;padding:2px 12px 13px}
+.plc{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 11px;border-radius:14px;border:1px solid #ffffff1a;background:linear-gradient(145deg,#ffffff0d,#ffffff05);color:inherit;font:inherit;text-align:left;cursor:pointer;transition:transform .2s,border-color .25s,box-shadow .25s;opacity:0}
+.dist.open .plc{animation:ctyIn .45s ease-out forwards;animation-delay:calc(var(--k)*.08s + .1s)}
+.plc:hover,.plc:active{border-color:var(--dc2);box-shadow:0 0 18px var(--dg)}
+.plc:active{transform:scale(.96)}
+.plc:after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#ffffff2a,transparent);transition:none}
+.plc.live:after{animation:ctySw 4.5s ease-in-out infinite;animation-delay:calc(var(--k)*.7s)}
+@keyframes ctySw{55%,100%{left:130%}}
+.plc .pi{font-size:26px;filter:drop-shadow(0 0 8px var(--dg));animation:floatY 4s ease-in-out infinite;animation-delay:calc(var(--k)*-.6s)}
+.plc b{font-size:13px;color:#f2e8d0}
+.plc small{font-size:10.5px;color:#a99dba;line-height:1.3}
+.plc .tg{margin-top:3px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;padding:2px 7px;border-radius:8px;background:#0007;border:1px solid #ffffff18}
+.plc.live .tg{color:#8fe8b0;border-color:#3aa86a66}
+.plc.soon{opacity:.55!important;cursor:default;filter:saturate(.5)}
+.plc.soon .tg{color:#b3a8c8}
+.d0{--dc1:#2a2210;--dc2:#b8984e;--dg:#d6b77955}
+.d1{--dc1:#10223a;--dc2:#5a9ad0;--dg:#6ab0ff44}
+.d2{--dc1:#3a1e10;--dc2:#d08a4a;--dg:#ff9a5a44}
+.d3{--dc1:#2a1240;--dc2:#9a6ad0;--dg:#b48cff44}
+@media(prefers-reduced-motion:reduce){.dist,.plc{opacity:1!important;transform:none!important}.ctyWin rect,.ctyLamps circle,.ctyMoon,.ctyFar,.ctyMid,.ctyHands,.ctyName,.dMed:after,.dMed i,.plc .pi,.plc:after{animation:none!important}}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -412,8 +472,28 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 </div>
 
 <div id="city" class="card hidden">
-  <h3>⌖ Тинген</h3>
-  <div style="font-size:11px;opacity:.5;margin-bottom:8px">Нажми на район, чтобы развернуть ›</div>
+  <section class="ctyHero" aria-label="Тинген">
+    <svg class="ctySky" viewBox="0 0 360 170" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#150e30"/><stop offset=".7" stop-color="#2d1b4e"/><stop offset="1" stop-color="#4a2c5c"/></linearGradient>
+        <radialGradient id="cgm" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6d8"/><stop offset=".6" stop-color="#f4e6b0"/><stop offset="1" stop-color="#e8d090"/></radialGradient>
+      </defs>
+      <rect width="360" height="170" fill="url(#cg1)"/>
+      <g id="ctyStars"></g>
+      <g class="ctyMoon"><circle cx="286" cy="38" r="38" fill="#f4e6b0" opacity=".12"/><circle cx="286" cy="38" r="22" fill="#f4e6b0" opacity=".16"/><circle cx="286" cy="38" r="14" fill="url(#cgm)"/><circle cx="281" cy="34" r="3" fill="#d8c88a" opacity=".6"/><circle cx="291" cy="43" r="2" fill="#d8c88a" opacity=".5"/></g>
+      <g class="ctyFar" fill="#241540"><path d="M0 150 L0 112 L16 112 L16 96 L30 96 L30 118 L48 118 L48 100 L60 88 L72 100 L72 122 L96 122 L96 106 L112 106 L112 126 L140 126 L140 98 L152 86 L164 98 L164 128 L200 128 L200 110 L220 110 L220 124 L250 124 L250 102 L262 92 L274 102 L274 126 L310 126 L310 108 L330 108 L330 120 L360 120 L360 150Z"/></g>
+      <g class="ctyMid" fill="#1a0f30"><path d="M0 160 L0 130 L22 130 L22 110 L34 98 L46 110 L46 134 L78 134 L78 120 L104 120 L104 138 L130 138 L130 112 L144 112 L144 96 L150 90 L156 96 L156 112 L172 112 L172 140 L204 140 L204 124 L232 124 L232 142 L262 142 L262 118 L286 118 L286 136 L322 136 L322 126 L360 126 L360 160Z"/>
+        <rect x="186" y="62" width="22" height="82"/><path d="M184 62 L197 40 L210 62Z"/><circle cx="197" cy="78" r="8" fill="#f0d88a" class="ctyClock"/><path d="M197 78 L197 72 M197 78 L202 80" stroke="#1a0f30" stroke-width="1.4" class="ctyHands"/></g>
+      <g class="ctyWin" fill="#ffd27a"><rect x="28" y="116" width="4" height="6"/><rect x="36" y="116" width="4" height="6" class="w2"/><rect x="84" y="124" width="4" height="6" class="w3"/><rect x="112" y="128" width="4" height="6"/><rect x="134" y="118" width="4" height="6" class="w2"/><rect x="236" y="130" width="4" height="6" class="w3"/><rect x="268" y="124" width="4" height="6"/><rect x="292" y="124" width="4" height="6" class="w2"/><rect x="62" y="136" width="4" height="6" class="w3"/><rect x="214" y="132" width="4" height="6"/><rect x="152" y="122" width="4" height="6" class="w2"/></g>
+      <g class="ctyLamps"><circle cx="20" cy="150" r="2.4" fill="#ffd27a"/><circle cx="120" cy="152" r="2.4" fill="#ffd27a"/><circle cx="260" cy="152" r="2.4" fill="#ffd27a"/><circle cx="340" cy="150" r="2.4" fill="#ffd27a"/></g>
+      <path d="M0 166 L360 166 L360 170 L0 170Z" fill="#0d0818"/>
+    </svg>
+    <div class="ctyMist m1"></div><div class="ctyMist m2"></div>
+    <div class="ctyFly" id="ctyFly"></div>
+    <div class="ctyTx"><div class="ctyName">ТИНГЕН</div><div class="ctySub"><span id="ctyClock">--:--</span> · ночь над городом · <span id="ctyMoon">🌙</span></div></div>
+    <div class="ctyVig"></div>
+  </section>
+  <div class="ctyHint">Выбери район и войди в место ›</div>
   <div id="cityBtns"></div>
   <div id="locInfo"></div>
   <div id="locBtns"></div>
@@ -1342,92 +1422,111 @@ async function doUnequip(slot) {
 }
 
 const cityData = {
-  "Центр": [
-    "Ратуша 🏛 — 🏆 Зал славы",
-    "Площадь 👥",
-    "Церковь Ночи 🌙"
-  ],
-  "Север": [
-    "Рынок 🍎 — 🧺 Торговец",
-    "Таверна 🐉 — 🍺 Бармен",
-    "Гадательный клуб 🔮 — 🃏 Гадалка"
-  ],
-  "Восток": [
-    "Дома 🏠 — Подвал",
-    "Лечебница 🏥"
-  ],
-  "Запад": [
-    "Бульвар 🌳",
-    "Банк 🏦"
-  ]
+  "Центр": { icon: "🏛", sub: "Сердце города", places: [
+    { icon: "🏛", name: "Ратуша", npc: "Зал славы · топ игроков", key: "top" },
+    { icon: "👥", name: "Площадь", npc: "Скоро" },
+    { icon: "🌙", name: "Церковь Ночи", npc: "Скоро" }
+  ]},
+  "Север": { icon: "❄️", sub: "Рынок, таверна и клуб гадалок", places: [
+    { icon: "🍎", name: "Рынок", npc: "Торговец", key: "market" },
+    { icon: "🍺", name: "Таверна", npc: "Бармен", key: "dragon_tavern" },
+    { icon: "🔮", name: "Гадательный клуб", npc: "Мадам Нира", key: "fortune" }
+  ]},
+  "Восток": { icon: "🌅", sub: "Жилые кварталы", places: [
+    { icon: "🏠", name: "Твой дом", npc: "Вольер · Сад · Лаборатория", key: "home" },
+    { icon: "🏥", name: "Лечебница", npc: "Скоро" }
+  ]},
+  "Запад": { icon: "🌇", sub: "Бульвар и банк", places: [
+    { icon: "🌳", name: "Бульвар", npc: "Скоро" },
+    { icon: "🏦", name: "Банк", npc: "Скоро" }
+  ]}
 };
 
-function toggleDistrict(district) {
-  const body = byId("body-" + district);
-  const chevron = byId("ch-" + district);
+function toggleDistrict(district, force) {
+  const el = byId("dist-" + district);
+  if (!el) return;
+  const open = typeof force === "boolean" ? force : !el.classList.contains("open");
+  el.classList.toggle("open", open);
+  el.querySelector(".dHead")?.setAttribute("aria-expanded", open ? "true" : "false");
+  try { window.snd && window.snd(open ? "open" : "back"); } catch (_) {}
+}
 
-  if (!body) return;
-
-  const willOpen = body.classList.contains("hidden");
-  body.classList.toggle("hidden", !willOpen);
-
-  if (chevron) {
-    chevron.textContent = willOpen ? "⌄" : "›";
-  }
+function openPlace(key) {
+  try { window.snd && window.snd("tap"); } catch (_) {}
+  if (key === "fortune") return openFortune();
+  if (key === "top") return openTop();
+  if (key === "home") { location.href = buildPageUrl("./home/index.html"); return; }
+  openLoc(key);
 }
 
 (function renderCity() {
   const container = byId("cityBtns");
-
-  Object.entries(cityData).forEach(([district, places]) => {
+  if (!container) return;
+  Object.entries(cityData).forEach(([district, d], n) => {
     const section = document.createElement("div");
-    section.className = "district";
+    section.className = "dist d" + n;
+    section.id = "dist-" + district;
+    section.style.setProperty("--n", n);
 
-    const head = document.createElement("div");
-    head.className = "districtHead";
-
-    const title = document.createElement("span");
-    title.textContent = ({ "Центр": "🏛 ", "Север": "❄️ ", "Восток": "🌅 ", "Запад": "🌇 " }[district] || "▸ ") + district;
-
-    const chevron = document.createElement("span");
-    chevron.id = "ch-" + district;
-    chevron.style.opacity = ".6";
-    chevron.textContent = "›";
-
-    head.append(title, chevron);
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "dHead";
+    head.setAttribute("aria-expanded", "false");
+    const live = d.places.filter(p => p.key).length;
+    head.innerHTML = '<span class="dMed"><i>' + d.icon + '</i></span><span class="dTx"><b>' + district + '</b><small>' + d.sub + ' · открыто мест: ' + live + '/' + d.places.length + '</small></span><span class="dCh">›</span>';
     head.addEventListener("click", () => toggleDistrict(district));
 
     const body = document.createElement("div");
-    body.id = "body-" + district;
-    body.className = "districtBody hidden";
-
-    places.forEach(place => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "btn";
-      button.textContent = place;
-
-      let key = "";
-
-      if (place.includes("Ратуша")) key = "top";
-      else if (place.includes("Гадательный")) key = "fortune";
-      else if (place.includes("Рынок")) key = "market";
-      else if (place.includes("Таверна")) key = "dragon_tavern";
-      else if (place.includes("Дома")) key = "houses";
-
-      if (key) {
-        button.addEventListener("click", () => key === "fortune" ? openFortune() : key === "top" ? openTop() : openLoc(key));
-      } else {
-        button.style.opacity = ".5";
-        button.disabled = true;
-      }
-
-      body.appendChild(button);
+    body.className = "dBody";
+    d.places.forEach((p, k) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "plc " + (p.key ? "live" : "soon");
+      b.style.setProperty("--k", k);
+      b.innerHTML = '<span class="pi">' + p.icon + '</span><b>' + p.name + '</b><small>' + p.npc + '</small><span class="tg">' + (p.key ? "Войти" : "Скоро") + '</span>';
+      if (p.key) b.addEventListener("click", () => openPlace(p.key));
+      else { b.disabled = true; }
+      body.appendChild(b);
     });
-
     section.append(head, body);
     container.appendChild(section);
   });
+  setTimeout(() => toggleDistrict("Центр", true), 350);
+
+  /* звёзды, вороны, часы */
+  const g = byId("ctyStars");
+  if (g) {
+    let h = "";
+    for (let i = 0; i < 40; i++) {
+      h += '<circle cx="' + (Math.random() * 360).toFixed(0) + '" cy="' + (Math.random() * 100).toFixed(0) + '" r="' + (Math.random() * 1.1 + .3).toFixed(1) + '" fill="#fff" opacity="' + (Math.random() * .6 + .3).toFixed(2) + '"><animate attributeName="opacity" values=".2;.9;.2" dur="' + (2 + Math.random() * 3).toFixed(1) + 's" begin="-' + (Math.random() * 3).toFixed(1) + 's" repeatCount="indefinite"/></circle>';
+    }
+    g.innerHTML = h;
+  }
+  const fly = byId("ctyFly");
+  const reduceM = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  function spawn() {
+    if (!fly || reduceM || document.hidden || byId("city").classList.contains("hidden")) return;
+    const r = document.createElement("div");
+    r.className = "raven";
+    r.style.top = (14 + Math.random() * 60) + "px";
+    r.style.setProperty("--t", (9 + Math.random() * 5) + "s");
+    r.style.setProperty("--dy", (Math.random() * 30 - 15) + "px");
+    r.innerHTML = '<svg viewBox="0 0 18 8"><path d="M0 4 Q4 0 9 4 Q14 0 18 4 Q14 3 9 8 Q4 3 0 4Z" fill="#0a0612"/></svg>';
+    fly.appendChild(r);
+    setTimeout(() => r.remove(), 15000);
+  }
+  setInterval(spawn, 6500);
+  const moons = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"];
+  const mp = Math.floor(((Date.now() / 86400000) % 29.53) / 29.53 * 8) % 8;
+  const mel = byId("ctyMoon");
+  if (mel) mel.textContent = moons[mp];
+  function clock() {
+    const e = byId("ctyClock");
+    if (!e) return;
+    const t = new Date();
+    e.textContent = String(t.getHours()).padStart(2, "0") + ":" + String(t.getMinutes()).padStart(2, "0");
+  }
+  clock(); setInterval(clock, 20000);
 })();
 
 function openLoc(id) {
