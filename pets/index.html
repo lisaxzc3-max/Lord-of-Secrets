@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0814">
+<title>Вольер — Повелитель тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--panel:rgba(22,17,34,.94);--line:#4a3d6a;--text:#eee6d6;--muted:#a99dba;--gold:#e2c27a;--pk:#ff8fb0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{min-height:100%;background:#0b0814}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -5%,#4a2f7a66,transparent 55%),linear-gradient(#0d0a18,#07050d)}
+button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.97)}
+.wrap{position:relative;max-width:480px;margin:auto;padding:10px 12px calc(40px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:6px 0 10px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#17122399;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.head h1{font-size:19px;margin:3px 0 0;font-weight:800;background:linear-gradient(90deg,#fff3cf,#e2c27a,#ffb4cf,#e2c27a);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+.hidden{display:none!important}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:11px}
+.card h3{margin:0 0 4px;font-size:14px}
+.muted{color:var(--muted);font-size:12px}
+
+/* выбор питомца */
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.pc{position:relative;border:1px solid var(--line);border-radius:18px;padding:12px 8px 12px;text-align:center;background:linear-gradient(160deg,#241a38,#150f24);transition:.3s;overflow:hidden}
+.pc.on{border-color:#e2c27a;box-shadow:0 0 22px #e2c27a55;transform:translateY(-3px)}
+.pc svg{width:100%;height:120px}
+.pc b{display:block;font-size:15px;margin-top:2px}
+.pc small{display:block;font-size:11px;color:var(--muted);line-height:1.35;margin-top:4px}
+.nameIn{width:100%;background:#16111f;border:1px solid #4a3f62;border-radius:12px;padding:12px;text-align:center;color:#efe8d8;font-size:16px;outline:none;margin:8px 0}
+.nameIn:focus{border-color:#e2c27a;box-shadow:0 0 12px #e2c27a44}
+.btn{border:1px solid #6a58a0;background:linear-gradient(145deg,#3a2866,#241645);border-radius:12px;padding:12px;font-weight:800;font-size:14px;width:100%}
+.btn.gold{border-color:#a98a4a;background:linear-gradient(145deg,#6a5020,#3a2a10);color:#fff0c4}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* комната */
+.room{position:relative;height:290px;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px #0009;background:linear-gradient(#2a1d3e 0 64%,#3a2a24 64%)}
+.room .wall{position:absolute;inset:0 0 36% 0;background:repeating-linear-gradient(90deg,#ffffff06 0 2px,transparent 2px 26px),linear-gradient(#2a1d3e,#1c1430)}
+.room .floor{position:absolute;inset:64% 0 0 0;background:repeating-linear-gradient(90deg,#00000022 0 2px,transparent 2px 46px),linear-gradient(#4a3428,#2a1c16)}
+.win{position:absolute;right:20px;top:18px;width:84px;height:104px;border-radius:44px 44px 6px 6px;border:5px solid #5a4630;background:linear-gradient(#0e0a24,#1a1244);overflow:hidden;box-shadow:0 0 24px #b9a0ff33}
+.win:before,.win:after{content:"";position:absolute;background:#5a4630}.win:before{left:50%;top:0;bottom:0;width:3px;margin-left:-1px}.win:after{top:55%;left:0;right:0;height:3px}
+.win .moon{position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:#f4ecd0;box-shadow:0 0 18px #f4ecd0aa}
+.win .st{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.2}}
+.lamp{position:absolute;left:16px;top:20px;font-size:26px;filter:drop-shadow(0 0 14px #ffc864);animation:lamp 3s ease-in-out infinite}
+@keyframes lamp{50%{filter:drop-shadow(0 0 24px #ffd88a)}}
+.glow{position:absolute;left:0;top:0;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#ffc86455,transparent 70%);pointer-events:none}
+.rug{position:absolute;left:50%;bottom:14px;width:230px;height:58px;margin-left:-115px;border-radius:50%;background:radial-gradient(ellipse,#6a2a4a,#3a1630 70%);border:2px solid #8a4a6a;box-shadow:0 0 0 6px #4a1e38}
+.bowl{position:absolute;left:18px;bottom:16px;width:62px;text-align:center;font-size:12px}
+.bowl .b{font-size:30px;filter:drop-shadow(0 4px 4px #000)}
+.bowl .fill{position:absolute;left:50%;top:2px;transform:translateX(-50%);font-size:15px;transition:.4s}
+.toy{position:absolute;right:20px;bottom:20px;font-size:34px;filter:drop-shadow(0 4px 4px #000);transform-origin:50% 100%}
+.toy.bounce{animation:toyB .5s ease-in-out 6}
+@keyframes toyB{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-62px) rotate(180deg)}}
+.petBox{position:absolute;left:50%;bottom:26px;width:190px;height:190px;margin-left:-95px;transform-origin:50% 100%}
+.petBox svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 6px #0008)}
+.petBox .sh{position:absolute;left:50%;bottom:-6px;width:130px;height:18px;margin-left:-65px;border-radius:50%;background:#0006;filter:blur(3px)}
+.petBox.breathe svg{animation:breathe 3.2s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes breathe{50%{transform:scaleY(1.025) scaleX(.99)}}
+.petBox.jump{animation:jumpP .5s ease-out 4}
+@keyframes jumpP{0%,100%{transform:translateY(0)}40%{transform:translateY(-46px)}}
+.petBox.eat svg{animation:eatP .35s ease-in-out 8}
+@keyframes eatP{50%{transform:translateY(5px) rotate(3deg)}}
+.petBox.happy svg{animation:happyP .6s ease-in-out 3}
+@keyframes happyP{25%{transform:rotate(-4deg) scale(1.04)}75%{transform:rotate(4deg) scale(1.04)}}
+.petBox.grow{animation:growP 1.6s ease-out}
+@keyframes growP{0%{transform:scale(.6);filter:brightness(3)}50%{transform:scale(1.25);filter:brightness(2)}100%{transform:none;filter:none}}
+/* части питомца */
+.eyes{animation:blink 4.6s infinite;transform-origin:center}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+.tail{transform-origin:var(--tx,110px) var(--ty,150px);animation:wag var(--ts,2.4s) ease-in-out infinite}
+@keyframes wag{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(14deg)}}
+.ear{transform-origin:center bottom;animation:ear 5s ease-in-out infinite}
+.ear.r{animation-delay:-2s}
+@keyframes ear{0%,90%,100%{transform:rotate(0)}94%{transform:rotate(-9deg)}}
+.aura{animation:aura 3s ease-in-out infinite;transform-origin:center}
+@keyframes aura{50%{opacity:.35;transform:scale(1.08)}}
+.mark{animation:mark 2.6s ease-in-out infinite}
+@keyframes mark{50%{opacity:.4}}
+.tongue{animation:tng .8s ease-in-out infinite;transform-origin:top center}
+@keyframes tng{50%{transform:scaleY(1.25)}}
+
+.fp{position:fixed;z-index:200;pointer-events:none;font-weight:900;font-size:17px;color:#ffe9a8;text-shadow:0 0 8px #000,0 0 14px #e2c27a;animation:fp 1.4s ease-out forwards;white-space:nowrap}
+@keyframes fp{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-70px)}}
+.pt{position:fixed;z-index:199;pointer-events:none;font-size:20px;animation:pt 1.1s ease-out forwards;font-style:normal}
+@keyframes pt{from{opacity:1;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--x),var(--y)) scale(.5) rotate(var(--r))}}
+.flash{position:fixed;inset:0;z-index:150;pointer-events:none;animation:fl 1s ease-out forwards}
+@keyframes fl{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.banner{position:fixed;inset:0;z-index:250;display:flex;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(circle,#e2c27a33,#000a);animation:fl 2.6s ease-out forwards}
+.banner div{text-align:center;font-weight:900;font-size:25px;letter-spacing:2px;color:#ffe9a8;text-shadow:0 0 24px #e2c27a;animation:bn 2s ease-out}
+.banner small{display:block;font-size:12px;letter-spacing:3px;color:#fff;margin-top:6px}
+@keyframes bn{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+
+/* карточка питомца */
+.pinfo{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pinfo .nm{flex:1;min-width:0}
+.pinfo .nm b{font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pinfo .nm span{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+.pinfo .edit{border:1px solid var(--line);background:#1a1330;border-radius:10px;padding:8px 10px;font-size:13px}
+.stg{display:flex;gap:5px}
+.stg i{width:26px;height:6px;border-radius:4px;background:#2a2040;transition:.5s}.stg i.on{background:linear-gradient(90deg,#8a5cff,#e2c27a);box-shadow:0 0 8px #e2c27a88}
+.bars{display:grid;gap:8px;margin-bottom:10px}
+.br .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px}
+.br .bar{height:9px;border-radius:6px;background:#0008;overflow:hidden;border:1px solid #ffffff10}
+.br .bar i{display:block;height:100%;width:0;border-radius:6px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.xp i{background:linear-gradient(90deg,#8a5cff,#e2c27a)}.sat i{background:linear-gradient(90deg,#ff7a5a,#ffd25a,#8fe0a0)}
+.sat.low i{box-shadow:0 0 10px #ff5a5a}
+.warn{margin-bottom:10px;padding:9px 11px;border:1px solid #8a4a54;border-radius:12px;background:#2a1519;color:#f0c8cc;font-size:12px}
+.acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.act{position:relative;border:1px solid #6a58a0;background:linear-gradient(160deg,#3a2866,#241645);border-radius:14px;padding:11px 4px;text-align:center;overflow:hidden}
+.act .i{font-size:24px;display:block}.act b{display:block;font-size:12px;margin-top:2px}.act small{display:block;font-size:10px;color:#cbbfe6;margin-top:1px;font-variant-numeric:tabular-nums}
+.act:disabled{opacity:.5;filter:grayscale(.5);cursor:not-allowed}
+.act:not(:disabled){animation:rdy 2s ease-in-out infinite}
+@keyframes rdy{50%{box-shadow:0 0 16px #8a5cff88}}
+.gift{margin-top:9px}
+.bf{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid #ffffff10}
+.bf:first-of-type{border-top:0}
+.bf .ic{flex:0 0 34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;background:#0006;border:1px solid #5a4a80}
+.bf .t b{font-size:13px}.bf .t div{font-size:11px;color:var(--muted)}
+.lv{display:flex;gap:6px;margin-top:5px}
+.lv span{font-size:11px;padding:3px 8px;border-radius:8px;background:#0006;border:1px solid #ffffff14;color:#8f84a6}
+.lv span.cur{color:#ffe9a8;border-color:#e2c27a;background:#3a2c10;box-shadow:0 0 10px #e2c27a44}
+.lv span.past{color:#b8accb}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);max-width:88%;z-index:300;background:#241a3af2;border:1px solid #8a6cd0;color:#fff;padding:10px 14px;border-radius:13px;font-size:13px;opacity:0;transition:.3s;text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.err{margin:12px 0;padding:12px;border:1px solid #7a3b42;border-radius:12px;background:#2a1519;color:#f0c8cc;text-align:center}
+.err button{margin-top:8px;border:1px solid #7a3b42;background:#3a1c22;color:#fff;border-radius:10px;padding:9px 14px;font-weight:700}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>sndMusic("pets")</script>
+</head>
+<body>
+<div class="wrap">
+<header class="head"><a class="back" id="back" href="../home/index.html">← Дом</a><div><div class="eyebrow">ДОМ · ВОЛЬЕР</div><h1>Комната питомцев</h1></div></div>
+
+<main id="main"><div class="card"><div class="muted">Загрузка…</div></div></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0b0814")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+$("back").href="../home/index.html"+location.search;
+async function api(payload){
+ if(!ACTION_URL)return needStart();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());
+ if(!d||typeof d!=="object")throw new Error("Некорректный ответ сервера.");
+ return d;
+}
+const esc=t=>{const d=document.createElement("div");d.textContent=String(t);return d.innerHTML};
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2400)}
+function burst(x,y,list,n){if(reduce)return;for(let i=0;i<(n||10);i++){const d=document.createElement("i");d.className="pt";d.textContent=list[i%list.length];d.style.left=x+"px";d.style.top=y+"px";d.style.setProperty("--x",rnd(-80,80)+"px");d.style.setProperty("--y",rnd(-120,-10)+"px");d.style.setProperty("--r",rnd(-200,200)+"deg");document.body.appendChild(d);setTimeout(()=>d.remove(),1150)}}
+function floatTx(t,x,y){if(reduce)return;const d=document.createElement("div");d.className="fp";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
+function flash(c){if(reduce)return;const d=document.createElement("div");d.className="flash";d.style.background="radial-gradient(circle,"+c+"88,transparent 70%)";document.body.appendChild(d);setTimeout(()=>d.remove(),1050)}
+function pulseAt(el){const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/3]}
+
+/* ---------- рисунки питомцев ---------- */
+function catSVG(stage){
+ const adult=stage===3,teen=stage>=2;
+ const sc=[.74,.9,1][stage-1],head=[1.18,1.06,1][stage-1];
+ return '<svg viewBox="0 0 200 200" aria-hidden="true">'+
+ (adult?'<ellipse class="aura" cx="100" cy="120" rx="86" ry="78" fill="#b48cff" opacity=".18"/>':'')+
+ '<g transform="translate(100 200) scale('+sc+') translate(-100 -200)">'+
+ '<path class="tail" style="--tx:128px;--ty:168px" d="M128 168 C176 160 186 118 164 96 C158 90 150 98 156 104 C170 122 160 150 126 156 Z" fill="#2c2440"/>'+
+ '<ellipse cx="100" cy="150" rx="46" ry="38" fill="#352a50"/>'+
+ '<ellipse cx="100" cy="162" rx="26" ry="20" fill="#43375f"/>'+
+ '<rect x="66" y="170" width="20" height="26" rx="10" fill="#2c2440"/><rect x="114" y="170" width="20" height="26" rx="10" fill="#2c2440"/>'+
+ '<g transform="translate(100 104) scale('+head+') translate(-100 -104)">'+
+ '<path class="ear" d="M60 78 L66 42 L90 68 Z" fill="#352a50"/><path class="ear r" d="M140 78 L134 42 L110 68 Z" fill="#352a50"/>'+
+ '<path d="M66 70 L68 52 L82 66 Z" fill="#ff9ab8" opacity=".7"/><path d="M134 70 L132 52 L118 66 Z" fill="#ff9ab8" opacity=".7"/>'+
+ '<ellipse cx="100" cy="98" rx="46" ry="40" fill="#3f3260"/>'+
+ '<g class="eyes"><ellipse cx="82" cy="96" rx="'+(stage===1?9.5:8)+'" ry="'+(stage===1?11:9)+'" fill="#ffe36a"/><ellipse cx="118" cy="96" rx="'+(stage===1?9.5:8)+'" ry="'+(stage===1?11:9)+'" fill="#ffe36a"/><ellipse cx="82" cy="96" rx="3" ry="8" fill="#14101c"/><ellipse cx="118" cy="96" rx="3" ry="8" fill="#14101c"/><circle cx="85" cy="92" r="2.4" fill="#fff"/><circle cx="121" cy="92" r="2.4" fill="#fff"/></g>'+
+ '<path d="M96 108 L104 108 L100 113 Z" fill="#ff9ab8"/><path d="M100 113 Q94 120 88 116 M100 113 Q106 120 112 116" stroke="#14101c" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+ '<path d="M70 108 L40 102 M70 112 L40 114 M130 108 L160 102 M130 112 L160 114" stroke="#cfc4e8" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>'+
+ (teen?'<path class="mark" d="M100 64 L103 72 L100 80 L97 72 Z" fill="#b48cff"/>':'')+
+ (adult?'<g class="mark"><path d="M82 70 L84 76 L82 82 L80 76Z" fill="#ffd56a"/><path d="M118 70 L120 76 L118 82 L116 76Z" fill="#ffd56a"/><circle cx="100" cy="62" r="3" fill="#ffd56a"/></g>':'')+
+ '</g>'+(teen?'<path d="M70 132 Q100 146 130 132" stroke="#b48cff" stroke-width="3" fill="none" opacity=".6"/>':'')+
+ '</g></svg>';
+}
+function dogSVG(stage){
+ const adult=stage===3,teen=stage>=2;
+ const sc=[.74,.9,1][stage-1],head=[1.2,1.08,1][stage-1];
+ return '<svg viewBox="0 0 200 200" aria-hidden="true">'+
+ (adult?'<ellipse class="aura" cx="100" cy="120" rx="86" ry="78" fill="#ffc864" opacity=".16"/>':'')+
+ '<g transform="translate(100 200) scale('+sc+') translate(-100 -200)">'+
+ '<path class="tail" style="--tx:132px;--ty:158px;--ts:.9s" d="M132 160 C166 140 172 108 160 96 C152 90 146 98 150 106 C158 122 150 140 128 150 Z" fill="#a8703c"/>'+
+ '<ellipse cx="100" cy="150" rx="48" ry="38" fill="#b57a42"/>'+
+ '<ellipse cx="100" cy="164" rx="28" ry="20" fill="#f0d8b0"/>'+
+ '<rect x="64" y="170" width="22" height="26" rx="11" fill="#a8703c"/><rect x="114" y="170" width="22" height="26" rx="11" fill="#a8703c"/>'+
+ '<g transform="translate(100 104) scale('+head+') translate(-100 -104)">'+
+ '<path class="ear" d="M58 70 C40 74 36 118 56 124 C68 122 70 90 66 72 Z" fill="#8a5a2c"/><path class="ear r" d="M142 70 C160 74 164 118 144 124 C132 122 130 90 134 72 Z" fill="#8a5a2c"/>'+
+ '<ellipse cx="100" cy="96" rx="44" ry="40" fill="#c2884e"/>'+
+ '<ellipse cx="100" cy="112" rx="26" ry="20" fill="#f0d8b0"/>'+
+ '<g class="eyes"><circle cx="82" cy="92" r="'+(stage===1?8:7)+'" fill="#2a1a12"/><circle cx="118" cy="92" r="'+(stage===1?8:7)+'" fill="#2a1a12"/><circle cx="84.5" cy="89.5" r="2.6" fill="#fff"/><circle cx="120.5" cy="89.5" r="2.6" fill="#fff"/></g>'+
+ '<ellipse cx="100" cy="104" rx="8" ry="6" fill="#1a0f0c"/><path d="M100 110 L100 118 M100 118 Q92 126 85 119 M100 118 Q108 126 115 119" stroke="#1a0f0c" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+ '<path class="tongue" d="M95 122 Q100 138 105 122 Z" fill="#ff7a9a"/>'+
+ (stage===1?'<circle cx="68" cy="102" r="5" fill="#ff9a9a" opacity=".35"/><circle cx="132" cy="102" r="5" fill="#ff9a9a" opacity=".35"/>':'')+
+ (teen?'<path class="mark" d="M100 58 L103 66 L100 74 L97 66 Z" fill="#ffd56a"/>':'')+
+ '</g>'+
+ (stage>=1?'<path d="M64 132 Q100 148 136 132" stroke="'+(adult?"#e2c27a":teen?"#d05a6a":"#6a9ad0")+'" stroke-width="'+(adult?7:5)+'" fill="none" stroke-linecap="round"/>':'')+
+ (adult?'<circle cx="100" cy="146" r="6" fill="#ffd56a" class="mark"/>':'')+
+ '</g></svg>';
+}
+const petSVG=(t,s)=>t==="cat"?catSVG(s):dogSVG(s);
+const STAGE_N={cat:["Котёнок","Молодая кошка","Сумеречная кошка"],dog:["Щенок","Молодой пёс","Верный страж"]};
+const BF={
+ cat:{luck:{i:"🍀",n:"Кошачья удача",d:v=>"+"+v+" 💷 за победу"},distract:{i:"🎯",n:"Отвлечь врага",d:v=>v+"% шанс снизить урон врага на 60%"},expb:{i:"👁",n:"Острое чутьё",d:v=>"+"+v+"% опыта за победу"}},
+ dog:{heal:{i:"💚",n:"Целебное тепло",d:v=>"+"+v+"% здоровья после победы"},guard:{i:"🛡",n:"Верный страж",d:v=>"−"+v+"% урона от врагов"},calm:{i:"🕯",n:"Спокойствие",d:v=>"−"+v+" безумия после победы"}}
+};
+const INTRO={
+ cat:{n:"Сумеречная кошка",t:"Приносит удачу и опыт, иногда отвлекает врагов в бою."},
+ dog:{n:"Верный пёс",t:"Лечит после побед, защищает от урона и унимает безумие."}
+};
+
+/* ---------- состояние ---------- */
+let P=null,busy=false,tickH=null,chosen="cat";
+const fmt=s=>{s=Math.max(0,s|0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h?h+"ч "+String(m).padStart(2,"0")+"м":m+":"+String(c).padStart(2,"0")}
+
+function roomHTML(type,stage){
+ let stars="";for(let i=0;i<9;i++)stars+='<i class="st" style="left:'+rnd(6,76)+'px;top:'+rnd(26,80)+'px;animation-delay:'+(-rnd(0,2))+'s"></i>';
+ return '<div class="room" id="room"><div class="wall"></div><div class="floor"></div><div class="glow"></div><div class="lamp">🕯️</div><div class="win"><i class="moon"></i>'+stars+'</div><div class="rug"></div>'+
+ '<div class="bowl" id="bowl"><span class="fill" id="bowlFill">🍖</span><div class="b">🥣</div></div><div class="toy" id="toy">'+(type==="cat"?"🧶":"🎾")+'</div>'+
+ '<div class="petBox breathe" id="petBox"><div class="sh"></div>'+petSVG(type,stage)+'</div></div>';
+}
+function render(){
+ const m=$("main");
+ if(!P.has_pet){renderPick();return}
+ const t=P.type,st=P.stage;
+ const xpPct=P.xp_next?Math.round((P.xp-P.xp_prev)/(P.xp_next-P.xp_prev)*100):100;
+ let bf="";
+ P.buffs.forEach(b=>{
+  const meta=BF[t][b.key];
+  bf+='<div class="bf"><div class="ic">'+meta.i+'</div><div class="t"><b>'+meta.n+'</b><div>'+meta.d(P.hungry?b.eff:b.cur)+(P.hungry?" · ослаблено голодом":"")+'</div><div class="lv">'+b.vals.map((v,i)=>'<span class="'+(i+1===st?"cur":i+1<st?"past":"")+'">'+["I","II","III"][i]+' · '+v+'</span>').join("")+'</div></div></div>';
+ });
+ m.innerHTML=roomHTML(t,st)+
+ '<div class="card" style="margin-top:11px"><div class="pinfo"><div class="nm"><span>'+STAGE_N[t][st-1]+' · стадия '+st+'/3</span><b>'+esc(P.name)+'</b></div><div class="stg"><i class="'+(st>=1?"on":"")+'"></i><i class="'+(st>=2?"on":"")+'"></i><i class="'+(st>=3?"on":"")+'"></i></div><button class="edit" id="bRen" aria-label="Переименовать">✎</button></div>'+
+ (P.hungry?'<div class="warn">🍖 Питомец голоден — бафы вдвое слабее. Накорми его!</div>':'')+
+ '<div class="bars"><div class="br xp"><div class="lab"><span>💞 Привязанность</span><span>'+(P.xp_next?P.xp+" / "+P.xp_next:"максимум")+'</span></div><div class="bar"><i data-w="'+xpPct+'"></i></div></div>'+
+ '<div class="br sat'+(P.hungry?" low":"")+'"><div class="lab"><span>🍖 Сытость</span><span>'+P.sat+"%"+'</span></div><div class="bar"><i data-w="'+P.sat+'"></i></div></div></div>'+
+ '<div class="acts"><button class="act" id="bFeed"><span class="i">🍖</span><b>Покормить</b><small id="tFeed"></small></button><button class="act" id="bPlay"><span class="i">'+(t==="cat"?"🧶":"🎾")+'</span><b>Играть</b><small id="tPlay"></small></button><button class="act" id="bPet"><span class="i">🤲</span><b>Погладить</b><small id="tPet"></small></button></div>'+
+ '<button class="btn gold gift" id="bGift">🎁 Находка питомца</button></div>'+
+ '<div class="card"><h3>✨ Пассивные бафы</h3><div class="muted">Действуют в боях автоматически. Чем старше питомец — тем сильнее.</div>'+bf+'</div>'+
+ '<div class="card"><div class="muted">Кормление, игры и ласка повышают привязанность. Сытость падает со временем: ниже 30% бафы слабеют. Играть можно, только если питомец не слишком голоден.</div></div>';
+ requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll(".br .bar i").forEach(b=>b.style.width=b.dataset.w+"%"),80));
+ $("bFeed").onclick=e=>act("pet_feed",e);$("bPlay").onclick=e=>act("pet_play",e);$("bPet").onclick=e=>act("pet_pet",e);$("bGift").onclick=e=>act("pet_gift",e);
+ $("bRen").onclick=rename;
+ $("petBox").onclick=()=>{if(busy)return;sfx(P.type==="cat"?"meow":"bark");const pb=$("petBox");pb.classList.remove("happy");void pb.offsetWidth;pb.classList.add("happy");const[x,y]=pulseAt(pb);burst(x,y,["💜"],2)};
+ timers();
+}
+function timers(){
+ if(!P||!P.has_pet)return;
+ const set=(btn,tx,left)=>{const b=$(btn),s=$(tx);if(!b)return;b.disabled=left>0;s.textContent=left>0?fmt(left):"готово"};
+ set("bFeed","tFeed",P.feed_left);set("bPlay","tPlay",P.play_left);set("bPet","tPet",P.pet_left);
+ const g=$("bGift");if(g){g.disabled=P.gift_left>0;g.textContent=P.gift_left>0?"🎁 Находка через "+fmt(P.gift_left):"🎁 Забрать находку питомца"}
+}
+function startTick(){clearInterval(tickH);tickH=setInterval(()=>{if(!P||!P.has_pet)return;["feed_left","play_left","pet_left","gift_left"].forEach(k=>{if(P[k]>0)P[k]--});timers()},1000)}
+
+function renderPick(){
+ chosen=chosen||"cat";
+ const m=$("main");
+ m.innerHTML='<div class="card"><h3>🐾 Добро пожаловать в вольер</h3><div class="muted">Здесь можно приютить питомца. Он вырастет в три стадии и даст пассивные бафы для боёв. Выбор сделать можно один раз — подумай хорошо.</div>'+
+ '<div class="pick"><button class="pc" id="pcCat" type="button">'+catSVG(2)+'<b>🐈 Кошка</b><small>Удача, чутьё на опыт и отвлечение врагов</small></button><button class="pc" id="pcDog" type="button">'+dogSVG(2)+'<b>🐕 Собака</b><small>Лечение, защита и спокойствие разума</small></button></div>'+
+ '<div class="muted" id="pickInfo" style="text-align:center"></div>'+
+ '<input class="nameIn" id="nameIn" maxlength="14" placeholder="Имя питомца (необязательно)" autocomplete="off">'+
+ '<button class="btn gold" id="bChoose">Приютить питомца</button></div>';
+ const upd=()=>{$("pcCat").classList.toggle("on",chosen==="cat");$("pcDog").classList.toggle("on",chosen==="dog");$("pickInfo").textContent=INTRO[chosen].n+": "+INTRO[chosen].t;$("nameIn").placeholder="Имя (по умолчанию — "+(chosen==="cat"?"Сумрак":"Верный")+")"};
+ $("pcCat").onclick=()=>{chosen="cat";sfx("meow");upd()};
+ $("pcDog").onclick=()=>{chosen="dog";sfx("bark");upd()};
+ $("bChoose").onclick=async e=>{
+  if(busy)return;busy=true;
+  try{
+   const r=await api({action:"pet_choose",type:chosen,name:$("nameIn").value.trim()});
+   if(r.ok===false)throw new Error(r.error==="already"?"Питомец уже выбран":(r.error||"Не удалось"));
+   P=r;sfx("grow");flash("#ffd56a");const[x,y]=pulseAt($("bChoose"));burst(x,y,["💛","✨","🐾"],14);
+   render();startTick();setTimeout(()=>{sfx(P.type==="cat"?"meow":"bark")},500);
+  }catch(er){if(er&&er.message==="need_start")return;sfx("deny");toast(er.message||"Ошибка связи")}
+  finally{busy=false}
+ };
+ upd();
+}
+function rename(){
+ const nm=document.querySelector(".pinfo .nm b");if(!nm||nm.tagName==="INPUT")return;
+ const inp=document.createElement("input");inp.className="nameIn";inp.style.margin="0";inp.style.padding="7px";inp.style.fontSize="15px";inp.maxLength=14;inp.value=P.name;
+ nm.replaceWith(inp);inp.focus();inp.select();let done=false;
+ const save=async()=>{
+  if(done)return;done=true;const v=inp.value.trim();
+  if(!v||v===P.name){render();return}
+  try{const r=await api({action:"pet_rename",name:v});if(r.ok===false)throw new Error("Не удалось переименовать");P=r;sfx("tap");toast("Теперь питомца зовут "+r.name);render()}catch(e){toast(e.message||"Ошибка");render()}
+ };
+ inp.addEventListener("keydown",e=>{if(e.key==="Enter")save();if(e.key==="Escape"){done=true;render()}});
+ inp.addEventListener("blur",save);
+}
+async function act(a,ev){
+ if(busy||!P)return;busy=true;
+ const pb=$("petBox"),room=$("room");
+ try{
+  const r=await api({action:a});
+  if(r.ok===false){
+   if(r.error==="cooldown"){sfx("deny");toast("Ещё рано. Подожди немного.")}
+   else if(r.error==="hungry"){sfx("deny");toast(r.text||"Питомец голоден")}
+   else {sfx("deny");toast(r.error||"Не удалось")}
+   return;
+  }
+  const e=r.event||{},old=P.stage;
+  const[x,y]=pulseAt(pb);
+  const cls=(c,ms)=>{pb.classList.remove("eat","jump","happy");void pb.offsetWidth;pb.classList.add(c);setTimeout(()=>pb.classList.remove(c),ms)};
+  if(e.act==="feed"){
+   sfx("munch");cls("eat",2900);const f=$("bowlFill");if(f){f.style.opacity=0;setTimeout(()=>{f.style.opacity=1},3000)}
+   burst(x,y,["🍖","💛","✨"],8);floatTx("+"+e.gain+" 💞",x,y);setTimeout(()=>{sfx(r.type==="cat"?"purr":"bark")},900);
+  }else if(e.act==="play"){
+   sfx("squeak");const t=$("toy");t.classList.remove("bounce");void t.offsetWidth;t.classList.add("bounce");cls("jump",2100);
+   [0,500,1000,1500].forEach(d=>setTimeout(()=>sfx("squeak"),d));setTimeout(()=>sfx(r.type==="cat"?"meow":"bark"),1700);
+   burst(x,y,["⭐","💫","✨"],10);floatTx("+"+e.gain+" 💞",x,y);
+  }else if(e.act==="pet"){
+   sfx(r.type==="cat"?"purr":"heal");cls("happy",1900);burst(x,y,["💗","💜","💞"],8);floatTx("+"+e.gain+" 💞",x,y);
+  }else if(e.act==="gift"){
+   sfx("chest");flash("#ffd56a");burst(x,y,["💷","✨","🎁"],12);floatTx("+"+e.gold+" 💷",x,y);if(e.absorb)setTimeout(()=>floatTx("+1% 🧪",x,y+24),300);
+   toast("🎁 Питомец принёс находку: "+e.gold+" 💷"+(e.absorb?" и каплю усвоения":""));
+  }
+  P=r;
+  if(r.stage>old||e.stage_up){
+   sfx("grow");setTimeout(()=>sfx("win"),900);flash("#ffe9a8");
+   const b=document.createElement("div");b.className="banner";b.innerHTML="<div>"+esc(r.name)+" ВЫРОС<small>"+STAGE_N[r.type][r.stage-1].toUpperCase()+" · СТАДИЯ "+r.stage+"</small></div>";document.body.appendChild(b);setTimeout(()=>b.remove(),2700);
+   render();const nb=$("petBox");if(nb){nb.classList.add("grow");setTimeout(()=>nb.classList.remove("grow"),1700)}
+  }else{
+   // обновить значения без пересборки комнаты
+   const keep=$("petBox")?.className;render();const nb=$("petBox");if(nb&&keep)nb.className=keep;
+  }
+ }catch(er){if(er&&er.message==="need_start")return;sfx("deny");toast(er.message||"Ошибка связи")}
+ finally{busy=false}
+}
+async function load(){
+ try{
+  const d=await api({action:"pet_state"});
+  if(d.ok===false)throw new Error(d.error||"Не удалось загрузить");
+  P=d;render();startTick();
+ }catch(e){
+  if(e&&e.message==="need_start")return;
+  $("main").innerHTML='<div class="err">'+esc(e.message||"Ошибка связи")+'<br><button type="button" id="rt">Повторить</button></div>';
+  $("rt").onclick=load;
+ }
+}
+load();
+</script>
+</body>
+</html>

@@ -112,9 +112,9 @@ p {
       🧪 Лаборатория
     </button>
 
-    <button class="btn" type="button" disabled>
+    <a class="btn" id="petsButton" href="../pets/index.html">
       🐾 Вольер
-    </button>
+    </a>
 
     <a class="btn" id="farmButton" href="../farm/index.html">
       🌙 Тайный сад
@@ -137,6 +137,8 @@ p {
 
   const farmButton = document.getElementById("farmButton");
   farmButton.href = "../farm/index.html" + location.search;
+  const petsButton = document.getElementById("petsButton");
+  if (petsButton) petsButton.href = "../pets/index.html" + location.search;
 })();
 </script>
 </body>
