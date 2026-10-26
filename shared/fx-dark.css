@@ -54,3 +54,15 @@ body{background-image:radial-gradient(ellipse at 50% -10%,#2a2430aa,transparent 
 /* общее: победный/поражение */
 .actionBtn.primary{color:#0a070b!important;background:linear-gradient(135deg,#cdbf9f,#8a7a58)!important;border-color:#a89a78!important}
 body.defeatFx:after{background:radial-gradient(ellipse at center,transparent 50%,#4a0a10cc)!important}
+/* ===== общие эффекты интерфейса ===== */
+.ctaSh,.btn.gold:after,.loc:after,.top:before,.bar.hp i:after{opacity:.35!important;filter:saturate(0)}
+.ripple{background:#cdbf9f33!important}
+.shoot{opacity:.5;background:linear-gradient(90deg,#cdbf9f,transparent)!important}
+.stars i,.win .st{background:#cdbf9f!important;opacity:.7}
+.lvlUp span{color:#cdbf9f!important;text-shadow:0 0 18px #a3262e99!important;letter-spacing:.12em}
+@keyframes growP{0%{transform:scale(.8);filter:brightness(.5)}50%{transform:scale(1.1);filter:brightness(1.2) sepia(.4)}100%{transform:none;filter:none}}
+.plot .mu{filter:drop-shadow(0 0 4px #000)!important}
+.bub{background:radial-gradient(circle,#cdbf9f55,#8a7a5833)!important}
+.fly{background:#b8c4b4!important;box-shadow:0 0 6px 2px #6a7a6a55!important;opacity:.55}
+.spore{background:radial-gradient(#b8bca0,#5a6a4a66)!important;box-shadow:0 0 6px 2px #4a5a4a44!important;opacity:.55}
+.tile.hasNew::after{background:#a3262e!important}
