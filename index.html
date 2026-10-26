@@ -361,6 +361,19 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .tile.hasNew{border-color:#e2c27a;box-shadow:0 0 16px #e2c27a55}
 .tile.hasNew::after{content:"!";position:absolute;top:8px;right:9px;width:18px;height:18px;border-radius:50%;background:#d9443c;color:#fff;font:800 11px/18px system-ui;text-align:center;animation:dnPulse 1.8s ease-in-out infinite}
 @keyframes dnPulse{50%{box-shadow:0 0 10px #d9443c;transform:scale(1.15)}}
+
+/* ===== Баффы на главной ===== */
+#buffRow{display:flex;gap:8px;margin:8px 0 2px}
+.buff{position:relative;flex:1;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;border:1px solid #e2c27a;background:linear-gradient(120deg,#3a2c14f2,#241a38f2);overflow:hidden;box-shadow:0 0 18px #e2c27a55;animation:bfIn .6s cubic-bezier(.2,.9,.3,1.2),bfGlow 2.4s ease-in-out .6s infinite}
+@keyframes bfIn{from{opacity:0;transform:translateY(-10px) scale(.94)}}
+@keyframes bfGlow{50%{box-shadow:0 0 30px #e2c27acc}}
+.buff .bfIc{font-size:24px;filter:drop-shadow(0 0 8px #ffd978);animation:bfSpin 3s ease-in-out infinite}
+@keyframes bfSpin{50%{transform:rotate(18deg) scale(1.18)}}
+.buff .bfTx{display:flex;flex-direction:column;line-height:1.2}
+.buff .bfTx b{font-size:13px;color:#ffe9a8}
+.buff .bfTx small{opacity:.8;font-size:11px;color:#e6d7ae;font-variant-numeric:tabular-nums}
+.buff .bfSh{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#fff5,transparent);transform:skewX(-20deg);animation:sweep 3s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.buff,.buff *{animation:none!important}}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -400,6 +413,10 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 <div id="loadError" class="card hidden" role="status">
   <div id="loadErrorText" class="status">Не удалось загрузить игру.</div>
   <button type="button" class="btn gold" id="retryLoad" style="width:100%;margin-top:8px">Повторить загрузку</button>
+</div>
+
+<div id="buffRow" class="hidden">
+  <div class="buff" id="buffXp"><span class="bfIc">✨</span><span class="bfTx"><b>Опыт <span id="bfPct">+300%</span></b><small>осталось <span id="bfLeft">—</span></small></span><i class="bfSh"></i></div>
 </div>
 
 <div class="timerRow">
@@ -918,6 +935,7 @@ async function loadProfile() {
 
     if (maybeShowStart(data)) return data;
     renderBagFromJ(data);
+    try { renderBuffs(data); } catch (_) {}
     checkDaily();
     try { window.LOTM_TUT && LOTM_TUT.check(); } catch (_) {}
     clearLoadError();
@@ -1171,6 +1189,28 @@ function setHudAvatar(data) {
   if (!img) { box.replaceChildren(); img = document.createElement("img"); img.alt = ""; box.appendChild(img); }
   const src = "./avatars/" + g + "_" + pk + ".svg";
   if (!img.src.endsWith(src.slice(1))) img.src = src;
+}
+
+
+let buffTimer = null;
+function renderBuffs(data) {
+  clearInterval(buffTimer);
+  const row = byId("buffRow");
+  let left = Number(data && data.xp_boost_left) || 0;
+  if (left <= 0) { row.classList.add("hidden"); return; }
+  byId("bfPct").textContent = "+" + (Number(data.xp_boost_pct) || 0) + "%";
+  const fmt = n => {
+    n = Math.max(0, n | 0);
+    return String(Math.floor(n / 3600)).padStart(2, "0") + ":" + String(Math.floor(n % 3600 / 60)).padStart(2, "0") + ":" + String(n % 60).padStart(2, "0");
+  };
+  const paint = () => { byId("bfLeft").textContent = fmt(left); };
+  paint();
+  row.classList.remove("hidden");
+  buffTimer = setInterval(() => {
+    left--;
+    if (left <= 0) { clearInterval(buffTimer); row.classList.add("hidden"); return; }
+    paint();
+  }, 1000);
 }
 
 function maybeShowStart(data) {
