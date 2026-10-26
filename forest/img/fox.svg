@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#4a2a14"/><stop offset="1" stop-color="#0a0604"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<ellipse cx="100" cy="186" rx="70" ry="9" fill="#000" opacity=".55"/>
+<g class="bob">
+<path d="M150 150 Q196 120 186 70 Q176 110 140 124Z" fill="#e8742a"/><path d="M186 70 Q182 92 168 104 Q176 96 186 70Z" fill="#fff3e0"/>
+<path d="M44 40 L72 8 L90 54Z" fill="#d8631c"/><path d="M156 40 L128 8 L110 54Z" fill="#d8631c"/>
+<path d="M56 36 L72 18 L80 46Z" fill="#2a1410"/><path d="M144 36 L128 18 L120 46Z" fill="#2a1410"/>
+<path d="M36 80 Q50 44 100 44 Q150 44 164 80 Q168 120 100 176 Q32 120 36 80Z" fill="#e8742a"/>
+<path d="M36 100 Q70 118 100 176 Q130 118 164 100 Q150 140 100 176 Q50 140 36 100Z" fill="#fff3e0"/>
+<path d="M60 64 Q100 80 140 64" stroke="#b8501a" stroke-width="3" fill="none"/>
+<g class="blink" filter="url(#glow)"><path d="M62 92 Q76 82 90 94 Q76 100 62 92Z" fill="#ffd24a"/><path d="M138 92 Q124 82 110 94 Q124 100 138 92Z" fill="#ffd24a"/>
+<rect x="74" y="86" width="3" height="12" fill="#2a1410"/><rect x="123" y="86" width="3" height="12" fill="#2a1410"/></g>
+<path d="M92 130 L100 140 L108 130Z" fill="#2a1410"/>
+<path d="M100 140 Q92 150 84 148 M100 140 Q108 150 116 148" stroke="#2a1410" stroke-width="2.5" fill="none"/>
+</g>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

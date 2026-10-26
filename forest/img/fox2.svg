@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#3a1a5a"/><stop offset="1" stop-color="#0a0510"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<circle class="pulse" cx="100" cy="110" r="90" fill="#7a3ac8" opacity=".22" filter="url(#soft)"/><path class="fl2" d="M100 130 Q69.4 143.7 21.1 146.7 Q54.1 120.3 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="21.1" cy="146.7" r="4" fill="#fff" opacity=".9"/><path class="fl" d="M100 130 Q61.0 126.7 16.7 107.0 Q58.2 98.8 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="16.7" cy="107.0" r="4" fill="#fff" opacity=".9"/><path class="fl2" d="M100 130 Q61.4 107.7 31.2 69.8 Q71.8 81.7 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="31.2" cy="69.8" r="4" fill="#fff" opacity=".9"/><path class="fl" d="M100 130 Q70.5 91.0 61.2 43.5 Q91.8 72.7 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="61.2" cy="43.5" r="4" fill="#fff" opacity=".9"/><path class="fl2" d="M100 130 Q86.3 80.4 100.0 34.0 Q113.6 74.1 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="100.0" cy="34.0" r="4" fill="#fff" opacity=".9"/><path class="fl" d="M100 130 Q105.2 78.3 138.8 43.5 Q132.3 85.3 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="138.8" cy="43.5" r="4" fill="#fff" opacity=".9"/><path class="fl2" d="M100 130 Q122.9 85.2 168.8 69.8 Q143.8 103.9 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="168.8" cy="69.8" r="4" fill="#fff" opacity=".9"/><path class="fl" d="M100 130 Q135.5 99.5 183.3 107.0 Q145.3 125.7 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="183.3" cy="107.0" r="4" fill="#fff" opacity=".9"/><path class="fl2" d="M100 130 Q140.0 118.0 178.9 146.7 Q136.6 145.8 100 130Z" fill="#c48cff" opacity=".85" filter="url(#glow)"/><circle cx="178.9" cy="146.7" r="4" fill="#fff" opacity=".9"/><ellipse cx="100" cy="186" rx="70" ry="9" fill="#000" opacity=".55"/>
+<g class="bob">
+<path d="M44 40 L72 8 L90 54Z" fill="#f0f0ff"/><path d="M156 40 L128 8 L110 54Z" fill="#f0f0ff"/>
+<path d="M56 36 L72 18 L80 46Z" fill="#7a3ac8"/><path d="M144 36 L128 18 L120 46Z" fill="#7a3ac8"/>
+<path d="M36 80 Q50 44 100 44 Q150 44 164 80 Q168 120 100 176 Q32 120 36 80Z" fill="#f4eefc"/>
+<path d="M36 100 Q70 118 100 176 Q130 118 164 100 Q150 140 100 176 Q50 140 36 100Z" fill="#d8c4f4"/>
+<path d="M62 62 l14 12 M138 62 l-14 12 M100 48 l0 14" stroke="#7a3ac8" stroke-width="3" stroke-linecap="round"/>
+<g class="blink" filter="url(#glow)"><path d="M60 92 Q76 80 92 94 Q76 102 60 92Z" fill="#ff3ad0"/><path d="M140 92 Q124 80 108 94 Q124 102 140 92Z" fill="#ff3ad0"/>
+<rect x="74" y="86" width="3" height="12" fill="#14091a"/><rect x="123" y="86" width="3" height="12" fill="#14091a"/></g>
+<path d="M92 130 L100 140 L108 130Z" fill="#14091a"/>
+<path d="M88 150 Q100 158 112 150" stroke="#c4257a" stroke-width="3" fill="none" stroke-linecap="round"/>
+</g><circle class="rise" cx="85" cy="170" r="1.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:0.0s"/><circle class="rise" cx="122" cy="159" r="2.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:3.1s"/><circle class="rise" cx="159" cy="148" r="3.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:2.2s"/><circle class="rise" cx="36" cy="137" r="1.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:1.3s"/><circle class="rise" cx="73" cy="166" r="2.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:0.4s"/><circle class="rise" cx="110" cy="155" r="3.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:3.5s"/><circle class="rise" cx="147" cy="144" r="1.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:2.6s"/><circle class="rise" cx="24" cy="133" r="2.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:1.7s"/><circle class="rise" cx="61" cy="162" r="3.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:0.8s"/><circle class="rise" cx="98" cy="151" r="1.5" fill="#e0b0ff" filter="url(#glow)" style="animation-delay:3.9s"/>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#26364a"/><stop offset="1" stop-color="#05080c"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<ellipse cx="100" cy="186" rx="70" ry="9" fill="#000" opacity=".55"/><g class="bob"><path d="M80 156 Q80 176 88 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M90 156 Q90 176 98 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M100 156 Q100 176 108 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M110 156 Q110 176 118 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M120 156 Q120 176 128 184" stroke="#d9d3c0" stroke-width="3" fill="none"/>
+<path d="M50 70 L62 34 L84 56 Q100 50 116 56 L138 34 L150 70 Q160 100 148 124 L132 152 Q100 170 68 152 L52 124 Q40 100 50 70Z" fill="#cfc9b4"/>
+<path d="M62 34 L70 62 M138 34 L130 62" stroke="#8a846e" stroke-width="3"/>
+<path d="M70 124 Q100 112 130 124 L124 150 Q100 160 76 150Z" fill="#e4dfcb"/>
+<g fill="#f6f1de"><path d="M80 148 l4 -14 l4 14z M92 150 l4 -16 l4 16z M104 150 l4 -16 l4 16z M116 148 l4 -14 l4 14z"/></g>
+<ellipse cx="82" cy="92" rx="13" ry="14" fill="#0b0f18"/><ellipse cx="118" cy="92" rx="13" ry="14" fill="#0b0f18"/>
+<g class="pulse" filter="url(#glow)"><circle cx="82" cy="94" r="5" fill="#6ad0ff"/><circle cx="118" cy="94" r="5" fill="#6ad0ff"/></g>
+<path d="M92 112 L100 124 L108 112Z" fill="#0b0f18"/>
+<path d="M60 70 Q66 90 62 104 M140 70 Q134 90 138 104" stroke="#8a846e" stroke-width="3" fill="none"/>
+</g>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

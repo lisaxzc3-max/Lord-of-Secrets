@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#33283d"/><stop offset="1" stop-color="#07040a"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<line x1="100" y1="100" x2="230.0" y2="100.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="212.6" y2="165.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="165.0" y2="212.6" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="100.0" y2="230.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="35.0" y2="212.6" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="-12.6" y2="165.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="-30.0" y2="100.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="-12.6" y2="35.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="35.0" y2="-12.6" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="100.0" y2="-30.0" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="165.0" y2="-12.6" stroke="#cfd8c8" stroke-opacity=".22"/><line x1="100" y1="100" x2="212.6" y2="35.0" stroke="#cfd8c8" stroke-opacity=".22"/><polyline points="130.0,100.0 126.0,115.0 115.0,126.0 100.0,130.0 85.0,126.0 74.0,115.0 70.0,100.0 74.0,85.0 85.0,74.0 100.0,70.0 115.0,74.0 126.0,85.0 130.0,100.0" fill="none" stroke="#cfd8c8" stroke-opacity=".2"/><polyline points="155.0,100.0 147.6,127.5 127.5,147.6 100.0,155.0 72.5,147.6 52.4,127.5 45.0,100.0 52.4,72.5 72.5,52.4 100.0,45.0 127.5,52.4 147.6,72.5 155.0,100.0" fill="none" stroke="#cfd8c8" stroke-opacity=".2"/><polyline points="180.0,100.0 169.3,140.0 140.0,169.3 100.0,180.0 60.0,169.3 30.7,140.0 20.0,100.0 30.7,60.0 60.0,30.7 100.0,20.0 140.0,30.7 169.3,60.0 180.0,100.0" fill="none" stroke="#cfd8c8" stroke-opacity=".2"/><polyline points="205.0,100.0 190.9,152.5 152.5,190.9 100.0,205.0 47.5,190.9 9.1,152.5 -5.0,100.0 9.1,47.5 47.5,9.1 100.0,-5.0 152.5,9.1 190.9,47.5 205.0,100.0" fill="none" stroke="#cfd8c8" stroke-opacity=".2"/><g class="bob"><polyline points="82,99.0 42,73.0 12,129.0" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="82,104.4 30,78.4 0,138.4" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="82,110.4 30,84.4 0,148.4" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="82,115.8 42,89.8 12,157.8" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="118,99.0 158,73.0 188,129.0" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="118,104.4 170,78.4 200,138.4" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="118,110.4 170,84.4 200,148.4" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="118,115.8 158,89.8 188,157.8" stroke="#1a1020" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="100" cy="132" rx="34" ry="40" fill="#1d1226"/>
+<path d="M100 98 L100 164" stroke="#6a2a8a" stroke-width="3"/><path d="M84 118 Q100 128 116 118M82 138 Q100 148 118 138" stroke="#6a2a8a" stroke-width="3" fill="none"/>
+<ellipse cx="100" cy="90" rx="22" ry="20" fill="#2a1a36"/>
+<g class="blink" filter="url(#glow)" fill="#ff3a4a"><circle cx="92" cy="84" r="4"/><circle cx="108" cy="84" r="4"/><circle cx="85" cy="92" r="2.5"/><circle cx="115" cy="92" r="2.5"/><circle cx="100" cy="80" r="2.5"/></g>
+<path d="M92 102 l-3 10 M108 102 l3 10" stroke="#d8d0e0" stroke-width="3" stroke-linecap="round"/></g>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

@@ -290,14 +290,14 @@ hunter_boost:{icon:"😤",name:"Провокация",desc:"Способност
 basic:{icon:"⚔️",name:"Базовая атака",desc:"Обычная атака."},
 flee:{icon:"🏃",name:"Отступить",desc:"Попробовать покинуть сражение."}
 };
-/* Картинки монстров: впиши путь, когда добавишь фото, например "Гриб-спорник":"./mushroom.png". Пока показываются эмодзи. */
+/* Картинки монстров лежат в forest/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Гриб-спорник":"",
-"Паук-ткач":"",
-"Проклятое дерево":"",
-"Шипастый кабан":"",
-"Костяной волк":"",
-"Лиса-оборотень":""
+"Гриб-спорник":"../img/mushroom.svg",
+"Паук-ткач":"../img/spider.svg",
+"Проклятое дерево":"../img/tree.svg",
+"Шипастый кабан":"../img/boar.svg",
+"Костяной волк":"../img/wolf.svg",
+"Лиса-оборотень":"../img/fox.svg"
 };
 const EMO={"Гриб-спорник":"🍄","Паук-ткач":"🕷️","Проклятое дерево":"🌳","Шипастый кабан":"🐗","Костяной волк":"🐺","Лиса-оборотень":"🦊"};
 const ROLE={"Гриб-спорник":"Споровик","Паук-ткач":"Ткач","Проклятое дерево":"Древний страж","Шипастый кабан":"Дикий зверь","Костяной волк":"Нежить","Лиса-оборотень":"Босс"};
@@ -438,7 +438,7 @@ function bossFx(text){
 if(!text)return;
 tickStatuses();
 const P=framePlayer(),E=frameEnemy();
-if(/КИЦУНЭ/.test(text)){flashScreen();banner("КИЦУНЭ","#c48cff");shakeScreen();ambient("fox",10);$("arena").classList.add("phase2")}
+if(/КИЦУНЭ/.test(text)){flashScreen();banner("КИЦУНЭ","#c48cff");shakeScreen();ambient("fox",10);$("arena").classList.add("phase2");setImageForEnemy("Лиса-оборотень")}
 if(/Усыпляющие споры/.test(text))ambient("spore",9);
 if(/Ядовитые споры/.test(text))ambient("spore",7);
 if(/Ты уснул/.test(text)){st.sleep=1;banner("СОН","#7aa8ff")}
@@ -528,7 +528,7 @@ if(boss)parts.push("Фаза "+(Number(phase)||1));
 parts.push(boss?"Босс":(ROLE[curEnemy]||"Враждебная сущность"));
 const p2=!!boss&&Number(phase)>=2;
 $("arena").classList.toggle("phase2",p2);
-if(p2&&curEnemy==="Лиса-оборотень")$("enemyEmo").textContent="🦊";
+if(curEnemy==="Лиса-оборотень")setImageForEnemy(curEnemy);
 const role=$("enemyRole");
 role.textContent=parts.join(" · ");
 role.classList.toggle("boss",!!boss);
@@ -559,7 +559,7 @@ $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.s
 function setImageForEnemy(enemy){
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌲";
-const src=pics[enemy];
+const src=(enemy==="Лиса-оборотень"&&$("arena").classList.contains("phase2"))?"../img/fox2.svg":pics[enemy];
 if(src){
 img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
 img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#4a3a1a"/><stop offset="1" stop-color="#080604"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<path d="M14 200 L14 62 M0 92 L14 42 L28 92Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><path d="M50 200 L50 110 M36 140 L50 90 L64 140Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><path d="M150 200 L150 110 M136 140 L150 90 L164 140Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><path d="M186 200 L186 108 M172 138 L186 88 L200 138Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><ellipse cx="100" cy="176" rx="72" ry="10" fill="#000" opacity=".6"/>
+<path d="M44 176 L56 106 L144 106 L156 176Z" fill="#4a4852"/>
+<path d="M56 106 L66 86 L134 86 L144 106Z" fill="#6a6872"/>
+<path d="M44 176 L56 106 L72 106 L60 176Z" fill="#34323a"/>
+<ellipse class="pulse" cx="100" cy="150" rx="20" ry="10" fill="#ffb04a" opacity=".5" filter="url(#soft)"/><text class="fl2" x="52" y="92" font-size="16" fill="#ffd27a" filter="url(#glow)" font-family="serif">ᚠ</text><text class="fl" x="84" y="76" font-size="16" fill="#ffd27a" filter="url(#glow)" font-family="serif">ᚱ</text><text class="fl2" x="116" y="76" font-size="16" fill="#ffd27a" filter="url(#glow)" font-family="serif">ᛟ</text><text class="fl" x="148" y="92" font-size="16" fill="#ffd27a" filter="url(#glow)" font-family="serif">ᛉ</text><text class="fl2" x="70" y="110" font-size="16" fill="#ffd27a" filter="url(#glow)" font-family="serif">ᚦ</text><text class="fl" x="126" y="110" font-size="16" fill="#ffd27a" filter="url(#glow)" font-family="serif">ᛞ</text>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

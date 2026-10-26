@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#2a3a3a"/><stop offset="1" stop-color="#050808"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<path d="M100 14 L52 110 L148 110Z M100 56 L38 150 L162 150Z" fill="#06140c" stroke="#06140c" stroke-width="4" stroke-linejoin="round"/>
+<ellipse cx="100" cy="184" rx="64" ry="8" fill="#000" opacity=".6"/>
+<g class="bob"><path d="M82 176 Q80 140 96 130 Q112 126 118 144 L122 176Z" fill="#2a2520"/>
+<circle cx="102" cy="120" r="12" fill="#c9c2b0"/><path d="M94 118 h5 M106 118 h5" stroke="#07040a" stroke-width="3"/>
+<path d="M90 110 Q102 98 114 110" stroke="#3a3228" stroke-width="5" fill="none"/>
+<path d="M118 148 l18 -6 l-4 14z" fill="#8a7a5a"/><rect x="126" y="146" width="14" height="10" fill="#d8d0b8" transform="rotate(-10 126 146)"/></g>
+<g fill="#07040a"><path class="rise" d="M30 60 l8 -4 l8 4 l-8 2z" style="animation-duration:7s"/><path d="M160 40 l8 -4 l8 4 l-8 2z"/><path d="M150 76 l8 -4 l8 4 l-8 2z"/></g><circle cx="52" cy="46" r="14" fill="#dfe8d0" opacity=".7" filter="url(#glow)"/>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

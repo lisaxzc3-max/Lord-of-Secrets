@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#4a3214"/><stop offset="1" stop-color="#0a0604"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<path d="M14 200 L14 62 M0 92 L14 42 L28 92Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><path d="M50 200 L50 110 M36 140 L50 90 L64 140Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><path d="M150 200 L150 110 M136 140 L150 90 L164 140Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><path d="M186 200 L186 108 M172 138 L186 88 L200 138Z" fill="#07140c" stroke="#07140c" stroke-width="5"/><g class="bob">
+<path d="M62 150 L66 176 L58 184 M138 150 L134 176 L142 184" stroke="#d8b870" stroke-width="6" fill="none" stroke-linecap="round"/>
+<path d="M58 184 l-8 2 M58 184 l2 6 M142 184 l8 2 M142 184 l-2 6" stroke="#d8b870" stroke-width="4" stroke-linecap="round"/>
+<rect x="56" y="96" width="88" height="58" fill="#4a3220"/>
+<path d="M44 100 L100 50 L156 100Z" fill="#2a1a10"/>
+<path d="M100 50 L100 38" stroke="#2a1a10" stroke-width="5"/>
+<rect x="86" y="112" width="28" height="24" fill="#ffb04a" filter="url(#glow)" class="fl"/>
+<path d="M86 124 h28 M100 112 v24" stroke="#3a2412" stroke-width="3"/>
+<path d="M118 150 l0 -22 l14 0 l0 22z" fill="#2a1a10"/>
+<path class="rise" d="M102 38 q-8 -10 4 -18" stroke="#9aa59a" stroke-width="4" fill="none" opacity=".6"/>
+</g><circle class="rise" cx="72" cy="170" r="1.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:0.0s"/><circle class="rise" cx="109" cy="159" r="2.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:3.1s"/><circle class="rise" cx="146" cy="148" r="3.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:2.2s"/><circle class="rise" cx="23" cy="137" r="1.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:1.3s"/><circle class="rise" cx="60" cy="166" r="2.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:0.4s"/><circle class="rise" cx="97" cy="155" r="3.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:3.5s"/><circle class="rise" cx="134" cy="144" r="1.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:2.6s"/><circle class="rise" cx="171" cy="133" r="2.5" fill="#ffd9a0" filter="url(#glow)" style="animation-delay:1.7s"/>
+<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
+</svg>

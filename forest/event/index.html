@@ -122,7 +122,7 @@ let busy=false,done=false,ev=null,evKey="";
 const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 const rnd=(a,b)=>a+Math.random()*(b-a);
 
-/* Картинки событий: впиши путь, когда добавишь фото, например whisper:"./whisper.png" */
+/* Картинки событий лежат в forest/img. Чтобы заменить на фото, поменяй путь. */
 const META={
 whisper:{t:"🌲 Шёпот между деревьями",s:"👁️",glow:"#b9a0ff88"},
 ring:{t:"🍄 Ведьмино кольцо",s:"🍄",glow:"#bfffa088"},
@@ -132,7 +132,7 @@ altar:{t:"🗿 Алтарь без имени",s:"🗿",glow:"#ffd27a99"},
 loop:{t:"🌀 Тропа без возврата",s:"🧭",glow:"#7aa8ff88"},
 hunter:{t:"💀 Мёртвый охотник",s:"💀",glow:"#c9c9c988"}
 };
-const IMG={whisper:"",ring:"",hut:"",tracks:"",altar:"",loop:"",hunter:""};
+const IMG={whisper:"../img/whisper.svg",ring:"../img/ring.svg",hut:"../img/hut.svg",tracks:"../img/tracks.svg",altar:"../img/altar.svg",loop:"../img/loop.svg",hunter:"../img/hunter.svg"};
 const ICON={f_whisper_listen:"👂",f_whisper_plug:"🙉",f_whisper_answer:"🗣",f_ring_enter:"🍄",f_ring_skip:"↩",f_hut_potion:"🧪",f_hut_fortune:"🔮",f_hut_leave:"↩",f_tracks_study:"🔍",f_tracks_erase:"🧹",f_altar_money:"💷",f_altar_blood:"🩸",f_altar_leave:"↩",f_loop_exit:"🧭",f_loop_straight:"➡",f_loop_mark:"🪓",f_hunter_diary:"📖",f_hunter_bag:"🎒",f_hunter_pray:"🙏"};
 
 function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
