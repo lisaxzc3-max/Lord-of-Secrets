@@ -307,6 +307,57 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .d2{--dc1:#3a1e10;--dc2:#d08a4a;--dg:#ff9a5a44}
 .d3{--dc1:#2a1240;--dc2:#9a6ad0;--dg:#b48cff44}
 @media(prefers-reduced-motion:reduce){.dist,.plc{opacity:1!important;transform:none!important}.ctyWin rect,.ctyLamps circle,.ctyMoon,.ctyFar,.ctyMid,.ctyHands,.ctyName,.dMed:after,.dMed i,.plc .pi,.plc:after{animation:none!important}}
+
+/* ===== Сумка ===== */
+.bagWrap{position:relative;overflow:hidden}
+.bagWrap::before{content:"";position:absolute;inset:-40% -20% auto;height:200px;background:radial-gradient(ellipse at 50% 0,#8a5cff33,transparent 70%);pointer-events:none;animation:bgBreath 6s ease-in-out infinite}
+@keyframes bgBreath{50%{opacity:.5;transform:scale(1.1)}}
+.bgHead{display:flex;justify-content:space-between;align-items:center}
+.bgHead h3{margin:0}
+.bgCnt{font:700 12px Georgia,serif;color:#e2c27a;background:#0005;border:1px solid #e2c27a55;border-radius:99px;padding:2px 9px}
+.bgBar{height:6px;border-radius:99px;background:#0006;border:1px solid #2f2745;margin:8px 0 12px;overflow:hidden}
+.bgBar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#6a58a0,#e2c27a);background-size:200% 100%;transition:width .8s cubic-bezier(.2,.8,.2,1);animation:bgFlow 3s linear infinite}
+.bgBar.full i{background:linear-gradient(90deg,#a33,#e2c27a)}
+@keyframes bgFlow{to{background-position:-200% 0}}
+.bgSub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#a99dba;margin:6px 0 7px;display:flex;justify-content:space-between}
+.eqGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.eqSlot{position:relative;aspect-ratio:1/1.05;border-radius:12px;border:1px dashed #3a3057;background:#120c1e99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;text-align:center;font:inherit;color:inherit;cursor:default;overflow:hidden;animation:bgIn .45s backwards;animation-delay:calc(var(--i)*45ms)}
+.eqSlot .ic{font-size:22px;opacity:.28;filter:grayscale(1)}
+.eqSlot .sl{font-size:9px;color:#7d7194;letter-spacing:.5px}
+.eqSlot.on{border-style:solid;border-color:var(--rc);background:linear-gradient(160deg,#2a2040,#150e24);cursor:pointer;box-shadow:0 0 12px var(--rg),inset 0 0 14px var(--rg)}
+.eqSlot.on .ic{opacity:1;filter:none;animation:bgFloat 3s ease-in-out infinite;animation-delay:calc(var(--i)*200ms)}
+.eqSlot.on .nm{font-size:9px;font-weight:700;color:#f2e6c8;line-height:1.1;max-height:22px;overflow:hidden}
+.eqSlot.on::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#fff3,transparent);transform:skewX(-20deg);animation:bgShine 4.5s ease-in-out infinite;animation-delay:calc(var(--i)*400ms)}
+.eqSlot.on:active{transform:scale(.94)}
+@keyframes bgFloat{50%{transform:translateY(-2px)}}
+@keyframes bgShine{0%,60%{left:-60%}100%{left:130%}}
+@keyframes bgIn{from{opacity:0;transform:translateY(10px) scale(.92)}}
+.bgFilter{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:4px;scrollbar-width:none}
+.bgFilter::-webkit-scrollbar{display:none}
+.bgChip{flex:0 0 auto;border:1px solid #3a3057;background:#120c1e;color:#b8accb;border-radius:99px;padding:5px 11px;font:600 11px inherit;font-family:inherit;cursor:pointer;transition:.2s}
+.bgChip.on{background:#e2c27a;color:#1a1020;border-color:#e2c27a;box-shadow:0 0 10px #e2c27a66}
+.invGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.invCard{position:relative;border-radius:13px;border:1px solid var(--rc);background:linear-gradient(165deg,#241a38,#130d20);padding:9px 9px 8px;display:flex;flex-direction:column;gap:5px;overflow:hidden;box-shadow:0 0 10px var(--rg);animation:bgIn .45s backwards;animation-delay:calc(var(--i)*40ms);transition:transform .25s,opacity .3s}
+.invCard::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 0,var(--rg),transparent 60%);opacity:.7;pointer-events:none}
+.invCard.legend::after,.invCard.epic::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#fff4,transparent);transform:skewX(-20deg);animation:bgShine 3.5s ease-in-out infinite}
+.invCard .tp{display:flex;align-items:center;gap:7px;position:relative}
+.invCard .ic{flex:0 0 34px;height:34px;border-radius:10px;background:#0007;border:1px solid var(--rc);display:flex;align-items:center;justify-content:center;font-size:19px;animation:bgFloat 3.4s ease-in-out infinite;animation-delay:calc(var(--i)*150ms)}
+.invCard .nm{font-weight:800;font-size:12px;color:#f6ecd0;line-height:1.15}
+.invCard .rr{font-size:9px;letter-spacing:.5px;color:var(--rc);text-transform:uppercase}
+.invCard .chips{display:flex;flex-wrap:wrap;gap:3px;position:relative;min-height:16px}
+.invCard .chip{font-size:10px;padding:1px 6px;border-radius:6px;background:#0007;border:1px solid #ffffff14;color:#d8cdea}
+.invCard .chip b{color:#e2c27a}
+.invCard .set{font-size:9px;color:#9fd7c4;position:relative}
+.invCard .btn{position:relative;width:100%;padding:6px 4px;font-size:12px;margin:0}
+.invCard .qk{font-size:10px;color:#8fb8b0;text-align:center;padding:6px 0;position:relative;border:1px dashed #3b6a66;border-radius:8px}
+.invCard.out{transform:scale(.7) translateY(-30px);opacity:0}
+.invCard.new{animation:bgNew .8s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes bgNew{0%{transform:scale(.6);box-shadow:0 0 30px var(--rc)}}
+.bgEmpty{grid-column:1/-1;text-align:center;padding:26px 10px;color:#8a7ea1;font-size:12px}
+.bgEmpty .big{font-size:38px;display:block;margin-bottom:6px;animation:bgFloat 3s ease-in-out infinite;filter:grayscale(.5)}
+.bgSpark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;background:var(--c,#e2c27a);box-shadow:0 0 8px var(--c,#e2c27a);animation:bgSp .7s ease-out forwards}
+@keyframes bgSp{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+@media(prefers-reduced-motion:reduce){.bagWrap *,.bagWrap::before{animation:none!important;transition:none!important}}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -499,11 +550,14 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
   <div id="locBtns"></div>
 </div>
 
-<div id="bag" class="card hidden">
-  <h3>🎒 Инвентарь <span id="bagCnt" style="font-size:11px;opacity:.6"></span></h3>
-  <div id="invList"></div>
-  <h3 style="margin-top:12px">⬢ Надето</h3>
-  <div id="eqList"></div>
+<div id="bag" class="card hidden bagWrap">
+  <div class="bgHead"><h3>🎒 Сумка</h3><span id="bagCnt" class="bgCnt"></span></div>
+  <div class="bgBar"><i id="bagBar"></i></div>
+  <div class="bgSub">⬢ Надето <span id="eqCnt"></span></div>
+  <div id="eqList" class="eqGrid"></div>
+  <div class="bgSub">Предметы</div>
+  <div id="bagFilter" class="bgFilter"></div>
+  <div id="invList" class="invGrid"></div>
 </div>
 
 <div id="eventCard" class="card hidden">
@@ -1277,90 +1331,207 @@ function maybeShowStart(data) {
   byId("hallProfileHint").classList.toggle("hidden", needsStart);
 }
 
+const BAG_SLOTS = [
+  ["head", "Голова", "🎩"], ["face", "Лицо", "🎭"], ["body", "Тело", "🥋"], ["weapon", "Оружие", "🗡️"],
+  ["legs", "Ноги", "👢"], ["necklace", "Шея", "📿"], ["ring", "Кольцо", "💍"]
+];
+const BAG_SLOT = Object.fromEntries(BAG_SLOTS.map(x => [x[0], x]));
+const BAG_RAR = {
+  "обычная": ["#8d86a0", "#8d86a022", ""],
+  "необычная": ["#5fbf7a", "#5fbf7a33", ""],
+  "редкая": ["#5a9cff", "#5a9cff33", "rare"],
+  "эпическая": ["#b46bff", "#b46bff44", "epic"],
+  "легендарная": ["#ffb43a", "#ffb43a55", "legend"],
+  "квестовый": ["#4ec9b8", "#4ec9b833", ""]
+};
+const BAG_STAT = { str: "💪 Сила", agi: "⚡ Ловк", int: "🔮 Инт", spi: "✨ Дух", con: "🛡 Вын", dmg: "⚔ Урон", def: "🛡 Защ", hp: "❤ HP", mp: "🔷 MP" };
+let bagFilter = "all";
+let bagPrevCount = -1;
+
+function bagRar(item) {
+  const key = String(item?.quest ? "квестовый" : (item?.rarity || "обычная")).toLowerCase();
+  return BAG_RAR[key] || BAG_RAR["обычная"];
+}
+
+function bagSpark(el, color) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const r = el.getBoundingClientRect();
+  for (let i = 0; i < 14; i++) {
+    const d = document.createElement("i");
+    d.className = "bgSpark";
+    const ang = Math.random() * 6.283, dist = 30 + Math.random() * 50;
+    d.style.cssText = "left:" + (r.left + r.width / 2) + "px;top:" + (r.top + r.height / 2) + "px;--c:" + color +
+      ";--dx:" + Math.cos(ang) * dist + "px;--dy:" + Math.sin(ang) * dist + "px";
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 750);
+  }
+}
+
+function bagStats(item) {
+  const box = document.createElement("div");
+  box.className = "chips";
+  const st = item && item.stats && typeof item.stats === "object" ? item.stats : null;
+  if (st) {
+    Object.keys(st).forEach(k => {
+      if (!st[k]) return;
+      const c = document.createElement("span");
+      c.className = "chip";
+      const label = BAG_STAT[k] || k;
+      const v = document.createElement("b");
+      v.textContent = (typeof st[k] === "number" && st[k] > 0 ? "+" : "") + st[k];
+      c.append(label + " ", v);
+      box.appendChild(c);
+    });
+  }
+  if (!box.children.length && item?.bonus) {
+    const c = document.createElement("span");
+    c.className = "chip";
+    c.textContent = String(item.bonus);
+    box.appendChild(c);
+  }
+  return box;
+}
+
 function renderBagFromJ(data) {
   G.inv = Array.isArray(data.inventory) ? data.inventory : [];
+  G.eq = data.equipped && typeof data.equipped === "object" ? data.equipped : {};
 
-  G.eq = data.equipped && typeof data.equipped === "object"
-    ? data.equipped
-    : {};
+  const total = G.inv.length;
+  byId("bagCnt").textContent = total + "/50";
+  const bar = byId("bagBar");
+  bar.style.width = Math.min(100, total * 2) + "%";
+  bar.parentElement.classList.toggle("full", total >= 45);
 
-  const invList = byId("invList");
-  invList.replaceChildren();
+  // Надето
+  const eqList = byId("eqList");
+  eqList.replaceChildren();
+  let worn = 0;
+  BAG_SLOTS.forEach(([slot, label, icon], i) => {
+    const item = G.eq[slot];
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "eqSlot";
+    b.style.setProperty("--i", i);
+    const ic = document.createElement("div");
+    ic.className = "ic";
+    ic.textContent = icon;
+    b.appendChild(ic);
+    if (item) {
+      worn++;
+      const [rc, rg] = bagRar(item);
+      b.classList.add("on");
+      b.style.setProperty("--rc", rc);
+      b.style.setProperty("--rg", rg);
+      b.title = "Снять: " + String(item.name ?? "");
+      const nm = document.createElement("div");
+      nm.className = "nm";
+      nm.textContent = String(item.name ?? "Предмет");
+      b.appendChild(nm);
+      b.addEventListener("click", () => {
+        bagSpark(b, rc);
+        try { snd("back"); } catch (e) {}
+        doUnequip(slot);
+      });
+    } else {
+      const sl = document.createElement("div");
+      sl.className = "sl";
+      sl.textContent = label;
+      b.appendChild(sl);
+      b.disabled = true;
+    }
+    eqList.appendChild(b);
+  });
+  byId("eqCnt").textContent = worn + "/7";
 
-  if (G.inv.length === 0) {
-    const empty = document.createElement("small");
-    empty.textContent = "Пусто";
-    invList.appendChild(empty);
-  } else {
-    G.inv.forEach((item, index) => {
-      const row = document.createElement("div");
-      row.className = "item";
-
-      const info = document.createElement("div");
-
-      const name = document.createElement("b");
-      name.textContent = String(item?.name ?? "Предмет");
-
-      const bonus = document.createElement("small");
-      bonus.textContent = String(item?.bonus ?? "");
-
-      info.append(name, bonus);
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "btn gold";
-      button.textContent = "Надеть";
-      button.addEventListener("click", () => doEquip(index));
-
-      row.append(info, button);
-      invList.appendChild(row);
+  // Фильтры
+  const filter = byId("bagFilter");
+  filter.replaceChildren();
+  const present = new Set(G.inv.map(it => it?.slot).filter(Boolean));
+  if (bagFilter !== "all" && !present.has(bagFilter)) bagFilter = "all";
+  if (present.size > 1) {
+    [["all", "Все"]].concat(BAG_SLOTS.filter(x => present.has(x[0])).map(x => [x[0], x[1]])).forEach(([k, t]) => {
+      const c = document.createElement("button");
+      c.type = "button";
+      c.className = "bgChip" + (bagFilter === k ? " on" : "");
+      c.textContent = t;
+      c.addEventListener("click", () => {
+        bagFilter = k;
+        try { snd("tap"); } catch (e) {}
+        renderBagFromJ(data);
+      });
+      filter.appendChild(c);
     });
   }
 
-  byId("bagCnt").textContent = "(" + G.inv.length + "/50)";
+  // Предметы
+  const invList = byId("invList");
+  invList.replaceChildren();
+  const grew = bagPrevCount >= 0 && total > bagPrevCount;
+  bagPrevCount = total;
+  let shown = 0;
+  G.inv.forEach((item, index) => {
+    if (bagFilter !== "all" && item?.slot !== bagFilter) return;
+    shown++;
+    const [rc, rg, cls] = bagRar(item);
+    const card = document.createElement("div");
+    card.className = "invCard " + cls + (grew && index === total - 1 ? " new" : "");
+    card.style.cssText = "--rc:" + rc + ";--rg:" + rg + ";--i:" + Math.min(shown, 12);
 
-  const eqList = byId("eqList");
-  eqList.replaceChildren();
+    const top = document.createElement("div");
+    top.className = "tp";
+    const ic = document.createElement("div");
+    ic.className = "ic";
+    ic.textContent = (BAG_SLOT[item?.slot] || [0, 0, "📦"])[2];
+    const tx = document.createElement("div");
+    const nm = document.createElement("div");
+    nm.className = "nm";
+    nm.textContent = String(item?.name ?? "Предмет");
+    const rr = document.createElement("div");
+    rr.className = "rr";
+    rr.textContent = (item?.quest ? "Квестовый" : String(item?.rarity || "Обычная")) +
+      (BAG_SLOT[item?.slot] ? " · " + BAG_SLOT[item.slot][1] : "");
+    tx.append(nm, rr);
+    top.append(ic, tx);
+    card.append(top, bagStats(item));
 
-  [
-    "head",
-    "face",
-    "body",
-    "weapon",
-    "legs",
-    "necklace",
-    "ring"
-  ].forEach(slot => {
-    const row = document.createElement("div");
-    row.className = "item";
-
-    const item = G.eq[slot];
-
-    if (item) {
-      const info = document.createElement("div");
-
-      const name = document.createElement("b");
-      name.textContent = String(item.name ?? "Предмет");
-
-      const label = document.createElement("small");
-      label.textContent = slot;
-
-      info.append(name, label);
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "btn";
-      button.textContent = "Снять";
-      button.addEventListener("click", () => doUnequip(slot));
-
-      row.append(info, button);
-    } else {
-      row.style.opacity = ".4";
-      row.textContent = slot + " — пусто";
+    if (item?.set) {
+      const st = document.createElement("div");
+      st.className = "set";
+      st.textContent = "◈ Комплект: " + (item.set === "novice" ? "Новичок" : item.set);
+      card.appendChild(st);
     }
 
-    eqList.appendChild(row);
+    if (item?.quest) {
+      const q = document.createElement("div");
+      q.className = "qk";
+      q.textContent = "Квестовый предмет";
+      card.appendChild(q);
+    } else {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn gold";
+      btn.textContent = "Надеть";
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        bagSpark(card, rc);
+        card.classList.add("out");
+        try { snd("good"); } catch (e) {}
+        doEquip(index);
+      });
+      card.appendChild(btn);
+    }
+    invList.appendChild(card);
   });
+
+  if (!shown) {
+    const e = document.createElement("div");
+    e.className = "bgEmpty";
+    const big = document.createElement("span");
+    big.className = "big";
+    big.textContent = "🎒";
+    e.append(big, total ? "Здесь ничего нет" : "Сумка пуста — добудь что-нибудь в походах");
+    invList.appendChild(e);
+  }
 }
 
 function renderBag() {
