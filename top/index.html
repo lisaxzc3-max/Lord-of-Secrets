@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0814">
+<title>Зал славы · Ратуша</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--panel:rgba(22,17,34,.94);--line:#4a3d6a;--text:#eee6d6;--muted:#a99dba;--gold:#e2c27a;--silver:#cfd6e4;--bronze:#d69a6a}
+*{box-sizing:border-box}
+html{min-height:100%;background:#0b0814}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -5%,#4a2f7a66,transparent 55%),radial-gradient(ellipse at 50% 110%,#7a5a2a33,transparent 55%),linear-gradient(#0d0a18,#07050d)}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 12px calc(40px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:7px 0 10px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#17122399;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.head h1{font-size:19px;margin:3px 0 0;font-weight:800;background:linear-gradient(90deg,#fff3cf,#e2c27a,#fff3cf);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+
+/* герб */
+.hall{position:relative;text-align:center;padding:6px 0 0}
+.crest{position:relative;width:96px;height:96px;margin:0 auto 4px}
+.crest .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed #e2c27a66;animation:spin 18s linear infinite}
+.crest .ring.r2{inset:10px;border-color:#b48cff55;animation-duration:12s;animation-direction:reverse}
+.crest .core{position:absolute;inset:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;background:radial-gradient(circle at 35% 30%,#fff3,#e2c27a33 40%,#2a1d44);box-shadow:0 0 28px #e2c27a66,inset 0 0 14px #0008;animation:pulse 3s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{box-shadow:0 0 44px #e2c27acc,inset 0 0 14px #0008;transform:scale(1.05)}}
+.sub{font-size:11px;color:var(--muted);letter-spacing:.5px}
+
+/* таймер */
+.timer{display:flex;justify-content:center;align-items:center;gap:8px;margin:10px auto 12px;padding:7px 12px;width:max-content;max-width:100%;border:1px solid var(--line);border-radius:999px;background:#150f22d0;font-size:11px;color:var(--muted)}
+.timer b{color:var(--gold);font-variant-numeric:tabular-nums}
+.timer i{width:7px;height:7px;border-radius:50%;background:#7be3a0;box-shadow:0 0 8px #7be3a0;animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{50%{opacity:.3}}
+
+/* подиум */
+.podium{display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:8px;align-items:end;margin:6px 0 14px;min-height:190px}
+.pod{position:relative;text-align:center;opacity:0;transform:translateY(24px) scale(.94);animation:rise .7s cubic-bezier(.2,.9,.3,1.2) forwards}
+.pod.p1{animation-delay:.35s}.pod.p2{animation-delay:.15s}.pod.p3{animation-delay:.05s}
+@keyframes rise{to{opacity:1;transform:none}}
+.pav{position:relative;margin:0 auto;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid var(--c);background:radial-gradient(circle at 35% 30%,#fff3,#1b1430 70%);box-shadow:0 0 18px var(--c)}
+.p1 .pav{width:76px;height:76px;font-size:32px;animation:glow1 2.4s ease-in-out infinite}
+@keyframes glow1{50%{box-shadow:0 0 36px var(--c),0 0 60px #e2c27a55}}
+.crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:24px;filter:drop-shadow(0 0 8px #ffd96a);animation:float 2.4s ease-in-out infinite}
+@keyframes float{50%{transform:translateX(-50%) translateY(-5px) rotate(4deg)}}
+.pn{margin-top:7px;font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
+.pl{font-size:11px;color:var(--c);font-weight:800;letter-spacing:.5px}
+.base{margin-top:6px;border-radius:12px 12px 4px 4px;border:1px solid var(--c);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 28%,#1a1328),#120d1d);display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-weight:900;font-size:22px;color:var(--c);position:relative;overflow:hidden}
+.p1 .base{height:78px}.p2 .base{height:58px}.p3 .base{height:44px}
+.base:after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#ffffff33,transparent);animation:sweep 3.6s ease-in-out infinite}
+@keyframes sweep{60%,100%{left:130%}}
+.p1{--c:var(--gold)}.p2{--c:var(--silver)}.p3{--c:var(--bronze)}
+.me .pn{color:#9fe8b6}
+
+/* список */
+.list{display:flex;flex-direction:column;gap:7px}
+.row{position:relative;display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden;opacity:0;transform:translateX(-18px);animation:slide .5s ease-out forwards}
+@keyframes slide{to{opacity:1;transform:none}}
+.row .rk{flex:0 0 28px;text-align:center;font-weight:900;color:var(--muted);font-size:14px}
+.row .av{flex:0 0 36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:radial-gradient(circle at 35% 30%,#fff2,#241a3a 70%);border:1px solid #5a4a80}
+.row .mid{flex:1;min-width:0}
+.row .nm{font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .bar{margin-top:6px;height:5px;border-radius:4px;background:#0006;overflow:hidden}
+.row .bar i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#8a5cff,#e2c27a);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.row .lv{flex:0 0 auto;text-align:center;min-width:44px}
+.row .lv b{display:block;font-size:18px;color:var(--gold);line-height:1}
+.row .lv small{font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+.row.me{border-color:#7be3a0;background:linear-gradient(145deg,#173226ee,#10201af0);box-shadow:0 0 16px #7be3a033}
+.row.me:before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,#7be3a022,transparent);transform:translateX(-100%);animation:meSweep 3.2s ease-in-out infinite}
+@keyframes meSweep{60%,100%{transform:translateX(100%)}}
+.row.maxed .lv b{background:linear-gradient(90deg,#fff3cf,#ff9ad5,#9ad5ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* моя позиция */
+.mine{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));margin-top:14px;z-index:5;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:16px;border:1px solid #7be3a0;background:linear-gradient(145deg,#173a2aF2,#0c1c15f2);box-shadow:0 8px 28px #000a,0 0 18px #7be3a033;backdrop-filter:blur(6px)}
+.mine .big{font-size:24px;font-weight:900;color:#9fe8b6;min-width:54px;text-align:center}
+.mine .t{font-size:12px;color:#cfe9d8;line-height:1.4}
+.mine .t b{color:#fff}
+.empty{text-align:center;padding:36px 12px;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+.err{margin:12px 0;padding:12px;border:1px solid #7a3b42;border-radius:12px;background:#2a1519;color:#f0c8cc;text-align:center}
+.err button{margin-top:8px;border:1px solid #7a3b42;background:#3a1c22;color:#fff;border-radius:10px;padding:9px 14px;font-weight:700}
+.skel{height:56px;border-radius:14px;background:linear-gradient(90deg,#1a1428,#261d3a,#1a1428);background-size:200% 100%;animation:sk 1.3s linear infinite;margin-bottom:7px}
+@keyframes sk{to{background-position:-200% 0}}
+.hidden{display:none!important}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}.pod,.row{opacity:1;transform:none}}
+</style>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>sndMusic("city")</script>
+</head>
+<body>
+<canvas id="dust"></canvas>
+<div class="wrap">
+<header class="head">
+ <a class="back" id="back" href="../index.html">← Город</a>
+ <div><div class="eyebrow">РАТУША ТИНГЕНА</div><h1>Зал славы</h1></div>
+</header>
+<div class="hall"><div class="crest"><div class="ring"></div><div class="ring r2"></div><div class="core">🏆</div></div><div class="sub">Сильнейшие по уровню</div></div>
+<div class="timer"><i></i><span>Обновление через <b id="left">—</b></span></div>
+<main id="main"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></main>
+<div class="mine hidden" id="mine"><div class="big" id="myRank">—</div><div class="t" id="myTxt"></div></div>
+</div>
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0b0814")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const PATH={seer:"🔮",sailor:"⚓",hunter:"🏹"};
+const MAXL=20;
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+(function(){const p=new URLSearchParams(location.search);const q=p.toString();$("back").href="../index.html"+(q?"?"+q:"")})();
+
+async function api(payload){
+ if(!ACTION_URL)return needStart();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());
+ if(!d||typeof d!=="object")throw new Error("Некорректный ответ сервера.");
+ return d;
+}
+function esc(t){const d=document.createElement("div");d.textContent=String(t);return d.innerHTML}
+function ico(p){return PATH[p]||"👤"}
+
+let leftSec=0,tick=null;
+function fmt(s){s=Math.max(0,s|0);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function startTimer(n){
+ leftSec=n;$("left").textContent=fmt(leftSec);clearInterval(tick);
+ tick=setInterval(()=>{leftSec--;$("left").textContent=fmt(leftSec);if(leftSec<=0){clearInterval(tick);load(true)}},1000);
+}
+
+function render(d){
+ const rows=Array.isArray(d.rows)?d.rows:[];
+ const main=$("main");main.replaceChildren();
+ if(!rows.length){main.innerHTML='<div class="empty">🌫️ Пока в зале пусто.<br>Стань первым, чьё имя здесь засияет.</div>';return}
+ const top=rows.slice(0,3);
+ const order=[top[1],top[0],top[2]].filter(Boolean);
+ const pod=document.createElement("div");pod.className="podium";
+ order.forEach(r=>{
+  const k=r.rank;const el=document.createElement("div");el.className="pod p"+k+(r.me?" me":"");
+  el.innerHTML=(k===1?'<span class="crown">👑</span>':"")+'<div class="pav">'+ico(r.path)+'</div><div class="pn">'+esc(r.nick)+'</div><div class="pl">УР. '+r.level+'</div><div class="base">'+k+'</div>';
+  pod.appendChild(el);
+ });
+ main.appendChild(pod);
+ const list=document.createElement("div");list.className="list";
+ rows.slice(3).forEach((r,i)=>{
+  const el=document.createElement("div");el.className="row"+(r.me?" me":"")+(r.level>=MAXL?" maxed":"");
+  el.style.animationDelay=(0.6+i*0.05)+"s";
+  el.innerHTML='<div class="rk">'+r.rank+'</div><div class="av">'+ico(r.path)+'</div><div class="mid"><div class="nm">'+esc(r.nick)+(r.me?" · это ты":"")+'</div><div class="bar"><i data-w="'+Math.round(r.level/MAXL*100)+'"></i></div></div><div class="lv"><b>'+r.level+'</b><small>УРОВЕНЬ</small></div>';
+  list.appendChild(el);
+ });
+ main.appendChild(list);
+ requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll(".bar i").forEach(b=>b.style.width=b.dataset.w+"%"),700));
+ const mine=$("mine");
+ if(d.my_rank>0){
+  mine.classList.remove("hidden");$("myRank").textContent="#"+d.my_rank;
+  $("myTxt").innerHTML='Твоё место из <b>'+d.total+'</b><br>Уровень в рейтинге: <b>'+(d.my_level??"—")+'</b> / '+MAXL;
+ }else{
+  mine.classList.remove("hidden");$("myRank").textContent="—";
+  $("myTxt").innerHTML='Тебя ещё нет в рейтинге.<br>Он обновляется раз в час.';
+ }
+}
+async function load(again){
+ try{
+  const d=await api({action:"leaderboard"});
+  if(d.ok===false||d.error)throw new Error(d.text||d.error);
+  render(d);startTimer(Number(d.next_in)||3600);
+  if(!again){try{snd("open")}catch(_){}
+   setTimeout(()=>{try{snd("win")}catch(_){}},500)}
+ }catch(e){
+  if(e&&e.message==="need_start")return;
+  $("main").innerHTML='<div class="err">'+esc(e.message||"Не удалось загрузить рейтинг")+'<br><button type="button" id="retry">Повторить</button></div>';
+  $("retry").onclick=()=>load();
+ }
+}
+/* золотая пыль */
+(function dust(){
+ if(reduce)return;
+ const c=$("dust"),x=c.getContext("2d");let w,h;const P=[];
+ function rs(){w=c.width=innerWidth;h=c.height=innerHeight}rs();addEventListener("resize",rs);
+ for(let i=0;i<46;i++)P.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+.4,v:Math.random()*.35+.1,a:Math.random()*6,g:Math.random()<.3});
+ (function f(){x.clearRect(0,0,w,h);for(const p of P){p.y-=p.v;p.a+=.02;if(p.y<-5){p.y=h+5;p.x=Math.random()*w}
+  x.globalAlpha=.25+.35*Math.abs(Math.sin(p.a));x.fillStyle=p.g?"#b48cff":"#e2c27a";x.beginPath();x.arc(p.x+Math.sin(p.a)*8,p.y,p.r,0,7);x.fill()}
+  requestAnimationFrame(f)})();
+})();
+load();
+</script>
+</body>
+</html>

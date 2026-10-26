@@ -947,6 +947,10 @@ function openForest() {
   location.href = buildPageUrl("./forest/index.html");
 }
 
+function openTop() {
+  location.href = buildPageUrl("./top/index.html");
+}
+
 function openFortune() {
   location.href = buildPageUrl("./fortune/index.html");
 }
@@ -1336,7 +1340,7 @@ async function doUnequip(slot) {
 
 const cityData = {
   "Центр": [
-    "Ратуша 🏛",
+    "Ратуша 🏛 — 🏆 Зал славы",
     "Площадь 👥",
     "Церковь Ночи 🌙"
   ],
@@ -1402,13 +1406,14 @@ function toggleDistrict(district) {
 
       let key = "";
 
-      if (place.includes("Гадательный")) key = "fortune";
+      if (place.includes("Ратуша")) key = "top";
+      else if (place.includes("Гадательный")) key = "fortune";
       else if (place.includes("Рынок")) key = "market";
       else if (place.includes("Таверна")) key = "dragon_tavern";
       else if (place.includes("Дома")) key = "houses";
 
       if (key) {
-        button.addEventListener("click", () => key === "fortune" ? openFortune() : openLoc(key));
+        button.addEventListener("click", () => key === "fortune" ? openFortune() : key === "top" ? openTop() : openLoc(key));
       } else {
         button.style.opacity = ".5";
         button.disabled = true;
