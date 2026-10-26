@@ -239,4 +239,5 @@ skill:function(fx,delay){sfx(fx,delay)},ready:ready,_master:function(){return ma
 /* общий чат: подключаем на каждой странице рядом с кнопкой звука */
 try{var _ss=document.querySelector('script[src*="sound.js"]');if(_ss&&!document.documentElement.hasAttribute("data-nochat")){var _c=document.createElement("script");_c.src=_ss.src.replace(/sound\.js(\?.*)?$/,"chat.js");_c.defer=true;document.head.appendChild(_c)}}catch(e){}
 try{var _ss2=document.querySelector('script[src*="sound.js"]');if(_ss2){var _t=document.createElement("script");_t.src=_ss2.src.replace(/sound\.js(\?.*)?$/,"theme.js");document.head.appendChild(_t)}}catch(e){}
+try{var _ss3=document.querySelector('script[src*="sound.js"]');if(_ss3){var _i=document.createElement("script");_i.src=_ss3.src.replace(/sound\.js(\?.*)?$/,"icons.js");document.head.appendChild(_i)}}catch(e){}
 })();
