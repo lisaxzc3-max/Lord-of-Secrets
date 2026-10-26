@@ -364,6 +364,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
+<script src="./shared/tutorial.js"></script>
 <script>sndMusic("city")</script>
 </head>
 <body>
@@ -412,54 +413,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 </div>
 
 <div id="hall" class="card">
-  <div id="startInHall" class="hidden">
-    <div style="display:flex;gap:10px;align-items:center">
-      <div style="width:46px;height:46px;border-radius:13px;background:linear-gradient(145deg,#3a2f52,#1d1530);border:1px solid #9a7c45;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 14px #d6b77933">🦉</div>
-      <div>
-        <div style="font-weight:800;font-size:13px;color:#efe8d8">ДАЛИЯ «ВЕСТНИЦА»</div>
-        <div style="font-size:10px;opacity:.6;letter-spacing:1px">ПРОВОДНИЦА · <span id="startStep">1/3</span></div>
-      </div>
-    </div>
-    <div class="quote" id="startQuote">«Так-так, новое лицо в Тингене. Я Далия, вижу нити судьбы.»</div>
-
-    <div id="step1">
-      <div style="font-size:12px;margin:6px 0">📜 Твоё имя</div>
-      <input id="startNick" class="startInput" maxlength="16" value="Путник123">
-      <div class="startHint"><span>до 16 символов</span><span id="nickCnt">9/16</span></div>
-      <div style="color:#e63946;font-size:11px" id="nickErr"></div>
-      <button type="button" class="btn gold" style="width:100%;margin-top:8px" onclick="startCheckNick()">Далее ›</button>
-    </div>
-
-    <div id="step2" class="hidden">
-      <div style="margin:6px 0">⟡ Избери Путь</div>
-      <div style="display:grid;gap:7px">
-        <div class="pathCard" id="card-seer" onclick="pickPath('seer')">
-          <b>𓂀 Путь Шута · Провидец</b>
-          <div style="font-size:11px;opacity:.6;margin-top:3px">🔮 Гадание · 💨 Воздушная пуля · 📜 Бумажный кинжал · 🎭 Актёрство</div>
-        </div>
-        <div class="pathCard" id="card-sailor" onclick="pickPath('sailor')">
-          <b>⚔ Путь Тирана · Матрос</b>
-          <div style="font-size:11px;opacity:.6;margin-top:3px">⛈ Удар шторма · 🌊 Морская волна · 🌙 Колыбельная · ⚡ Ярость шторма</div>
-        </div>
-        <div class="pathCard" id="card-hunter" onclick="pickPath('hunter')">
-          <b>🏹 Путь Красного Жреца · Охотник</b>
-          <div style="font-size:11px;opacity:.6;margin-top:3px">🎯 Меткий выстрел · 🔥 Поджог · 🪤 Ловушка · 😤 Провокация</div>
-        </div>
-      </div>
-      <div style="color:#e63946;font-size:11px" id="pathErr"></div>
-      <button type="button" class="btn gold" style="width:100%;margin-top:8px" onclick="startConfirmPath()">Далее ›</button>
-    </div>
-
-    <div id="step3" class="hidden">
-      <div class="genderRow">
-        <div class="btn gbtn" id="g-male" onclick="pickGender('male')"><img class="gimg" id="gimg-male" alt=""><span>♂ Мужчина</span></div>
-        <div class="btn gbtn" id="g-female" onclick="pickGender('female')"><img class="gimg" id="gimg-female" alt=""><span>♀ Женщина</span></div>
-      </div>
-      <div style="color:#e63946;font-size:11px" id="genderErr"></div>
-      <button type="button" class="btn gold" style="width:100%" onclick="startFinish()">🎮 Начать игру</button>
-    </div>
-  </div>
-
   <div id="hallProfileHint" class="hidden">
   <section class="hero" id="hero">
     <div class="stars" id="stars"></div>
@@ -962,9 +915,10 @@ async function loadProfile() {
       setRegenUI(data.regen_left || 0, hp, maxHp);
     }
 
-    maybeShowStart(data);
+    if (maybeShowStart(data)) return data;
     renderBagFromJ(data);
     checkDaily();
+    try { window.LOTM_TUT && LOTM_TUT.check(); } catch (_) {}
     clearLoadError();
 
     return data;
@@ -1207,35 +1161,6 @@ function setRegenUI(left, hp, maxHp) {
   }, 1000);
 }
 
-let START = {
-  nick: "",
-  path: "",
-  gender: ""
-};
-
-byId("startNick").addEventListener("input", event => {
-  byId("nickCnt").textContent = event.target.value.length + "/16";
-  byId("nickErr").textContent = "";
-});
-
-function pickPath(path) {
-  START.path = path;
-
-  document.querySelectorAll(".pathCard").forEach(card => {
-    card.classList.remove("sel");
-  });
-
-  byId("card-" + path)?.classList.add("sel");
-  setGenderPreview();
-  byId("pathErr").textContent = "";
-}
-
-function setGenderPreview() {
-  const pk = START.path || "seer";
-  byId("gimg-male").src = "./avatars/m_" + pk + ".svg";
-  byId("gimg-female").src = "./avatars/f_" + pk + ".svg";
-}
-
 function setHudAvatar(data) {
   const pk = LOTM_SKILLS.pathKey(data.path_key || data.path);
   if (!pk || !data.gender) return;
@@ -1247,110 +1172,23 @@ function setHudAvatar(data) {
   if (!img.src.endsWith(src.slice(1))) img.src = src;
 }
 
-function pickGender(gender) {
-  START.gender = gender;
-
-  byId("g-male").className =
-    gender === "male" ? "btn act" : "btn";
-
-  byId("g-female").className =
-    gender === "female" ? "btn act" : "btn";
-
-  byId("genderErr").textContent = "";
-}
-
-async function startCheckNick() {
-  const nick = byId("startNick").value.trim();
-
-  if (!nick || nick.length > 16) {
-    byId("nickErr").textContent =
-      "Имя должно содержать от 1 до 16 символов.";
-    return;
-  }
-
-  START.nick = nick;
-
-  try {
-    const data = await api({
-      action: "set_nickname",
-      nick
-    });
-
-    if (!data.ok) {
-      byId("nickErr").textContent =
-        data.error || "Не удалось сохранить имя.";
-      return;
-    }
-
-    byId("step1").classList.add("hidden");
-    byId("step2").classList.remove("hidden");
-    byId("startStep").textContent = "2/3";
-  } catch (error) {
-    byId("nickErr").textContent = "Ошибка связи: " + error.message;
-  }
-}
-
-async function startConfirmPath() {
-  if (!START.path) {
-    byId("pathErr").textContent = "Сначала выбери путь.";
-    return;
-  }
-
-  try {
-    const data = await api({
-      action: "confirm_path",
-      choice: START.path
-    });
-
-    if (!data.ok) {
-      byId("pathErr").textContent =
-        data.error || "Не удалось выбрать путь.";
-      return;
-    }
-
-    byId("step2").classList.add("hidden");
-    byId("step3").classList.remove("hidden"); try { setGenderPreview(); } catch (e) {}
-    byId("startStep").textContent = "3/3";
-  } catch (error) {
-    byId("pathErr").textContent = "Ошибка связи: " + error.message;
-  }
-}
-
-async function startFinish() {
-  if (!START.gender) {
-    byId("genderErr").textContent = "Выбери пол персонажа.";
-    return;
-  }
-
-  try {
-    const data = await api({
-      action: "set_gender",
-      gender: START.gender
-    });
-
-    if (data && data.ok) {
-      byId("startInHall").classList.add("hidden");
-      byId("hallProfileHint").classList.remove("hidden");
-      await loadProfileWithRetry();
-    } else {
-      byId("genderErr").textContent =
-        data?.error || "Не удалось завершить создание персонажа.";
-    }
-  } catch (error) {
-    byId("genderErr").textContent = "Ошибка связи: " + error.message;
-  }
-}
-
 function maybeShowStart(data) {
   const needsStart =
     !data ||
     !data.nickname ||
     data.nickname === "Без имени" ||
     !data.path ||
-    data.path === "—";
+    data.path === "—" ||
+    !data.gender;
 
-  byId("startInHall").classList.toggle("hidden", !needsStart);
-  byId("hallProfileHint").classList.toggle("hidden", needsStart);
+  if (needsStart) {
+    // Новичок: игра закрыта, пока не создан персонаж — отдельная страница старта.
+    location.replace(buildPageUrl("./start/index.html"));
+    return true;
+  }
+
+  byId("hallProfileHint").classList.remove("hidden");
+  return false;
 }
 
 const BAG_SLOTS = [
@@ -1579,6 +1417,13 @@ async function api(payload) {
     actionBusy = false;
   }
 }
+
+window.tutApi = async function (payload) {
+  const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), cache: "no-store" });
+  let d = await r.json();
+  for (let i = 0; i < 3 && d && d.result && typeof d.result === "object"; i++) d = d.result;
+  return d;
+};
 
 async function doEquip(index) {
   try {
