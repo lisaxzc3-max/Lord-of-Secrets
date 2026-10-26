@@ -194,6 +194,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 .chip.poison{border-color:#4f9a58;color:#a6f0a8}.chip.coil{border-color:#c4a45a;color:#f0dca0}
 .portraitFrame.coiled .emo,.portraitFrame.coiled img{filter:brightness(.8) hue-rotate(40deg)}
 </style>
+<script src="../../shared/skills.js"></script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
@@ -280,19 +281,7 @@ let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURI
 let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
 
 const $=id=>document.getElementById(id);
-const skillInfo={
-divination:{icon:"🔮",name:"Гадание",desc:"Способность пути Шута."},
-boomerang:{icon:"🪃",name:"Бумеранг",desc:"Атакующее умение пути Шута."},
-acting:{icon:"🎭",name:"Актёрство",desc:"Фирменная способность пути Шута."},
-sailor_hit:{icon:"👊",name:"Сильный удар",desc:"Мощная атака пути Тирана."},
-sailor_drink:{icon:"🍺",name:"Перепить",desc:"Способность пути Тирана."},
-sailor_pray:{icon:"⚡",name:"Гнев",desc:"Сила пути Тирана."},
-hunter_dagger:{icon:"🔥",name:"Берсерк",desc:"Атакующее умение охотника."},
-hunter_trap:{icon:"🪤",name:"Ловушка",desc:"Тактическое умение охотника."},
-hunter_boost:{icon:"😤",name:"Провокация",desc:"Способность пути охотника."},
-basic:{icon:"⚔️",name:"Базовая атака",desc:"Обычная атака."},
-flee:{icon:"🏃",name:"Отступить",desc:"Попробовать покинуть сражение."}
-};
+const skillInfo=LOTM_SKILLS.SK;
 /* Картинки монстров лежат в lake/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
 "Утопленник":"../img/drowned.svg",
@@ -386,26 +375,7 @@ floatNum(frame,"+"+abs,"heal");addTemp(frame,"healGlow",850);
 },side==="player"?500:250);
 }
 }
-function playSkillFx(move){
-const P=framePlayer(),E=frameEnemy();
-const lunge=()=>addTemp(P,"lungeR",420);
-switch(move){
-case "basic":lunge();setTimeout(()=>slashAt(E,"#d6b779","-35deg"),180);break;
-case "boomerang":{
-lunge();
-const a=arenaPos(P),b=arenaPos(E);
-spawn("fxBoom",a.x,a.y,{"--dx":(b.x-a.x)+"px","--dy":(b.y-a.y)+"px"},1050,"🪃");
-break;}
-case "sailor_hit":lunge();setTimeout(()=>{slashAt(E,"#ff9b5e","-35deg");slashAt(E,"#ff9b5e","30deg");shakeScreen()},180);break;
-case "hunter_dagger":lunge();setTimeout(()=>{slashAt(E,"#ff5d3a","-40deg");emojiAt(E,"🔥","#ff7a3a")},180);break;
-case "divination":ringAt(P,"#7aa8ff");emojiAt(P,"🔮","#7aa8ff");break;
-case "acting":ringAt(P,"#c48cff");emojiAt(P,"🎭","#c48cff");break;
-case "sailor_drink":ringAt(P,"#7be3a0");emojiAt(P,"🍺","#7be3a0");break;
-case "sailor_pray":ringAt(P,"#ff5d5d");emojiAt(P,"⚡","#ffd84a");break;
-case "hunter_trap":emojiAt(E,"🪤","#d6b779","fxDrop");break;
-case "hunter_boost":ringAt(P,"#ffb04a");emojiAt(P,"😤","#ffb04a");break;
-}
-}
+function playSkillFx(move){LOTM_SKILLS.play(move,framePlayer(),frameEnemy())}
 const st={poison:0,coil:0};
 function drawChips(){
 const box=$("chips");box.replaceChildren();
@@ -583,22 +553,9 @@ return enemy;
 }
 function renderSkills(cds={}){
 lastCds=cds||{};
-const path=PLAYER_PATH,box=$("battleSkills");box.replaceChildren();
-let actions;
-if(path.includes("Шут")){
-actions=[["divination",lastCds.divination||0],["boomerang",lastCds.boomerang||0],["acting",lastCds.acting||0]];
-$("skillPathLabel").textContent="Путь Шута";
-}else if(path.includes("Тирана")){
-actions=[["sailor_hit",lastCds.hit||0],["sailor_drink",lastCds.drink||0],["sailor_pray",lastCds.pray||0]];
-$("skillPathLabel").textContent="Путь Тирана";
-}else if(path.includes("Жреца")||path.includes("Красного")){
-actions=[["hunter_dagger",lastCds.dagger||0],["hunter_trap",lastCds.trap||0],["hunter_boost",lastCds.boost||0]];
-$("skillPathLabel").textContent="Путь охотника";
-}else{
-actions=[["divination",lastCds.divination||0],["boomerang",lastCds.boomerang||0],["acting",lastCds.acting||0]];
-$("skillPathLabel").textContent=path||"Способности пути";
-}
-actions.forEach(([key,cooldown])=>addSkill(key,cooldown,""));
+const pk=LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");box.replaceChildren();
+$("skillPathLabel").textContent=LOTM_SKILLS.PATHNAME[pk][0];
+LOTM_SKILLS.list(pk).forEach(s=>addSkill(s.key,lastCds[s.cd]||0,""));
 addSkill("basic",lastCds.basic||0,"basic");addSkill("flee",0,"escape");
 }
 function addSkill(key,cooldown,className){
@@ -606,7 +563,7 @@ const info=skillInfo[key],button=document.createElement("button");
 button.type="button";button.className="skill "+className;
 button.dataset.cooldown=Number(cooldown)>0?"true":"false";
 button.disabled=busy||ended||Number(cooldown)>0;
-const name=document.createElement("div");name.className="skillName";name.textContent=(info?.icon||"")+" "+(info?.name||key);
+const name=document.createElement("div");name.className="skillName";name.textContent=(info?.name||key);if(info?.icon){const ic=document.createElement("span");ic.className="skIc";ic.textContent=info.icon+" ";name.prepend(ic)}LOTM_SKILLS.decorate(button,key);if(info?.tag){const tg=document.createElement("span");tg.className="skTag";tg.textContent=info.tag;button.appendChild(tg)}
 const desc=document.createElement("div");desc.className="skillDesc";desc.textContent=info?.desc||"";
 button.append(name,desc);
 if(Number(cooldown)>0){
@@ -647,7 +604,7 @@ document.body.classList.remove("defeatFx");
 setBusy(true,"Загрузка…");hideError();
 try{
 const profile=await loadProfile();
-PLAYER_PATH=profile.path||"";
+PLAYER_PATH=profile.path||"";try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+".svg"}catch(e){}
 $("playerName").textContent=profile.nickname||"Путешественник";
 $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
 setHealth("player",profile.hp,profile.max_hp);

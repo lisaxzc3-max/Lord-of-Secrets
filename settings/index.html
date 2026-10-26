@@ -35,17 +35,17 @@ small{opacity:.6;font-size:10px}
 <input id="newNick" class="input" maxlength="16" placeholder="Новый ник 2-16 буквы/цифры/_/- без пробелов">
 <div id="nickErr" style="color:#e63946;font-size:11px;min-height:14px;margin-top:4px"></div>
 <div class="btn gold" onclick="changeNick()">Сменить ник</div>
-<div style="font-size:10px;opacity:.5">Меняется везде: главная 𓂀 · профиль · бой `vsGrid`. Проверка занятости через `nick_index`.</div>
+<div style="font-size:10px;opacity:.5">Ник меняется везде: главная, профиль и бой.</div>
 </div>
 
 <div class="card">
 <h3>2. Смена пути <span style="font-size:10px;opacity:.5">сбросит уровень и навыки</span></h3>
 <div id="curPath2" style="font-size:11px;opacity:.6;margin-bottom:6px"></div>
-<div class="pathCard" id="c-seer" onclick="pick('seer')"><b>𓂀 Путь Шута · Провидец</b><div style="font-size:11px;opacity:.7">🔮 Гадание КД2 уклон 2 · 🪃 Бумеранг КД3 6→3 (+30% силы) · 🎭 Актёрство КД1 -25% 1 ход · пассив Предчувствие</div></div>
-<div class="pathCard" id="c-sailor" onclick="pick('sailor')"><b>⚔ Путь Тирана · Матрос</b><div style="font-size:11px;opacity:.7">👊 Сильный удар КД2 10+40% силы · 🍺 Перепить КД3 сон 2 · 😡 Гнев КД2 x2 сила/ловк · пассив Чешуя +30 HP</div></div>
-<div class="pathCard" id="c-hunter" onclick="pick('hunter')"><b>🏹 Путь Жреца · Охотник</b><div style="font-size:11px;opacity:.7">🔥 Берсерк КД2 -25HP +100% силы · 🪤 Ловушка КД3 оглуш 2 · 😤 Провокация КД1 -25% метк 2 хода · пассив Слабые места x2</div></div>
+<div class="pathCard" id="c-seer" onclick="pick('seer')"><b>𓂀 Путь Шута · Провидец</b><div style="font-size:11px;opacity:.7">🔮 Гадание · 💨 Воздушная пуля · 📜 Бумажный кинжал · 🎭 Актёрство · пассив Предчувствие опасности</div></div>
+<div class="pathCard" id="c-sailor" onclick="pick('sailor')"><b>⚔ Путь Тирана · Матрос</b><div style="font-size:11px;opacity:.7">⛈ Удар шторма · 🌊 Морская волна · 🌙 Колыбельная глубин · ⚡ Ярость шторма · пассив Чешуя под кожей</div></div>
+<div class="pathCard" id="c-hunter" onclick="pick('hunter')"><b>🏹 Путь Красного Жреца · Охотник</b><div style="font-size:11px;opacity:.7">🎯 Меткий выстрел · 🔥 Поджог · 🪤 Ловушка · 😤 Провокация · пассив Выслеживание</div></div>
 <div class="btn red" onclick="changePath()">Сменить путь</div>
-<div style="font-size:10px;opacity:.5">Сбросит прогресс `lvl1 exp0`, очистит `cds` и бафы, сменит навыки в `профиле 📜` и в `lake/battle/` — пути не пересекаются.</div>
+<div style="font-size:10px;opacity:.5">Сбросит уровень и опыт, очистит перезарядки и баффы, сменит навыки и аватар.</div>
 </div>
 </div>
 <script>

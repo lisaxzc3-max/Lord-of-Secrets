@@ -21,12 +21,12 @@ button{font:inherit}
 h1{font-size:20px;margin:4px 0 0;line-height:1.2}
 .pill{flex-shrink:0;border:1px solid #62503a;border-radius:999px;padding:7px 9px;color:var(--gold);font-size:10px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;box-shadow:0 10px 30px #0003}
-.scene{overflow:hidden}
+.eventCard{overflow:hidden}
 .sceneTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px 16px 0}
 .label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .type{font-size:10px;color:var(--gold);text-align:right}
 .artWrap{position:relative;min-height:190px;margin:13px 13px 0;overflow:hidden;border:1px solid #2d5a6a;border-radius:13px;background:#04121a}
-.art{display:block;width:100%;max-width:270px;aspect-ratio:1;height:auto;margin:0 auto;object-fit:cover}
+.art{display:block;width:100%;max-width:min(270px,34vh);aspect-ratio:1;height:auto;margin:0 auto;object-fit:cover}
 .fallback{height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;background:radial-gradient(ellipse at 50% 40%,#b79be82e,transparent 65%)}
 .symbol{font-size:65px;filter:drop-shadow(0 0 18px #d6b77940)}
 .caption{font-size:10px;letter-spacing:3px;color:var(--muted);text-align:center}
@@ -98,7 +98,7 @@ h1{font-size:20px;margin:4px 0 0;line-height:1.2}
 </header>
 
 <main>
-  <section class="card scene">
+  <section class="card eventCard">
     <div class="sceneTop">
       <span class="label">Неожиданная встреча</span>
       <span class="type" id="eventType">Событие у озера</span>
@@ -416,7 +416,7 @@ function lakeResultFx(result){
   const cls=ev==="frog_kiss"?"fx-poison":ev==="chest_dive"?"fx-gold":ev==="chest_dive_fail"?"fx-hurt":"fx-calm";
   const box=document.querySelector(".artWrap");
   box.classList.remove("fx-poison","fx-gold","fx-hurt","fx-calm");void box.offsetWidth;box.classList.add(cls);
-  if(cls==="fx-hurt"||cls==="fx-poison"){const c=document.querySelector(".scene.card")||document.body;c.classList.add("shk");setTimeout(()=>c.classList.remove("shk"),520)}
+  if(cls==="fx-hurt"||cls==="fx-poison"){const c=document.querySelector(".eventCard")||document.body;c.classList.add("shk");setTimeout(()=>c.classList.remove("shk"),520)}
   try{tg?.HapticFeedback?.notificationOccurred(cls==="fx-hurt"||cls==="fx-poison"?"error":"success")}catch(_){}
 }
 async function chooseAction(action){

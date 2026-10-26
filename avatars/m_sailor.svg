@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240">
+<defs><radialGradient id="bgmsailor" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#164a7a"/><stop offset="1" stop-color="#071626"/></radialGradient>
+<clipPath id="cpmsailor"><rect width="120" height="120" rx="16"/></clipPath></defs>
+<style>
+.breathe{animation:br 3.4s ease-in-out infinite;transform-origin:60px 100px}
+@keyframes br{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(1.6px) scale(1.012)}}
+.blink{animation:bl 4.6s infinite}
+@keyframes bl{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.glow{animation:gl 2.6s ease-in-out infinite}
+@keyframes gl{0%,100%{opacity:1}50%{opacity:.55}}
+.aura{animation:au 3.2s ease-in-out infinite;transform-origin:60px 60px}
+@keyframes au{0%,100%{transform:scale(.94);opacity:.5}50%{transform:scale(1.06);opacity:.9}}
+.sway{animation:sw 4s ease-in-out infinite;transform-origin:60px 20px}
+@keyframes sw{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
+.tw{animation:tw 2s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.4}}
+.floatA{animation:fa 3.6s ease-in-out infinite}.floatB{animation:fa 4.2s ease-in-out infinite reverse}
+@keyframes fa{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.fog{animation:fg 6s ease-in-out infinite}
+@keyframes fg{0%,100%{transform:translateX(-4px)}50%{transform:translateX(5px)}}
+.wavesAv{animation:wv 3s linear infinite}
+@keyframes wv{from{transform:translateX(0)}to{transform:translateX(-40px)}}
+.bolt{animation:bo 3.5s infinite;opacity:0}
+@keyframes bo{0%,86%,100%{opacity:0}88%,92%{opacity:1}90%{opacity:.2}}
+.moon{animation:mo 4s ease-in-out infinite}
+@keyframes mo{0%,100%{opacity:.75}50%{opacity:1}}
+.em{animation:em 2.4s ease-in infinite;opacity:0}
+@keyframes em{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-34px);opacity:0}}
+.hat{animation:ht 4.5s ease-in-out infinite;transform-origin:60px 30px}
+@keyframes ht{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+<g clip-path="url(#cpmsailor)">
+<rect width="120" height="120" fill="url(#bgmsailor)"/>
+<g class="aura"><circle cx="60" cy="58" r="46" fill="none" stroke="#4fb4ff" stroke-width="2" opacity=".7"/><circle cx="60" cy="58" r="52" fill="none" stroke="#4fb4ff" stroke-width="1" stroke-dasharray="3 5" opacity=".5"/></g>
+<g class="wavesAv"><path d="M0 108 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 V120 H0Z" fill="#4fb4ff" opacity=".35"/></g><path class="bolt" d="M96 20 l-8 14 h7 l-6 14 14 -18 h-8 l7 -10z" fill="#ffe36a"/>
+<g class="breathe"><path d="M8 120 C10 100 28 90 46 88 L60 98 L74 88 C92 90 110 100 112 120Z" fill="#16304f"/><path d="M46 88 L60 104 L74 88 L68 86 L60 94 L52 86Z" fill="#e7f3ff" opacity=".9"/><rect x="54.5" y="76" width="11" height="16" fill="#e8c3a0" /><path d="M54.5 84 q5.5 6 11 0 v6 h-11z" fill="#00000022"/><path d="M40 52 C40 36 50 30 60 30 C70 30 80 36 80 52 C80 66 74 80 60 82 C46 80 40 66 40 52Z" fill="#e8c3a0"/><g class="blink" style="transform-origin:60px 56px"><ellipse cx="51" cy="56" rx="3.6" ry="4.2" fill="#fff"/><ellipse cx="69" cy="56" rx="3.6" ry="4.2" fill="#fff"/><circle cx="51.5" cy="56.5" r="2.3" fill="#6cd0ff" class="glow"/><circle cx="68.5" cy="56.5" r="2.3" fill="#6cd0ff" class="glow"/><circle cx="51.5" cy="56.5" r="1" fill="#111"/><circle cx="68.5" cy="56.5" r="1" fill="#111"/></g><path d="M47 46 l9 -2 M73 46 l-9 -2" stroke="#d9a441" stroke-width="2.4" stroke-linecap="round"/><path d="M54 71 q6 3 12 0" stroke="#a5604c" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="46" cy="64" rx="4" ry="2.4" fill="#ff8a8a" opacity=".22"/><ellipse cx="74" cy="64" rx="4" ry="2.4" fill="#ff8a8a" opacity=".22"/><path d="M38 52 C34 30 48 20 62 21 C78 22 86 34 82 54 C80 44 76 38 68 36 C60 40 48 40 42 38 C40 42 39 47 38 52Z" fill="#d9a441"/><g class="hat"><path d="M38 34 Q60 6 82 34 Z" fill="#f4f7fb"/><rect x="38" y="32" width="44" height="6" rx="2" fill="#2c7fc4"/><path d="M60 8 v8" stroke="#f4f7fb"/></g><path d="M46 88 L60 104 L74 88" fill="none" stroke="#fff" stroke-width="3"/><path d="M52 98 h16" stroke="#2c7fc4" stroke-width="3"/></g>
+</g></svg>

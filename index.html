@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0b0912">
 <title>Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="./shared/skills.js"></script>
 <style>
 :root{--gold:#d6b779;--gold2:#b28c4d;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.82)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -76,6 +77,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .pathCard{border:1px solid #3d3550;border-radius:13px;padding:11px;background:rgba(28,22,42,.85);cursor:pointer;transition:all .3s}
 .pathCard:active{transform:scale(.98)}
 .pathCard.sel{border-color:var(--gold);background:linear-gradient(145deg,#3a2f52,#241b36);box-shadow:0 0 18px #d6b77944}
+.gbtn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px!important}.gimg{width:100%;max-width:130px;aspect-ratio:1;border-radius:14px;display:block;background:#150f20}.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
 .genderRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
 
 /* таймеры */
@@ -254,7 +256,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 <div class="wrap">
 
 <div class="top" id="topCard">
-  <div class="avatar" onclick="openProfile()"><span>𓂀</span></div>
+  <div class="avatar" id="hudAv" onclick="openProfile()"><span>𓂀</span></div>
   <div class="info" onclick="openProfile()">
     <div class="nameRow">
       <b id="nick">Загрузка…</b>
@@ -315,15 +317,15 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
       <div style="display:grid;gap:7px">
         <div class="pathCard" id="card-seer" onclick="pickPath('seer')">
           <b>𓂀 Путь Шута · Провидец</b>
-          <div style="font-size:11px;opacity:.6;margin-top:3px">🔮 Гадание · 🪃 Бумеранг · 🎭 Актёрство</div>
+          <div style="font-size:11px;opacity:.6;margin-top:3px">🔮 Гадание · 💨 Воздушная пуля · 📜 Бумажный кинжал · 🎭 Актёрство</div>
         </div>
         <div class="pathCard" id="card-sailor" onclick="pickPath('sailor')">
           <b>⚔ Путь Тирана · Матрос</b>
-          <div style="font-size:11px;opacity:.6;margin-top:3px">👊 Сильный удар · 🍺 Перепить · 😡 Гнев</div>
+          <div style="font-size:11px;opacity:.6;margin-top:3px">⛈ Удар шторма · 🌊 Морская волна · 🌙 Колыбельная · ⚡ Ярость шторма</div>
         </div>
         <div class="pathCard" id="card-hunter" onclick="pickPath('hunter')">
-          <b>🏹 Путь Жреца · Охотник</b>
-          <div style="font-size:11px;opacity:.6;margin-top:3px">🔥 Берсерк · 🪤 Ловушка · 😤 Провокация</div>
+          <b>🏹 Путь Красного Жреца · Охотник</b>
+          <div style="font-size:11px;opacity:.6;margin-top:3px">🎯 Меткий выстрел · 🔥 Поджог · 🪤 Ловушка · 😤 Провокация</div>
         </div>
       </div>
       <div style="color:#e63946;font-size:11px" id="pathErr"></div>
@@ -332,8 +334,8 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 
     <div id="step3" class="hidden">
       <div class="genderRow">
-        <div class="btn" id="g-male" onclick="pickGender('male')">♂ Мужчина</div>
-        <div class="btn" id="g-female" onclick="pickGender('female')">♀ Женщина</div>
+        <div class="btn gbtn" id="g-male" onclick="pickGender('male')"><img class="gimg" id="gimg-male" alt=""><span>♂ Мужчина</span></div>
+        <div class="btn gbtn" id="g-female" onclick="pickGender('female')"><img class="gimg" id="gimg-female" alt=""><span>♀ Женщина</span></div>
       </div>
       <div style="color:#e63946;font-size:11px" id="genderErr"></div>
       <button type="button" class="btn gold" style="width:100%" onclick="startFinish()">🎮 Начать игру</button>
@@ -782,6 +784,7 @@ async function loadProfile() {
     }
 
     byId("nick").textContent = data.nickname || "Без имени";
+    try { setHudAvatar(data); } catch (e) {}
     byId("lvl").textContent = data.level ?? "—";
     byId("hp").textContent = hp + "/" + maxHp;
     byId("hp2").textContent = hp + "/" + maxHp;
@@ -1043,7 +1046,25 @@ function pickPath(path) {
   });
 
   byId("card-" + path)?.classList.add("sel");
+  setGenderPreview();
   byId("pathErr").textContent = "";
+}
+
+function setGenderPreview() {
+  const pk = START.path || "seer";
+  byId("gimg-male").src = "./avatars/m_" + pk + ".svg";
+  byId("gimg-female").src = "./avatars/f_" + pk + ".svg";
+}
+
+function setHudAvatar(data) {
+  const pk = LOTM_SKILLS.pathKey(data.path_key || data.path);
+  if (!pk || !data.gender) return;
+  const g = data.gender === "female" ? "f" : "m";
+  const box = byId("hudAv");
+  let img = box.querySelector("img");
+  if (!img) { box.replaceChildren(); img = document.createElement("img"); img.alt = ""; box.appendChild(img); }
+  const src = "./avatars/" + g + "_" + pk + ".svg";
+  if (!img.src.endsWith(src.slice(1))) img.src = src;
 }
 
 function pickGender(gender) {
@@ -1108,7 +1129,7 @@ async function startConfirmPath() {
     }
 
     byId("step2").classList.add("hidden");
-    byId("step3").classList.remove("hidden");
+    byId("step3").classList.remove("hidden"); try { setGenderPreview(); } catch (e) {}
     byId("startStep").textContent = "3/3";
   } catch (error) {
     byId("pathErr").textContent = "Ошибка связи: " + error.message;

@@ -113,6 +113,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   box-shadow:inset 0 0 0 4px rgba(215,183,117,.045);
   color:var(--gold);font-size:36px;
 }
+.portrait img{width:100%;height:100%;object-fit:cover;border-radius:16px 16px 7px 16px;display:block}
 .portrait span{filter:drop-shadow(0 0 10px rgba(215,183,117,.5));animation:floaty 4s ease-in-out infinite}
 .heroInfo{flex:1;min-width:0}
 .heroName{font-size:21px;font-weight:800;letter-spacing:.2px;overflow-wrap:anywhere;text-shadow:0 0 16px #d7b77733}
@@ -346,6 +347,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   #veil{display:none}
 }
 </style>
+<script src="../shared/skills.js"></script>
 </head>
 <body>
 <canvas id="fx"></canvas>
@@ -369,7 +371,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
     <div class="eyebrow">✦ Личное досье ✦</div>
 
     <div class="heroTop" style="margin-top:13px">
-      <div class="portraitWrap"><div class="portrait"><span>𓂀</span></div></div>
+      <div class="portraitWrap"><div class="portrait" id="portrait"><span>𓂀</span></div></div>
       <div class="heroInfo">
         <div class="heroName" id="nick">Загрузка…</div>
         <div class="heroLevel">
@@ -893,42 +895,32 @@ function skillCard(icon, name, type, description, passive = false, index = 0) {
   return card;
 }
 
+function setPortrait(data) {
+  const pk = LOTM_SKILLS.pathKey(data.path_key || data.path);
+  if (!pk || !data.gender) return;
+  const g = data.gender === "female" ? "f" : "m";
+  const box = $("portrait");
+  let img = box.querySelector("img");
+  if (!img) { box.replaceChildren(); img = document.createElement("img"); img.alt = ""; box.appendChild(img); }
+  img.src = "../avatars/" + g + "_" + pk + ".svg";
+}
+
 function renderSkills(path) {
   const box = $("skillsList");
   box.replaceChildren();
 
-  const p = String(path || "");
+  const pk = LOTM_SKILLS.pathKey(path);
   let title = "Навыки пути";
   let subtitle = "—";
   let skills = [];
-
-  if (p.includes("Шута") || p.includes("Шут") || p.toLowerCase().includes("seer")) {
-    title = "𓂀 Провидец";
-    subtitle = "ПУТЬ ШУТА";
-    skills = [
-      ["🔮","Гадание","КД 2","Уклонение на 2 хода.",false],
-      ["🪃","Бумажный бумеранг","КД 3","6 урона и 3 урона при возврате. Бонус зависит от силы.",false],
-      ["🎭","Актёрское мастерство","КД 1","Снижение атаки и защиты врага на 25% на 1 ход.",false],
-      ["👁️","Предчувствие опасности","ПАССИВ","Уклонение от первой атаки в бою.",true]
-    ];
-  } else if (p.includes("Тирана") || p.toLowerCase().includes("sailor")) {
-    title = "⚔ Матрос";
-    subtitle = "ПУТЬ ТИРАНА";
-    skills = [
-      ["👊","Сильный удар","КД 2","10 базового урона с бонусом от силы.",false],
-      ["🍺","Перепить","КД 3","Усыпляет противника на 2 хода.",false],
-      ["😡","Гнев","КД 2","Удваивает силу и ловкость на 1 ход.",false],
-      ["🛡️","Чешуя под кожей","ПАССИВ","+30 к максимальному здоровью.",true]
-    ];
-  } else if (p.includes("Жреца") || p.includes("Красного") || p.includes("Охотник") || p.toLowerCase().includes("hunter")) {
-    title = "🏹 Охотник";
-    subtitle = "ПУТЬ КРАСНОГО";
-    skills = [
-      ["🔥","Берсерк","КД 2","+100% силы, расход здоровья и усиленная атака на 1 ход.",false],
-      ["🪤","Ловушка","КД 3","Оглушает противника на 2 хода.",false],
-      ["😤","Провокация","КД 1","Снижает меткость врага на 25% на 2 хода.",false],
-      ["🎯","Слабые места","ПАССИВ","Первый нанесённый урон увеличен вдвое.",true]
-    ];
+  const keys = [];
+  if (pk) {
+    const names = { seer: "𓂀 Провидец", sailor: "⚔ Матрос", hunter: "🏹 Охотник" };
+    title = names[pk];
+    subtitle = LOTM_SKILLS.PATHNAME[pk][0].toUpperCase();
+    LOTM_SKILLS.list(pk).forEach(sk => { skills.push([sk.icon, sk.name, sk.tag, sk.desc, false]); keys.push(sk.key); });
+    { const ps = LOTM_SKILLS.PASS[pk]; skills.push([ps[0], ps[1], ps[2], ps[3], true]); }
+    keys.push("");
   }
 
   setText("skillsTitle", title);
@@ -942,7 +934,14 @@ function renderSkills(path) {
     return;
   }
 
-  skills.forEach((skill, i) => box.appendChild(skillCard(skill[0], skill[1], skill[2], skill[3], skill[4], i)));
+  skills.forEach((skill, i) => {
+    const card = skillCard(skill[0], skill[1], skill[2], skill[3], skill[4], i);
+    if (keys[i]) {
+      card.style.cursor = "pointer";
+      card.addEventListener("click", () => LOTM_SKILLS.play(keys[i], document.querySelector(".portrait"), card));
+    }
+    box.appendChild(card);
+  });
 }
 
 function renderExperience(data) {
@@ -982,7 +981,8 @@ async function loadProfile() {
 
   renderExperience(data);
   renderStats(data);
-  renderSkills(data.path || "");
+  setPortrait(data);
+  renderSkills(data.path_key || data.path || "");
 }
 
 async function init() {
