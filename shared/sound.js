@@ -236,4 +236,6 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 window.snd=function(n,d){try{sfx(n,d)}catch(e){}};window.sndMusic=function(n){try{music(n)}catch(e){}};window.sndStop=function(){try{stop()}catch(e){}};
 window.LOTM_SND={sfx:sfx,music:music,stop:stop,toggle:toggle,setVol:setVol,state:st,resume:resume,
 skill:function(fx,delay){sfx(fx,delay)},ready:ready,_master:function(){return master}};
+/* общий чат: подключаем на каждой странице рядом с кнопкой звука */
+try{var _ss=document.querySelector('script[src*="sound.js"]');if(_ss&&!document.documentElement.hasAttribute("data-nochat")){var _c=document.createElement("script");_c.src=_ss.src.replace(/sound\.js(\?.*)?$/,"chat.js");_c.defer=true;document.head.appendChild(_c)}}catch(e){}
 })();
