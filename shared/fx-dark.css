@@ -1,0 +1,56 @@
+/* LOTM: приглушённые, «взрослые» эффекты боя и событий: тушь, туман, рваные росчерки, тлеющий красный */
+:root{--fx-bone:#cdbf9f;--fx-bronze:#8a7a58;--fx-crim:#a3262e;--fx-crimb:#c0343e}
+/* росчерк: рваный тонкий след вместо яркой вспышки */
+.fxSlash{height:2px!important;margin-top:-1px!important;background:linear-gradient(90deg,transparent,#d8cfb8 30%,#d8cfb8 60%,transparent)!important;
+ box-shadow:0 0 3px #000,0 1px 0 var(--fx-crim)!important;filter:saturate(.4);clip-path:polygon(0 40%,18% 0,34% 70%,52% 10%,70% 80%,86% 20%,100% 60%,86% 100%,64% 50%,46% 100%,30% 40%,12% 100%)}
+.fxSlash:after{content:"";position:absolute;inset:-2px 12%;background:linear-gradient(90deg,transparent,var(--fx-crim),transparent);opacity:.55;filter:blur(1px)}
+/* кольцо: расходящаяся рябь дымом */
+.fxRing{border:1px solid var(--fx-bronze)!important;box-shadow:0 0 14px #00000099,inset 0 0 12px #00000099!important;filter:saturate(.3) brightness(.9);border-style:dashed!important}
+.fxEmoji,.fxBoom{filter:drop-shadow(0 0 5px #000) saturate(.3) brightness(.85)!important;color:var(--fx-bone)}
+/* вспышка → чернильная клякса */
+.fxFlash{background:radial-gradient(ellipse at 50% 55%,#000 0,#000000cc 45%,#000000 100%)!important;animation:flashInk .8s ease-out forwards!important}
+@keyframes flashInk{0%{opacity:.9;transform:scale(.6)}30%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.15)}}
+/* попадание: тёмная кровь/потемнение вместо белого и красного неона */
+@keyframes flashR{0%,100%{filter:none}30%{filter:brightness(.55) sepia(.6) saturate(1.6) contrast(1.2) drop-shadow(0 0 7px #a3262e)}}
+@keyframes flashW{0%,100%{filter:none}30%{filter:brightness(.4) contrast(1.3) grayscale(.5)}}
+@keyframes healG{0%,100%{filter:none}40%{filter:brightness(1.1) sepia(.35) saturate(.7) drop-shadow(0 0 8px #8a7a58)}}
+@keyframes coil{0%,100%{transform:scale(1);box-shadow:0 0 0 #0000}50%{transform:scale(.94);box-shadow:0 0 22px #1f2a22cc}}
+@keyframes poison{0%,100%{box-shadow:0 0 0 #0000}50%{box-shadow:0 0 18px #3d4a2acc}}
+@keyframes bossAura{0%,100%{box-shadow:0 0 10px #a3262e44}50%{box-shadow:0 0 24px #a3262e99}}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 0 #8a7a58}50%{text-shadow:0 0 10px #8a7a5899}}
+@keyframes vsPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1;text-shadow:0 0 8px #a3262e}}
+/* всплывающие числа */
+.float{text-shadow:0 0 4px #000,0 1px 0 #000!important;letter-spacing:.5px}
+.float.dmg{color:#c0343e!important}.float.heal{color:#a9b89a!important}
+/* баннеры */
+.banner{color:var(--fx-bone)!important;letter-spacing:7px!important;font-weight:700!important;text-shadow:0 0 16px #a3262e99,0 2px 3px #000!important;filter:saturate(.5)}
+/* конфетти победы → медленный пепел */
+.spark{width:3px!important;height:3px!important;border-radius:50%!important;background:#8a7a58!important;opacity:.55!important;filter:blur(.4px)}
+/* ambient-частицы */
+.amb-p{filter:saturate(.3) brightness(.8) drop-shadow(0 0 4px #000);color:var(--fx-bone)}
+.amb-p.ic,.amb-p .ic{color:#8a7a58}
+/* полосы здоровья */
+.bar.hp i{background:linear-gradient(90deg,#5a1a22,#a3262e)!important}
+.bar.enemyHp i{background:linear-gradient(90deg,#4a3a22,#8a7a58)!important}
+.bar .ghost{background:#cdbf9f66!important}
+/* карточки навыков */
+.skill:not(:disabled):active{box-shadow:0 0 12px #a3262e55!important}
+.skill{background:linear-gradient(145deg,#1c1820,#120f15)!important;border-color:#3a3340!important}
+.skill.basic{background:linear-gradient(145deg,#19191c,#0f0f12)!important}
+.skill.escape{border-color:#5a2c32!important}
+.cooldown{background:#2a2218!important;color:#cdbf9f!important}
+.chip{filter:saturate(.45) brightness(.9)}
+/* фон арены и портретов: без голубых/зелёных свечений */
+body{background-image:radial-gradient(ellipse at 50% -10%,#2a2430aa,transparent 55%),linear-gradient(#0a080c,#040305)!important}
+.arena:after{background:radial-gradient(ellipse at 20% 100%,#8a7a5812,transparent 55%),radial-gradient(ellipse at 80% 0%,#8a7a580c,transparent 55%)!important}
+.arena.phase2 .portraitFrame:last-child,.arena.phase2 #enemyFrame{border-color:#a3262e!important;box-shadow:0 0 22px #a3262e88!important}
+.portraitFrame{background:linear-gradient(145deg,#1d1a20,#0c0a0d)!important;border-color:#3a3340!important}
+.emo{background:radial-gradient(circle at 50% 40%,#1c1a1f,#08070a 80%)!important;filter:none!important;color:#8a7a58}
+.arena.phase2 .emo{background:radial-gradient(circle at 50% 40%,#2a1015,#0a0507 80%)!important;filter:none!important}
+.portraitFrame.coiled .emo,.portraitFrame.coiled img{filter:brightness(.7) saturate(.6)!important}
+.portraitFrame.shielded{box-shadow:0 0 0 1px #8a7a58,0 0 16px #8a7a5866!important}
+/* глаза врага: красная искра */
+.portraitFrame img{filter:contrast(1.04) saturate(.9)}
+/* общее: победный/поражение */
+.actionBtn.primary{color:#0a070b!important;background:linear-gradient(135deg,#cdbf9f,#8a7a58)!important;border-color:#a89a78!important}
+body.defeatFx:after{background:radial-gradient(ellipse at center,transparent 50%,#4a0a10cc)!important}

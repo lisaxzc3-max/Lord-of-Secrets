@@ -7,6 +7,7 @@ var KEY="lotm_tone";
 function mode(){try{return localStorage.getItem(KEY)||"dark"}catch(e){return"dark"}}
 var m=mode();
 if(m==="vivid")return;
+try{var cs=document.currentScript||document.querySelector('script[src*="theme.js"]');if(cs&&cs.src){var lk=document.createElement("link");lk.rel="stylesheet";lk.href=cs.src.replace(/theme\.js(\?.*)?$/,"fx-dark.css");document.head.appendChild(lk)}}catch(e){}
 var ok=false;try{ok=CSS.supports("backdrop-filter","blur(1px)")||CSS.supports("-webkit-backdrop-filter","blur(1px)")}catch(e){}
 var s=document.createElement("style");
 var grain="url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
