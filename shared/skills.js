@@ -188,6 +188,7 @@ pop(E,"💢","#ff5d5d",300);
 function play(key,pEl,eEl){
 var s=SK[key];if(!s||!s.fx||!FX[s.fx])return;
 try{FX[s.fx](ctr(pEl),ctr(eEl))}catch(e){}
+try{if(window.snd)snd(s.fx)}catch(e){}
 }
 /* кнопка навыка (в бою) */
 function decorate(btn,key){

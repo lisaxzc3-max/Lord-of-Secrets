@@ -69,10 +69,18 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
 .burst{position:fixed;left:0;top:0;width:100%;height:0;z-index:70;pointer-events:none}
 .burst i{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:bst 1s ease-out forwards}
 @keyframes bst{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.sRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px}
+.sRow input[type=range]{width:55%;accent-color:#d6b779}
+.sw{position:relative;width:48px;height:26px;flex-shrink:0}.sw input{opacity:0;position:absolute;inset:0;z-index:2;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:99px;background:#2a2238;border:1px solid var(--line);transition:.25s}
+.sw i:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#8d869a;transition:.25s}
+.sw input:checked+i{background:#4a3a1a;border-color:var(--gold)}.sw input:checked+i:after{left:25px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
 </style>
 <script src="../shared/auth.js"></script>
 <script src="../shared/skills.js"></script>
+<script src="../shared/sound.js"></script>
+<script>sndMusic("calm")</script>
 </head>
 <body>
 <div class="stars" id="stars"></div>
@@ -87,6 +95,15 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
         <div class="chips"><span class="chip g" id="curPath">—</span><span class="chip" id="curGender">—</span><span class="chip">Ур. <span id="curLvl">—</span></span></div>
       </div>
     </div>
+  </section>
+
+  <section class="card">
+    <h3>🔊 Звук</h3>
+    <div class="sub">Музыка локаций и звуки боя, навыков и событий.</div>
+    <div class="sRow"><span>Звук включён</span><label class="sw"><input type="checkbox" id="sOn"><i></i></label></div>
+    <div class="sRow"><span>Эффекты</span><input type="range" id="sSfx" min="0" max="100"></div>
+    <div class="sRow"><span>Музыка</span><input type="range" id="sMus" min="0" max="100"></div>
+    <div class="btn" onclick="testSnd()">▶ Проверить звук</div>
   </section>
 
   <section class="card">
@@ -197,6 +214,15 @@ async function changePath(){
   if(!d.ok){toast(d.error||"Не удалось",true);return}
   burst();toast("Путь сменён: "+NAMES[selP]);await load();
 }
+(function(){
+  const S=LOTM_SND.state;
+  $("sOn").checked=!!S.on;$("sSfx").value=Math.round(S.sfx*100);$("sMus").value=Math.round(S.mus*100);
+  $("sOn").addEventListener("change",e=>LOTM_SND.toggle(e.target.checked));
+  $("sSfx").addEventListener("input",e=>LOTM_SND.setVol("sfx",e.target.value/100));
+  $("sSfx").addEventListener("change",()=>snd("hit"));
+  $("sMus").addEventListener("input",e=>LOTM_SND.setVol("mus",e.target.value/100));
+})();
+function testSnd(){LOTM_SND.resume();["divine","storm","fire","win"].forEach((n,i)=>snd(n,i*0.9))}
 load().catch(()=>{});
 </script>
 </body>

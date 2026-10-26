@@ -248,6 +248,8 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @media(prefers-reduced-motion:reduce){.hero .city .win,.lamp,.coin,.liq:before,.liq:after{animation:none!important}}
 </style>
 <script src="./shared/auth.js"></script>
+<script src="./shared/sound.js"></script>
+<script>sndMusic("city")</script>
 </head>
 <body>
 <canvas id="fx"></canvas>
@@ -502,6 +504,7 @@ var pt=$("path").textContent;$("orbPath").textContent=pt&&pt!=="—"?pt:"Пут�
 
 /* всплывающие +N и новый уровень */
 function gain(id,txt,color){
+snd("coin");
 var el=$(id);if(!el)return;var r=(el.parentElement||el).getBoundingClientRect();
 var f=document.createElement("div");f.className="floatGain";f.textContent=txt;f.style.color=color;
 f.style.left=(r.left+r.width/2-12)+"px";f.style.top=(r.top+4)+"px";document.body.appendChild(f);
@@ -517,6 +520,7 @@ if(old!=null&&v!==old){gain(id,(v>old?"+":"")+(v-old)+" "+label,v>old?color:"#ff
 }
 track("pounds","#ffd86a","£");track("exp","#b9a0ff","✨");
 function levelUp(n){
+snd("level");
 if(reduce)return;
 var o=document.createElement("div");o.className="lvlUp";o.innerHTML="<b>НОВЫЙ УРОВЕНЬ</b><span>"+n+"</span>";
 var cols=["#ffe9a8","#d6b779","#fff","#b9a0ff"];

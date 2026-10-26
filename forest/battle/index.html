@@ -194,6 +194,8 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 </style>
 <script src="../../shared/skills.js"></script>
 <script src="../../shared/auth.js"></script>
+<script src="../../shared/sound.js"></script>
+<script>sndMusic("battle")</script>
 </head>
 <body>
 <div class="wrap">
@@ -320,6 +322,7 @@ function emojiAt(el,emoji,color,cls){const p=arenaPos(el);spawn(cls||"fxEmoji",p
 function shakeScreen(){addTemp(document.body,"shake",480)}
 let bannerFree=0;
 function banner(text,color){
+snd("banner");
 const now=Date.now(),wait=Math.max(0,bannerFree-now);
 bannerFree=now+wait+900;
 setTimeout(()=>{
@@ -351,6 +354,7 @@ setTimeout(()=>s.remove(),3800);
 }
 }
 function hpFx(side,delta,max){
+snd(delta<0?(side==="player"?"hurt":"hit"):"heal",delta<0?(side==="player"?0.45:0.2):0.4);
 const frame=side==="player"?framePlayer():frameEnemy();
 const abs=Math.abs(delta);
 if(delta<0){
@@ -503,7 +507,7 @@ if(curEnemy==="Лиса-оборотень")setImageForEnemy(curEnemy);
 const role=$("enemyRole");
 role.textContent=parts.join(" · ");
 role.classList.toggle("boss",!!boss);
-$("arena").classList.toggle("boss",!!boss);
+$("arena").classList.toggle("boss",!!boss);sndMusic(boss?"boss":"battle");
 }
 function cleanBattleText(value){
 const text=String(value??"").trim();
@@ -604,6 +608,7 @@ const badge=document.createElement("span");badge.className="cooldown";badge.text
 $("battleSkills").appendChild(button);
 }
 function showVictory(data){
+sndStop();snd("win");
 ended=true;setStatus("Победа");$("roundLabel").textContent="✦ Противник повержен";
 $("vTenge").textContent=data.tenge==null?"—":Number(data.tenge);
 $("vExp").textContent=data.exp_add==null?"—":Number(data.exp_add);
@@ -614,6 +619,7 @@ addLog("Победа! Чаща затихает.","good");
 sparks($("victoryCard"));
 }
 function showDefeat(data){
+sndStop();snd("lose");
 ended=true;setStatus("Поражение");$("roundLabel").textContent="☠ Силы иссякли";
 $("defeatCard").classList.remove("hidden");$("victoryCard").classList.add("hidden");
 $("skillCard").classList.add("hidden");hideError();

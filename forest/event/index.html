@@ -82,6 +82,8 @@ h1{font-size:20px;margin:4px 0 0}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 <script src="../../shared/auth.js"></script>
+<script src="../../shared/sound.js"></script>
+<script>sndMusic("forest")</script>
 </head>
 <body>
 <div class="wrap">
@@ -226,6 +228,7 @@ async function choose(id){
 }
 function showResult(r){
  const fx=r.fx||"calm";
+ snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
  const st=$("stage");st.classList.remove("fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx-"+fx);
  if(fx==="hurt"||fx==="poison"){$("sceneCard").classList.add("shake");setTimeout(()=>$("sceneCard").classList.remove("shake"),520)}
  try{tg?.HapticFeedback?.notificationOccurred(fx==="hurt"||fx==="poison"?"error":"success")}catch(_){}

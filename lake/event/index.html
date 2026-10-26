@@ -85,6 +85,8 @@ h1{font-size:20px;margin:4px 0 0;line-height:1.2}
 @keyframes shk{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}}
 </style>
 <script src="../../shared/auth.js"></script>
+<script src="../../shared/sound.js"></script>
+<script>sndMusic("lake")</script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
@@ -415,6 +417,7 @@ function actionIcon(action,index){
 function lakeResultFx(result){
   const ev=String(result.event||"");
   const cls=ev==="frog_kiss"?"fx-poison":ev==="chest_dive"?"fx-gold":ev==="chest_dive_fail"?"fx-hurt":"fx-calm";
+  if(ev==="frog_kiss"){snd("kiss");snd("bad",0.35)}else if(ev==="chest_dive"){snd("dive");snd("coin",0.9)}else if(cls==="fx-hurt")snd("bad");else snd("good");
   const box=document.querySelector(".artWrap");
   box.classList.remove("fx-poison","fx-gold","fx-hurt","fx-calm");void box.offsetWidth;box.classList.add(cls);
   if(cls==="fx-hurt"||cls==="fx-poison"){const c=document.querySelector(".eventCard")||document.body;c.classList.add("shk");setTimeout(()=>c.classList.remove("shk"),520)}
