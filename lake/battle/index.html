@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101014">
-<title>Сражение — Повелитель Тайн</title>
+<meta name="theme-color" content="#03101a">
+<title>Озёра · Сражение</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--panel:rgba(25,24,30,.96);--line:#45404b;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779;--red:#d65d63;--green:#77b98b}
+:root{--panel:rgba(8,22,30,.96);--line:#2d4d5c;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779;--red:#d65d63;--green:#77b98b}
 *{box-sizing:border-box}
-html{min-height:100%;background:#101014}
-body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,#6f4c843b,transparent 50%),linear-gradient(#0a090ed1,#0a090ef5),url('../IMG_20261020_125409.jpg') center/cover no-repeat}
+html{min-height:100%;background:#03101a}
+body{margin:0;min-height:100vh;color:var(--text);overflow-x:hidden;background:radial-gradient(ellipse at 50% -10%,#1f7a8a40,transparent 55%),linear-gradient(#051722,#030a10)}
 button,a{-webkit-tap-highlight-color:transparent}
 button{font:inherit}
-.wrap{max-width:520px;margin:auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
+.wrap{position:relative;z-index:2;max-width:520px;margin:auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
 .head{display:flex;align-items:center;gap:10px;padding:7px 0 14px}
 .back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#19181de0;font-size:12px}
 .headTitle{min-width:0;flex:1}
@@ -162,9 +162,41 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 @keyframes vig{0%,100%{opacity:.9}50%{opacity:.45}}
 @media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.card{padding:11px}.fighters{grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:5px}.fighterName{font-size:12px}.skill{padding:9px 8px;min-height:75px}.skillName{font-size:11px}.headTitle h1{font-size:16px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+/* ---- атмосфера озера ---- */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.moon{position:absolute;top:6%;right:14%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#f3f6df,#c9d8c0 60%,#9fbab0);box-shadow:0 0 70px 22px #bfe3f033}
+.glint{position:absolute;top:22%;right:calc(14% + 36px);width:12px;height:46%;background:linear-gradient(#e8f6ff55,#0000);filter:blur(5px);animation:glint 4s ease-in-out infinite}
+.horizon{position:absolute;left:0;right:0;top:40%;height:60%;background:linear-gradient(#0b3a4a66,#031018 70%)}
+.mist{position:absolute;left:-50%;width:200%;height:34%;background:radial-gradient(ellipse at center,#9fd0d82b,transparent 65%);filter:blur(10px)}
+.mist.a{bottom:24%;animation:mist 30s linear infinite}.mist.b{bottom:8%;animation:mist 44s linear -18s infinite reverse;opacity:.7}
+.wave{position:absolute;left:-10%;width:120%;height:2px;background:linear-gradient(90deg,transparent,#8fe8f044,transparent);animation:wave var(--t) ease-in-out var(--d) infinite}
+.bub{position:absolute;bottom:-12px;width:8px;height:8px;border-radius:50%;border:1.5px solid #bff6ff88;animation:bub var(--t) linear var(--d) infinite}
+.fly{position:absolute;width:4px;height:4px;border-radius:50%;background:#d8ffe8;box-shadow:0 0 9px 3px #9fffd066;animation:fly var(--t) ease-in-out var(--d) infinite;opacity:0}
+@keyframes glint{50%{opacity:.4;transform:scaleX(1.6)}}
+@keyframes mist{from{transform:translateX(0)}to{transform:translateX(25%)}}
+@keyframes wave{0%,100%{transform:translateY(0);opacity:.2}50%{transform:translateY(5px);opacity:.8}}
+@keyframes bub{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),-100vh);opacity:0}}
+@keyframes fly{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}60%{transform:translate(var(--x),var(--y));opacity:.5}100%{opacity:0;transform:translate(calc(var(--x)*-.5),calc(var(--y)*1.4))}}
+@media(prefers-reduced-motion:reduce){.scene *{animation:none!important}}
+
+.hidden{display:none!important}
+.portraitFrame{overflow:visible}
+.emo{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:10px;font-size:64px;background:radial-gradient(circle at 50% 40%,#1f5a6a,#051016 80%)}
+.flashR .emo{animation:flashR .45s}.flashW .emo{animation:flashW .4s}.healGlow .emo{animation:healG .8s}
+.stat{position:absolute;inset:0;pointer-events:none}
+.arena.phase2{border-color:#c4252f}
+.arena.phase2 #enemyFrame{border-color:#ff5a3a;box-shadow:0 0 28px #ff3a2a99}
+.amb{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+.amb-p{position:absolute;font-size:22px;font-style:normal;animation:ambUp 1.5s ease-out forwards}
+@keyframes ambUp{0%{opacity:0;transform:translateY(14px) scale(.5)}25%{opacity:.95}100%{opacity:0;transform:translateY(-70px) scale(1.2) rotate(40deg)}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-size:10px;font-weight:800;padding:4px 8px;border-radius:999px;border:1px solid #3a6a7a;background:#08181f;color:#cfe8ee;animation:cardIn .3s ease-out}
+.chip.poison{border-color:#4f9a58;color:#a6f0a8}.chip.coil{border-color:#c4a45a;color:#f0dca0}
+.portraitFrame.coiled .emo,.portraitFrame.coiled img{filter:brightness(.8) hue-rotate(40deg)}
 </style>
 </head>
 <body>
+<div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
 <div class="wrap">
 <header class="head">
 <a class="back" id="backHome" href="../index.html">← Озёра</a>
@@ -173,11 +205,11 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 </header>
 <main>
 <section class="card arena" id="arena">
-<div class="fx" id="fx"></div>
-<div class="arenaTop"><span class="sectionLabel">Поле боя</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
+<div class="fx" id="fx"></div><div class="amb" id="amb"></div>
+<div class="arenaTop"><span class="sectionLabel">Топи</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
 <div class="fighters">
 <div class="fighter">
-<div class="portraitFrame"><img id="playerImg" src="../../i-72.jpeg" alt="Игрок"></div>
+<div class="portraitFrame" id="playerFrame"><img id="playerImg" src="../../i-72.jpeg" alt="Игрок"><div class="stat" id="playerStat"></div></div>
 <div class="fighterName" id="playerName">Путешественник</div>
 <div class="fighterRole" id="playerPath">Путь неизвестен</div>
 <div class="hpNumbers"><span>❤️ Здоровье</span><strong id="playerHp">—</strong></div>
@@ -186,7 +218,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 </div>
 <div class="vs">VS</div>
 <div class="fighter">
-<div class="portraitFrame"><img id="enemyImg" src="./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png" alt="Противник"></div>
+<div class="portraitFrame" id="enemyFrame"><img id="enemyImg" class="hidden" alt="Противник"><div class="emo" id="enemyEmo">🌊</div><div class="stat" id="enemyStat"></div></div>
 <div class="fighterName" id="enemyLabel">Противник</div>
 <div class="fighterRole" id="enemyRole">Враждебная сущность</div>
 <div class="hpNumbers"><span>🩸 Здоровье</span><strong id="enemyHp">—</strong></div>
@@ -194,6 +226,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <div class="hpCaption"><span id="enemyHpPercent">—</span><span id="enemyHpState">—</span></div>
 </div>
 </div>
+<div class="chips" id="chips"></div>
 <div class="battleMessage hidden" id="battleMessage">
 <div class="messageIcon" id="messageIcon">📜</div>
 <div class="messageBody"><div class="messageTitle" id="messageTitle">ХОД СРАЖЕНИЯ</div><div id="battleText" aria-live="polite"></div></div>
@@ -260,17 +293,21 @@ hunter_boost:{icon:"😤",name:"Провокация",desc:"Способност
 basic:{icon:"⚔️",name:"Базовая атака",desc:"Обычная атака."},
 flee:{icon:"🏃",name:"Отступить",desc:"Попробовать покинуть сражение."}
 };
+/* Картинки монстров лежат в lake/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Утопленник":"./fdcd7a60-8785-416e-bb15-4c0ff06b5c23.png",
-"Жаба":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png",
-"Лягушка":"./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png",
-"Змей":"../i-86.jpeg"
+"Утопленник":"../img/drowned.svg",
+"Жаба":"../img/toad.svg",
+"Лягушка":"../img/toad.svg",
+"Змей":"../img/serpent.svg"
 };
+const EMO={"Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
+const ROLE={"Утопленник":"Утопленник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
+let curEnemy="";
 
 /* ===== ЭФФЕКТЫ ===== */
 const prevHp={player:null,enemy:null};
-const framePlayer=()=>$("playerImg").closest(".portraitFrame");
-const frameEnemy=()=>$("enemyImg").closest(".portraitFrame");
+const framePlayer=()=>$("playerFrame");
+const frameEnemy=()=>$("enemyFrame");
 function addTemp(el,cls,ms){
 if(!el)return;
 el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);
@@ -293,11 +330,16 @@ function slashAt(el,color,rot){const p=arenaPos(el);spawn("fxSlash",p.x,p.y,{"--
 function ringAt(el,color){const p=arenaPos(el);spawn("fxRing",p.x,p.y,{"--c":color},1000)}
 function emojiAt(el,emoji,color,cls){const p=arenaPos(el);spawn(cls||"fxEmoji",p.x,p.y,{"--c":color},1050,emoji)}
 function shakeScreen(){addTemp(document.body,"shake",480)}
+let bannerFree=0;
 function banner(text,color){
+const now=Date.now(),wait=Math.max(0,bannerFree-now);
+bannerFree=now+wait+900;
+setTimeout(()=>{
 const b=document.createElement("div");
 b.className="banner";b.textContent=text;
 if(color)b.style.setProperty("--c",color);
 $("fx").appendChild(b);setTimeout(()=>b.remove(),1750);
+},wait);
 }
 function flashScreen(){
 const f=document.createElement("div");f.className="fxFlash";
@@ -364,12 +406,34 @@ case "hunter_trap":emojiAt(E,"🪤","#d6b779","fxDrop");break;
 case "hunter_boost":ringAt(P,"#ffb04a");emojiAt(P,"😤","#ffb04a");break;
 }
 }
+const st={poison:0,coil:0};
+function drawChips(){
+const box=$("chips");box.replaceChildren();
+if(st.poison>0){const c=document.createElement("span");c.className="chip poison";c.textContent="☠ Яд";box.appendChild(c)}
+if(st.coil>0){const c=document.createElement("span");c.className="chip coil";c.textContent="🌀 Кольца";box.appendChild(c)}
+frameEnemy().classList.toggle("coiled",st.coil>0);
+}
+function ambient(icons,n){
+const box=$("amb");
+for(let i=0;i<n;i++){
+const e=document.createElement("i");e.className="amb-p";e.textContent=icons[i%icons.length];
+e.style.left=(8+Math.random()*84)+"%";e.style.top=(10+Math.random()*60)+"%";
+e.style.animationDelay=(Math.random()*.4).toFixed(2)+"s";
+box.appendChild(e);setTimeout(()=>e.remove(),1700);
+}}
 function bossFx(text){
 if(!text)return;
-if(/ЛИНЬКА/.test(text)){flashScreen();banner("ЛИНЬКА","#7be3a0");shakeScreen()}
-if(/кольца/.test(text))addTemp(frameEnemy(),"coil",1700);
-if(/Удушение/.test(text)){banner("УДУШЕНИЕ","#f08b8b");shakeScreen()}
-if(/Яд/.test(text))addTemp(framePlayer(),"poison",1000);
+if(st.poison>0)st.poison--;
+st.coil=0;
+if(/ЛИНЬКА/.test(text)){flashScreen();banner("ЛИНЬКА","#ff5a3a");shakeScreen();ambient(["🔥","✨"],8)}
+if(/кольца/.test(text)){addTemp(frameEnemy(),"coil",1700);st.coil=1}
+if(/Удушение/.test(text)){banner("УДУШЕНИЕ","#f08b8b");shakeScreen();ambient(["🌀"],6)}
+if(/Ядовитый укус|Яд\s/.test(text)||/☠/.test(text)){st.poison=3;addTemp(framePlayer(),"poison",1000);ambient(["🟢","☠"],5)}
+if(/Язык-хлыст/.test(text)){addTemp(frameEnemy(),"lungeL",420);ambient(["💦"],4)}
+if(/Склизкий прыжок/.test(text)){addTemp(frameEnemy(),"lungeL",420);ambient(["💚"],4)}
+if(/Утягивание на дно/.test(text)){banner("НА ДНО","#7af0ff");shakeScreen();ambient(["🫧","🌊"],8)}
+if(/Ледяной шёпот/.test(text)){banner("ШЁПОТ","#9fb8ff");ambient(["❄️","🌀"],6)}
+drawChips();
 }
 
 function unwrap(value){
@@ -428,11 +492,15 @@ function setEnemyLevel(level,boss,phase){
 const parts=[];
 if(level)parts.push("Ур. "+level);
 if(boss)parts.push("Фаза "+(Number(phase)||1));
-parts.push(boss?"Босс":"Враждебная сущность");
+parts.push(boss?"Босс":(ROLE[curEnemy]||"Враждебная сущность"));
 const role=$("enemyRole");
 role.textContent=parts.join(" · ");
 role.classList.toggle("boss",!!boss);
 $("arena").classList.toggle("boss",!!boss);
+const p2=!!boss&&Number(phase)>=2;
+const was2=$("arena").classList.contains("phase2");
+$("arena").classList.toggle("phase2",p2);
+if(curEnemy==="Змей"&&p2!==was2)setImageForEnemy(curEnemy);
 }
 function cleanBattleText(value){
 const text=String(value??"").trim();
@@ -457,10 +525,14 @@ $("logCount").textContent=count+" "+(count===1?"запись":count>=2&&count<=4
 $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":""):"Хроника пуста";
 }
 function setImageForEnemy(enemy){
-const img=$("enemyImg");
-const fallback="./b10d4ddc-2110-4e37-a16b-cc7d5a1d2cc2.png";
-img.onerror=function(){this.onerror=null;if(enemy!=="Змей")this.src=fallback};
-img.src=pics[enemy]||pics["Утопленник"];
+const img=$("enemyImg"),emo=$("enemyEmo");
+emo.textContent=EMO[enemy]||"🌊";
+const src=(enemy==="Змей"&&$("arena").classList.contains("phase2"))?"../img/serpent2.svg":pics[enemy];
+if(src){
+img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
+img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
+if(!img.src.endsWith(src.replace("..","")))img.src=src;else{img.classList.remove("hidden");emo.classList.add("hidden")}
+}else{img.classList.add("hidden");emo.classList.remove("hidden")}
 }
 function lakeUrl(){
 const params=new URLSearchParams(location.search);
@@ -505,7 +577,7 @@ if(!data||typeof data!=="object")throw new Error("Профиль игрока н
 return data;
 }
 function getEnemyName(serverEnemy){
-let enemy=qs.get("enemy")||serverEnemy||"Утопленник";
+let enemy=serverEnemy||qs.get("enemy")||"Утопленник";
 if(enemy==="Лягушка")enemy="Жаба";
 return enemy;
 }
@@ -582,7 +654,7 @@ setHealth("player",profile.hp,profile.max_hp);
 let state=null;
 try{state=await api({action:"battle_state"})}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
-const enemy=getEnemyName(state?.enemy);
+const enemy=getEnemyName(state?.enemy);curEnemy=enemy;
 $("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
 if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 else setHealth("enemy",null,null);
@@ -707,6 +779,13 @@ $("defeatCloseBtn").addEventListener("click",goLake);
 $("defeatRetryBtn").addEventListener("click",load);
 $("retryBtn").addEventListener("click",load);
 window.addEventListener("DOMContentLoaded",load);
+(function(){
+if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+var sc=document.getElementById("scene");if(!sc)return;var r=function(a,b){return a+Math.random()*(b-a)};
+for(var i=0;i<7;i++){var w=document.createElement("i");w.className="wave";w.style.top=r(48,96)+"%";w.style.setProperty("--t",r(3,6)+"s");w.style.setProperty("--d",r(-6,0)+"s");sc.appendChild(w)}
+for(var j=0;j<12;j++){var b=document.createElement("i");b.className="bub";b.style.left=r(2,98)+"%";b.style.setProperty("--x",r(-24,24)+"px");b.style.setProperty("--t",r(9,16)+"s");b.style.setProperty("--d",r(-14,0)+"s");sc.appendChild(b)}
+for(var k=0;k<9;k++){var f=document.createElement("i");f.className="fly";f.style.left=r(4,96)+"%";f.style.top=r(40,88)+"%";f.style.setProperty("--x",r(-50,50)+"px");f.style.setProperty("--y",r(-60,20)+"px");f.style.setProperty("--t",r(5,10)+"s");f.style.setProperty("--d",r(-8,0)+"s");sc.appendChild(f)}
+})();
 </script>
 </body>
 </html>

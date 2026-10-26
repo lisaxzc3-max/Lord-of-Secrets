@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="40%" r="78%"><stop offset="0" stop-color="#0e4a6a"/><stop offset="1" stop-color="#02080e"/></radialGradient>
+<linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d3a4a" stop-opacity=".0"/><stop offset="1" stop-color="#02101a" stop-opacity=".92"/></linearGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4.5s linear infinite}
+.rip{animation:rip 3.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.tongue{animation:tongue 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:0 50%}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes pulse{50%{transform:scale(1.1);opacity:.75}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-80px);opacity:0}}
+@keyframes rip{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+@keyframes tongue{0%,70%,100%{transform:scaleX(.2);opacity:0}78%,92%{transform:scaleX(1);opacity:1}}
+@keyframes sway{50%{transform:rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<path d="M20 0 L34 0 L60 170 L6 170Z" fill="#b8f0ff" opacity=".07"/><path d="M70 0 L84 0 L110 170 L56 170Z" fill="#b8f0ff" opacity=".07"/><path d="M120 0 L134 0 L160 170 L106 170Z" fill="#b8f0ff" opacity=".07"/><path d="M160 0 L174 0 L200 170 L146 170Z" fill="#b8f0ff" opacity=".07"/><circle class="rise" cx="52" cy="180" r="1.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:0.0s"/><circle class="rise" cx="93" cy="167" r="2.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:3.7s"/><circle class="rise" cx="134" cy="154" r="3.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:2.9s"/><circle class="rise" cx="175" cy="141" r="1.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:2.1s"/><circle class="rise" cx="52" cy="178" r="2.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:1.3s"/><circle class="rise" cx="93" cy="165" r="3.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:0.5s"/><circle class="rise" cx="134" cy="152" r="1.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:4.2s"/><circle class="rise" cx="175" cy="139" r="2.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:3.4s"/><circle class="rise" cx="52" cy="176" r="3.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:2.6s"/><circle class="rise" cx="93" cy="163" r="1.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:1.8s"/>
+<path d="M0 160 Q50 148 100 160 T200 160 L200 200 L0 200Z" fill="#06202a"/>
+<ellipse cx="100" cy="172" rx="62" ry="9" fill="#02080c" opacity=".7"/>
+<g class="bob">
+<rect x="48" y="112" width="104" height="56" rx="5" fill="#5a3a1c"/>
+<path d="M48 112 Q100 76 152 112Z" fill="#6a4524"/>
+<path d="M48 112 Q100 76 152 112" stroke="#d4b06a" stroke-width="4" fill="none"/>
+<rect x="48" y="112" width="104" height="8" fill="#d4b06a"/>
+<rect x="48" y="146" width="104" height="5" fill="#d4b06a" opacity=".85"/>
+<rect x="90" y="116" width="20" height="26" rx="3" fill="#d4b06a"/><circle cx="100" cy="128" r="3.5" fill="#2a1a08"/><rect x="99" y="128" width="2" height="8" fill="#2a1a08"/>
+<path d="M54 112 Q100 84 146 112 L146 104 Q100 70 54 104Z" fill="#ffd84a" opacity=".55" filter="url(#glow)" class="pulse"/>
+<g filter="url(#glow)" fill="#ffd84a"><circle class="fl" cx="72" cy="104" r="3.5"/><circle class="fl" cx="100" cy="98" r="3"/><circle class="fl" cx="128" cy="104" r="3.5" style="animation-delay:-1.4s"/></g>
+</g>
+<path d="M10 200 Q16 170 8 150 M190 200 Q184 172 192 148" stroke="#0a3a22" stroke-width="5" fill="none" class="sway"/>
+</svg>

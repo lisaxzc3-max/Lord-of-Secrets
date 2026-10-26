@@ -3,30 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080b0f">
+<meta name="theme-color" content="#03101a">
 <title>Озёра · Топи</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 * { box-sizing: border-box; }
 :root { color-scheme: dark; --panel: rgba(22,22,27,.94); --line: #403c46; --text: #ded9d0; --gold: #d4b579; }
-body { margin: 0; min-height: 100vh; color: var(--text); font: 14px Inter, Arial, sans-serif;
-  background: #080b0f url('./IMG_20261020_125409.jpg') center/cover fixed no-repeat; }
-body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: linear-gradient(#090c11aa, #09090df2); }
-.wrap { max-width: 480px; margin: auto; padding: 12px 12px 32px; }
+html { background: #03101a; }
+body { margin: 0; min-height: 100vh; color: var(--text); font: 14px Inter, Arial, sans-serif; overflow-x: hidden;
+  background: radial-gradient(ellipse at 50% -10%, #1f7a8a40, transparent 55%), linear-gradient(#051722, #030a10); }
+.wrap { position: relative; z-index: 2; max-width: 480px; margin: auto; padding: 12px 12px 32px; }
 .head { display: flex; align-items: center; gap: 11px; padding: 8px 0 14px; }
-.back { color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #19181de8; }
+.back { color: var(--text); text-decoration: none; border: 1px solid #28485a; border-radius: 10px; padding: 10px 12px; background: #0a1c26e8; }
 .heading { font-size: 16px; font-weight: 800; }
-.subheading { font-size: 10px; letter-spacing: 2px; color: var(--gold); margin-top: 3px; }
-.card { border: 1px solid var(--line); border-radius: 17px; padding: 15px; background: var(--panel); box-shadow: 0 10px 28px #0003; }
-.button { display: block; width: 100%; padding: 14px 12px; margin-top: 9px; border: 1px solid #5b4b36; border-radius: 11px;
-  background: linear-gradient(135deg, #51442f, #302832); color: #e7d5ae; font: inherit; font-weight: 800; cursor: pointer; }
+.subheading { font-size: 10px; letter-spacing: 2px; color: #7fd0dc; margin-top: 3px; }
+.card { border: 1px solid #28485a; border-radius: 17px; padding: 15px; background: rgba(8,22,30,.92); box-shadow: 0 10px 28px #0003; }
+.button { position: relative; overflow: hidden; display: block; width: 100%; padding: 15px 12px; margin-top: 12px; border: 1px solid #3f8a9a; border-radius: 12px;
+  background: linear-gradient(135deg, #1a5060, #282440); color: #d4f2f6; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; }
+.button:after { content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, #ffffff30, transparent); transform: skewX(-20deg); animation: sweep 4s ease-in-out infinite; }
+@keyframes sweep { 0%, 60% { left: -60%; } 100% { left: 140%; } }
+.lore { font-size: 12px; line-height: 1.65; color: #aac8cf; margin: 0 0 4px; }
+body.going .wrap { animation: going .8s ease-in forwards; }
+body.going:after { content: ""; position: fixed; inset: 0; z-index: 20; background: #02080c; animation: fadeBlack .8s ease-in forwards; }
+@keyframes going { to { transform: scale(1.06); filter: blur(3px); } }
+@keyframes fadeBlack { from { opacity: 0; } to { opacity: 1; } }
 .button:active { transform: scale(.99); }
 .button:disabled { opacity: .5; }
 #msg { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #d1c8d6; min-height: 18px; }
 #msg.err { color: #f0a3a3; }
+
+/* ---- атмосфера озера ---- */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.moon{position:absolute;top:6%;right:14%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#f3f6df,#c9d8c0 60%,#9fbab0);box-shadow:0 0 70px 22px #bfe3f033}
+.glint{position:absolute;top:22%;right:calc(14% + 36px);width:12px;height:46%;background:linear-gradient(#e8f6ff55,#0000);filter:blur(5px);animation:glint 4s ease-in-out infinite}
+.horizon{position:absolute;left:0;right:0;top:40%;height:60%;background:linear-gradient(#0b3a4a66,#031018 70%)}
+.mist{position:absolute;left:-50%;width:200%;height:34%;background:radial-gradient(ellipse at center,#9fd0d82b,transparent 65%);filter:blur(10px)}
+.mist.a{bottom:24%;animation:mist 30s linear infinite}.mist.b{bottom:8%;animation:mist 44s linear -18s infinite reverse;opacity:.7}
+.wave{position:absolute;left:-10%;width:120%;height:2px;background:linear-gradient(90deg,transparent,#8fe8f044,transparent);animation:wave var(--t) ease-in-out var(--d) infinite}
+.bub{position:absolute;bottom:-12px;width:8px;height:8px;border-radius:50%;border:1.5px solid #bff6ff88;animation:bub var(--t) linear var(--d) infinite}
+.fly{position:absolute;width:4px;height:4px;border-radius:50%;background:#d8ffe8;box-shadow:0 0 9px 3px #9fffd066;animation:fly var(--t) ease-in-out var(--d) infinite;opacity:0}
+@keyframes glint{50%{opacity:.4;transform:scaleX(1.6)}}
+@keyframes mist{from{transform:translateX(0)}to{transform:translateX(25%)}}
+@keyframes wave{0%,100%{transform:translateY(0);opacity:.2}50%{transform:translateY(5px);opacity:.8}}
+@keyframes bub{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),-100vh);opacity:0}}
+@keyframes fly{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}60%{transform:translate(var(--x),var(--y));opacity:.5}100%{opacity:0;transform:translate(calc(var(--x)*-.5),calc(var(--y)*1.4))}}
+@media(prefers-reduced-motion:reduce){.scene *{animation:none!important}}
 </style>
 </head>
 <body>
+<div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
 <div class="wrap">
   <header class="head">
     <a class="back" id="backHome" href="../index.html">← Зал</a>
@@ -36,6 +61,7 @@ body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: 
     </div>
   </header>
   <section class="card">
+    <p class="lore">Туман стелется над топями. В воде что-то шевелится, на кочках сидят жабы, а в омутах поблёскивает чужое золото. Иногда из глубины поднимается Змей.</p>
     <button class="button" id="exploreBtn" type="button">🔍 Исследовать берег</button>
     <div id="msg"></div>
   </section>
@@ -105,24 +131,35 @@ btn.addEventListener("click", async function () {
 
     if (data.type === "event") {
       params.set("event_data", JSON.stringify(data));
-      location.href = "./event/index.html?" + params.toString();
+      document.body.classList.add("going");
+      setTimeout(function () { location.href = "./event/index.html?" + params.toString(); }, 600);
       return;
     }
 
     if (data.type === "battle") {
       if (data.enemy) params.set("enemy", data.enemy);
       params.delete("event_data");
-      location.href = "./battle/index.html?" + params.toString();
+      document.body.classList.add("going");
+      setTimeout(function () { location.href = "./battle/index.html?" + params.toString(); }, 600);
       return;
     }
 
     say("Сервер вернул неожиданный ответ.", true);
     btn.disabled = false;
   } catch (e) {
+    document.body.classList.remove("going");
     say(e.message || "Ошибка связи.", true);
     btn.disabled = false;
   }
 });
+
+(function(){
+if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+var sc=document.getElementById("scene");if(!sc)return;var r=function(a,b){return a+Math.random()*(b-a)};
+for(var i=0;i<7;i++){var w=document.createElement("i");w.className="wave";w.style.top=r(48,96)+"%";w.style.setProperty("--t",r(3,6)+"s");w.style.setProperty("--d",r(-6,0)+"s");sc.appendChild(w)}
+for(var j=0;j<12;j++){var b=document.createElement("i");b.className="bub";b.style.left=r(2,98)+"%";b.style.setProperty("--x",r(-24,24)+"px");b.style.setProperty("--t",r(9,16)+"s");b.style.setProperty("--d",r(-14,0)+"s");sc.appendChild(b)}
+for(var k=0;k<9;k++){var f=document.createElement("i");f.className="fly";f.style.left=r(4,96)+"%";f.style.top=r(40,88)+"%";f.style.setProperty("--x",r(-50,50)+"px");f.style.setProperty("--y",r(-60,20)+"px");f.style.setProperty("--t",r(5,10)+"s");f.style.setProperty("--d",r(-8,0)+"s");sc.appendChild(f)}
+})();
 </script>
 </body>
 </html>

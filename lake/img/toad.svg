@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="40%" r="78%"><stop offset="0" stop-color="#1a5a3a"/><stop offset="1" stop-color="#030a08"/></radialGradient>
+<linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d3a4a" stop-opacity=".0"/><stop offset="1" stop-color="#02101a" stop-opacity=".92"/></linearGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4.5s linear infinite}
+.rip{animation:rip 3.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.tongue{animation:tongue 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:0 50%}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.35}}
+@keyframes pulse{50%{transform:scale(1.1);opacity:.75}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}100%{transform:translateY(-80px);opacity:0}}
+@keyframes rip{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+@keyframes tongue{0%,70%,100%{transform:scaleX(.2);opacity:0}78%,92%{transform:scaleX(1);opacity:1}}
+@keyframes sway{50%{transform:rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<path d="M30 160 Q100 140 170 160 L170 200 L30 200Z" fill="#0a2a1a"/><circle class="rise" cx="35" cy="180" r="1.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:0.0s"/><circle class="rise" cx="76" cy="167" r="2.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:3.7s"/><circle class="rise" cx="117" cy="154" r="3.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:2.9s"/><circle class="rise" cx="158" cy="141" r="1.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:2.1s"/><circle class="rise" cx="35" cy="178" r="2.4" fill="none" stroke="#bff6ff" stroke-width="1.2" style="animation-delay:1.3s"/>
+<ellipse cx="100" cy="168" rx="70" ry="14" fill="#1f6a3a"/><ellipse cx="100" cy="166" rx="62" ry="10" fill="#2f8a4a"/>
+<path d="M100 168 L158 158" stroke="#0a2a1a" stroke-width="2"/>
+<g class="bob">
+<path d="M40 150 Q36 100 70 84 Q100 74 130 84 Q164 100 160 150 Q100 176 40 150Z" fill="#3f7a2c"/>
+<path d="M60 130 Q100 150 140 130 Q100 170 60 130Z" fill="#a9c26a"/>
+<g fill="#2a5a1c"><circle cx="64" cy="108" r="4"/><circle cx="82" cy="98" r="3"/><circle cx="118" cy="98" r="3"/><circle cx="138" cy="108" r="4"/><circle cx="100" cy="94" r="3.5"/><circle cx="52" cy="130" r="3"/><circle cx="150" cy="130" r="3"/></g>
+<circle class="pulse" cx="100" cy="134" r="14" fill="#c8de80" opacity=".7"/>
+<ellipse cx="70" cy="84" rx="16" ry="15" fill="#4f9a3a"/><ellipse cx="130" cy="84" rx="16" ry="15" fill="#4f9a3a"/>
+<ellipse cx="70" cy="82" rx="10" ry="10" fill="#e8d84a"/><ellipse cx="130" cy="82" rx="10" ry="10" fill="#e8d84a"/>
+<g class="blink"><rect x="68" y="73" width="4" height="18" rx="2" fill="#07140a"/><rect x="128" y="73" width="4" height="18" rx="2" fill="#07140a"/></g>
+<path d="M56 116 Q100 134 144 116" stroke="#1a3a10" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<g class="tongue"><path d="M100 124 Q112 138 128 150" stroke="#e8607a" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+</g><path d="M10 192 Q30 176 50 190" stroke="#0a2a1a" stroke-width="3" fill="none"/>
+</svg>
