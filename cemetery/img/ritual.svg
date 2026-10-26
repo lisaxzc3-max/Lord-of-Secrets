@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<defs>
+<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#1c1626"/><stop offset="1" stop-color="#05030a"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<style>
+.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.float{animation:float 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.fl{animation:fl 3s ease-in-out infinite}.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
+.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rise{animation:rise 4s linear infinite}.rise2{animation:rise 5.5s linear -2s infinite}
+.spin{animation:spin 14s linear infinite;transform-box:fill-box;transform-origin:center}
+.spinr{animation:spin 20s linear infinite reverse;transform-box:fill-box;transform-origin:center}
+.drift{animation:drift 9s ease-in-out infinite}
+.wave{animation:wave 1.6s ease-out infinite;transform-box:fill-box;transform-origin:center}.wave2{animation:wave 1.6s ease-out -.8s infinite;transform-box:fill-box;transform-origin:center}
+.flick{animation:flick 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.flick2{animation:flick 1.7s ease-in-out -.6s infinite;transform-box:fill-box;transform-origin:50% 100%}
+.dig{animation:dig 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes fl{50%{opacity:.3}}
+@keyframes sway{50%{transform:rotate(2.5deg)}}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.7}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drift{0%,100%{transform:translateX(-10px)}50%{transform:translateX(12px)}}
+@keyframes wave{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+@keyframes flick{0%,100%{transform:scale(1,1)}50%{transform:scale(.88,1.15)}}
+@keyframes dig{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(10deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<rect width="200" height="200" fill="url(#bg)"/>
+<circle cx="98" cy="66" r="0.8" fill="#fff" class="fl2" opacity=".7"/><circle cx="78" cy="59" r="0.6" fill="#fff" class="fl" opacity=".7"/><circle cx="120" cy="6" r="0.8" fill="#fff" class="fl2" opacity=".7"/><circle cx="174" cy="39" r="0.6" fill="#fff" class="fl" opacity=".7"/><circle cx="168" cy="34" r="0.6" fill="#fff" class="fl2" opacity=".7"/><circle cx="81" cy="44" r="0.8" fill="#fff" class="fl" opacity=".7"/><circle cx="176" cy="24" r="1.1" fill="#fff" class="fl2" opacity=".7"/><circle cx="160" cy="45" r="0.6" fill="#fff" class="fl" opacity=".7"/><circle cx="62" cy="83" r="0.8" fill="#fff" class="fl2" opacity=".7"/><circle cx="11" cy="25" r="1.1" fill="#fff" class="fl" opacity=".7"/><circle cx="176" cy="86" r="0.6" fill="#fff" class="fl2" opacity=".7"/><circle cx="124" cy="64" r="1.1" fill="#fff" class="fl" opacity=".7"/><circle cx="166" cy="43" r="0.6" fill="#fff" class="fl2" opacity=".7"/><circle cx="85" cy="52" r="0.8" fill="#fff" class="fl" opacity=".7"/><circle cx="113" cy="17" r="0.8" fill="#fff" class="fl2" opacity=".7"/><circle cx="132" cy="60" r="1.1" fill="#fff" class="fl" opacity=".7"/><ellipse cx="100" cy="164" rx="78" ry="10" fill="#000" opacity=".6"/><path d="M0 150 Q60 142 100 148 T200 146 V200 H0Z" fill="#07090a"/>
+<g class="spin" style="transform-origin:100px 150px"><ellipse cx="100" cy="150" rx="74" ry="26" fill="none" stroke="#e8e0cc" stroke-width="2.4" stroke-dasharray="8 4"/></g>
+<ellipse cx="100" cy="150" rx="56" ry="19" fill="none" stroke="#e8e0cc" stroke-width="1.6"/>
+<path d="M100 134 L130 158 L70 158Z" fill="none" stroke="#b86bff" stroke-width="2" class="pulse"/><path d="M100 166 L70 142 L130 142Z" fill="none" stroke="#b86bff" stroke-width="2" class="pulse"/>
+<ellipse cx="100" cy="150" rx="16" ry="6" fill="#1a0a12"/><ellipse cx="100" cy="148" rx="12" ry="4" fill="#5a0e22"/>
+<g class="rise" fill="#ff4a7a" filter="url(#glow)"><circle cx="100" cy="144" r="2"/></g><g class="rise2" fill="#ff4a7a" filter="url(#glow)"><circle cx="94" cy="146" r="1.6"/><circle cx="107" cy="146" r="1.6"/></g>
+<rect x="84" y="124" width="32" height="16" rx="2" fill="#d8ceaa" transform="rotate(-6 100 132)" opacity=".92"/><path d="M89 129 h22 M89 133 h18 M89 137 h14" stroke="#6a4a2a" stroke-width="1.2" transform="rotate(-6 100 132)"/>
+<g transform="translate(28 140)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick2" filter="url(#glow)"/></g><g transform="translate(46 160)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick" filter="url(#glow)"/></g><g transform="translate(100 176)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick2" filter="url(#glow)"/></g><g transform="translate(154 160)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick" filter="url(#glow)"/></g><g transform="translate(172 140)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick2" filter="url(#glow)"/></g><g transform="translate(146 126)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick" filter="url(#glow)"/></g><g transform="translate(54 124)"><rect x="-3.5" y="0" width="7" height="16" fill="#e8e0cc"/><ellipse cx="0" cy="-4" rx="3" ry="6" fill="#ffc86a" class="flick2" filter="url(#glow)"/></g>
+
+</svg>
