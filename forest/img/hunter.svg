@@ -1,33 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-<defs>
-<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#2a3a3a"/><stop offset="1" stop-color="#050808"/></radialGradient>
-<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
-</defs>
-<style>
-.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
-.fl{animation:fl 3s ease-in-out infinite}
-.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
-.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.rise{animation:rise 4s linear infinite}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><style>
+.br{animation:br 5.5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.bob{animation:bob 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.eye{animation:eye 4.2s ease-in-out infinite}
+.eye2{animation:eye 3.1s ease-in-out -1.2s infinite}
+.fl{animation:fl 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.dr{animation:dr 16s ease-in-out infinite alternate}
+.dr2{animation:dr 22s ease-in-out -6s infinite alternate-reverse}
+.sp{animation:sp 7s linear infinite}
+.sp2{animation:sp 9s linear -3s infinite}
+.sw{animation:sw 7s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pl{animation:pl 3.4s ease-in-out infinite}
+@keyframes br{50%{transform:translateY(-2px) scaleY(1.014)}}
 @keyframes bob{50%{transform:translateY(-3px)}}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-@keyframes fl{50%{opacity:.35}}
-@keyframes sway{50%{transform:rotate(2.5deg)}}
-@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
-@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@keyframes eye{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes fl{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.12) skewX(2deg)}60%{transform:scaleY(.94) skewX(-2deg)}}
+@keyframes dr{to{transform:translateX(26px)}}
+@keyframes sp{0%{transform:translateY(0);opacity:0}15%{opacity:.7}100%{transform:translateY(-60px);opacity:0}}
+@keyframes sw{50%{transform:rotate(1.6deg)}}
+@keyframes pl{50%{opacity:.35}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
-
-</style>
-<rect width="200" height="200" fill="url(#bg)"/>
-<path d="M100 14 L52 110 L148 110Z M100 56 L38 150 L162 150Z" fill="#06140c" stroke="#06140c" stroke-width="4" stroke-linejoin="round"/>
-<ellipse cx="100" cy="184" rx="64" ry="8" fill="#000" opacity=".6"/>
-<g class="bob"><path d="M82 176 Q80 140 96 130 Q112 126 118 144 L122 176Z" fill="#2a2520"/>
-<circle cx="102" cy="120" r="12" fill="#c9c2b0"/><path d="M94 118 h5 M106 118 h5" stroke="#07040a" stroke-width="3"/>
-<path d="M90 110 Q102 98 114 110" stroke="#3a3228" stroke-width="5" fill="none"/>
-<path d="M118 148 l18 -6 l-4 14z" fill="#8a7a5a"/><rect x="126" y="146" width="14" height="10" fill="#d8d0b8" transform="rotate(-10 126 146)"/></g>
-<g fill="#07040a"><path class="rise" d="M30 60 l8 -4 l8 4 l-8 2z" style="animation-duration:7s"/><path d="M160 40 l8 -4 l8 4 l-8 2z"/><path d="M150 76 l8 -4 l8 4 l-8 2z"/></g><circle cx="52" cy="46" r="14" fill="#dfe8d0" opacity=".7" filter="url(#glow)"/>
-<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
-</svg>
+</style><defs>
+<radialGradient id="bg" cx="50%" cy="40%" r="80%"><stop offset="0" stop-color="#16201d"/><stop offset="1" stop-color="#050806"/></radialGradient>
+<linearGradient id="mi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a92a6" stop-opacity="0"/><stop offset="1" stop-color="#9a92a6" stop-opacity=".42"/></linearGradient>
+<radialGradient id="vg" cx="50%" cy="48%" r="72%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></radialGradient>
+<pattern id="ht" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-opacity=".38" stroke-width="1"/></pattern>
+<pattern id="hd" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#8a7a58" stroke-opacity=".28" stroke-width=".9"/></pattern>
+<filter id="gl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="bl"><feGaussianBlur stdDeviation="5"/></filter>
+</defs><rect width="200" height="200" fill="url(#bg)"/><circle cx="150" cy="46" r="26" fill="#d8cfae" opacity="0.16"/><circle cx="150" cy="46" r="26" fill="none" stroke="#8a7a58" stroke-opacity=".5" stroke-width=".8"/><path d="M18 200 L16 146 L18 136 L20 146 Z M17 150 L2 134 M19 160 L33 144 M18 144 L10 128" stroke="#0e1514" stroke-width="2.4" fill="#0e1514" stroke-linecap="round" opacity=".95"/><path d="M52 200 L50 166 L52 156 L54 166 Z M51 170 L36 154 M53 180 L67 164 M52 164 L44 148" stroke="#0e1514" stroke-width="2.4" fill="#0e1514" stroke-linecap="round" opacity=".95"/><path d="M150 200 L148 152 L150 142 L152 152 Z M149 156 L134 140 M151 166 L165 150 M150 150 L142 134" stroke="#0e1514" stroke-width="2.4" fill="#0e1514" stroke-linecap="round" opacity=".95"/><path d="M184 200 L182 170 L184 160 L186 170 Z M183 174 L168 158 M185 184 L199 168 M184 168 L176 152" stroke="#0e1514" stroke-width="2.4" fill="#0e1514" stroke-linecap="round" opacity=".95"/><path d="M120 200 L118 180 L120 170 L122 180 Z M119 184 L104 168 M121 194 L135 178 M120 178 L112 162" stroke="#0e1514" stroke-width="2.4" fill="#0e1514" stroke-linecap="round" opacity=".95"/><g class="dr2"><ellipse cx="90" cy="166" rx="130" ry="18.0" fill="#9a92a6" opacity="0.1925" filter="url(#bl)"/><ellipse cx="150" cy="173.2" rx="90" ry="15.0" fill="#b0a8bb" opacity="0.165" filter="url(#bl)"/></g><path d="M0 178 Q50 172 100 178 T200 178 V200 H0 Z" fill="#06090a"/><path d="M100 190 V30 M100 70 L62 118 M100 100 L140 140 M100 130 L72 168" stroke="#0a070b" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M100 190 V30 M100 70 L62 118 M100 100 L140 140 M100 130 L72 168" stroke="#8a7a58" stroke-width="1.2" fill="none"/><g class="br"><path d="M96 186 Q100 156 120 148 L150 150 L156 186 Z" fill="#0a070b" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M96 186 Q100 156 120 148 L150 150 L156 186 Z" fill="url(#hd)" opacity="1" /><path d="M128 140 Q130 120 144 124 Q154 132 146 146 Z" fill="#aab0a6" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><ellipse cx="142" cy="134" rx="2" ry="2.4" fill="#050306"/><path d="M146 160 h22 v16 h-22 Z" fill="#cfc4a2" stroke="#8a7a58" stroke-width="1" stroke-linejoin="round" /><path d="M146 160 h22 v16 h-22 Z" fill="url(#ht)" opacity="1" /><path d="M150 166 h14 M150 171 h10" stroke="#0a070b" stroke-width="1.2"/></g><g class="dr"><ellipse cx="90" cy="184" rx="130" ry="19.0" fill="#9a92a6" opacity="0.315" filter="url(#bl)"/><ellipse cx="150" cy="191.6" rx="90" ry="15.833333333333334" fill="#b0a8bb" opacity="0.27" filter="url(#bl)"/></g><rect width="200" height="200" fill="url(#vg)"/><rect x="1.5" y="1.5" width="197" height="197" fill="none" stroke="#8a7a58" stroke-opacity=".45" stroke-width="1"/></svg>

@@ -1,36 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-<defs>
-<radialGradient id="bg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#26364a"/><stop offset="1" stop-color="#05080c"/></radialGradient>
-<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-<filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
-</defs>
-<style>
-.bob{animation:bob 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
-.fl{animation:fl 3s ease-in-out infinite}
-.fl2{animation:fl 4.4s ease-in-out -1.5s infinite}
-.sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
-.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.rise{animation:rise 4s linear infinite}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><style>
+.br{animation:br 5.5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.bob{animation:bob 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.eye{animation:eye 4.2s ease-in-out infinite}
+.eye2{animation:eye 3.1s ease-in-out -1.2s infinite}
+.fl{animation:fl 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.dr{animation:dr 16s ease-in-out infinite alternate}
+.dr2{animation:dr 22s ease-in-out -6s infinite alternate-reverse}
+.sp{animation:sp 7s linear infinite}
+.sp2{animation:sp 9s linear -3s infinite}
+.sw{animation:sw 7s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pl{animation:pl 3.4s ease-in-out infinite}
+@keyframes br{50%{transform:translateY(-2px) scaleY(1.014)}}
 @keyframes bob{50%{transform:translateY(-3px)}}
-@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-@keyframes fl{50%{opacity:.35}}
-@keyframes sway{50%{transform:rotate(2.5deg)}}
-@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
-@keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@keyframes eye{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes fl{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.12) skewX(2deg)}60%{transform:scaleY(.94) skewX(-2deg)}}
+@keyframes dr{to{transform:translateX(26px)}}
+@keyframes sp{0%{transform:translateY(0);opacity:0}15%{opacity:.7}100%{transform:translateY(-60px);opacity:0}}
+@keyframes sw{50%{transform:rotate(1.6deg)}}
+@keyframes pl{50%{opacity:.35}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
-
-</style>
-<rect width="200" height="200" fill="url(#bg)"/>
-<ellipse cx="100" cy="186" rx="70" ry="9" fill="#000" opacity=".55"/><g class="bob"><path d="M80 156 Q80 176 88 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M90 156 Q90 176 98 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M100 156 Q100 176 108 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M110 156 Q110 176 118 184" stroke="#d9d3c0" stroke-width="3" fill="none"/><path d="M120 156 Q120 176 128 184" stroke="#d9d3c0" stroke-width="3" fill="none"/>
-<path d="M50 70 L62 34 L84 56 Q100 50 116 56 L138 34 L150 70 Q160 100 148 124 L132 152 Q100 170 68 152 L52 124 Q40 100 50 70Z" fill="#cfc9b4"/>
-<path d="M62 34 L70 62 M138 34 L130 62" stroke="#8a846e" stroke-width="3"/>
-<path d="M70 124 Q100 112 130 124 L124 150 Q100 160 76 150Z" fill="#e4dfcb"/>
-<g fill="#f6f1de"><path d="M80 148 l4 -14 l4 14z M92 150 l4 -16 l4 16z M104 150 l4 -16 l4 16z M116 148 l4 -14 l4 14z"/></g>
-<ellipse cx="82" cy="92" rx="13" ry="14" fill="#0b0f18"/><ellipse cx="118" cy="92" rx="13" ry="14" fill="#0b0f18"/>
-<g class="pulse" filter="url(#glow)"><circle cx="82" cy="94" r="5" fill="#6ad0ff"/><circle cx="118" cy="94" r="5" fill="#6ad0ff"/></g>
-<path d="M92 112 L100 124 L108 112Z" fill="#0b0f18"/>
-<path d="M60 70 Q66 90 62 104 M140 70 Q134 90 138 104" stroke="#8a846e" stroke-width="3" fill="none"/>
-</g>
-<rect width="200" height="200" fill="none" stroke="#000" stroke-opacity=".0"/>
-</svg>
+</style><defs>
+<radialGradient id="bg" cx="50%" cy="40%" r="80%"><stop offset="0" stop-color="#16201d"/><stop offset="1" stop-color="#050806"/></radialGradient>
+<linearGradient id="mi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a92a6" stop-opacity="0"/><stop offset="1" stop-color="#9a92a6" stop-opacity=".42"/></linearGradient>
+<radialGradient id="vg" cx="50%" cy="48%" r="72%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></radialGradient>
+<pattern id="ht" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-opacity=".38" stroke-width="1"/></pattern>
+<pattern id="hd" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#8a7a58" stroke-opacity=".28" stroke-width=".9"/></pattern>
+<filter id="gl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="bl"><feGaussianBlur stdDeviation="5"/></filter>
+</defs><rect width="200" height="200" fill="url(#bg)"/><circle cx="150" cy="46" r="26" fill="#d8cfae" opacity="0.16"/><circle cx="150" cy="46" r="26" fill="none" stroke="#8a7a58" stroke-opacity=".5" stroke-width=".8"/><path d="M18 200 L16 146 L18 136 L20 146 Z M17 150 L2 134 M19 160 L33 144 M18 144 L10 128" stroke="#121a18" stroke-width="2.4" fill="#121a18" stroke-linecap="round" opacity=".95"/><path d="M52 200 L50 166 L52 156 L54 166 Z M51 170 L36 154 M53 180 L67 164 M52 164 L44 148" stroke="#121a18" stroke-width="2.4" fill="#121a18" stroke-linecap="round" opacity=".95"/><path d="M150 200 L148 152 L150 142 L152 152 Z M149 156 L134 140 M151 166 L165 150 M150 150 L142 134" stroke="#121a18" stroke-width="2.4" fill="#121a18" stroke-linecap="round" opacity=".95"/><path d="M184 200 L182 170 L184 160 L186 170 Z M183 174 L168 158 M185 184 L199 168 M184 168 L176 152" stroke="#121a18" stroke-width="2.4" fill="#121a18" stroke-linecap="round" opacity=".95"/><path d="M120 200 L118 180 L120 170 L122 180 Z M119 184 L104 168 M121 194 L135 178 M120 178 L112 162" stroke="#121a18" stroke-width="2.4" fill="#121a18" stroke-linecap="round" opacity=".95"/><g class="dr2"><ellipse cx="90" cy="164" rx="130" ry="18.0" fill="#9a92a6" opacity="0.1925" filter="url(#bl)"/><ellipse cx="150" cy="171.2" rx="90" ry="15.0" fill="#b0a8bb" opacity="0.165" filter="url(#bl)"/></g><path d="M0 178 Q50 172 100 178 T200 178 V200 H0 Z" fill="#06090a"/><g class="br"><path d="M60 142 Q58 96 90 82 Q122 74 144 92 Q160 104 186 122 L190 136 L160 142 L152 156 L132 150 L122 162 L106 154 L92 162 L72 154 Z" fill="#cdbf9f" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M60 142 Q58 96 90 82 Q122 74 144 92 Q160 104 186 122 L190 136 L160 142 L152 156 L132 150 L122 162 L106 154 L92 162 L72 154 Z" fill="url(#ht)" opacity="1" /><path d="M72 100 L62 66 L90 88 Z M118 84 L130 56 L142 90 Z" fill="#cdbf9f" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M72 100 L62 66 L90 88 Z M118 84 L130 56 L142 90 Z" fill="url(#ht)" opacity="1" /><ellipse cx="98" cy="112" rx="13" ry="10" fill="#050306"/><g class="eye" filter="url(#gl)"><circle cx="98" cy="113" r="4" fill="#d4343f"/><circle cx="98" cy="113" r="1.5" fill="#fff" opacity=".85"/></g><path d="M160 142 l4 12 l5 -12 M138 152 l3 11 l5 -11 M172 138 l3 11" fill="#0a070b" stroke="#0a070b" stroke-width="2.4" stroke-linejoin="round" /><path d="M70 164 Q80 190 100 196 M90 168 Q96 190 112 196 M110 166 Q114 188 128 194" stroke="#cdbf9f" stroke-opacity=".55" stroke-width="2" fill="none"/></g><g class="dr"><ellipse cx="90" cy="182" rx="130" ry="19.0" fill="#9a92a6" opacity="0.315" filter="url(#bl)"/><ellipse cx="150" cy="189.6" rx="90" ry="15.833333333333334" fill="#b0a8bb" opacity="0.27" filter="url(#bl)"/></g><rect width="200" height="200" fill="url(#vg)"/><rect x="1.5" y="1.5" width="197" height="197" fill="none" stroke="#8a7a58" stroke-opacity=".45" stroke-width="1"/></svg>

@@ -1,37 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240">
-<defs><radialGradient id="bgfhunter" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#6a1a1a"/><stop offset="1" stop-color="#1c0707"/></radialGradient>
-<clipPath id="cpfhunter"><rect width="120" height="120" rx="16"/></clipPath></defs>
-<style>
-.breathe{animation:br 3.4s ease-in-out infinite;transform-origin:60px 100px}
-@keyframes br{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(1.6px) scale(1.012)}}
-.blink{animation:bl 4.6s infinite}
-@keyframes bl{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
-.glow{animation:gl 2.6s ease-in-out infinite}
-@keyframes gl{0%,100%{opacity:1}50%{opacity:.55}}
-.aura{animation:au 3.2s ease-in-out infinite;transform-origin:60px 60px}
-@keyframes au{0%,100%{transform:scale(.94);opacity:.5}50%{transform:scale(1.06);opacity:.9}}
-.sway{animation:sw 4s ease-in-out infinite;transform-origin:60px 20px}
-@keyframes sw{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
-.tw{animation:tw 2s ease-in-out infinite}
-@keyframes tw{0%,100%{opacity:1}50%{opacity:.4}}
-.floatA{animation:fa 3.6s ease-in-out infinite}.floatB{animation:fa 4.2s ease-in-out infinite reverse}
-@keyframes fa{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.fog{animation:fg 6s ease-in-out infinite}
-@keyframes fg{0%,100%{transform:translateX(-4px)}50%{transform:translateX(5px)}}
-.wavesAv{animation:wv 3s linear infinite}
-@keyframes wv{from{transform:translateX(0)}to{transform:translateX(-40px)}}
-.bolt{animation:bo 3.5s infinite;opacity:0}
-@keyframes bo{0%,86%,100%{opacity:0}88%,92%{opacity:1}90%{opacity:.2}}
-.moon{animation:mo 4s ease-in-out infinite}
-@keyframes mo{0%,100%{opacity:.75}50%{opacity:1}}
-.em{animation:em 2.4s ease-in infinite;opacity:0}
-@keyframes em{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-34px);opacity:0}}
-.hat{animation:ht 4.5s ease-in-out infinite;transform-origin:60px 30px}
-@keyframes ht{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}}</style>
-<g clip-path="url(#cpfhunter)">
-<rect width="120" height="120" fill="url(#bgfhunter)"/>
-<g class="aura"><circle cx="60" cy="58" r="46" fill="none" stroke="#ff6a3a" stroke-width="2" opacity=".7"/><circle cx="60" cy="58" r="52" fill="none" stroke="#ff6a3a" stroke-width="1" stroke-dasharray="3 5" opacity=".5"/></g>
-<circle cx="94" cy="26" r="9" fill="#ff7a5a" class="moon"/><circle cx="91" cy="23" r="9" fill="url(#bgfhunter)" opacity="0"/><g class="embers"><circle class="em" cx="20" cy="100" r="1.8" fill="#ffb04a" style="animation-delay:0s"/><circle class="em" cx="34" cy="106" r="1.8" fill="#ffb04a" style="animation-delay:0.6s"/><circle class="em" cx="88" cy="104" r="1.8" fill="#ffb04a" style="animation-delay:1.1s"/><circle class="em" cx="100" cy="96" r="1.8" fill="#ffb04a" style="animation-delay:0.3s"/><circle class="em" cx="14" cy="84" r="1.8" fill="#ffb04a" style="animation-delay:1.5s"/><circle class="em" cx="106" cy="82" r="1.8" fill="#ffb04a" style="animation-delay:0.9s"/></g>
-<g class="breathe"><path d="M30 60 C30 20 90 20 90 60 L96 112 L24 112Z" fill="#b62a22"/><g class="sway"><path d="M36 54 C30 24 52 14 62 15 C80 16 92 32 84 62 C88 84 84 100 78 108 L42 108 C34 100 32 82 36 54Z" fill="#a8281c"/></g><path d="M8 120 C10 100 28 90 46 88 L60 98 L74 88 C92 90 110 100 112 120Z" fill="#3a1010"/><path d="M46 88 L60 104 L74 88 L68 86 L60 94 L52 86Z" fill="#ffd0a0" opacity=".9"/><rect x="56.0" y="76" width="8" height="16" fill="#f1d2b6" /><path d="M56.0 84 q4.0 6 8 0 v6 h-8z" fill="#00000022"/><path d="M42 52 C42 36 50 31 60 31 C70 31 78 36 78 52 C78 68 71 82 60 83 C49 82 42 68 42 52Z" fill="#f1d2b6"/><circle cx="41" cy="62" r="2.4" fill="#ffd0a0" class="tw"/><circle cx="79" cy="62" r="2.4" fill="#ffd0a0" class="tw"/><g class="blink" style="transform-origin:60px 56px"><ellipse cx="51" cy="56" rx="3.6" ry="4.2" fill="#fff"/><ellipse cx="69" cy="56" rx="3.6" ry="4.2" fill="#fff"/><circle cx="51.5" cy="56.5" r="2.3" fill="#ff9a5e" class="glow"/><circle cx="68.5" cy="56.5" r="2.3" fill="#ff9a5e" class="glow"/><circle cx="51.5" cy="56.5" r="1" fill="#111"/><circle cx="68.5" cy="56.5" r="1" fill="#111"/></g><path d="M45 52 l-3 -2 M75 52 l3 -2" stroke="#1a1018" stroke-width="2" stroke-linecap="round"/><path d="M47 45 q5 -3 10 -1 M73 45 q-5 -3 -10 -1" stroke="#a8281c" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M54 71 q6 4 12 0" stroke="#c5605e" stroke-width="2.6" fill="none" stroke-linecap="round"/><ellipse cx="46" cy="64" rx="4" ry="2.4" fill="#ff8a8a" opacity=".22"/><ellipse cx="74" cy="64" rx="4" ry="2.4" fill="#ff8a8a" opacity=".22"/><path d="M40 54 C38 30 50 24 62 24 C74 24 82 32 80 54 C76 42 70 36 62 35 C54 40 46 42 40 54Z" fill="#a8281c"/><path d="M34 58 C34 24 86 24 86 58 C80 44 70 38 60 38 C50 38 40 44 34 58Z" fill="#b62a22"/><path d="M44 100 L60 112 L76 100" fill="none" stroke="#ffd0a0" stroke-width="3"/><circle cx="60" cy="102" r="3.5" fill="#ffcf5a" class="tw"/></g>
-</g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><style>
+.br{animation:br 5.5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.bob{animation:bob 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.eye{animation:eye 4.2s ease-in-out infinite}
+.eye2{animation:eye 3.1s ease-in-out -1.2s infinite}
+.fl{animation:fl 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.dr{animation:dr 16s ease-in-out infinite alternate}
+.dr2{animation:dr 22s ease-in-out -6s infinite alternate-reverse}
+.sp{animation:sp 7s linear infinite}
+.sp2{animation:sp 9s linear -3s infinite}
+.sw{animation:sw 7s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.pl{animation:pl 3.4s ease-in-out infinite}
+@keyframes br{50%{transform:translateY(-2px) scaleY(1.014)}}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes eye{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes fl{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.12) skewX(2deg)}60%{transform:scaleY(.94) skewX(-2deg)}}
+@keyframes dr{to{transform:translateX(26px)}}
+@keyframes sp{0%{transform:translateY(0);opacity:0}15%{opacity:.7}100%{transform:translateY(-60px);opacity:0}}
+@keyframes sw{50%{transform:rotate(1.6deg)}}
+@keyframes pl{50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style><defs>
+<radialGradient id="bg" cx="50%" cy="40%" r="80%"><stop offset="0" stop-color="#1d1417"/><stop offset="1" stop-color="#060406"/></radialGradient>
+<linearGradient id="mi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a92a6" stop-opacity="0"/><stop offset="1" stop-color="#9a92a6" stop-opacity=".42"/></linearGradient>
+<radialGradient id="vg" cx="50%" cy="48%" r="72%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></radialGradient>
+<pattern id="ht" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-opacity=".38" stroke-width="1"/></pattern>
+<pattern id="hd" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#8a7a58" stroke-opacity=".28" stroke-width=".9"/></pattern>
+<filter id="gl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="bl"><feGaussianBlur stdDeviation="5"/></filter>
+</defs><rect width="200" height="200" fill="url(#bg)"/><circle cx="150" cy="44" r="24" fill="#d8cfae" opacity="0.16"/><circle cx="150" cy="44" r="24" fill="none" stroke="#8a7a58" stroke-opacity=".5" stroke-width=".8"/><path d="M18 200 L16 146 L18 136 L20 146 Z M17 150 L2 134 M19 160 L33 144 M18 144 L10 128" stroke="#150d10" stroke-width="2.4" fill="#150d10" stroke-linecap="round" opacity=".95"/><path d="M52 200 L50 166 L52 156 L54 166 Z M51 170 L36 154 M53 180 L67 164 M52 164 L44 148" stroke="#150d10" stroke-width="2.4" fill="#150d10" stroke-linecap="round" opacity=".95"/><path d="M150 200 L148 152 L150 142 L152 152 Z M149 156 L134 140 M151 166 L165 150 M150 150 L142 134" stroke="#150d10" stroke-width="2.4" fill="#150d10" stroke-linecap="round" opacity=".95"/><path d="M184 200 L182 170 L184 160 L186 170 Z M183 174 L168 158 M185 184 L199 168 M184 168 L176 152" stroke="#150d10" stroke-width="2.4" fill="#150d10" stroke-linecap="round" opacity=".95"/><path d="M120 200 L118 180 L120 170 L122 180 Z M119 184 L104 168 M121 194 L135 178 M120 178 L112 162" stroke="#150d10" stroke-width="2.4" fill="#150d10" stroke-linecap="round" opacity=".95"/><g class="dr2"><ellipse cx="90" cy="162" rx="130" ry="18.0" fill="#9a92a6" opacity="0.1925" filter="url(#bl)"/><ellipse cx="150" cy="169.2" rx="90" ry="15.0" fill="#b0a8bb" opacity="0.165" filter="url(#bl)"/></g><path d="M30 30 Q8 100 30 176" stroke="#8a7a58" stroke-width="3" fill="none"/><path d="M30 30 L30 176" stroke="#8a7a58" stroke-opacity=".6"/><path d="M34 200 L40 152 Q46 128 76 118 L100 130 L124 118 Q154 128 160 152 L166 200 Z" fill="#0a070b" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M34 200 L40 152 Q46 128 76 118 L100 130 L124 118 Q154 128 160 152 L166 200 Z" fill="url(#hd)" opacity="1" /><path d="M74 76 Q70 128 66 160 L82 142 L80 92 Z M126 76 Q130 128 134 160 L118 142 L120 92 Z" fill="#0a070b" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M74 76 Q70 128 66 160 L82 142 L80 92 Z M126 76 Q130 128 134 160 L118 142 L120 92 Z" fill="url(#hd)" opacity="1" /><path d="M64 90 Q64 36 100 30 Q136 36 136 90 L144 140 Q100 120 56 140 Z" fill="#0a070b" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M64 90 Q64 36 100 30 Q136 36 136 90 L144 140 Q100 120 56 140 Z" fill="url(#hd)" opacity="1" /><path d="M80 84 Q80 56 100 54 Q120 56 120 84 Q120 108 100 114 Q80 108 80 84 Z" fill="#050306" stroke="#8a7a58" stroke-width="1" stroke-linejoin="round" /><g class="eye" filter="url(#gl)"><circle cx="92" cy="86" r="2.1" fill="#d8cfae"/><circle cx="92" cy="86" r="0.8" fill="#fff" opacity=".85"/></g><g class="eye2" filter="url(#gl)"><circle cx="108" cy="86" r="2.1" fill="#d8cfae"/><circle cx="108" cy="86" r="0.8" fill="#fff" opacity=".85"/></g><path d="M70 120 Q100 138 130 120 L134 134 Q100 152 66 134 Z" fill="#5a1218" stroke="#7a2a30" stroke-width="1.2" stroke-linejoin="round" /><path d="M70 120 Q100 138 130 120 L134 134 Q100 152 66 134 Z" fill="url(#hd)" opacity="1" /><path d="M118 136 L130 176 L118 168 L112 140 Z" fill="#5a1218" stroke="#7a2a30" stroke-width="1" stroke-linejoin="round" /><path d="M60 96 Q40 140 52 190 Q62 160 64 110 Z" fill="#0a070b" stroke="#8a7a58" stroke-width="1.2" stroke-linejoin="round" /><path d="M60 96 Q40 140 52 190 Q62 160 64 110 Z" fill="url(#hd)" opacity="1" /><g class="dr"><ellipse cx="90" cy="180" rx="130" ry="19.0" fill="#9a92a6" opacity="0.315" filter="url(#bl)"/><ellipse cx="150" cy="187.6" rx="90" ry="15.833333333333334" fill="#b0a8bb" opacity="0.27" filter="url(#bl)"/></g><rect width="200" height="200" fill="url(#vg)"/><rect x="1.5" y="1.5" width="197" height="197" fill="none" stroke="#8a7a58" stroke-opacity=".45" stroke-width="1"/></svg>
