@@ -43,7 +43,7 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 .cnt{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;justify-content:space-between}
 .rew{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .rw{font-size:11px;font-weight:800;padding:4px 8px;border-radius:9px;background:#0006;border:1px solid #ffffff14}
-.rw.g{color:#ffe08a}.rw.x{color:#b9a0ff}.rw.p{color:#8fe8b0}
+.rw.a{color:#8fe8d0;border-color:#3aa88a66;background:#0b2a2488}.rw.g{color:#ffe08a}.rw.x{color:#b9a0ff}.rw.p{color:#8fe8b0}
 .claim{margin-top:10px;width:100%;padding:11px;border-radius:12px;font-weight:900;letter-spacing:.5px;border:1px solid #a98a4a;background:linear-gradient(145deg,#6a5020,#3a2a10);color:#fff0c4;position:relative;overflow:hidden;animation:glowBtn 1.6s ease-in-out infinite}
 .claim:after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#fff6,transparent);animation:sw2 2.2s ease-in-out infinite}
 @keyframes sw2{60%,100%{left:130%}}
@@ -138,7 +138,7 @@ function render(d,animatedId){
   el.id="q-"+q.id;el.style.setProperty("--i",firstRender?i:0);
   if(!firstRender){el.style.animation="none";el.style.opacity=1;el.style.transform="none"}
   const pct=Math.round(q.prog/q.goal*100);
-  let rew='<span class="rw g">💷 +'+q.gold+'</span><span class="rw x">⭐ +'+q.xp+' опыта</span>'+(q.pts?'<span class="rw p">✦ +'+q.pts+' очко</span>':"");
+  let rew='<span class="rw a">🧪 +'+q.absorb+'% усвоения</span>';
   el.innerHTML='<div class="ic">'+q.icon+'</div><div class="mid"><span class="tag">'+esc(q.diff_name)+'</span><div class="ti">'+esc(q.title)+'</div><div class="tx">'+esc(q.text)+'</div><div class="bar"><i data-w="'+pct+'"></i></div><div class="cnt"><span>'+q.prog+' / '+q.goal+'</span><span>'+pct+'%</span></div><div class="rew">'+rew+'</div></div>';
   if(q.done&&!q.claimed){const b=document.createElement("button");b.className="claim";b.textContent="🎁 ЗАБРАТЬ НАГРАДУ";b.onclick=e=>claim(q.id,e);el.querySelector(".mid").appendChild(b)}
   if(q.claimed){const s=document.createElement("div");s.className="stamp"+(animatedId===q.id?"":" old");s.textContent="ВЫПОЛНЕНО";el.appendChild(s)}
@@ -161,8 +161,8 @@ async function claim(id,ev){
   if(r.ok===false)throw new Error(r.error==="already"?"Награда уже получена":r.error==="not_done"?"Задание ещё не выполнено":r.error==="not_ready"?"Сундук пока закрыт":(r.error||"Не удалось забрать"));
   const c=r.claim||{};
   if(id==="bonus"){sfx("chest");flash("#ffd96a");burst(x,y,["💷","✨","🌙","⭐"],22)}
-  else{sfx("stamp");setTimeout(()=>sfx("coin"),180);if(c.level_up)setTimeout(()=>sfx("level"),500);flash("#e2c27a");burst(x,y,["💷","✨","⭐"],14)}
-  floatTx("+"+c.gold+" 💷",x,y);if(c.xp)setTimeout(()=>floatTx("+"+c.xp+" ⭐",x,y+22),250);if(c.pts)setTimeout(()=>floatTx("+"+c.pts+" ✦",x,y+44),500);
+  else{sfx("stamp");setTimeout(()=>sfx("coin"),180);if(c.level_up)setTimeout(()=>sfx("level"),500);flash("#e2c27a");burst(x,y,["🧪","✨","💧"],14)}
+  if(c.absorb)floatTx("+"+c.absorb+"% 🧪",x,y);if(c.gold)setTimeout(()=>floatTx("+"+c.gold+" 💷",x,y+22),250);if(c.pts)setTimeout(()=>floatTx("+"+c.pts+" ✦",x,y+44),500);
   if(c.level_up)toast("🎉 Новый уровень!");
   render(r,id);startTimer(r.reset_in);
  }catch(e){if(e&&e.message==="need_start")return;sfx("deny");toast(e.message||"Ошибка связи")}
