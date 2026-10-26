@@ -206,7 +206,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .ctaIc{font-size:24px;filter:drop-shadow(0 2px 2px #0006)}
 .ctaTx{flex:1;text-align:left}
 .ctaSh{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff66,transparent);transform:skewX(-20deg);animation:sweep 3.4s ease-in-out infinite}
-.tiles{display:grid;grid-template-columns:1fr;gap:8px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tile{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:13px;border-radius:16px;cursor:pointer;text-align:left;color:#e6dcc4;border:1px solid #4a3f62;background:linear-gradient(145deg,#2c2440,#1a1428);transition:transform .15s,box-shadow .3s}
 .tile:active{transform:scale(.97)}
 .tile:hover{box-shadow:0 0 18px #8b6bff44}
@@ -358,6 +358,9 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .bgSpark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;background:var(--c,#e2c27a);box-shadow:0 0 8px var(--c,#e2c27a);animation:bgSp .7s ease-out forwards}
 @keyframes bgSp{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
 @media(prefers-reduced-motion:reduce){.bagWrap *,.bagWrap::before{animation:none!important;transition:none!important}}
+.tile.hasNew{border-color:#e2c27a;box-shadow:0 0 16px #e2c27a55}
+.tile.hasNew::after{content:"!";position:absolute;top:8px;right:9px;width:18px;height:18px;border-radius:50%;background:#d9443c;color:#fff;font:800 11px/18px system-ui;text-align:center;animation:dnPulse 1.8s ease-in-out infinite}
+@keyframes dnPulse{50%{box-shadow:0 0 10px #d9443c;transform:scale(1.15)}}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -492,6 +495,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 
   <div class="tiles">
     <button type="button" class="tile" onclick="openQuests()"><span class="tIc">📋</span><b>Квесты</b><small>Задания дня</small></button>
+    <button type="button" class="tile" id="dailyTile" onclick="openDaily()"><span class="tIc">🎁</span><b>Награда дня</b><small>Неделя даров</small></button>
   </div>
 
   <div class="tip" id="tipBox"><span class="tipIc">🦉</span><span id="tipTxt">…</span></div>
@@ -960,6 +964,7 @@ async function loadProfile() {
 
     maybeShowStart(data);
     renderBagFromJ(data);
+    checkDaily();
     clearLoadError();
 
     return data;
@@ -1086,6 +1091,23 @@ function openTop() {
 
 function openQuests() {
   location.href = buildPageUrl("./quests/index.html");
+}
+
+let dailyT = 0;
+async function checkDaily() {
+  if (!ACTION_URL || Date.now() - dailyT < 30000) return;
+  dailyT = Date.now();
+  try {
+    const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "daily_reward" }), cache: "no-store" });
+    let d = await r.json();
+    for (let i = 0; i < 3 && d && d.result && typeof d.result === "object"; i++) d = d.result;
+    const t = document.getElementById("dailyTile");
+    if (t && d && d.ok) t.classList.toggle("hasNew", !d.claimed);
+  } catch (e) {}
+}
+
+function openDaily() {
+  location.href = buildPageUrl("./daily/index.html");
 }
 
 function openFortune() {

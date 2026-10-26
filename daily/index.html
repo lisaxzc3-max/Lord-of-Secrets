@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0814">
+<title>Дар Богини — Повелитель тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--panel:rgba(22,17,34,.94);--line:#4a3d6a;--text:#eee6d6;--muted:#a99dba;--gold:#e2c27a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{min-height:100%;background:#0b0814}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -5%,#6a4a2a66,transparent 55%),radial-gradient(ellipse at 50% 110%,#4a2f7a44,transparent 55%),linear-gradient(#0d0a18,#07050d)}
+button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.97)}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 12px calc(40px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:7px 0 10px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#17122399;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.head h1{font-size:19px;margin:3px 0 0;font-weight:800;background:linear-gradient(90deg,#fff3cf,#e2c27a,#fff3cf);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+.hero{position:relative;text-align:center;padding:16px 10px 12px;margin-bottom:12px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(160deg,#241a38e8,#130d20e8);overflow:hidden}
+.hero:before{content:"";position:absolute;left:50%;top:-40px;width:240px;height:240px;margin-left:-120px;background:conic-gradient(from 0deg,transparent,#e2c27a33,transparent 25%,#8a5cff33,transparent 50%,#e2c27a33,transparent 75%,#8a5cff33,transparent);border-radius:50%;animation:spin 14s linear infinite;filter:blur(8px)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero>*{position:relative}
+.moon{font-size:44px;display:inline-block;filter:drop-shadow(0 0 16px #e2c27a);animation:fl 4s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-5px)}}
+.hero h2{margin:2px 0 2px;font-size:16px}
+.hero p{margin:0;color:var(--muted);font-size:12px}
+.stats{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chip{padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:#150f22d0;font-size:12px;color:var(--muted)}
+.chip b{color:var(--gold);font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.day{position:relative;padding:10px 4px 9px;border-radius:16px;text-align:center;border:1px solid var(--line);background:var(--panel);overflow:hidden;opacity:0;transform:translateY(18px) scale(.95);animation:enter .55s cubic-bezier(.2,.9,.3,1.1) forwards;animation-delay:calc(var(--i)*.08s)}
+@keyframes enter{to{opacity:1;transform:none}}
+.day .n{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.day .coin{font-size:30px;margin:6px 0 2px;filter:drop-shadow(0 3px 4px #000a)}
+.day .v{font-weight:900;font-size:15px;color:var(--gold)}
+.day.taken{opacity:.62;filter:saturate(.5)}
+.day.taken .v{color:#9bd9b0}
+.day.taken:after{content:"✓";position:absolute;right:7px;top:5px;color:#7be3a0;font-weight:900;font-size:15px}
+.day.future .coin{filter:grayscale(.8) brightness(.7)}
+.day.now{border-color:var(--gold);background:linear-gradient(160deg,#3a2c14f2,#1c1410f2);box-shadow:0 0 26px #e2c27a66;animation:enter .55s cubic-bezier(.2,.9,.3,1.1) forwards,glow 1.8s ease-in-out .6s infinite}
+@keyframes glow{50%{box-shadow:0 0 40px #e2c27acc}}
+.day.now .coin{animation:coin 1.6s ease-in-out infinite}
+@keyframes coin{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(-4px) rotateY(180deg)}}
+.day.now:before,.day.big:before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#fff5,transparent);transform:skewX(-20deg);animation:sw 2.6s ease-in-out infinite}
+@keyframes sw{0%,50%{left:-60%}100%{left:130%}}
+.day.big{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:14px;padding:14px;border-color:#a98a4a}
+.day.big .coin{font-size:44px;margin:0}
+.day.big .v{font-size:20px}
+.day.big .n{color:var(--gold)}
+.day.big .tx{text-align:left}
+.day.big.future{border-color:var(--line)}
+.day.stamped:after{content:"ПОЛУЧЕНО";position:absolute;right:50%;top:42%;transform:translate(50%,-50%) rotate(-12deg);border:3px solid #7be3a0;color:#7be3a0;border-radius:10px;padding:2px 8px;font-weight:900;letter-spacing:2px;font-size:11px;background:#0b0814cc;animation:stamp .5s cubic-bezier(.2,1.6,.4,1) both}
+.day.stamped .v{opacity:.5}
+@keyframes stamp{0%{opacity:0;transform:translate(50%,-50%) rotate(-12deg) scale(3)}100%{opacity:1;transform:translate(50%,-50%) rotate(-12deg) scale(1)}}
+.claim{margin-top:14px;width:100%;padding:15px;border-radius:16px;font-weight:900;font-size:15px;letter-spacing:.5px;border:1px solid #a98a4a;background:linear-gradient(145deg,#7a5c22,#3a2a10);color:#fff0c4;position:relative;overflow:hidden;animation:glowBtn 1.6s ease-in-out infinite}
+.claim:after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#fff6,transparent);animation:sw 2.2s ease-in-out infinite}
+@keyframes glowBtn{50%{box-shadow:0 0 28px #e2c27a88}}
+.claim:disabled{animation:none;opacity:.55;filter:saturate(.5)}
+.claim:disabled:after{display:none}
+.timer{margin-top:12px;text-align:center;color:var(--muted);font-size:12px}
+.timer b{color:var(--gold);font-variant-numeric:tabular-nums;font-size:14px}
+.note{text-align:center;color:#7d7192;font-size:11px;padding:12px 0}
+.fp{position:fixed;z-index:200;pointer-events:none;font-weight:900;font-size:22px;color:#ffe9a8;text-shadow:0 0 8px #000,0 0 14px #e2c27a;animation:fp 1.5s ease-out forwards;white-space:nowrap}
+@keyframes fp{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-90px)}}
+.pt{position:fixed;z-index:199;pointer-events:none;font-size:20px;animation:pt 1.1s ease-out forwards}
+@keyframes pt{from{opacity:1;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--x),var(--y)) scale(.4) rotate(var(--r))}}
+.flash{position:fixed;inset:0;z-index:150;pointer-events:none;animation:fl2 .9s ease-out forwards}
+@keyframes fl2{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.skel{height:90px;border-radius:16px;background:linear-gradient(90deg,#1a1428,#261d3a,#1a1428);background-size:200% 100%;animation:sk 1.3s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);max-width:88%;z-index:300;background:#241a3af2;border:1px solid #8a6cd0;color:#fff;padding:10px 14px;border-radius:13px;font-size:13px;opacity:0;transition:.3s;text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}.day{opacity:1;transform:none}}
+</style>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>sndMusic("quests")</script>
+</head>
+<body>
+<canvas id="dust"></canvas>
+<div class="wrap">
+<header class="head"><a class="back" id="back" href="../index.html">← Назад</a><div><div class="eyebrow">ДАР БОГИНИ НОЧИ</div><h1>Ежедневная награда</h1></div></div>
+<div class="hero"><div class="moon">🌙</div><h2>Заходи каждый день</h2><p>7 дней подряд — и круг начнётся заново</p>
+<div class="stats"><span class="chip">📅 День: <b id="streak">1</b>/7</span><span class="chip">💷 Фунты: <b id="pounds">—</b></span></div></div>
+<main id="main" class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></main>
+<button class="claim" id="claim" type="button" disabled>…</button>
+<div class="timer" id="timer"></div>
+<div class="note">Сброс в полночь по Москве. Награды идут по кругу: после 7-го дня — снова с 1-го.</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0b0814")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+$("back").href="../index.html"+location.search;
+async function api(payload){
+ if(!ACTION_URL)return needStart();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());
+ if(!d||typeof d!=="object")throw new Error("Некорректный ответ сервера.");
+ return d;
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2600)}
+function burst(x,y,list,n){if(reduce)return;for(let i=0;i<n;i++){const d=document.createElement("i");d.className="pt";d.style.fontStyle="normal";d.textContent=list[i%list.length];d.style.left=x+"px";d.style.top=y+"px";d.style.setProperty("--x",rnd(-150,150)+"px");d.style.setProperty("--y",rnd(-190,40)+"px");d.style.setProperty("--r",rnd(-240,240)+"deg");document.body.appendChild(d);setTimeout(()=>d.remove(),1200)}}
+function floatTx(t,x,y){if(reduce)return;const d=document.createElement("div");d.className="fp";d.textContent=t;d.style.left=x+"px";d.style.top=y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),1600)}
+function flash(c){if(reduce)return;const d=document.createElement("div");d.className="flash";d.style.background="radial-gradient(circle,"+c+"99,transparent 70%)";document.body.appendChild(d);setTimeout(()=>d.remove(),950)}
+
+let D=null,busy=false,tick=null,left=0,justDay=-1;
+const fmt=s=>{s=Math.max(0,s|0);return String(Math.floor(s/3600)).padStart(2,"0")+":"+String(Math.floor(s%3600/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function startTimer(n){
+ left=n;paintTimer();clearInterval(tick);
+ tick=setInterval(()=>{left--;paintTimer();if(left<=0){clearInterval(tick);load()}},1000);
+}
+function paintTimer(){$("timer").innerHTML=(D&&D.claimed?"Следующая награда через ":"Награда сгорит через ")+"<b>"+fmt(left)+"</b> (МСК)"}
+function norm(d){return Object.assign({},d,{day:(d.cur||1)-1,reset_in:d.next_in,got:d.reward,streak:d.cur||1,cycle_done:!!(d.claimed&&d.cur===7)})}
+function render(d){
+ d=norm(d);D=d;if(d.pounds!=null)$("pounds").textContent=d.pounds;const main=$("main");main.replaceChildren();
+ $("streak").textContent=d.streak||0;
+ d.rewards.forEach((g,i)=>{
+  const taken=d.claimed?i<=d.day:i<d.day;
+  const now=!d.claimed&&i===d.day;
+  const el=document.createElement("div");
+  el.className="day"+(i===6?" big":"")+(taken?" taken":"")+(now?" now":"")+(!taken&&!now?" future":"")+(taken&&i===justDay?" stamped":"");
+  el.style.setProperty("--i",i);el.dataset.i=i;
+  const coin=i===6?"👑":"💷";
+  el.innerHTML=i===6
+   ?'<div class="coin">'+coin+'</div><div class="tx"><div class="n">День 7 · Дар Богини</div><div class="v">+'+g+' 💷</div></div>'
+   :'<div class="n">День '+(i+1)+'</div><div class="coin">'+coin+'</div><div class="v">+'+g+'</div>';
+  main.appendChild(el);
+ });
+ const b=$("claim");
+ if(d.claimed){b.disabled=true;b.textContent="✓ Награда получена"}
+ else{b.disabled=false;b.textContent="🎁 ЗАБРАТЬ +"+d.rewards[d.day]+" 💷"}
+ startTimer(d.reset_in||0);
+}
+async function load(){
+ try{const d=await api({action:"daily_reward"});if(!d.ok){toast(d.text||d.error||"Ошибка");return}render(d)}
+ catch(e){if(e.message!=="need_start")$("main").innerHTML='<div class="note" style="grid-column:1/-1;color:#f0c8cc">'+e.message+' <br><button class="claim" style="animation:none" onclick="load()">Повторить</button></div>'}
+}
+$("claim").addEventListener("click",async e=>{
+ if(busy||!D||D.claimed)return;busy=true;const b=$("claim");b.disabled=true;
+ try{
+  const d=await api({action:"daily_claim"});
+  if(!d.ok){toast(d.text||"Не удалось");await load();return}
+  const idx=D.day;justDay=idx;const nd=norm(d);
+  const card=document.querySelector('.day[data-i="'+idx+'"]');
+  const r=(card||b).getBoundingClientRect();const x=r.left+r.width/2,y=r.top+r.height/2;
+  sfx(nd.cycle_done?"win":"chest");setTimeout(()=>sfx("coin"),250);setTimeout(()=>sfx("coin"),420);
+  flash("#e2c27a");burst(x,y,["💷","✦","💰","✨"],nd.cycle_done?30:18);floatTx("+"+d.reward+" 💷",x,y);
+  render(d);
+  if(d.pounds!=null)$("pounds").textContent=d.pounds;
+  toast(nd.cycle_done?"Круг завершён! Завтра награды начнутся заново.":"Завтра: +"+d.rewards[d.cur%7]+" 💷");
+ }catch(err){toast(err.message)}finally{busy=false}
+});
+(function dust(){
+ if(reduce)return;const c=$("dust"),x=c.getContext("2d");let w,h;const P=[];
+ function rs(){w=c.width=innerWidth;h=c.height=innerHeight}rs();addEventListener("resize",rs);
+ for(let i=0;i<40;i++)P.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.6+.4,s:Math.random()*.3+.08,a:Math.random()*.5+.2,g:Math.random()<.5});
+ (function f(){x.clearRect(0,0,w,h);P.forEach(p=>{p.y-=p.s;if(p.y<-5){p.y=h+5;p.x=Math.random()*w}x.fillStyle=(p.g?"rgba(226,194,122,":"rgba(170,140,255,")+p.a+")";x.beginPath();x.arc(p.x,p.y,p.r,0,6.3);x.fill()});requestAnimationFrame(f)})();
+})();
+load();
+</script>
+</body>
+</html>
