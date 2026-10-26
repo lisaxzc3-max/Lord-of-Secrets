@@ -107,6 +107,22 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
   </section>
 
   <section class="card">
+    <h3>💬 Чат</h3>
+    <div class="sub">Уведомления и звук сообщений. Настройки хранятся на этом устройстве.</div>
+    <div class="sRow"><span>Уведомления Мира</span><label class="sw"><input type="checkbox" id="cWorld"><i></i></label></div>
+    <div class="sRow"><span>Уведомления личных</span><label class="sw"><input type="checkbox" id="cDm"><i></i></label></div>
+    <div class="sRow"><span>Звук сообщений</span><label class="sw"><input type="checkbox" id="cSnd"><i></i></label></div>
+    <div class="sRow"><span>Мелодия</span>
+      <select id="cTone" style="background:#150e24;color:#f0e8d2;border:1px solid #3a3057;border-radius:10px;padding:7px 9px;font:13px system-ui">
+        <option value="bell">Колокол</option><option value="scroll">Свиток</option><option value="raven">Ворон</option><option value="chest">Сундук</option>
+      </select></div>
+    <div class="sRow"><span>Покачивание кнопки</span><label class="sw"><input type="checkbox" id="cShake"><i></i></label></div>
+    <div class="sRow"><span>Кнопка чата на экране</span><label class="sw"><input type="checkbox" id="cFab"><i></i></label></div>
+    <div class="sub" id="cNote" style="display:none;margin-top:6px">Кнопка скрыта — чат можно открыть только вернув этот переключатель.</div>
+    <div class="btn" onclick="testChat()">▶ Проверить звук чата</div>
+  </section>
+
+  <section class="card">
     <h3>🖋 Имя</h3>
     <div class="sub">2–16 символов: буквы, цифры, _ и -. Меняется везде.</div>
     <input id="newNick" class="input" maxlength="16" placeholder="Новый ник" autocomplete="off">
@@ -221,6 +237,17 @@ async function changePath(){
   $("sSfx").addEventListener("input",e=>LOTM_SND.setVol("sfx",e.target.value/100));
   $("sSfx").addEventListener("change",()=>snd("hit"));
   $("sMus").addEventListener("input",e=>LOTM_SND.setVol("mus",e.target.value/100));
+})();
+(function(){
+  const K="lotm_chat_cfg";
+  let c={world:1,dm:1,snd:1,tone:"bell",shake:1,fab:1};
+  try{Object.assign(c,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+  const map={cWorld:"world",cDm:"dm",cSnd:"snd",cShake:"shake",cFab:"fab"};
+  const save=()=>{try{localStorage.setItem(K,JSON.stringify(c))}catch(e){}$("cNote").style.display=c.fab?"none":"block"};
+  Object.keys(map).forEach(id=>{$(id).checked=!!c[map[id]];$(id).addEventListener("change",e=>{c[map[id]]=e.target.checked?1:0;save()})});
+  $("cTone").value=c.tone;$("cTone").addEventListener("change",e=>{c.tone=e.target.value;save();LOTM_SND.resume();snd(c.tone)});
+  save();
+  window.testChat=()=>{LOTM_SND.resume();snd(c.tone)};
 })();
 function testSnd(){LOTM_SND.resume();["divine","storm","fire","win"].forEach((n,i)=>snd(n,i*0.9))}
 load().catch(()=>{});

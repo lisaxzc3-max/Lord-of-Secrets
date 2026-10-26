@@ -15,6 +15,8 @@ function call(p){
  return fetch(URL_,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store"})
  .then(function(r){if(!r.ok)throw new Error("http");return r.json()}).then(function(d){d=unwrap(d);if(!d||typeof d!=="object")throw new Error("bad");return d});
 }
+var CFGK="lotm_chat_cfg";
+function cfg(){var c={world:1,dm:1,snd:1,tone:"bell",shake:1,fab:1};try{var j=JSON.parse(localStorage.getItem(CFGK)||"{}");for(var k in j)c[k]=j[k]}catch(e){}return c}
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
 function hhmm(t){var d=new Date(t*1000);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
 
@@ -163,7 +165,8 @@ function close(){
 }
 function markWorld(){if(S.ws>S.wseen){S.wseen=S.ws;ls("lotm_chat_ws",String(S.wseen))}}
 function paint(){
- var n=S.unreadDm+(S.open&&S.tab==="world"?0:S.newWorld);
+ var C=cfg();fab.style.display=C.fab?"":"none";
+ var n=(C.dm?S.unreadDm:0)+(C.world&&!(S.open&&S.tab==="world")?S.newWorld:0);
  var b=fab.querySelector("b");b.textContent=n>0?(n>99?"99+":String(n)):"";
  fab.classList.toggle("has",n>0);
  var i=tabD.querySelector("i");i.textContent=S.unreadDm>0?String(S.unreadDm):"";
@@ -215,26 +218,28 @@ function sync(){
    var incoming=w.filter(function(m){return String(m.uid)!==String(S.me)});
    S.ws=w[w.length-1].id;appendMsgs(wMsgs,w,false);
    if(S.open&&S.tab==="world"){markWorld()}else{S.newWorld+=incoming.length}
-   if(incoming.length){ring()}
+   if(incoming.length){ring("world")}
   }else if(!wMsgs.children.length){appendMsgs(wMsgs,[],true)}
   var un=d.unread|0;
-  if(un>S.unreadDm){ring()}
+  if(un>S.unreadDm){ring("dm")}
   S.unreadDm=un;
   if(S.peer&&Array.isArray(d.dm)){
    var dm=d.dm;
-   if(dm.length){S.ds=dm[dm.length-1].id;appendMsgs(tMsgs,dm,firstThread);firstThread=false;if(dm.some(function(m){return String(m.uid)!==String(S.me)}))sfx("bell")}
+   if(dm.length){S.ds=dm[dm.length-1].id;appendMsgs(tMsgs,dm,firstThread);firstThread=false;if(dm.some(function(m){return String(m.uid)!==String(S.me)})&&cfg().snd)sfx(cfg().tone)}
    else if(firstThread){appendMsgs(tMsgs,[],true);firstThread=false}
   }
   paint();
  },function(){S.busy=false});
 }
-function ring(){
- if(S.open)return;sfx("bell");
- if(reduce)return;fab.classList.remove("ring");void fab.offsetWidth;fab.classList.add("ring");
+function ring(kind){
+ var C=cfg();if(kind==="world"&&!C.world)return;if(kind==="dm"&&!C.dm)return;
+ if(S.open&&!(kind==="dm"&&S.tab!=="dm"))return;
+ if(C.snd)sfx(C.tone);
+ if(reduce||!C.shake)return;fab.classList.remove("ring");void fab.offsetWidth;fab.classList.add("ring");
 }
 function startPoll(){
  clearInterval(S.poll);
- S.poll=setInterval(function(){if(!document.hidden)sync();if(S.open&&S.tab==="dm"&&!S.peer)loadList()},S.open?3500:25000);
+ S.poll=setInterval(function(){paint();if(!document.hidden)sync();if(S.open&&S.tab==="dm"&&!S.peer)loadList()},S.open?3500:25000);
 }
 
 function pathIco(p){return PATH[p]||"👤"}
