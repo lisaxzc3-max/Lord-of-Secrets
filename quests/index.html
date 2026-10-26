@@ -138,7 +138,7 @@ function render(d,animatedId){
   el.id="q-"+q.id;el.style.setProperty("--i",firstRender?i:0);
   if(!firstRender){el.style.animation="none";el.style.opacity=1;el.style.transform="none"}
   const pct=Math.round(q.prog/q.goal*100);
-  let rew='<span class="rw a">🧪 +'+q.absorb+'% усвоения</span>';
+  let rew='<span class="rw g">💷 +'+q.gold+'</span><span class="rw x">⭐ +'+q.xp+' опыта</span><span class="rw a">🧪 +'+q.absorb+'% усвоения</span>'+(q.pts?'<span class="rw p">✦ +'+q.pts+' очко</span>':"");
   el.innerHTML='<div class="ic">'+q.icon+'</div><div class="mid"><span class="tag">'+esc(q.diff_name)+'</span><div class="ti">'+esc(q.title)+'</div><div class="tx">'+esc(q.text)+'</div><div class="bar"><i data-w="'+pct+'"></i></div><div class="cnt"><span>'+q.prog+' / '+q.goal+'</span><span>'+pct+'%</span></div><div class="rew">'+rew+'</div></div>';
   if(q.done&&!q.claimed){const b=document.createElement("button");b.className="claim";b.textContent="🎁 ЗАБРАТЬ НАГРАДУ";b.onclick=e=>claim(q.id,e);el.querySelector(".mid").appendChild(b)}
   if(q.claimed){const s=document.createElement("div");s.className="stamp"+(animatedId===q.id?"":" old");s.textContent="ВЫПОЛНЕНО";el.appendChild(s)}
@@ -161,8 +161,8 @@ async function claim(id,ev){
   if(r.ok===false)throw new Error(r.error==="already"?"Награда уже получена":r.error==="not_done"?"Задание ещё не выполнено":r.error==="not_ready"?"Сундук пока закрыт":(r.error||"Не удалось забрать"));
   const c=r.claim||{};
   if(id==="bonus"){sfx("chest");flash("#ffd96a");burst(x,y,["💷","✨","🌙","⭐"],22)}
-  else{sfx("stamp");setTimeout(()=>sfx("coin"),180);if(c.level_up)setTimeout(()=>sfx("level"),500);flash("#e2c27a");burst(x,y,["🧪","✨","💧"],14)}
-  if(c.absorb)floatTx("+"+c.absorb+"% 🧪",x,y);if(c.gold)setTimeout(()=>floatTx("+"+c.gold+" 💷",x,y+22),250);if(c.pts)setTimeout(()=>floatTx("+"+c.pts+" ✦",x,y+44),500);
+  else{sfx("stamp");setTimeout(()=>sfx("coin"),180);if(c.level_up)setTimeout(()=>sfx("level"),500);flash("#e2c27a");burst(x,y,["💷","🧪","✨","⭐"],16)}
+  if(c.absorb)floatTx("+"+c.absorb+"% 🧪",x,y);if(c.gold)setTimeout(()=>floatTx("+"+c.gold+" 💷",x,y+22),250);if(c.xp)setTimeout(()=>floatTx("+"+c.xp+" ⭐",x,y+44),400);if(c.pts)setTimeout(()=>floatTx("+"+c.pts+" ✦",x,y+66),550);
   if(c.level_up)toast("🎉 Новый уровень!");
   render(r,id);startTimer(r.reset_in);
  }catch(e){if(e&&e.message==="need_start")return;sfx("deny");toast(e.message||"Ошибка связи")}
