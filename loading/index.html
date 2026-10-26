@@ -120,7 +120,7 @@ if(ready){countLine.textContent="Всё готово — входим…";if(el>
 
 /* ===== загрузка игры во время заставки ===== */
 const qsL=new URLSearchParams(location.search);
-const uidL=String(qsL.get("u")||tg?.initDataUnsafe?.user?.id||"7320193489");
+const uidL=String(qsL.get("u")||tg?.initDataUnsafe?.user?.id||"0");
 const HS="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 const mkUrl=e=>e?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(e):"";
 const unwrapL=v=>(v&&v.result&&typeof v.result==="object")?v.result:v;

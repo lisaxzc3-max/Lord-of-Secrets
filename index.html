@@ -581,7 +581,7 @@ try {
 
 const qs = new URLSearchParams(location.search);
 const telegramUserId = tg?.initDataUnsafe?.user?.id;
-const uid = String(qs.get("u") || telegramUserId || "7320193489");
+const uid = String(qs.get("u") || telegramUserId || "0");
 
 document.getElementById("uid").textContent = uid;
 

@@ -480,7 +480,7 @@ try {
 } catch (_) {}
 
 const qs = new URLSearchParams(location.search);
-const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "7320193489");
+const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "0");
 const p_enc = qs.get("p_enc") || qs.get("p") || "";
 const a_enc = qs.get("a_enc") || qs.get("a") || "";
 

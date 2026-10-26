@@ -51,7 +51,7 @@ small{opacity:.6;font-size:10px}
 <script>
 const tg=Telegram.WebApp;tg.ready();tg.expand();
 const qs=new URLSearchParams(location.search);
-let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"7320193489";
+let uid=qs.get("u")||tg.initDataUnsafe?.user?.id||"0";
 document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";

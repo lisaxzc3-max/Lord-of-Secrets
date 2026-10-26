@@ -96,7 +96,7 @@ const tg=window.Telegram?.WebApp||null;
 try{tg?.ready();tg?.expand();tg?.setHeaderColor("#06100b")}catch(_){}
 
 const qs=new URLSearchParams(location.search);
-const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"7320193489");
+const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
 const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
