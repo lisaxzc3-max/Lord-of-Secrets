@@ -70,6 +70,7 @@ body{color:var(--text)}
 @media(max-height:620px){.seal{width:160px;height:160px;transform:none}.photoWrap{width:100px;height:100px}.tick i{top:-80px}.tip{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
+<script src="../shared/auth.js"></script>
 </head>
 <body>
 <div class="loader" id="loader">
@@ -121,7 +122,7 @@ if(ready){countLine.textContent="Всё готово — входим…";if(el>
 /* ===== загрузка игры во время заставки ===== */
 const qsL=new URLSearchParams(location.search);
 const uidL=String(qsL.get("u")||tg?.initDataUnsafe?.user?.id||"0");
-const HS="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+
 const mkUrl=e=>e?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(e):"";
 const unwrapL=v=>(v&&v.result&&typeof v.result==="object")?v.result:v;
 async function post(url,body,ms){
@@ -136,7 +137,7 @@ return unwrapL(await r.json());
 try{
 let pu=mkUrl(qsL.get("p_enc")||qsL.get("p")||""),au=mkUrl(qsL.get("a_enc")||qsL.get("a")||"");
 if(!pu||!au){
-const d=await post(HS,{user_id:uidL},9000);
+const d=await needStart();
 pu=pu||new URL(d.profile_url||d.PROFILE_URL).href;
 au=au||new URL(d.action_url||d.ACTION_URL).href;
 }

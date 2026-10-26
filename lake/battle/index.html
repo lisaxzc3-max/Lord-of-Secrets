@@ -195,6 +195,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 .portraitFrame.coiled .emo,.portraitFrame.coiled img{filter:brightness(.8) hue-rotate(40deg)}
 </style>
 <script src="../../shared/skills.js"></script>
+<script src="../../shared/auth.js"></script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
@@ -275,7 +276,7 @@ const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
 const pEnc=qs.get("p_enc")||qs.get("p")||"";
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
@@ -519,7 +520,7 @@ async function ensure(){
 if(PROFILE_URL&&ACTION_URL)return true;
 if(handshakePromise)return handshakePromise;
 handshakePromise=(async()=>{
-const response=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+const response=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
 if(!response.ok)throw new Error("Не удалось подключиться к игровой системе (HTTP "+response.status+").");
 const data=unwrap(await response.json());
 const profile=data?.profile_url||data?.PROFILE_URL,action=data?.action_url||data?.ACTION_URL;

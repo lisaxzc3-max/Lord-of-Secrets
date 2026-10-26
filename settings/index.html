@@ -24,6 +24,7 @@ body{background:linear-gradient(rgba(10,10,14,.82),rgba(10,10,14,.94)),url('../i
 h3{font-size:14px;color:#c9c5b8;margin-bottom:6px}
 small{opacity:.6;font-size:10px}
 </style>
+<script src="../shared/auth.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -56,10 +57,10 @@ document.getElementById('uid').innerText=uid;
 let p_enc=qs.get("p_enc")||qs.get("p")||"",a_enc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=p_enc?"https://api.telebotcreator.com/new-webhook?data="+p_enc:"";
 let ACTION_URL=a_enc?"https://api.telebotcreator.com/new-webhook?data="+a_enc:"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 function unwrap(j){return j&&j.result&&typeof j.result==='object'?j.result:j}
 document.addEventListener('DOMContentLoaded',()=>{let a=document.getElementById('backHome');if(a) a.href="../index.html"+location.search;});
-async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
+async function ensure(){if(PROFILE_URL&&ACTION_URL) return true;const r=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:String(uid)})});const j=unwrap(await r.json());PROFILE_URL=j.profile_url;ACTION_URL=j.action_url;return true;}
 async function api(p){if(!ACTION_URL) await ensure();const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});return unwrap(await r.json());}
 let pickPath="";
 function pick(p){pickPath=p;document.querySelectorAll('.pathCard').forEach(c=>c.classList.remove('sel'));document.getElementById('c-'+p).classList.add('sel');}

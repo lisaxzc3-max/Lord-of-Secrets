@@ -66,6 +66,7 @@ body.going:after{content:"";position:fixed;inset:0;z-index:20;background:#020604
 @keyframes fadeBlack{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
+<script src="../shared/auth.js"></script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true">
@@ -98,7 +99,7 @@ try{tg?.ready();tg?.expand();tg?.setHeaderColor("#06100b")}catch(_){}
 const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 const btn=document.getElementById("exploreBtn"),msg=document.getElementById("msg");
 document.getElementById("backHome").href="../index.html"+(location.search||"");
@@ -126,7 +127,7 @@ function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="objec
 function say(t,e){msg.textContent=t||"";msg.className=e?"err":""}
 async function ensure(){
   if(ACTION_URL)return;
-  const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+  const r=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
   if(!r.ok)throw new Error("Не удалось подключиться к игре (HTTP "+r.status+").");
   const d=unwrap(await r.json());
   const a=d?.action_url||d?.ACTION_URL;

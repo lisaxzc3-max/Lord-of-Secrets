@@ -49,6 +49,7 @@ body.going:after { content: ""; position: fixed; inset: 0; z-index: 20; backgrou
 @keyframes fly{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}60%{transform:translate(var(--x),var(--y));opacity:.5}100%{opacity:0;transform:translate(calc(var(--x)*-.5),calc(var(--y)*1.4))}}
 @media(prefers-reduced-motion:reduce){.scene *{animation:none!important}}
 </style>
+<script src="../shared/auth.js"></script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
@@ -75,7 +76,7 @@ try { tg?.ready(); tg?.expand(); } catch (_) {}
 const qs = new URLSearchParams(location.search);
 const uid = String(qs.get("u") || tg?.initDataUnsafe?.user?.id || "0");
 const aEnc = qs.get("a_enc") || qs.get("a") || "";
-const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 let ACTION_URL = aEnc ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(aEnc) : "";
 
 const btn = document.getElementById("exploreBtn");
@@ -92,7 +93,7 @@ function say(text, isError) { msg.textContent = text || ""; msg.className = isEr
 
 async function ensure() {
   if (ACTION_URL) return;
-  const r = await fetch(HANDSHAKE, { method: "POST", headers: { "Content-Type": "application/json" },
+  const r = await needStart( { method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: uid }), cache: "no-store" });
   if (!r.ok) throw new Error("Не удалось подключиться к игре (HTTP " + r.status + ").");
   const d = unwrap(await r.json());

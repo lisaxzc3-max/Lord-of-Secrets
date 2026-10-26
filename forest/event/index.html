@@ -81,6 +81,7 @@ h1{font-size:20px;margin:4px 0 0}
 @keyframes shk{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
+<script src="../../shared/auth.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -115,7 +116,7 @@ try{tg?.ready();tg?.expand();tg?.setHeaderColor("#06100b")}catch(_){}
 const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
-const HANDSHAKE="https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 const $=id=>document.getElementById(id);
 let busy=false,done=false,ev=null,evKey="";
@@ -138,7 +139,7 @@ const ICON={f_whisper_listen:"👂",f_whisper_plug:"🙉",f_whisper_answer:"🗣
 function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
 async function ensure(){
  if(ACTION_URL)return;
- const r=await fetch(HANDSHAKE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+ const r=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
  if(!r.ok)throw new Error("Не удалось подключиться к игре (HTTP "+r.status+").");
  const d=unwrap(await r.json());const a=d?.action_url||d?.ACTION_URL;
  if(typeof a!=="string"||!a)throw new Error("Сервер не вернул адрес действий.");

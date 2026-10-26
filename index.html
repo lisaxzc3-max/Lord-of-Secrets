@@ -247,6 +247,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @media(max-width:360px){.orb{width:72px;height:72px}.lvBadge{width:64px;height:64px}.locArt{flex-basis:92px}}
 @media(prefers-reduced-motion:reduce){.hero .city .win,.lamp,.coin,.liq:before,.liq:after{animation:none!important}}
 </style>
+<script src="./shared/auth.js"></script>
 </head>
 <body>
 <canvas id="fx"></canvas>
@@ -596,7 +597,7 @@ let ACTION_URL = a_enc
   ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(a_enc)
   : "";
 
-const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 
 /* данные, которые экран входа уже загрузил во время заставки */
 let bootData = null;
@@ -656,7 +657,7 @@ async function ensureUrls(force = false) {
 
   handshakePromise = (async () => {
     try {
-      const response = await fetch(HANDSHAKE, {
+      const response = await needStart( {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: uid }),

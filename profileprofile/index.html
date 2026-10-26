@@ -348,6 +348,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 }
 </style>
 <script src="../shared/skills.js"></script>
+<script src="../shared/auth.js"></script>
 </head>
 <body>
 <canvas id="fx"></canvas>
@@ -492,7 +493,7 @@ let ACTION_URL = a_enc
   ? "https://api.telebotcreator.com/new-webhook?data=" + encodeURIComponent(a_enc)
   : "";
 
-const HANDSHAKE = "https://api.telebotcreator.com/new-webhook?data=TBCSECRET_secret_99d5d708";
+/* вход только по личным ссылкам бота */
 
 const $ = id => document.getElementById(id);
 const reduceMotion = matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -667,7 +668,7 @@ async function ensure() {
   if (handshakePromise) return handshakePromise;
 
   handshakePromise = (async () => {
-    const response = await fetch(HANDSHAKE, {
+    const response = await needStart( {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({user_id: uid}),
