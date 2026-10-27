@@ -158,9 +158,10 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .city{position:absolute;left:0;right:0;bottom:0;width:100%;height:68%}
 .city .ly{transition:transform .25s ease-out}
 .city .l1{transform:translate(calc(var(--px)*-3px),0)}.city .l2{transform:translate(calc(var(--px)*-7px),0)}.city .l3{transform:translate(calc(var(--px)*-13px),0)}
-.hero .city .win{fill:#ffd27a;animation:winf 4s steps(2,end) infinite}
+.hero .city .win{fill:#ffd27a;animation:winf 6s ease-in-out infinite}
 .hero .city .w2{animation-delay:-1s}.hero .city .w3{animation-delay:-2.2s;fill:#ffb35a}.hero .city .w4{opacity:.25;animation:none}
-@keyframes winf{0%,70%{opacity:1}72%,76%{opacity:.15}78%,100%{opacity:1}}
+@keyframes winf{0%,100%{opacity:1}50%{opacity:.7}}
+@media(pointer:coarse){body:before{animation:none}}
 .hero .city .lamp{animation:lamp 3.4s ease-in-out infinite}
 @keyframes lamp{0%,100%{opacity:.9}45%{opacity:.6}50%{opacity:1}}
 .hero .clockface{filter:drop-shadow(0 0 4px #f0d88a)}

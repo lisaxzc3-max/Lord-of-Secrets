@@ -3,6 +3,7 @@
 "use strict";
 var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 var LOW=false;try{LOW=(navigator.deviceMemory&&navigator.deviceMemory<=3)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)}catch(e){} /* слабое устройство: меньше частиц и кадров */
+var PH=false;try{PH=matchMedia("(pointer:coarse)").matches||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent||"")}catch(e){} /* телефон: один слой и редкая перерисовка — меньше нагрузка на видеопамять, без мерцания */
 var SC=.5; /* половинное разрешение — мягкий туман, дёшево для телефона */
 function mk(z,op){var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;z-index:"+z+";pointer-events:none;opacity:"+op;document.body.insertBefore(c,document.body.firstChild);return c}
 function sprite(rgb){
@@ -42,12 +43,13 @@ function draw(now){
 var last=0;
 function loop(now){
  if(!running)return;
- if(now-last>(LOW?50:33)){last=now;draw(now)} /* ~30 fps, на слабых ~20 */
+ if(now-last>(PH?66:(LOW?50:33))){last=now;draw(now)} /* ~30 fps, на слабых ~20 */
  requestAnimationFrame(loop);
 }
 function start(){
  if(!document.body){return document.addEventListener("DOMContentLoaded",start)}
-layers.forEach(function(L){L.c=mk(L.z,L.o)});
+if(PH)layers=[layers[0]];
+layers.forEach(function(L){L.c=mk(L.z,0);L.c.style.transition="opacity 1.6s ease";setTimeout(function(){L.c.style.opacity=L.o},900)});
  size();seed();draw(performance.now());
  if(!reduce)requestAnimationFrame(loop);
  addEventListener("resize",function(){size();seed();draw(performance.now())});
