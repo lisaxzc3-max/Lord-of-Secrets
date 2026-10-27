@@ -148,13 +148,13 @@ function render(d){
   el.style.setProperty("--i",i);el.dataset.i=i;
   const coin=i===6?"👑":"💷";
   el.innerHTML=i===6
-   ?'<div class="coin">'+coin+'</div><div class="tx"><div class="n">День 7 · Дар Богини</div><div class="v">+'+g+' 💷</div><div class="rel">✦ + реликвия дня</div></div>'
+   ?'<div class="coin">'+coin+'</div><div class="tx"><div class="n">День 7 · Дар Богини</div><div class="v">+'+g+' 💷</div><div class="rel">✦ + реликвия дня · 💎 10 рубинов</div></div>'
    :'<div class="n">День '+(i+1)+'</div><div class="coin">'+coin+'</div><div class="v">+'+g+'</div><div class="rel">✦ реликвия</div>';
   main.appendChild(el);
  });
  const b=$("claim");
  if(d.claimed){b.disabled=true;b.textContent="✓ Награда получена"}
- else{b.disabled=false;b.textContent="🎁 ЗАБРАТЬ +"+d.rewards[d.day]+" 💷"}
+ else{b.disabled=false;b.textContent="🎁 ЗАБРАТЬ +"+d.rewards[d.day]+" 💷"+(d.day===6?" + 💎 10":"")}
  startTimer(d.reset_in||0);
 }
 async function load(){
@@ -171,7 +171,7 @@ $("claim").addEventListener("click",async e=>{
   const card=document.querySelector('.day[data-i="'+idx+'"]');
   const r=(card||b).getBoundingClientRect();const x=r.left+r.width/2,y=r.top+r.height/2;
   sfx(nd.cycle_done?"win":"chest");setTimeout(()=>sfx("coin"),250);setTimeout(()=>sfx("coin"),420);
-  flash("#e2c27a");burst(x,y,["💷","✦","💰","✨"],nd.cycle_done?30:18);floatTx("+"+d.reward+" 💷",x,y);
+  flash("#e2c27a");burst(x,y,["💷","✦","💰","✨"],nd.cycle_done?30:18);floatTx("+"+d.reward+" 💷",x,y);if(d.ruby)setTimeout(()=>{floatTx("+"+d.ruby+" 💎",x,y-34);burst(x,y,["💎","✦","✧"],14)},350);
   render(d);
   if(d.art)setTimeout(()=>artReveal(d.art),700);
   if(d.pounds!=null)$("pounds").textContent=d.pounds;
