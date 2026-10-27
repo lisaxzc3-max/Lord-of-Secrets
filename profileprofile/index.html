@@ -405,7 +405,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
           <span class="levelTag">УРОВЕНЬ <span id="lvl">—</span></span>
           <span class="pathTag" id="path">Путь неизвестен</span>
         </div>
-        <div class="heroCaption">Путник · Последователь мистерий</div>
+        <div class="heroCaption" id="heroCap">Путник · Последователь мистерий</div>
         <a class="clanChip hidden" id="clanChip" href="../clan/index.html"><span class="ce" id="clanEmb"></span><span class="ct"><b id="clanName">—</b><small id="clanRank">—</small></span><i>›</i></a>
         <a class="arenaChip hidden" id="arenaChip" href="../arena/index.html"><span class="ce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-1-1-3zM3 21l6-6"/></svg></span><span class="ct"><b id="arLeague">—</b><small id="arSub">—</small></span><i>›</i></a>
         <a class="profChip hidden" id="profChip" href="../bureau/index.html"><span class="ce" id="pfEmb"></span><span class="ct"><b id="pfName">—</b><small id="pfSub">—</small><span class="pfBar"><i id="pfFill"></i></span></span><i class="ar">›</i></a>
@@ -951,6 +951,8 @@ function setPortrait(data) {
   if (!pk || !data.gender) return;
   window._seqName = ((data.sequence|0) && (data.sequence|0) <= 8) ? (data.sequence_name || "") : "";
   window._seqNum = (data.sequence|0) || 9;
+  { const cap = $("heroCap"), base = { seer: "Провидец", sailor: "Матрос", hunter: "Охотник" }[pk];
+    if (cap) cap.textContent = window._seqNum + " · " + (window._seqName || base || "Путник"); }
   const g = data.gender === "female" ? "f" : "m";
   const box = $("portrait");
   let img = box.querySelector("img");
