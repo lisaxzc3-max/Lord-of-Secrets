@@ -76,6 +76,7 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
 .sw i:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#8d869a;transition:.25s}
 .sw input:checked+i{background:#4a3a1a;border-color:var(--gold)}.sw input:checked+i:after{left:25px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
+.nSel{background:#150e24;color:#f0e8d2;border:1px solid #3a3057;border-radius:10px;padding:6px 8px;font:13px system-ui}
 </style>
 <script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
@@ -111,6 +112,22 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
     <h3>🕯 Атмосфера</h3>
     <div class="sub">Мрачный стиль — приглушённые цвета, туман и тёмная виньетка. Яркий отключает затемнение (и может быть легче для слабых телефонов).</div>
     <div class="sRow"><span>Мрачный стиль</span><label class="sw"><input type="checkbox" id="tOn"><i></i></label></div>
+  </section>
+
+  <section class="card" id="ntfCard">
+    <h3>🔔 Уведомления в Telegram</h3>
+    <div class="sub">Бот пришлёт сообщение, когда ты вне игры. Включай только нужное.</div>
+    <div class="sRow"><span>Переход на новую ступень</span><label class="sw"><input type="checkbox" data-n="seq"><i></i></label></div>
+    <div class="sRow"><span>Воскрешение</span><label class="sw"><input type="checkbox" data-n="rev"><i></i></label></div>
+    <div class="sRow"><span>Награда дня</span><label class="sw"><input type="checkbox" data-n="daily"><i></i></label></div>
+    <div class="sRow"><span>Арена: вызовы и ходы</span><label class="sw"><input type="checkbox" data-n="arena"><i></i></label></div>
+    <div class="sRow"><span>Вороны: почта рынка</span><label class="sw"><input type="checkbox" data-n="mail"><i></i></label></div>
+    <div class="sRow"><span>Личные сообщения</span><label class="sw"><input type="checkbox" data-n="dm"><i></i></label></div>
+    <div class="sRow"><span>Показывать текст сообщения</span><label class="sw"><input type="checkbox" data-n="dt"><i></i></label></div>
+    <div class="sRow"><span>Тихие часы (МСК)</span><label class="sw"><input type="checkbox" id="nQon"><i></i></label></div>
+    <div class="sRow" id="nQrow" style="display:none"><span>С / до</span>
+      <span><select id="nQa" class="nSel"></select> — <select id="nQb" class="nSel"></select></span></div>
+    <div class="sub" id="ntfNote" style="margin-top:6px">Загрузка…</div>
   </section>
 
   <section class="card">
@@ -260,6 +277,34 @@ async function changePath(){
   let m="dark";try{m=localStorage.getItem("lotm_tone")||"dark"}catch(e){}
   $("tOn").checked=m!=="vivid";
   $("tOn").addEventListener("change",e=>{try{localStorage.setItem("lotm_tone",e.target.checked?"dark":"vivid")}catch(_){}location.reload()});
+})();
+(function(){
+  const box=$("ntfCard"),inputs=[...box.querySelectorAll("input[data-n]")];
+  const hrs=[...Array(24).keys()].map(h=>'<option value="'+h+'">'+String(h).padStart(2,"0")+':00</option>').join("");
+  $("nQa").innerHTML=hrs;$("nQb").innerHTML=hrs;
+  let st=null;
+  function paint(){
+    if(!st)return;
+    inputs.forEach(i=>{i.checked=!!st[i.dataset.n]});
+    const q=st.q;$("nQon").checked=!!q;$("nQrow").style.display=q?"flex":"none";
+    if(q){$("nQa").value=q[0];$("nQb").value=q[1]}
+    $("ntfNote").textContent=st.q?"В тихие часы сообщения не приходят.":"Сообщения приходят от бота игры. Остановишь бота в Telegram — уведомлений не будет.";
+  }
+  async function set(k,v){
+    const prev=JSON.parse(JSON.stringify(st));
+    try{
+      const d=await api({action:"ntf_set",k,v});
+      if(!d||!d.ok)throw 0;
+      st=d.p;paint();
+    }catch(e){st=prev;paint();toast("Не удалось сохранить",true)}
+  }
+  inputs.forEach(i=>i.addEventListener("change",()=>set(i.dataset.n,i.checked?1:0)));
+  $("nQon").addEventListener("change",e=>{
+    if(e.target.checked){st.q=[23,8];paint();set("q",[23,8])}else{st.q=null;paint();set("q",null)}
+  });
+  const qs2=()=>set("q",[+$("nQa").value,+$("nQb").value]);
+  $("nQa").addEventListener("change",qs2);$("nQb").addEventListener("change",qs2);
+  api({action:"ntf_get"}).then(d=>{if(d&&d.ok){st=d.p;paint()}else $("ntfNote").textContent="Настройки недоступны."}).catch(()=>{$("ntfNote").textContent="Настройки недоступны."});
 })();
 function testSnd(){LOTM_SND.resume();["divine","storm","fire","win"].forEach((n,i)=>snd(n,i*0.9))}
 load().catch(()=>{});
