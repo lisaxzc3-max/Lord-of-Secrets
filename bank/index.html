@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070d0e">
+<title>Банк — Повелитель тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--ink:#070d0e;--line:#3a4a3e;--text:#efe8d4;--muted:#9aa79a;--gold:#e6c46e;--gold2:#fff0b8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html{background:var(--ink);min-height:100%}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;touch-action:manipulation;
+ background:radial-gradient(ellipse at 50% 0,#1d3a34aa,transparent 55%),radial-gradient(ellipse at 50% 100%,#3a2a0a66,transparent 60%),var(--ink)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+ background:repeating-linear-gradient(45deg,transparent 0 26px,#e6c46e0a 26px 27px),repeating-linear-gradient(-45deg,transparent 0 26px,#e6c46e0a 26px 27px)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 14px calc(40px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:6px 0 4px}
+.back{flex:none;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#0c1a18aa;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.head h1{margin:2px 0 0;font:700 22px Georgia,serif;background:linear-gradient(90deg,#fff3cf,#e6c46e,#fff3cf,#c9a24a,#fff3cf);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+.pn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #6a5a2a;border-radius:99px;padding:6px 12px;background:#1a160acc;font:700 13px Georgia,serif;color:var(--gold2)}
+
+.hero{position:relative;text-align:center;padding:6px 0 0}
+.vault{position:relative;width:min(62vw,230px);aspect-ratio:1;margin:6px auto 0}
+.vault .leak{position:absolute;inset:-14%;border-radius:50%;background:radial-gradient(circle,#ffd97a66,#ffb43a22 45%,transparent 68%);animation:leak 6s ease-in-out infinite}
+@keyframes leak{50%{opacity:.55;transform:scale(1.07)}}
+.vault svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.wheel{transform-origin:100px 100px;transition:transform 1.6s cubic-bezier(.2,.8,.2,1)}
+.vault.open .wheel{transform:rotate(540deg)}
+.vault.open .leak{animation:none;opacity:1;transform:scale(1.25);transition:transform 1.4s,opacity 1s}
+.sum{display:flex;gap:8px;margin:12px 0 2px}
+.sm{flex:1;padding:10px 8px;border-radius:15px;border:1px solid #4a4a2a;background:linear-gradient(160deg,#1a2a24e6,#0c1614e6);text-align:center}
+.sm small{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sm b{display:block;font:700 19px Georgia,serif;color:var(--gold2);margin-top:2px}
+
+.card{position:relative;border:1px solid var(--line);border-radius:20px;padding:14px;margin-top:12px;background:linear-gradient(160deg,#16261fe6,#0a1412e6);overflow:hidden}
+.card h3{margin:0 0 10px;font:700 12px Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:flex;justify-content:space-between;align-items:center}
+.card h3 em{font-style:normal;font:11px Inter,system-ui;color:var(--muted);letter-spacing:0;text-transform:none}
+.dep{position:relative;display:flex;align-items:center;gap:12px;padding:11px;border-radius:16px;margin-bottom:9px;border:1px solid #4a4a2a;background:linear-gradient(160deg,#1c2e26,#0e1a16);animation:up .5s cubic-bezier(.2,.9,.3,1) both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.dep.ready{border-color:#e6c46e;box-shadow:0 0 24px #e6c46e44}
+.dep.ready:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(110deg,transparent 35%,#fff2b855 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.6s ease-in-out infinite;pointer-events:none}
+@keyframes sweep{0%,50%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.ring{position:relative;flex:none;width:58px;height:58px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:5}
+.ring .bg{stroke:#24362e}.ring .fg{stroke:url(#gg);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.ring span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 11px Georgia,serif;color:var(--gold2)}
+.dep .tx{flex:1;min-width:0}
+.dep .tx b{font:700 16px Georgia,serif;color:#fff}
+.dep .tx small{display:block;font-size:11.5px;color:var(--muted)}
+.dep .tx i{font-style:normal;color:#9dfad0;font-weight:700}
+.dep .bt{flex:none;padding:10px 13px;border-radius:12px;font:700 13px Georgia,serif;border:1px solid #5a5a3a;background:#14221c}
+.dep .bt.go{border:0;color:#2a1a08;background:linear-gradient(135deg,#fff0b8,#e6a83a);box-shadow:0 5px 18px #e6a83a55}
+.dep .bt.sm2{font-size:11.5px;padding:9px 10px;color:#c8b89a}
+.empty{display:flex;align-items:center;justify-content:center;gap:9px;padding:16px;border-radius:16px;border:1.5px dashed #4a5a46;color:var(--muted);font:14px Georgia,serif;width:100%;margin-bottom:9px;transition:border-color .25s,color .25s}
+.empty:active{transform:scale(.98)}
+.empty:hover{border-color:var(--gold);color:var(--gold2)}
+.main{position:relative;overflow:hidden;width:100%;padding:16px;border-radius:16px;font:700 16px Georgia,serif;letter-spacing:.06em;color:#2a1a08;background:linear-gradient(135deg,#fff0b8,#e6b04a 55%,#c9892a);box-shadow:0 8px 28px #e6a83a44,inset 0 1px 0 #fff9}
+.main:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#fff9 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.8s ease-in-out infinite}
+.main[disabled]{background:linear-gradient(135deg,#2a3a32,#1a2620);color:#8a9a8c;box-shadow:none}
+.main[disabled]:after{display:none}
+.heist{background:linear-gradient(160deg,#241612e6,#0e0a0ae6);border-color:#5a3a2a}
+.heist h3{color:#ff9a7a}
+.heist p{margin:0 0 12px;color:#c9b8a8;font-size:13px;line-height:1.5}
+.heist .main{background:linear-gradient(135deg,#ffb48a,#e8643a 55%,#a82a1a);color:#fff;box-shadow:0 8px 28px #e8643a44}
+.heist .main[disabled]{background:linear-gradient(135deg,#3a2a26,#241a18);color:#8a7a72}
+.info{font-size:12.5px;color:#a9b9ab;line-height:1.55}
+.info b{color:var(--gold2)}
+
+.dim{position:fixed;inset:0;z-index:99990;background:#040a08d0;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s}
+.dim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:99991;max-width:480px;margin:auto;border:1px solid #8a7a3a;border-bottom:0;border-radius:24px 24px 0 0;background:radial-gradient(ellipse at 50% -10%,#6a5a1a44,transparent 60%),linear-gradient(180deg,#1c2c24,#0a1410);padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .5s cubic-bezier(.2,.9,.3,1);max-height:92vh;overflow-y:auto}
+.sheet.on{transform:none}
+.sheet h3{margin:0 0 12px;font:700 19px Georgia,serif;color:var(--gold2);text-align:center}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tm{padding:12px 4px;border-radius:14px;border:1px solid #3a4a3e;background:#0c1816;text-align:center;transition:border-color .25s,box-shadow .25s}
+.tm b{display:block;font:700 15px Georgia,serif}
+.tm .p{display:block;font:700 18px Georgia,serif;color:#9dfad0;margin-top:2px}
+.tm small{display:block;font-size:10.5px;color:var(--muted)}
+.tm.sel{border-color:var(--gold);box-shadow:0 0 20px #e6c46e44,inset 0 0 14px #e6c46e1a;background:linear-gradient(160deg,#2a2a14,#12160c)}
+.amt{margin:14px 0 6px;text-align:center;font:700 30px Georgia,serif;color:#fff}
+.amt small{font:12px Inter,system-ui;color:var(--muted);display:block}
+input[type=range]{width:100%;height:30px;-webkit-appearance:none;appearance:none;background:none}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(90deg,#e6c46e var(--v,0%),#24362e var(--v,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8d8,#e6b04a);box-shadow:0 0 14px #e6c46e}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:#24362e}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radius:50%;background:#e6b04a}
+.qk{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:6px 0 12px}
+.qk button{padding:9px 0;border-radius:11px;border:1px solid #3a4a3e;background:#0c1816;font:700 12.5px Georgia,serif}
+.pv{text-align:center;padding:10px;border-radius:14px;background:#0c1816;border:1px solid #2a3a30;margin-bottom:12px;font-size:13px;color:#b9c9bb}
+.pv b{color:#9dfad0;font:700 16px Georgia,serif}
+.err{min-height:16px;text-align:center;color:#ff9aa8;font-size:12.5px;margin-bottom:6px}
+.row{display:flex;gap:9px}
+.row .no{flex:none;padding:0 16px;border-radius:14px;border:1px solid #3a4a3e;background:#0c1816;font:700 14px Georgia,serif}
+
+.hov{position:fixed;inset:0;z-index:99994;background:radial-gradient(ellipse at 50% 40%,#2a1a14,#080404 75%);opacity:0;pointer-events:none;transition:opacity .5s;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.hov.on{opacity:1;pointer-events:auto}
+.hov h2{margin:0 0 4px;font:700 20px Georgia,serif;color:#ffd0b0}
+.hov .hint{margin:0 0 14px;color:#c9a898;font-size:12.5px;min-height:34px;max-width:300px}
+.lockw{position:relative;width:min(84vw,320px);aspect-ratio:1}
+.lockw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pins{display:flex;gap:10px;margin:14px 0 4px;justify-content:center}
+.pin{width:14px;height:14px;border-radius:50%;background:#2a1a16;border:1px solid #6a4a3a;transition:.3s}
+.pin.ok{background:#9dfad0;border-color:#9dfad0;box-shadow:0 0 12px #9dfad0}
+.pin.bad{background:#ff6a5a;border-color:#ff6a5a;box-shadow:0 0 12px #ff6a5a}
+.tap{width:min(84vw,320px);margin-top:12px;padding:18px;border-radius:17px;font:700 17px Georgia,serif;letter-spacing:.08em;color:#fff;background:linear-gradient(135deg,#ffb48a,#e8643a 55%,#a82a1a);box-shadow:0 8px 28px #e8643a55;touch-action:none}
+.tap:active{transform:scale(.97);filter:brightness(1.15)}
+.hres{position:fixed;inset:0;z-index:99996;display:flex;align-items:center;justify-content:center;padding:20px;background:#040a08e8;opacity:0;pointer-events:none;transition:opacity .4s}
+.hres.on{opacity:1;pointer-events:auto}
+.hres .box{width:100%;max-width:340px;border-radius:24px;padding:24px 18px 18px;text-align:center;background:linear-gradient(180deg,#1c2c24,#0a1410);border:1px solid var(--bc,#8a7a3a);box-shadow:0 0 50px var(--bg,#e6c46e44);transform:translateY(20px) scale(.95);transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+.hres.on .box{transform:none}
+.box .ic{font-size:54px}
+.box h2{margin:6px 0 4px;font:700 22px Georgia,serif;color:#fff}
+.box p{margin:0 0 6px;color:#b9c9bb;font-size:13.5px;line-height:1.5}
+.box .big{font:700 30px Georgia,serif;margin:8px 0}
+.box .main{margin-top:12px}
+.coin{position:fixed;top:-30px;z-index:99997;width:var(--s);height:var(--s);border-radius:50%;pointer-events:none;background:radial-gradient(circle at 35% 30%,#fff8d8,#f0c04a 55%,#a8761a);border:1px solid #fff2b866;box-shadow:0 0 8px #e6c46e88;animation:fall var(--d) cubic-bezier(.4,.1,.8,.6) var(--dl) forwards}
+@keyframes fall{to{transform:translate(var(--x),calc(100vh + 60px)) rotateY(720deg);opacity:.2}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);max-width:88%;z-index:99999;background:#14241cf2;border:1px solid #8a7a3a;color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;font-size:13px;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+<script src="../shared/vip.js"></script>
+<script src="../shared/fast.js"></script>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>try{sndMusic("calm")}catch(_){}</script>
+</head>
+<body>
+<canvas id="dust"></canvas>
+<div class="wrap">
+  <header class="head">
+    <a class="back" id="back" href="../index.html">← Назад</a>
+    <div><div class="eyebrow">Банк безмолвных</div><h1>Золотая тишина</h1></div>
+    <div class="pn">💷 <span id="pn">0</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="vault" id="vault">
+      <div class="leak"></div>
+      <svg viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="mt" cx="40%" cy="35%"><stop offset="0" stop-color="#4a5a52"/><stop offset=".6" stop-color="#1c2824"/><stop offset="1" stop-color="#0a1210"/></radialGradient>
+          <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#d8a84a"/><stop offset="1" stop-color="#8a6420"/></linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="94" fill="none" stroke="url(#gd)" stroke-width="7"/>
+        <circle cx="100" cy="100" r="86" fill="url(#mt)" stroke="#0006" stroke-width="2"/>
+        <circle cx="100" cy="100" r="66" fill="none" stroke="#e6c46e55" stroke-width="1.4" stroke-dasharray="3 5"/>
+        <g id="bolts"></g>
+        <circle cx="100" cy="100" r="46" fill="#0e1816" stroke="url(#gd)" stroke-width="3"/>
+        <g class="wheel" id="wheel">
+          <circle cx="100" cy="100" r="30" fill="none" stroke="url(#gd)" stroke-width="5"/>
+          <g stroke="url(#gd)" stroke-width="5" stroke-linecap="round"><path d="M100 70V44M100 130v26M70 100H44M130 100h26M79 79L61 61M121 121l18 18M121 79l18-18M79 121L61 139"/></g>
+          <circle cx="100" cy="100" r="10" fill="url(#gd)"/>
+          <g fill="url(#gd)"><circle cx="100" cy="42" r="5"/><circle cx="100" cy="158" r="5"/><circle cx="42" cy="100" r="5"/><circle cx="158" cy="100" r="5"/></g>
+        </g>
+      </svg>
+    </div>
+    <div class="sum"><div class="sm"><small>На счетах</small><b id="sA">0</b></div><div class="sm"><small>Будет начислено</small><b id="sG">0</b></div></div>
+  </section>
+
+  <section class="card"><h3>Вклады <em id="cap"></em></h3><div id="deps"></div></section>
+
+  <section class="card heist"><h3>Хранилище <em id="hcd"></em></h3>
+    <p>Говорят, замок хранилища можно вскрыть. Три кольца, один шанс на каждое: щёлкни, когда прорезь окажется под меткой. Откроешь все три и заберёшь крупный куш. Ошибёшься дважды, и охрана отберёт часть твоих фунтов.</p>
+    <button type="button" class="main" id="hBtn">Взломать замок</button>
+  </section>
+
+  <section class="card"><h3>Правила банка</h3>
+    <div class="info">
+      Вклады на <b>1, 3 или 7 дней</b> приносят <b>+4%, +15% или +40%</b>. VIP повышает проценты. Одновременно можно держать до 3 вкладов, а общий лимит растёт с уровнем. Расторгнуть вклад раньше срока можно, но банк удержит <b>15%</b> тела вклада и проценты не выплатит. Взлом хранилища доступен раз в сутки.
+    </div>
+  </section>
+</div>
+
+<div class="dim" id="dim"></div>
+<div class="sheet" id="sheet">
+  <h3>Новый вклад</h3>
+  <div class="terms" id="terms"></div>
+  <div class="amt"><span id="aV">0</span> 💷<small id="aM"></small></div>
+  <input type="range" id="rng" min="50" max="100" step="10" value="50">
+  <div class="qk"><button type="button" data-q="0">Мин.</button><button type="button" data-q=".25">25%</button><button type="button" data-q=".5">50%</button><button type="button" data-q="1">Макс.</button></div>
+  <div class="pv" id="pv"></div>
+  <div class="err" id="err"></div>
+  <div class="row"><button type="button" class="no" id="sNo">Отмена</button><button type="button" class="main" id="sGo">Положить в банк</button></div>
+</div>
+
+<div class="hov" id="hov">
+  <h2>Замок хранилища</h2>
+  <p class="hint" id="hHint">Щёлкни, когда прорезь окажется под красной меткой.</p>
+  <div class="lockw"><svg viewBox="0 0 220 220" id="lsv"></svg></div>
+  <div class="pins" id="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i></div>
+  <button type="button" class="tap" id="tap">ЩЁЛКНУТЬ</button>
+</div>
+<div class="hres" id="hres"><div class="box" id="hbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#070d0e")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+const hap=t=>{try{tg?.HapticFeedback?.impactOccurred(t||"light")}catch(_){}};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+async function api(p){
+ if(!ACTION_URL)throw new Error("Нужен вход через бота.");
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера ("+r.status+").");
+ const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Некорректный ответ сервера.");return d;
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2600)}
+$("back").href="../index.html"+location.search;
+const fmt=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const fmtD=s=>{s=Math.max(0,s|0);const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);if(d>0)return d+"д "+h+"ч";if(h>0)return h+"ч "+m+"м";return m+"м "+(s%60)+"с"};
+
+(function(){let h="";for(let i=0;i<12;i++){const a=i/12*Math.PI*2,x=100+Math.cos(a)*76,y=100+Math.sin(a)*76;h+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="3.4" fill="url(#gd)" stroke="#0008" stroke-width=".8"/>'}$("bolts").innerHTML=h})();
+
+/* золотая пыль */
+(function(){
+ const c=$("dust"),x=c.getContext("2d");let W,H,P=[];
+ function size(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio}
+ size();addEventListener("resize",size);
+ for(let i=0;i<36;i++)P.push({x:Math.random(),y:Math.random(),r:rnd(.6,1.9),s:rnd(.008,.03),a:rnd(.15,.5),p:rnd(0,6)});
+ if(reduce)return;
+ (function f(){x.clearRect(0,0,W,H);for(const p of P){p.y-=p.s/60;p.p+=.01;if(p.y<-.02){p.y=1.02;p.x=Math.random()}
+  x.globalAlpha=p.a*(.6+.4*Math.sin(p.p));x.fillStyle="#e6c46e";x.beginPath();x.arc((p.x+Math.sin(p.p)*.01)*W,p.y*H,p.r*devicePixelRatio,0,6.283);x.fill()}requestAnimationFrame(f)})();
+})();
+function coins(n){
+ if(reduce)return;
+ for(let i=0;i<n;i++){const d=document.createElement("i");d.className="coin";const s=rnd(10,20);
+  d.style.cssText="left:"+rnd(2,96)+"vw;--s:"+s+"px;--x:"+rnd(-40,40)+"px;--d:"+rnd(1.3,2.3)+"s;--dl:"+rnd(0,.7)+"s";
+  document.body.appendChild(d);setTimeout(()=>d.remove(),3200)}
+}
+
+let S=null;
+function paint(){
+ if(!S)return;
+ $("pn").textContent=fmt(S.pounds);
+ let a=0,g=0;S.dep.forEach(d=>{a+=d.a;g+=d.g});
+ $("sA").textContent=fmt(a);$("sG").textContent="+"+fmt(g);
+ $("cap").textContent="лимит свободно: "+fmt(S.cap)+" 💷";
+ const C=2*Math.PI*24;
+ let h='<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset="1" stop-color="#e6a83a"/></linearGradient></defs></svg>';
+ S.dep.forEach((d,i)=>{
+  const ready=d.left<=0,p=clamp(1-d.left/d.tot,0,1);
+  h+='<div class="dep'+(ready?" ready":"")+'" style="animation-delay:'+i*70+'ms" data-id="'+d.id+'"><div class="ring"><svg viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="24"/><circle class="fg" cx="29" cy="29" r="24" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-p)).toFixed(1)+'"/></svg><span>'+d.d+'д</span></div>'
+   +'<div class="tx"><b>'+fmt(d.a)+' 💷</b><small>Проценты: <i>+'+fmt(d.g)+'</i><br>'+(ready?"Срок вышел. Деньги ждут.":"Ещё "+fmtD(d.left))+'</small></div>'
+   +(ready?'<button type="button" class="bt go" data-col="'+d.id+'">Забрать</button>':'<button type="button" class="bt sm2" data-brk="'+d.id+'">Расторгнуть</button>')+'</div>';
+ });
+ for(let i=S.dep.length;i<3;i++)h+='<button type="button" class="empty" data-new="1"><span style="font-size:20px">＋</span> Открыть вклад</button>';
+ $("deps").innerHTML=h;
+ const hb=$("hBtn"),hl=S.hl;
+ hb.disabled=hl>0;hb.textContent=hl>0?"Охрана настороже · "+fmtD(hl):"Взломать замок";
+ $("hcd").textContent=hl>0?"":"попытка готова";
+}
+setInterval(()=>{
+ if(!S)return;let ch=false;
+ S.dep.forEach(d=>{if(d.left>0){d.left--;if(d.left<=0)ch=true}});
+ if(S.hl>0)S.hl--;
+ if(ch){paint();return}
+ const C=2*Math.PI*24;
+ S.dep.forEach(d=>{const el=document.querySelector('.dep[data-id="'+d.id+'"]');if(!el)return;
+  const p=clamp(1-d.left/d.tot,0,1);el.querySelector(".fg").setAttribute("stroke-dashoffset",(C*(1-p)).toFixed(1));
+  const sm=el.querySelector(".tx small");sm.innerHTML="Проценты: <i>+"+fmt(d.g)+"</i><br>"+(d.left<=0?"Срок вышел. Деньги ждут.":"Ещё "+fmtD(d.left))});
+ const hb=$("hBtn");if(!H_.on){hb.disabled=S.hl>0;hb.textContent=S.hl>0?"Охрана настороже · "+fmtD(S.hl):"Взломать замок"}
+},1000);
+
+$("deps").addEventListener("click",async e=>{
+ const nw=e.target.closest("[data-new]");if(nw){openSheet();return}
+ const col=e.target.closest("[data-col]");
+ if(col){col.disabled=true;sfx("tap");
+  try{const d=await api({action:"bank_collect",id:+col.dataset.col});if(!d.ok){toast(d.text||"Не вышло");paint();return}
+   S=d;sfx("chest");$("vault").classList.add("open");coins(34);hap("heavy");toast("Получено "+fmt(d.pay)+" 💷");setTimeout(()=>$("vault").classList.remove("open"),1800);paint()}catch(x){toast(x.message);col.disabled=false}return}
+ const br=e.target.closest("[data-brk]");
+ if(br){
+  if(!br.dataset.sure){br.dataset.sure="1";br.textContent="Точно? −"+S.fee+"%";sfx("deny");setTimeout(()=>{br.dataset.sure="";br.textContent="Расторгнуть"},3000);return}
+  try{const d=await api({action:"bank_break",id:+br.dataset.brk});if(!d.ok){toast(d.text||"Не вышло");return}S=d;sfx("coin");toast("Вклад расторгнут: вернулось "+fmt(d.pay)+" 💷");paint()}catch(x){toast(x.message)}
+ }
+});
+
+/* оформление вклада */
+let term=3,amt=50;
+function maxAmt(){return Math.max(0,Math.min(S.pounds,S.cap))}
+function paintSheet(){
+ const mx=maxAmt(),mn=50;
+ $("terms").innerHTML=S.terms.map(t=>{const p=Math.round(t[1]*(100+S.vb)/100*10)/10;return '<button type="button" class="tm'+(term===t[0]?" sel":"")+'" data-t="'+t[0]+'"><b>'+t[0]+' '+(t[0]===1?"день":t[0]<5?"дня":"дней")+'</b><span class="p">+'+p+'%</span><small>'+(S.vb?"с VIP":"доход")+'</small></button>'}).join("");
+ const r=$("rng");r.min=mn;r.max=Math.max(mx,mn);r.step=Math.max(1,Math.floor(mx/100)||1);
+ amt=clamp(amt,mn,Math.max(mx,mn));r.value=amt;r.style.setProperty("--v",(mx>mn?(amt-mn)/(mx-mn)*100:100)+"%");
+ $("aV").textContent=fmt(amt);$("aM").textContent=mx<mn?"Не хватает фунтов или лимита (мин. "+mn+")":"доступно "+fmt(mx);
+ const t=S.terms.find(x=>x[0]===term),g=Math.floor(Math.floor(amt*t[1]/100)*(100+S.vb)/100);
+ $("pv").innerHTML='Через '+term+' дн. вернётся <b>'+fmt(amt+g)+' 💷</b> (+'+fmt(g)+')';
+ $("sGo").disabled=mx<mn;
+}
+function openSheet(){
+ if(S.dep.length>=3){toast("Открыто максимум 3 вклада.");return}
+ sfx("open");$("err").textContent="";amt=Math.min(maxAmt(),Math.max(50,Math.round(maxAmt()/2/10)*10));paintSheet();
+ $("dim").classList.add("on");$("sheet").classList.add("on");
+}
+function closeSheet(){$("dim").classList.remove("on");$("sheet").classList.remove("on")}
+$("terms").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;sfx("tap");term=+b.dataset.t;paintSheet()});
+$("rng").addEventListener("input",e=>{amt=+e.target.value;paintSheet()});
+document.querySelector(".qk").addEventListener("click",e=>{const b=e.target.closest("[data-q]");if(!b)return;sfx("tap");const mx=maxAmt(),q=+b.dataset.q;amt=q===0?50:q===1?mx:Math.floor(mx*q/10)*10;paintSheet()});
+$("sNo").onclick=()=>{sfx("back");closeSheet()};$("dim").addEventListener("click",()=>{sfx("back");closeSheet()});
+$("sGo").onclick=async()=>{
+ $("sGo").disabled=true;
+ try{const d=await api({action:"bank_open",days:term,amount:amt});
+  if(!d.ok){$("err").textContent=d.text||"Не вышло";sfx("deny");$("sGo").disabled=false;return}
+  S=d;closeSheet();sfx("coin");coins(14);toast("Вклад открыт. Банк сохранит твои фунты.");paint()}catch(x){$("err").textContent=x.message;$("sGo").disabled=false}
+};
+
+/* взлом хранилища */
+const RAD=[92,70,48],SPD=[80,106,134];
+let H_={on:false};
+function buildLock(){
+ let h='<defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset="1" stop-color="#8a6420"/></linearGradient></defs><circle cx="110" cy="110" r="106" fill="#120a08" stroke="url(#hg)" stroke-width="3"/>';
+ for(let i=0;i<3;i++){h+='<g id="rg'+i+'" transform="rotate(0 110 110)"><circle id="rc'+i+'" cx="110" cy="110" r="'+RAD[i]+'" fill="none" stroke="#7a5a2a" stroke-width="15" transform="rotate(-90 110 110)"/></g>'}
+ h+='<circle cx="110" cy="110" r="26" fill="#1c1210" stroke="url(#hg)" stroke-width="3"/><path d="M104 112v-6a6 6 0 0 1 12 0v6M101 112h18v14h-18z" fill="none" stroke="#e6c46e" stroke-width="2" stroke-linejoin="round"/>';
+ h+='<path d="M110 2l-9 -0 9 15 9 -15z" fill="#ff5a4a" stroke="#fff" stroke-width="1" transform="translate(0,-1)"/>';
+ $("lsv").innerHTML=h;
+}
+function ringStyle(i,gapHalf,col){
+ const r=RAD[i],C=2*Math.PI*r,Lg=(gapHalf*2/360)*C,el=$("rc"+i);
+ el.setAttribute("stroke-dasharray",(C-Lg).toFixed(2)+" "+Lg.toFixed(2));el.setAttribute("stroke-dashoffset",(-Lg/2).toFixed(2));el.setAttribute("stroke",col)
+}
+const ang=a=>{a=((a%360)+540)%360-180;return a};
+$("hBtn").onclick=async()=>{
+ if(!S||$("hBtn").disabled)return;
+ sfx("open");$("hBtn").disabled=true;
+ let d;try{d=await api({action:"bank_heist_start"})}catch(e){toast(e.message);paint();return}
+ if(!d.ok){toast(d.text||"Не вышло");if(d.left)S.hl=d.left;paint();return}
+ S.hl=20*3600;
+ buildLock();
+ const R=(a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296})(d.seed);
+ const gh=20-d.d*3,k=1+d.d*.12;
+ H_={on:true,i:0,n:0,gh,t0:performance.now(),last:performance.now(),a:[0,1,2].map(()=>R()*360),v:[0,1,2].map(i=>SPD[i]*k*(i%2?-1:1)),done:[false,false,false],snap:null,res:[]};
+ for(let i=0;i<3;i++){ringStyle(i,gh,i===0?"#d8a84a":"#7a5a2a")}
+ document.querySelectorAll(".pin").forEach(p=>p.className="pin");
+ $("hHint").textContent="Кольцо 1 из 3. Щёлкни, когда прорезь окажется под красной меткой.";
+ $("hov").classList.add("on");sfx("rune");
+ requestAnimationFrame(hLoop);
+};
+function hLoop(now){
+ const h=H_;if(!h.on)return;
+ const dt=Math.min(.05,(now-h.last)/1000);h.last=now;
+ for(let i=0;i<3;i++){
+  if(h.done[i]&&!(h.snap&&h.snap.i===i))continue;
+  if(h.snap&&h.snap.i===i){h.snap.k=Math.min(1,h.snap.k+dt/.18);h.a[i]=h.snap.from*(1-h.snap.k);if(h.snap.k>=1){h.snap=null}}
+  else if(!h.done[i]&&i>=h.i)h.a[i]+=h.v[i]*dt;
+  $("rg"+i).setAttribute("transform","rotate("+h.a[i].toFixed(2)+" 110 110)");
+ }
+ requestAnimationFrame(hLoop);
+}
+$("tap").addEventListener("pointerdown",e=>{
+ e.preventDefault();const h=H_;if(!h.on||h.i>2)return;
+ const i=h.i,a=ang(h.a[i]),ok=Math.abs(a)<=h.gh;
+ const pins=document.querySelectorAll(".pin");
+ h.done[i]=true;
+ if(ok){h.n++;h.snap={i,from:a,k:0};ringStyle(i,h.gh,"#9dfad0");pins[i].className="pin ok";sfx("hit");hap("medium")}
+ else{ringStyle(i,h.gh,"#ff6a5a");pins[i].className="pin bad";sfx("deny");hap("heavy")}
+ h.i++;
+ if(h.i<3){
+  ringStyle(h.i,h.gh,"#d8a84a");
+  $("hHint").textContent=(ok?"Щелчок! ":"Мимо. ")+"Кольцо "+(h.i+1)+" из 3.";
+ }else{h.on=false;finishHeist()}
+});
+async function finishHeist(){
+ $("hHint").textContent="Замок поддаётся…";
+ const ms=Math.round(performance.now()-H_.t0),n=H_.n;
+ await wait(900);
+ let d;try{d=await api({action:"bank_heist_end",n,ms})}catch(e){toast(e.message);$("hov").classList.remove("on");return}
+ $("hov").classList.remove("on");
+ if(!d.ok){toast(d.text||"Не вышло");return}
+ S=d;const g=d.gain,bx=$("hbox"),hr=$("hres");
+ let ic,t,p,col;
+ if(d.n===3){ic="🔓";t="Хранилище вскрыто";p="Все три кольца сдались. Золото твоё.";col="#e6c46e";sfx("divine");coins(60);hap("heavy")}
+ else if(d.n===2){ic="🗝";t="Часть добычи";p="Один пин не поддался, но ты успел схватить немного.";col="#9dfad0";sfx("chest");coins(22)}
+ else{ic="🚨";t="Тревога!";p="Замок не поддался, охрана подняла шум и отобрала часть фунтов.";col="#ff6a5a";sfx("lose");hap("heavy")}
+ bx.style.setProperty("--bc",col);bx.style.setProperty("--bg",col+"55");
+ bx.innerHTML='<div class="ic">'+ic+'</div><h2>'+t+'</h2><p>'+p+'</p><div class="big" style="color:'+col+'">'+(g>0?"+":"")+fmt(g)+' 💷</div><button type="button" class="main" id="hOk">Уйти в тень</button>';
+ hr.classList.add("on");$("hOk").onclick=()=>{sfx("tap");hr.classList.remove("on");paint()};paint();
+}
+
+async function load(){
+ try{const d=await api({action:"bank_state"});if(!d.ok)throw new Error(d.text||"Закрыто");S=d;paint()}
+ catch(e){$("deps").innerHTML='<div style="color:#9aa79a;text-align:center;padding:10px">'+VIP.esc(e.message)+'</div>'}
+}
+load();
+</script>
+</body>
+</html>
