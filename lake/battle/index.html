@@ -297,7 +297,8 @@ const pics={
 "Змей":"../img/m-snake.webp"
 };
 const EMO={"Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
-const ROLE={"Утопленник":"Утопленник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
+const DISP={"Утопленник":"Утопленица"};const dn=n=>DISP[n]||n;
+const ROLE={"Утопленник":"Утонувшая дева","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
 let curEnemy="";
 
 /* ===== ЭФФЕКТЫ ===== */
@@ -635,12 +636,12 @@ let state=null;
 try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
 const enemy=getEnemyName(state?.enemy);curEnemy=enemy;
-$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
+$("enemyLabel").textContent=dn(enemy);setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
 if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 else setHealth("enemy",null,null);
 renderSkills(state?.cds||{});
 if(!initialized){
-addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
+addLog("Ты столкнулся с противником: "+dn(enemy)+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 if(state?.boss){
 setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
 setTimeout(()=>{banner("БОСС: ЗМЕЙ","#c45a6a");shakeScreen()},500);
