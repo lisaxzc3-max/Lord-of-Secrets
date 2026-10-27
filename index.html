@@ -1789,7 +1789,7 @@ function openPlace(key) {
       b.innerHTML = '<span class="pi">' + p.icon + '</span><b>' + p.name + '</b><small>' + p.npc + '</small><span class="tg">' + (p.key ? "Войти" : "Скоро") + '</span>';
       if (p.key) b.addEventListener("click", () => openPlace(p.key));
       if (p.key && PLACE_URL[p.key]) b.addEventListener("pointerdown", () => { try { LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[p.key])); } catch (_) {} });
-      else { b.disabled = true; }
+      if (!p.key) b.disabled = true;
       body.appendChild(b);
     });
     section.append(head, body);
