@@ -178,20 +178,32 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .heroText{position:absolute;left:0;right:0;top:14px;padding:0 16px;pointer-events:none}
 .heroText .place{font-size:20px;font-weight:900;letter-spacing:6px;color:var(--gold);text-shadow:0 0 18px #d6b77988,0 2px 6px #000}
 .heroText .sub{font-size:10px;letter-spacing:1.5px;color:#cbbfe0;margin-top:4px;text-shadow:0 1px 4px #000}
-/* шары */
+/* песочные часы */
 .orbs{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;margin:12px 4px 6px}
-.orbCol{display:flex;flex-direction:column;align-items:center;gap:6px}
+.orbCol{display:flex;flex-direction:column;align-items:center;gap:5px}
 .orbCol label{font-size:10px;letter-spacing:1px;color:var(--muted)}
-.orb{position:relative;width:84px;height:84px;border-radius:50%;overflow:hidden;border:2px solid #54456f;background:#0f0a1a;box-shadow:0 0 22px var(--oc),inset 0 0 18px #000c}
-.orb.hpOrb{--oc:#e4525c55;--lc:linear-gradient(#ff7b83,#a82a36)}.orb.madOrb{--oc:#8b6bff55;--lc:linear-gradient(#a98cff,#4a2f9a)}
-.liq{position:absolute;left:0;right:0;bottom:0;height:var(--f,0%);background:var(--lc);transition:height .9s cubic-bezier(.3,1,.4,1)}
-.liq:before,.liq:after{content:"";position:absolute;left:-50%;width:200%;height:200%;top:-18px;border-radius:42%;background:inherit;opacity:.55;animation:liqw 6s linear infinite}
-.liq:after{top:-14px;opacity:.4;animation-duration:9s;animation-direction:reverse}
-@keyframes liqw{to{transform:rotate(360deg)}}
-.glass{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 24%,#ffffff55,transparent 34%),radial-gradient(circle at 70% 85%,#ffffff18,transparent 40%)}
-.orb b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;text-shadow:0 1px 6px #000,0 0 6px #000;z-index:2}
-.orb.low{animation:orbLow 1s ease-in-out infinite}
-@keyframes orbLow{50%{box-shadow:0 0 30px #ff2a3acc,inset 0 0 18px #000c}}
+.hg{position:relative;width:62px;height:92px;--fn:0;--s1:#b9757b;--s2:#6e3540;--gl:#b9757b33}
+.hg.madOrb{--s1:#9a8cc2;--s2:#4f4378;--gl:#9a8cc233}
+.hg svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 9px var(--gl))}
+.hg .glassP{fill:#ffffff08;stroke:#8f8266;stroke-width:1.3;stroke-linejoin:round}
+.hg .cap{fill:#2a2238;stroke:#8f8266;stroke-width:1.3}
+.hg .sandT,.hg .sandB{transform-box:fill-box;transform-origin:50% 100%;transition:transform 1.2s cubic-bezier(.3,1,.4,1)}
+.hg .sandT{transform:scaleY(var(--fn))}
+.hg .sandB{transform:scaleY(calc(1 - var(--fn)))}
+.hg .stream{stroke:var(--s1);stroke-width:1.2;stroke-dasharray:2 3;opacity:0;animation:hgFall .7s linear infinite;transition:opacity .6s}
+.hg.run .stream{opacity:.75}
+@keyframes hgFall{to{stroke-dashoffset:-10}}
+.hg .grain{fill:var(--s1);opacity:0}
+.hg.run .grain{animation:hgGr 1.6s ease-in infinite}
+.hg.run .grain:nth-of-type(2){animation-delay:.5s}.hg.run .grain:nth-of-type(3){animation-delay:1s}
+@keyframes hgGr{0%{transform:translate(0,0);opacity:0}15%{opacity:.8}100%{transform:translate(1px,30px);opacity:0}}
+.hg .shine{fill:none;stroke:#ffffff30;stroke-width:1.4;stroke-linecap:round}
+.hg .mote{fill:#e8dcc0;opacity:0;animation:hgMote 7s ease-in-out infinite}
+.hg .mote:nth-of-type(2){animation-delay:2.3s}.hg .mote:nth-of-type(3){animation-delay:4.6s}
+@keyframes hgMote{0%{opacity:0;transform:translate(0,0)}30%{opacity:.35}100%{opacity:0;transform:translate(4px,-26px)}}
+.hg.low svg{animation:hgLow 3s ease-in-out infinite}
+@keyframes hgLow{50%{filter:drop-shadow(0 0 13px #c0545e88)}}
+.hgTxt{font-size:12px;color:#d9cfb8;text-shadow:0 1px 4px #000}
 .orbCol.mid{gap:4px}
 .lvBadge{position:relative;width:74px;height:74px;display:flex;align-items:center;justify-content:center}
 .lvBadge i{position:absolute;inset:0;border:2px solid #d6b77966;clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
@@ -245,7 +257,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes lvlA{0%{opacity:0}12%,80%{opacity:1}100%{opacity:0}}
 @keyframes lvlT{0%{transform:scale(1.8);opacity:0}14%{transform:scale(1);opacity:1}}
 @keyframes spk{to{transform:translateY(110vh) rotate(700deg)}}
-@media(max-width:360px){.orb{width:72px;height:72px}.lvBadge{width:64px;height:64px}.locArt{flex-basis:92px}}
+@media(max-width:360px){.hg{width:54px;height:80px}.lvBadge{width:64px;height:64px}.locArt{flex-basis:92px}}
 @media(prefers-reduced-motion:reduce){.hero .city .win,.lamp,.coin,.liq:before,.liq:after{animation:none!important}}
 
 /* ===== ГОРОД ===== */
@@ -519,7 +531,8 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 
   <section class="orbs">
     <div class="orbCol">
-      <div class="orb hpOrb"><div class="liq" id="orbHp"></div><div class="glass"></div><b id="orbHpTxt">—</b></div>
+      <div class="hg hpOrb" id="orbHp"><svg viewBox="0 0 64 96" aria-hidden="true"><defs><linearGradient id="sghpOrb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient><clipPath id="cphpOrb"><path d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/></clipPath></defs><path class="glassP" d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/><g clip-path="url(#cphpOrb)"><rect class="sandT" x="12" y="12" width="40" height="36" fill="url(#sghpOrb)"/><rect class="sandB" x="12" y="48" width="40" height="36" fill="url(#sghpOrb)"/><line class="stream" x1="32" y1="46" x2="32" y2="82"/><circle class="grain" cx="32" cy="50" r=".9"/><circle class="grain" cx="32" cy="50" r=".8"/><circle class="grain" cx="32" cy="50" r=".9"/></g><path class="shine" d="M19 18C19 28 25 34 28 40"/><path class="shine" d="M45 70C45 76 44 79 43 81" stroke-opacity=".6"/><rect class="cap" x="9" y="6" width="46" height="6" rx="2"/><rect class="cap" x="9" y="84" width="46" height="6" rx="2"/><circle class="mote" cx="22" cy="36" r="1"/><circle class="mote" cx="42" cy="40" r="1"/><circle class="mote" cx="32" cy="30" r=".9"/></svg></div>
+      <b class="hgTxt" id="orbHpTxt">—</b>
       <label>Здоровье</label>
     </div>
     <div class="orbCol mid">
@@ -527,7 +540,8 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
       <label id="orbPath">Путь</label>
     </div>
     <div class="orbCol">
-      <div class="orb madOrb"><div class="liq" id="orbMad"></div><div class="glass"></div><b id="orbMadTxt">—</b></div>
+      <div class="hg madOrb" id="orbMad"><svg viewBox="0 0 64 96" aria-hidden="true"><defs><linearGradient id="sgmadOrb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient><clipPath id="cpmadOrb"><path d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/></clipPath></defs><path class="glassP" d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/><g clip-path="url(#cpmadOrb)"><rect class="sandT" x="12" y="12" width="40" height="36" fill="url(#sgmadOrb)"/><rect class="sandB" x="12" y="48" width="40" height="36" fill="url(#sgmadOrb)"/><line class="stream" x1="32" y1="46" x2="32" y2="82"/><circle class="grain" cx="32" cy="50" r=".9"/><circle class="grain" cx="32" cy="50" r=".8"/><circle class="grain" cx="32" cy="50" r=".9"/></g><path class="shine" d="M19 18C19 28 25 34 28 40"/><path class="shine" d="M45 70C45 76 44 79 43 81" stroke-opacity=".6"/><rect class="cap" x="9" y="6" width="46" height="6" rx="2"/><rect class="cap" x="9" y="84" width="46" height="6" rx="2"/><circle class="mote" cx="22" cy="36" r="1"/><circle class="mote" cx="42" cy="40" r="1"/><circle class="mote" cx="32" cy="30" r=".9"/></svg></div>
+      <b class="hgTxt" id="orbMadTxt">—</b>
       <label>Безумие</label>
     </div>
   </section>
@@ -680,9 +694,9 @@ function num(t){var n=parseFloat(String(t).replace(",","."));return isFinite(n)?
 /* шары здоровья и безумия, значок уровня */
 function syncHud(){
 var m=$("hp").textContent.split("/"),a=num(m[0]),b=num(m[1]);
-if(a!=null&&b){var f=Math.max(0,Math.min(100,a/b*100));$("orbHp").style.setProperty("--f",f+"%");$("orbHpTxt").textContent=a+"/"+b;document.querySelector(".hpOrb").classList.toggle("low",f<=25)}
+if(a!=null&&b){var f=Math.max(0,Math.min(100,a/b*100));$("orbHp").style.setProperty("--fn",(f/100).toFixed(3));$("orbHp").classList.toggle("run",f>1&&f<99);$("orbHpTxt").textContent=a+"/"+b;$("orbHp").classList.toggle("low",f<=25)}
 var md=num($("madTxt").textContent);
-if(md!=null){$("orbMad").style.setProperty("--f",Math.max(0,Math.min(100,md/(window.MADMAX||100)*100))+"%");$("orbMadTxt").textContent=Math.round(md)+"%"}
+if(md!=null){var mf=Math.max(0,Math.min(100,md/(window.MADMAX||100)*100));$("orbMad").style.setProperty("--fn",(mf/100).toFixed(3));$("orbMad").classList.toggle("run",mf>1&&mf<99);$("orbMadTxt").textContent=Math.round(md)+"%"}
 $("orbLv").textContent=$("lvl").textContent;
 var pt=$("path").textContent;$("orbPath").textContent=pt&&pt!=="—"?pt:"Путь";
 }
