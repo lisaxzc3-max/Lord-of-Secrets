@@ -81,10 +81,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .item{border:1px solid #2f2745;border-radius:12px;padding:9px;margin:5px 0;background:rgba(26,20,40,.85);display:flex;justify-content:space-between;align-items:center;gap:8px;animation:pop .35s backwards}
 
 /* заставка */
-#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#07050d;animation:splashOut 2s ease forwards;pointer-events:none}
-#splash .t{font-size:24px;font-weight:900;letter-spacing:7px;color:var(--gold);text-shadow:0 0 22px var(--gold);animation:splashIn 1.3s ease backwards}
-#splash .s{margin-top:10px;font-size:10px;letter-spacing:5px;color:#8d869a;animation:splashIn 1.3s ease .3s backwards}
-#splash .e{margin-top:22px;font-size:36px;color:var(--gold);animation:spin 5s linear infinite}
 
 @keyframes fog{from{transform:translate(-3%,-2%) scale(1)}to{transform:translate(3%,2%) scale(1.15)}}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -100,9 +96,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes lowPulse{0%,100%{box-shadow:0 8px 30px #0007,0 0 0 #c45a6a00}50%{box-shadow:0 8px 30px #0007,0 0 22px #c45a6acc}}
 @keyframes deadPulse{0%,100%{box-shadow:0 0 0 #c45a6a00}50%{box-shadow:0 0 22px #c45a6a99}}
 @keyframes regenPulse{0%,100%{box-shadow:0 0 0 #4cff9a00}50%{box-shadow:0 0 20px #4cff9a66}}
-@keyframes splashIn{from{opacity:0;transform:scale(1.25);letter-spacing:14px}to{opacity:1;transform:none}}
-@keyframes splashOut{0%,70%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#splash{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 /* ===== ИГРОВОЙ ИНТЕРФЕЙС ===== */
 .wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
@@ -493,8 +487,6 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 </head>
 <body>
 <canvas id="fx"></canvas>
-<script>try{if(sessionStorage.getItem("lotm_boot")){var st=document.createElement("style");st.textContent="#splash{display:none!important}";document.head.appendChild(st)}}catch(e){}</script>
-<div id="splash"><div class="t">ПОВЕЛИТЕЛЬ ТАЙН</div><div class="s">LORD OF THE MYSTERIES</div><div class="e">𓂀</div></div>
 
 <div class="wrap">
 
@@ -714,7 +706,6 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 (function(){
 "use strict";
 var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
-setTimeout(function(){var s=document.getElementById("splash");if(s)s.remove()},2100);
 
 /* золотые искры на фоне */
 function sprite(rgb){var c=document.createElement("canvas");c.width=c.height=32;var g=c.getContext("2d"),r=g.createRadialGradient(16,16,0,16,16,16);r.addColorStop(0,"rgba("+rgb+",1)");r.addColorStop(.25,"rgba("+rgb+",.55)");r.addColorStop(1,"rgba("+rgb+",0)");g.fillStyle=r;g.fillRect(0,0,32,32);return c}
