@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
@@ -7,140 +6,162 @@
 <title>Дом — Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Inter, Arial, sans-serif;
-}
-
-body {
-  background:
-    linear-gradient(rgba(10,10,14,.78), rgba(10,10,14,.94)),
-    url('../i-72.jpeg') center/cover fixed no-repeat,
-    #0a0a0e;
-  color: #b8b5ad;
-  min-height: 100vh;
-}
-
-.wrap {
-  max-width: 440px;
-  margin: 0 auto;
-  padding: 10px 10px 60px;
-}
-
-.head {
-  padding: 10px 0;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.head a {
-  color: #b8b5ad;
-  text-decoration: none;
-  border: 1px solid #3a3a3e;
-  border-radius: 8px;
-  padding: 6px 10px;
-}
-
-.card {
-  background: rgba(22,22,26,.90);
-  border: 1px solid #3a3a3e;
-  border-radius: 16px;
-  padding: 14px;
-  margin: 8px 0;
-}
-
-.btn {
-  display: block;
-  width: 100%;
-  border: 1px solid #3a3a3e;
-  background: rgba(38,38,42,.92);
-  border-radius: 10px;
-  padding: 13px;
-  text-align: center;
-  margin: 8px 0;
-  color: #d4d0c3;
-  font-size: 14px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.btn:disabled {
-  opacity: .8;
-  cursor: not-allowed;
-}
-
-.btn:active {
-  transform: scale(.98);
-}
-
-h1 {
-  font-size: 18px;
-  color: #d4d0c3;
-  margin-bottom: 8px;
-}
-
-p {
-  font-size: 12px;
-  line-height: 1.5;
-  opacity: .75;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+:root{--bone:#cdbf9f;--bronze:#8a7a58;--crim:#a3262e;--crimb:#d4343f;--ink:#0a070b}
+body{background:radial-gradient(120% 70% at 50% 0%,#1d1026,#09060c 60%,#050306);color:#b8b0a4;min-height:100vh;overflow-x:hidden}
+#fogCv{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:10px 12px 60px}
+.head{padding:8px 0;display:flex;gap:12px;align-items:center}
+.head a{color:var(--bone);text-decoration:none;border:1px solid #3a2f40;border-radius:10px;padding:7px 11px;background:#120c16cc;font-size:13px}
+.head b{letter-spacing:.2em;font-size:12px;color:var(--bronze);text-transform:uppercase}
+/* сцена */
+.hero{position:relative;height:250px;border-radius:20px;overflow:hidden;border:1px solid #3a2a44;box-shadow:0 0 40px #4a1a5a55,inset 0 0 60px #000;margin:6px 0 14px;animation:rise .9s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.hero .ttl{position:absolute;left:0;right:0;bottom:12px;text-align:center;z-index:3}
+.hero .ttl h1{font-family:Georgia,serif;font-size:24px;letter-spacing:.28em;color:#e8dcc0;text-shadow:0 0 18px #a3262e,0 2px 0 #000;font-weight:400;animation:ttlG 6s ease-in-out infinite}
+@keyframes ttlG{50%{text-shadow:0 0 30px #d4343f,0 2px 0 #000}}
+.hero .ttl p{font-size:11px;color:#a89cb8;letter-spacing:.14em;margin-top:3px}
+.win{animation:winF 5s steps(1) infinite}
+.win.w2{animation-delay:-1.7s;animation-duration:7s}.win.w3{animation-delay:-3.1s;animation-duration:4s}
+@keyframes winF{0%{opacity:.9}20%{opacity:.55}24%{opacity:1}60%{opacity:.8}64%{opacity:.3}68%{opacity:.95}}
+.bat{animation:batF 14s linear infinite;transform-origin:center}
+.bat.b2{animation-duration:19s;animation-delay:-7s}
+@keyframes batF{0%{transform:translate(-30px,60px)}50%{transform:translate(180px,20px) scale(1.2)}100%{transform:translate(420px,70px)}}
+.flap{animation:flap .25s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes flap{to{transform:scaleY(.45)}}
+.moonG{animation:moonP 7s ease-in-out infinite}
+@keyframes moonP{50%{opacity:.75}}
+.lightn{position:absolute;inset:0;background:#b9a8e0;opacity:0;z-index:2;pointer-events:none;animation:ltn 13s infinite;mix-blend-mode:screen}
+@keyframes ltn{0%,94%,100%{opacity:0}95%{opacity:.35}96%{opacity:.05}97%{opacity:.25}99%{opacity:0}}
+/* комнаты */
+.sec{font-size:10px;letter-spacing:.3em;color:var(--bronze);text-transform:uppercase;margin:6px 4px 8px;display:flex;align-items:center;gap:10px}
+.sec:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#8a7a5866,transparent)}
+.room{position:relative;display:flex;align-items:center;gap:14px;padding:14px;margin:10px 0;border-radius:16px;text-decoration:none;color:inherit;background:linear-gradient(145deg,#1a1220,#0c080f);border:1px solid var(--rc);overflow:hidden;cursor:pointer;opacity:0;animation:rin .7s ease-out forwards;animation-delay:var(--d);transition:transform .2s,box-shadow .3s}
+@keyframes rin{from{opacity:0;transform:translateX(-22px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+.room:before{content:"";position:absolute;inset:0;background:radial-gradient(90% 140% at 0% 50%,var(--rg),transparent 70%);opacity:.5;transition:opacity .4s}
+.room:after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,#ffffff14,transparent);transform:skewX(-18deg);animation:shine 6s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes shine{0%,60%{left:-80px}100%{left:120%}}
+.room:active{transform:scale(.98)}.room:hover:before{opacity:.9}.room:hover{box-shadow:0 0 26px var(--rg)}
+.room .ic{position:relative;z-index:1;flex:0 0 62px;height:62px;border-radius:14px;background:#050306cc;border:1px solid var(--rc);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 18px #000,0 0 14px var(--rg);animation:icP 4.5s ease-in-out infinite}
+@keyframes icP{50%{box-shadow:inset 0 0 18px #000,0 0 26px var(--rg)}}
+.room .ic svg{width:40px;height:40px;color:var(--rc);filter:drop-shadow(0 0 5px var(--rg))}
+.room .tx{position:relative;z-index:1;flex:1}
+.room b{display:block;font-family:Georgia,serif;font-size:17px;letter-spacing:.06em;color:#e0d4b8;font-weight:400}
+.room small{display:block;font-size:11px;line-height:1.4;color:#8f8798;margin-top:3px}
+.room .go{position:relative;z-index:1;color:var(--rc);font-size:20px;opacity:.7;animation:gA 2.4s ease-in-out infinite}
+@keyframes gA{50%{transform:translateX(4px);opacity:1}}
+.note{margin-top:14px;text-align:center;font-size:11px;font-style:italic;color:#6f6578;letter-spacing:.06em;min-height:16px;transition:opacity 1s}
+.cflk{animation:cf .18s steps(2) infinite alternate}
+@keyframes cf{to{opacity:.7}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.room{opacity:1}}
 </style>
 </head>
-
 <body>
+<canvas id="fogCv"></canvas>
 <div class="wrap">
-
   <div class="head">
     <a id="backProfile" href="../profileprofile/index.html">← Профиль</a>
-    <b>🏠 Дом</b>
+    <b>Твоё убежище</b>
   </div>
 
-  <div class="card">
-    <h1>Твой дом</h1>
-    <p>
-      Твоё личное место. Здесь будут помещения,
-      которые со временем можно будет развивать.
-    </p>
+  <div class="hero" id="hero">
+    <svg viewBox="0 0 360 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0614"/><stop offset=".7" stop-color="#2a1536"/><stop offset="1" stop-color="#3d1d3a"/></linearGradient>
+        <radialGradient id="mg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e8dcc0"/><stop offset=".6" stop-color="#cdbf9f"/><stop offset="1" stop-color="#8a7a58"/></radialGradient>
+        <radialGradient id="halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#cdbf9f" stop-opacity=".4"/><stop offset="1" stop-color="#cdbf9f" stop-opacity="0"/></radialGradient>
+        <radialGradient id="wg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd98a"/><stop offset="1" stop-color="#c2542a"/></radialGradient>
+      </defs>
+      <rect width="360" height="250" fill="url(#sk)"/>
+      <g fill="#fff" opacity=".6"><circle cx="30" cy="30" r=".8"/><circle cx="80" cy="60" r=".6"/><circle cx="210" cy="24" r=".8"/><circle cx="300" cy="70" r=".7"/><circle cx="130" cy="20" r=".6"/><circle cx="250" cy="50" r=".5"/></g>
+      <g class="moonG"><circle cx="270" cy="62" r="64" fill="url(#halo)"/><circle cx="270" cy="62" r="26" fill="url(#mg)"/><circle cx="262" cy="56" r="5" fill="#8a7a58" opacity=".5"/><circle cx="278" cy="70" r="3.4" fill="#8a7a58" opacity=".5"/></g>
+      <path d="M0 190 Q60 160 120 178 T240 170 T360 180 V250 H0Z" fill="#0d0813"/>
+      <!-- особняк -->
+      <g fill="#07040a" stroke="#2a1e32" stroke-width="1">
+        <path d="M96 200 V120 L110 100 V80 L116 62 L122 80 V100 L136 120 H168 V92 L180 70 L192 92 V120 H224 L238 100 V82 L244 66 L250 82 V100 L264 120 V200Z"/>
+        <path d="M168 120 L180 56 L192 120"/>
+        <rect x="74" y="146" width="26" height="54"/><path d="M70 146 L87 128 L104 146Z"/>
+      </g>
+      <path d="M180 56 V40 M180 40 l8 4 l-8 4" stroke="#6a2a3a" stroke-width="1.5" fill="#6a2a3a"/>
+      <g fill="url(#wg)"><rect class="win" x="112" y="132" width="9" height="14" rx="4"/><rect class="win w2" x="142" y="132" width="9" height="14" rx="4"/><rect class="win w3" x="176" y="100" width="8" height="13" rx="4"/><rect class="win w2" x="212" y="132" width="9" height="14" rx="4"/><rect class="win" x="240" y="132" width="9" height="14" rx="4"/><rect class="win w3" x="114" y="164" width="9" height="14" rx="4"/><rect x="82" y="162" width="8" height="12" rx="4" opacity=".0"/></g>
+      <rect x="170" y="164" width="20" height="36" rx="10" fill="#050306" stroke="#3a2a40"/>
+      <circle cx="186" cy="184" r="1.4" fill="#cdbf9f"/>
+      <!-- деревья и изгородь -->
+      <g stroke="#050306" stroke-width="3" fill="none" stroke-linecap="round"><path d="M30 210 V150 M30 170 l-14 -16 M30 160 l12 -14 M30 184 l16 -10"/><path d="M330 214 V140 M330 164 l14 -16 M330 156 l-12 -14 M330 182 l-16 -10"/></g>
+      <path d="M0 205 H360 V250 H0Z" fill="#06040a"/>
+      <path d="M12 206 V226 M26 204 V228 M40 206 V226 M300 206 V226 M314 204 V228 M328 206 V226 M342 204 V228" stroke="#1a1220" stroke-width="3"/>
+      <!-- фонарь -->
+      <g><path d="M62 206 V176" stroke="#2a2030" stroke-width="3"/><circle class="cflk" cx="62" cy="172" r="12" fill="#ffb25a" opacity=".16"/><rect x="58" y="166" width="8" height="12" rx="2" fill="#ffd98a" class="cflk"/></g>
+      <!-- летучие мыши -->
+      <g class="bat"><path class="flap" d="M0 0 q-8 -8 -14 0 q6 -2 8 4 q3 -4 6 -4 q3 0 6 4 q2 -6 8 -4 q-6 -8 -14 0z" fill="#050306"/></g>
+      <g class="bat b2"><path class="flap" d="M0 20 q-8 -8 -14 0 q6 -2 8 4 q3 -4 6 -4 q3 0 6 4 q2 -6 8 -4 q-6 -8 -14 0z" fill="#050306"/></g>
+      <ellipse cx="180" cy="214" rx="190" ry="18" fill="#cdbf9f" opacity=".06"/>
+    </svg>
+    <div class="lightn"></div>
+    <div class="ttl"><h1>ДОМ</h1><p>Здесь тебя не найдут…</p></div>
   </div>
 
-  <div class="card" aria-label="Помещения дома">
+  <div class="sec">Помещения</div>
 
-    <a class="btn" id="labButton" href="../lab/index.html">
-      🧪 Лаборатория
-    </a>
+  <a class="room" id="labButton" href="../lab/index.html" style="--rc:#a98fd0;--rg:#6a3a9a77;--d:.15s">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-10V3"/><path d="M7.5 15h9"/><circle cx="11" cy="18" r=".8"/><circle cx="14" cy="17" r=".6"/></svg></span>
+    <span class="tx"><b>Лаборатория</b><small>Котёл, ингредиенты и зелья следующей последовательности.</small></span><span class="go">›</span>
+  </a>
+  <a class="room" id="petsButton" href="../pets/index.html" style="--rc:#c9a45a;--rg:#9a6a2a77;--d:.3s">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="16" rx="5" ry="4"/><circle cx="6" cy="10" r="2"/><circle cx="10" cy="6" r="2"/><circle cx="14" cy="6" r="2"/><circle cx="18" cy="10" r="2"/></svg></span>
+    <span class="tx"><b>Вольер</b><small>Твои спутники. Кормить, гладить и не смотреть им в глаза.</small></span><span class="go">›</span>
+  </a>
+  <a class="room" id="farmButton" href="../farm/index.html" style="--rc:#6fae92;--rg:#2a7a5a77;--d:.45s">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/><path d="M12 21v-6M12 17c-3 0-4-2-4-4 3 0 4 2 4 4zM12 17c3 0 4-2 4-4-3 0-4 2-4 4z"/></svg></span>
+    <span class="tx"><b>Тайный сад</b><small>Лунные растения растут, пока ты спишь.</small></span><span class="go">›</span>
+  </a>
 
-    <a class="btn" id="petsButton" href="../pets/index.html">
-      🐾 Вольер
-    </a>
-
-    <a class="btn" id="farmButton" href="../farm/index.html">
-      🌙 Тайный сад
-    </a>
-
-  </div>
+  <div class="note" id="note"></div>
 </div>
+<canvas id="embCv" style="display:none"></canvas>
 
+<script src="../shared/sound.js"></script>
 <script>
 (function () {
   const tg = window.Telegram && window.Telegram.WebApp;
-
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
-
-  const link = document.getElementById("backProfile");
-  link.href = "../profileprofile/index.html" + location.search;
-
-  const farmButton = document.getElementById("farmButton");
-  farmButton.href = "../farm/index.html" + location.search;
-  const labButton = document.getElementById("labButton");
-  if (labButton) labButton.href = "../lab/index.html" + location.search;
-  const petsButton = document.getElementById("petsButton");
-  if (petsButton) petsButton.href = "../pets/index.html" + location.search;
+  if (tg) { tg.ready(); tg.expand(); }
+  document.getElementById("backProfile").href = "../profileprofile/index.html" + location.search;
+  ["farmButton","labButton","petsButton"].forEach(function(id){
+    const a = document.getElementById(id), p = {farmButton:"farm",labButton:"lab",petsButton:"pets"}[id];
+    if (a) a.href = "../" + p + "/index.html" + location.search;
+    a.addEventListener("click", function(){ try{ snd("open") }catch(e){} });
+  });
+  const sfx = n => { try { window.snd && window.snd(n) } catch (_) {} };
+  // туман, угли и руны
+  const cv = document.getElementById("fogCv"), x = cv.getContext("2d");
+  let w, h;
+  function fit(){ w = cv.width = innerWidth; h = cv.height = innerHeight }
+  fit(); addEventListener("resize", fit);
+  const RU = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒ", P = [], F = [];
+  for (let i = 0; i < 30; i++) P.push({x: Math.random()*innerWidth, y: Math.random()*innerHeight, v: .15+Math.random()*.4, a: Math.random()*6.28, r: .5+Math.random()*1.4, g: Math.random() < .3 ? RU[(Math.random()*RU.length)|0] : null});
+  for (let i = 0; i < 7; i++) F.push({x: Math.random()*innerWidth, y: innerHeight*(.3+Math.random()*.7), r: 120+Math.random()*140, v: .1+Math.random()*.2, d: Math.random() < .5 ? 1 : -1});
+  if (!matchMedia("(prefers-reduced-motion:reduce)").matches) (function loop(){
+    x.clearRect(0, 0, w, h); const t = Date.now()/1000;
+    F.forEach(f => { f.x += f.v*f.d; if (f.x > w+f.r) f.x = -f.r; if (f.x < -f.r) f.x = w+f.r;
+      const g = x.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r); g.addColorStop(0, "rgba(120,90,150,.10)"); g.addColorStop(1, "rgba(120,90,150,0)");
+      x.fillStyle = g; x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.28); x.fill() });
+    P.forEach(p => { p.y -= p.v; p.x += Math.sin(t+p.a)*.35; if (p.y < -10) { p.y = h+10; p.x = Math.random()*w }
+      x.globalAlpha = .15+.45*Math.abs(Math.sin(t*.7+p.a));
+      if (p.g) { x.fillStyle = "#b48bd0"; x.font = "13px serif"; x.fillText(p.g, p.x, p.y) }
+      else { x.fillStyle = "#d4a05a"; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.28); x.fill() } });
+    x.globalAlpha = 1; requestAnimationFrame(loop);
+  })();
+  // шёпот дома
+  const WH = ["…ты дома…", "тени помнят тебя", "не зажигай свет", "кто-то был здесь", "половицы скрипят сами", "оно ждёт у двери"];
+  const note = document.getElementById("note");
+  function whisper(){ if (document.hidden) return;
+    note.style.opacity = 0; setTimeout(function(){ note.textContent = WH[(Math.random()*WH.length)|0]; note.style.opacity = 1 }, 900);
+    sfx("whisper"); }
+  setTimeout(whisper, 2500); setInterval(whisper, 12000);
+  setInterval(function(){ if (!document.hidden && Math.random() < .5) sfx("bell") }, 20000);
+  document.getElementById("hero").addEventListener("click", function(){ sfx("raven") });
+  try { window.sndMusic && sndMusic("city") } catch (e) {}
 })();
 </script>
 </body>
