@@ -1331,6 +1331,12 @@ function maybeShowStart(data) {
     return true;
   }
 
+  try {
+    if (data.intro_done === false && (data.level | 0) <= 1 && localStorage.getItem("lotm_intro_skip_" + uid) !== "1") {
+      location.replace(buildPageUrl("./intro/index.html"));
+      return true;
+    }
+  } catch (_) {}
   byId("hallProfileHint").classList.remove("hidden");
   return false;
 }

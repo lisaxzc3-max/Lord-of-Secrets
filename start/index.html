@@ -135,7 +135,7 @@ button{font:inherit;color:inherit;cursor:pointer}
    <div class="lbl">Герой создан</div>
    <div class="av"><img id="himg" alt=""></div>
    <h2 id="hnick"></h2><div class="pp" id="hpath"></div>
-   <button class="btn" id="b4">⚔ В Тинген</button>
+   <button class="btn" id="b4">✦ Открыть приглашение</button>
   </div></section>
  </div>
 </div>
@@ -269,7 +269,7 @@ function finale(){
  $("hnick").textContent=S.nick;$("hpath").textContent=p.t+" · "+p.s;
  setTimeout(()=>{sfx("win");flash(p.c);burst(innerWidth/2,innerHeight/2,["✦","✨",p.e,"💫"],26)},350);
 }
-$("b4").addEventListener("click",()=>{sfx("open");location.replace("../index.html"+location.search)});
+$("b4").addEventListener("click",()=>{sfx("open");location.replace("../intro/index.html"+location.search)});
 
 /* ---- звёзды ---- */
 (function sky(){
