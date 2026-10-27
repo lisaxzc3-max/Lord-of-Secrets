@@ -321,6 +321,15 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes bgFlow{to{background-position:-200% 0}}
 .bgSub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#a99dba;margin:6px 0 7px;display:flex;justify-content:space-between}
 .eqGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.setBox{margin:8px 0 2px}
+.setRow{border:1px solid #3a3057;border-radius:12px;padding:7px 10px;background:#120c1e99;margin-bottom:6px}
+.setRow .sn{font-size:11px;color:#d8cdea;letter-spacing:.04em}.setRow .sn b{color:#e2c27a;margin-left:4px}
+.setRow .sp{display:flex;gap:4px;margin:5px 0}.setRow .sp i{flex:1;height:5px;border-radius:3px;background:#2a2040}.setRow .sp i.on{background:#9fd7c4;box-shadow:0 0 6px #9fd7c4}
+.setRow .sb{font-size:10px;color:#8d86a0}
+.setRow.done{border-color:#9fd7c4;box-shadow:0 0 16px #9fd7c455}.setRow.done .sb{color:#9fd7c4}
+.fogIc{color:#9fd7c4;opacity:1!important;filter:drop-shadow(0 0 5px #5fbfa8)!important}.fogIc svg{width:22px;height:22px;display:block}
+.invCard.fog{background:linear-gradient(165deg,#12262a,#0a1316);border-color:#4a8f86}
+.invCard.fog::before{background:radial-gradient(circle at 20% 0,#5fbfa844,transparent 60%)}
 .eqSlot{position:relative;aspect-ratio:1/1.05;border-radius:12px;border:1px dashed #3a3057;background:#120c1e99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;text-align:center;font:inherit;color:inherit;cursor:default;overflow:hidden;animation:bgIn .45s backwards;animation-delay:calc(var(--i)*45ms)}
 .eqSlot .ic{font-size:22px;opacity:.28;filter:grayscale(1)}
 .eqSlot .sl{font-size:9px;color:#7d7194;letter-spacing:.5px}
@@ -590,6 +599,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
   <div class="bgBar"><i id="bagBar"></i></div>
   <div class="bgSub">⬢ Надето <span id="eqCnt"></span></div>
   <div id="eqList" class="eqGrid"></div>
+  <div id="setBox" class="setBox hidden"></div>
   <div class="bgSub">Предметы</div>
   <div id="bagFilter" class="bgFilter"></div>
   <div id="invList" class="invGrid"></div>
@@ -1302,6 +1312,42 @@ const BAG_SLOTS = [
   ["legs", "Ноги", "👢"], ["necklace", "Шея", "📿"], ["ring", "Кольцо", "💍"]
 ];
 const BAG_SLOT = Object.fromEntries(BAG_SLOTS.map(x => [x[0], x]));
+const FOG_ART = {
+  "Капюшон Серого Тумана": '<path d="M12 3c-4 0-7 3-7 8v6l3 4h8l3-4v-6c0-5-3-8-7-8z"/><path d="M9 12c0 2 1 3 3 3s3-1 3-3" stroke-opacity=".6"/><circle cx="10" cy="11" r=".8" fill="currentColor"/><circle cx="14" cy="11" r=".8" fill="currentColor"/>',
+  "Маска Безликого": '<path d="M4 8c3-2 13-2 16 0 0 6-3 10-8 10S4 14 4 8z"/><path d="M8 11c1 1 2 1 3 0M13 11c1 1 2 1 3 0M10 15q2 1 4 0" stroke-opacity=".7"/>',
+  "Плащ Шепчущих Теней": '<path d="M8 3l4 2 4-2 3 6-2 12H7L5 9z"/><path d="M12 5v16M9 10c1 2 2 3 3 3s2-1 3-3" stroke-opacity=".6"/>',
+  "Лунный Стилет": '<path d="M12 2l3 10-3 3-3-3z"/><path d="M7 15h10M12 15v7"/><path d="M12 5v6" stroke-opacity=".6"/>',
+  "Сапоги Безмолвных Шагов": '<path d="M8 3h6v9l6 3v4H6v-5l2-1z"/><path d="M8 8h6" stroke-opacity=".6"/><path d="M4 21c3-1 5-1 8 0" stroke-opacity=".5"/>',
+  "Подвеска Оловянного Ока": '<path d="M5 4c1 8 4 11 7 11s6-3 7-11"/><circle cx="12" cy="17.500" r="3"/><circle cx="12" cy="17.500" r="1" fill="currentColor"/>',
+  "Перстень Забытых Имён": '<circle cx="12" cy="14" r="6"/><path d="M9 6l3-3 3 3-3 3z"/><path d="M8 14a4 4 0 0 1 4-4" stroke-opacity=".5"/>'
+};
+const SET_NAMES = { novice: "Новичок", fog: "Реликвии Серого Тумана" };
+const SET_INFO = { novice: [7, "+10 Сила, Вын, Дух"], fog: [7, "+3 ко всем характеристикам"] };
+function bagIcon(el, item, fallback) {
+  const art = item && item.set === "fog" ? FOG_ART[item.name] : null;
+  if (!art) { el.textContent = fallback; return; }
+  el.classList.add("fogIc");
+  el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + art + "</svg>";
+}
+function bagSets() {
+  const box = byId("setBox");
+  if (!box) return;
+  const cnt = {};
+  Object.values(G.eq || {}).forEach(it => { if (it && it.set) cnt[it.set] = (cnt[it.set] || 0) + 1; });
+  const keys = Object.keys(cnt);
+  box.replaceChildren();
+  box.classList.toggle("hidden", !keys.length);
+  keys.forEach(k => {
+    const info = SET_INFO[k] || [7, ""], n = cnt[k], done = n >= info[0];
+    const row = document.createElement("div");
+    row.className = "setRow" + (done ? " done" : "") + (k === "fog" ? " fogS" : "");
+    let pips = "";
+    for (let i = 0; i < info[0]; i++) pips += '<i class="' + (i < n ? "on" : "") + '"></i>';
+    row.innerHTML = '<div class="sn">◈ ' + (SET_NAMES[k] || k) + ' <b>' + n + "/" + info[0] + '</b></div><div class="sp">' + pips + '</div><div class="sb">' + (done ? "Бонус сета активен: " : "Полный сет: ") + info[1] + "</div>";
+    box.appendChild(row);
+  });
+}
+
 const BAG_RAR = {
   "обычная": ["#8d86a0", "#8d86a022", ""],
   "необычная": ["#5fbf7a", "#5fbf7a33", ""],
@@ -1383,6 +1429,7 @@ function renderBagFromJ(data) {
     ic.textContent = icon;
     b.appendChild(ic);
     if (item) {
+      bagIcon(ic, item, icon);
       worn++;
       const [rc, rg] = bagRar(item);
       b.classList.add("on");
@@ -1408,6 +1455,7 @@ function renderBagFromJ(data) {
     eqList.appendChild(b);
   });
   byId("eqCnt").textContent = worn + "/7";
+  bagSets();
 
   // Фильтры
   const filter = byId("bagFilter");
@@ -1440,14 +1488,14 @@ function renderBagFromJ(data) {
     shown++;
     const [rc, rg, cls] = bagRar(item);
     const card = document.createElement("div");
-    card.className = "invCard " + cls + (grew && index === total - 1 ? " new" : "");
+    card.className = "invCard " + (item?.set === "fog" ? "fog " : "") + cls + (grew && index === total - 1 ? " new" : "");
     card.style.cssText = "--rc:" + rc + ";--rg:" + rg + ";--i:" + Math.min(shown, 12);
 
     const top = document.createElement("div");
     top.className = "tp";
     const ic = document.createElement("div");
     ic.className = "ic";
-    ic.textContent = (BAG_SLOT[item?.slot] || [0, 0, "📦"])[2];
+    bagIcon(ic, item, (BAG_SLOT[item?.slot] || [0, 0, "📦"])[2]);
     const tx = document.createElement("div");
     const nm = document.createElement("div");
     nm.className = "nm";
@@ -1463,7 +1511,7 @@ function renderBagFromJ(data) {
     if (item?.set) {
       const st = document.createElement("div");
       st.className = "set";
-      st.textContent = "◈ Комплект: " + (item.set === "novice" ? "Новичок" : item.set);
+      st.textContent = "◈ Комплект: " + (SET_NAMES[item.set] || item.set);
       card.appendChild(st);
     }
 
