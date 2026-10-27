@@ -49,9 +49,12 @@ if(of){
   var quiet=!action||/chat_|_state$|^profile|poll|_view$|^arena_fight$/.test(action);
   var release=function(){};
   if(last&&Date.now()-lastT<1200&&!quiet){release=pend(last);last=null}
+  if(quiet)return of.apply(this,arguments);
   inflight++;var t0=Date.now();
   var timer=setTimeout(barOn,250);
-  var fin=function(){inflight=Math.max(0,inflight-1);clearTimeout(timer);release();if(inflight===0)barOff()};
+  var fdone=false;
+  var fin=function(){if(fdone)return;fdone=true;inflight=Math.max(0,inflight-1);clearTimeout(timer);clearTimeout(safe);release();if(inflight===0)barOff()};
+  var safe=setTimeout(fin,25000);
   var p=of.apply(this,arguments);
   p.then(fin,fin);
   return p;
