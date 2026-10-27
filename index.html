@@ -39,7 +39,7 @@ body:after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;backg
 .chips>span{background:#ffffff0a;border:1px solid #ffffff10;border-radius:7px;padding:2px 7px;color:#d8d0c2}
 .chips .bump{animation:bump .7s ease}
 .side{display:flex;flex-direction:column;gap:5px;align-items:center}
-.gear{width:34px;height:34px;border-radius:10px;background:#2a2040;border:1px solid #54456f;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:transform .4s}
+.gear{position:relative;width:34px;height:34px;border-radius:10px;background:#2a2040;border:1px solid #54456f;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:transform .4s}
 .gear:active{transform:rotate(90deg) scale(.9)}
 .uid{font-size:9px;opacity:.5}
 
@@ -390,6 +390,8 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes bgSp{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
 @media(prefers-reduced-motion:reduce){.bagWrap *,.bagWrap::before{animation:none!important;transition:none!important}}
 .tile.hasNew{border-color:#e2c27a;box-shadow:0 0 16px #e2c27a55}
+#menuBtn.hasNew::after,#sideMenu .smIt.hasNew::after{content:"";position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:#d9443c;box-shadow:0 0 8px #d9443c}
+#sideMenu .smIt.hasNew::after{top:50%;right:16px;margin-top:-4px}
 .tile.hasNew::after{content:"!";position:absolute;top:8px;right:9px;width:18px;height:18px;border-radius:50%;background:#d9443c;color:#fff;font:800 11px/18px system-ui;text-align:center;animation:dnPulse 1.8s ease-in-out infinite}
 @keyframes dnPulse{50%{box-shadow:0 0 10px #d9443c;transform:scale(1.15)}}
 
@@ -613,11 +615,6 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
   </section>
 
   <button type="button" class="cta" id="ctaGo" onclick="goLast()"><span class="ctaIc">⚔</span><span class="ctaTx" id="ctaTx">Отправиться в поход</span><span class="ctaSh"></span></button>
-
-  <div class="tiles">
-    <button type="button" class="tile" onclick="openQuests()"><span class="tIc">📋</span><b>Квесты</b><small>Задания дня</small></button>
-    <button type="button" class="tile" id="dailyTile" onclick="openDaily()"><span class="tIc">🎁</span><b>Награда дня</b><small>Неделя даров</small></button>
-  </div>
 
   <div class="tip" id="tipBox"><span class="tipIc">🦉</span><span id="tipTxt">…</span></div>
 </div>
@@ -1230,8 +1227,7 @@ async function checkDaily() {
     const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "daily_reward" }), cache: "no-store" });
     let d = await r.json();
     for (let i = 0; i < 3 && d && d.result && typeof d.result === "object"; i++) d = d.result;
-    const t = document.getElementById("dailyTile");
-    if (t && d && d.ok) t.classList.toggle("hasNew", !d.claimed);
+    if (d && d.ok) { const nw = !d.claimed; ["menuBtn"].forEach(i => { const e = document.getElementById(i); if (e) e.classList.toggle("hasNew", nw); }); const di = document.querySelector("#sideMenu .smIt[onclick*=daily]"); if (di) di.classList.toggle("hasNew", nw); }
   } catch (e) {}
 }
 
