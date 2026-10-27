@@ -200,6 +200,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
 <script>sndMusic("battle")</script>
+<style id="perfCss">button,.skill{touch-action:manipulation;-webkit-tap-highlight-color:transparent}#battleSkills{contain:layout style}.skill{contain:layout style;transition:transform .08s,opacity .15s}.skill:active:not(:disabled){transform:scale(.97)}.spark,.float{will-change:transform,opacity}@media(max-width:600px){.spark:nth-child(3n){display:none}}</style>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
@@ -348,7 +349,7 @@ frame.appendChild(f);setTimeout(()=>f.remove(),1200);
 }
 function sparks(box){
 const colors=["#e4ca91","#d6b779","#fff3c4","#b28c4d"];
-for(let i=0;i<46;i++){
+for(let i=0;i<24;i++){
 const s=document.createElement("i");s.className="spark";
 s.style.left=(Math.random()*100)+"%";
 s.style.setProperty("--c",colors[i%colors.length]);
@@ -559,24 +560,34 @@ let enemy=serverEnemy||qs.get("enemy")||"Утопленник";
 if(enemy==="Лягушка")enemy="Жаба";
 return enemy;
 }
+let skBuilt="";
 function renderSkills(cds={}){
 lastCds=cds||{};
-const pk=LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");box.replaceChildren();
+const pk=LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");
+if(skBuilt!==pk||!box.children.length){
+box.replaceChildren();skBuilt=pk;
 $("skillPathLabel").textContent=LOTM_SKILLS.PATHNAME[pk][0];
-LOTM_SKILLS.list(pk).forEach(s=>addSkill(s.key,lastCds[s.cd]||0,""));
-addSkill("basic",lastCds.basic||0,"basic");addSkill("flee",0,"escape");
+LOTM_SKILLS.list(pk).forEach(s=>addSkill(s.key,s.cd,""));
+addSkill("basic","basic","basic");addSkill("flee",null,"escape");
 }
-function addSkill(key,cooldown,className){
+box.querySelectorAll("button.skill").forEach(b=>{
+const cd=b.dataset.cdk?Number(lastCds[b.dataset.cdk]||0):0;
+b.dataset.cooldown=cd>0?"true":"false";
+b.disabled=busy||ended||cd>0;
+let bd=b.querySelector(".cooldown");
+if(cd>0){if(!bd){bd=document.createElement("span");bd.className="cooldown";b.appendChild(bd)}if(bd.textContent!==String(cd))bd.textContent=cd}
+else if(bd)bd.remove();
+});
+}
+function addSkill(key,cdk,className){
 const info=skillInfo[key],button=document.createElement("button");
 button.type="button";button.className="skill "+className;
-button.dataset.cooldown=Number(cooldown)>0?"true":"false";
-button.disabled=busy||ended||Number(cooldown)>0;
+if(cdk)button.dataset.cdk=cdk;
+button.dataset.cooldown="false";
 const name=document.createElement("div");name.className="skillName";name.textContent=(info?.name||key);if(info?.icon){const ic=document.createElement("span");ic.className="skIc";ic.textContent=info.icon+" ";name.prepend(ic)}LOTM_SKILLS.decorate(button,key);if(info?.tag){const tg=document.createElement("span");tg.className="skTag";tg.textContent=info.tag;button.appendChild(tg)}
 const desc=document.createElement("div");desc.className="skillDesc";desc.textContent=info?.desc||"";
 button.append(name,desc);
-if(Number(cooldown)>0){
-const badge=document.createElement("span");badge.className="cooldown";badge.textContent=cooldown;button.appendChild(badge);
-}else button.addEventListener("click",()=>doBattle(key));
+button.addEventListener("click",()=>{if(button.dataset.cooldown!=="true")doBattle(key)});
 $("battleSkills").appendChild(button);
 }
 function showVictory(data){
@@ -614,13 +625,13 @@ if(busy)return;
 document.body.classList.remove("defeatFx");
 setBusy(true,"Загрузка…");hideError();
 try{
-const profile=await loadProfile();
+const stP=api({action:"battle_state"}).catch(e=>({__err:e}));const profile=await loadProfile();
 PLAYER_PATH=profile.path||"";try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+((profile.sequence|0)&&(profile.sequence|0)<=8?"8":"")+".svg"}catch(e){}
 $("playerName").textContent=profile.nickname||"Путешественник";
 $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
 setHealth("player",profile.hp,profile.max_hp);
 let state=null;
-try{state=await api({action:"battle_state"})}
+try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
 const enemy=getEnemyName(state?.enemy);curEnemy=enemy;
 $("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
