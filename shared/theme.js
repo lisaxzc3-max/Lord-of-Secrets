@@ -18,8 +18,7 @@ var grain="url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
 var light=(m==="light");
 var grainL=grain.replace(".55 0'",".05 0'");
 if(light){
- s.textContent="#lotmTone{position:fixed;inset:0;pointer-events:none;z-index:2147483000;background-image:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 40%,rgba(4,2,8,.62) 100%),linear-gradient(rgba(30,24,20,.30),rgba(30,24,20,.30)),"+grainL+"}"+
-  "h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em}";
+ s.textContent="h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em}"; /* лёгкая атмосфера: без затемнения и виньетки, только шрифт заголовков */
 }else
 s.textContent=
 "#lotmTone,#lotmGrain{position:fixed;inset:0;pointer-events:none}"+
@@ -30,8 +29,8 @@ s.textContent=
 document.head.appendChild(s);
 function add(){
  if(!document.body)return;
- var a=document.createElement("div");a.id="lotmTone";a.setAttribute("aria-hidden","true");
- document.body.appendChild(a);
+ if(!light){var a=document.createElement("div");a.id="lotmTone";a.setAttribute("aria-hidden","true");
+ document.body.appendChild(a)}
  if(!light){var b=document.createElement("div");b.id="lotmGrain";b.setAttribute("aria-hidden","true");document.body.appendChild(b)}
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);else add();
