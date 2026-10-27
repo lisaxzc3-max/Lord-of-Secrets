@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0814">
+<title>Приглашения — Повелитель тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--ink:#0b0814;--line:#4a3d6a;--text:#eee6d6;--muted:#a99dba;--gold:#e2c27a;--ruby:#e0425a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{min-height:100%;background:var(--ink)}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -8%,#4a2a6a77,transparent 55%),radial-gradient(ellipse at 95% 45%,#5a1a3a44,transparent 50%),radial-gradient(ellipse at 5% 85%,#1a3a4a44,transparent 55%),var(--ink)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 14px calc(44px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:7px 0 12px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#17122399;font-size:12px}
+.hd{flex:1;min-width:0}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.head h1{font:700 21px Georgia,serif;margin:3px 0 0;background:linear-gradient(90deg,#fff3cf,#e2c27a,#a9c8ff,#e2c27a,#fff3cf);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+.rb{flex:none;display:flex;align-items:center;gap:6px;border:1px solid #7a2a44;background:linear-gradient(160deg,#3a1026ee,#1a0a16ee);border-radius:99px;padding:5px 12px 5px 7px;box-shadow:0 0 14px #e0425a33}
+.rb svg{width:20px;height:20px;filter:drop-shadow(0 0 4px #e0425a)}
+.rb b{font:700 14px Georgia,serif;color:#ffd0d8}
+
+.tabs{position:relative;display:flex;gap:0;margin-bottom:14px;border:1px solid var(--line);border-radius:16px;background:#120c1ecc;padding:4px}
+.tabs button{position:relative;z-index:1;flex:1;padding:11px 6px;border-radius:12px;font:700 13.5px Georgia,serif;color:#b8accb;transition:color .3s}
+.tabs button.on{color:#fff3cf}
+.tabs i{position:absolute;z-index:0;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:12px;background:linear-gradient(160deg,#4a3680,#2a1f4a);border:1px solid #e2c27a88;box-shadow:0 0 16px #8a5cff44;transition:transform .45s cubic-bezier(.2,.9,.3,1)}
+.tabs.p2 i{transform:translateX(100%)}
+.pane{display:none}
+.pane.on{display:block;animation:pIn .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes pIn{from{opacity:0;transform:translateY(12px)}}
+
+.card{position:relative;border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:14px;background:linear-gradient(160deg,#241a38e8,#120c20e8);overflow:hidden}
+.card h3{margin:0 0 8px;font:700 13px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.hero{text-align:center;padding:20px 14px 16px}
+.hero:before{content:"";position:absolute;left:50%;top:-80px;width:320px;height:320px;margin-left:-160px;background:conic-gradient(from 0deg,transparent,#8a5cff33,transparent 25%,#e2c27a33,transparent 50%,#e0425a2a,transparent 75%);border-radius:50%;animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero>*{position:relative}
+.sig{width:64px;height:64px;margin:0 auto 6px;color:#e2c27a;filter:drop-shadow(0 0 12px #e2c27a88)}
+.sig .r1{transform-origin:50% 50%;animation:spin 30s linear infinite}
+.sig .r2{transform-origin:50% 50%;animation:spin 18s linear infinite reverse}
+.hero p{margin:0 0 12px;color:var(--muted);font-size:12.5px}
+.code{display:flex;justify-content:center;align-items:center;gap:7px;margin:4px 0 14px}
+.code b{width:38px;height:50px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid #8a6a3a;background:linear-gradient(165deg,#3a2a4a,#150e22);font:700 25px Georgia,serif;color:#fff3cf;box-shadow:inset 0 1px 0 #fff2,0 0 14px #c79a4a33;opacity:0;transform:translateY(10px) rotateX(50deg);animation:tile .6s cubic-bezier(.2,.9,.3,1.2) forwards}
+.code span{color:#8a6a3a;font-size:20px}
+@keyframes tile{to{opacity:1;transform:none}}
+.btns{display:flex;gap:9px}
+.btn{position:relative;overflow:hidden;flex:1;padding:13px 8px;border-radius:14px;font:700 14px Georgia,serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,filter .2s}
+.btn:active{transform:scale(.97)}
+.btn svg{width:18px;height:18px}
+.btn.g{color:#2a1a08;background:linear-gradient(135deg,#f3dc9c,#c79a4a 55%,#8a6428);box-shadow:0 6px 20px #c79a4a44,inset 0 1px 0 #fff6}
+.btn.g:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffff66 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.6s ease-in-out infinite}
+@keyframes sweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.btn.o{border:1px solid #6a58a0;background:#1c1430cc;color:#eadfc4}
+.btn[disabled]{opacity:.5;pointer-events:none}
+
+.rw{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.rc{position:relative;border:1px solid var(--line);border-radius:18px;padding:13px 12px;background:linear-gradient(165deg,#221838,#110a1e);overflow:hidden}
+.rc .ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;border:1px solid #6a5a38;background:radial-gradient(circle at 35% 30%,#3a2d4a,#140e1e)}
+.rc .ic svg{width:22px;height:22px;color:#e2c27a}
+.rc.rb2 .ic{border-color:#7a2a44}.rc.rb2 .ic svg{color:#ff8aa0}
+.rc small{display:block;color:var(--muted);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.rc b{display:block;margin-top:2px;font:700 14.5px Georgia,serif;color:#fff3cf;line-height:1.25}
+.rc em{display:block;margin-top:4px;font-style:normal;color:#b8accb;font-size:11.5px;line-height:1.35}
+
+.inp{display:flex;gap:9px;margin-top:6px}
+.inp input{flex:1;min-width:0;padding:13px 12px;border-radius:14px;border:1px solid #4a3d6a;background:#0e0918;color:#fff3cf;font:700 18px Georgia,serif;letter-spacing:.22em;text-transform:uppercase;text-align:center;outline:none;transition:border-color .25s,box-shadow .25s}
+.inp input::placeholder{color:#5a4f70;letter-spacing:.2em}
+.inp input:focus{border-color:#e2c27a;box-shadow:0 0 18px #e2c27a33}
+.inp .btn{flex:none;padding:0 18px}
+.msg{min-height:18px;margin-top:9px;font-size:12.5px;color:var(--muted);text-align:center}
+.msg.ok{color:#9dfad0}.msg.bad{color:#ff9aa8}
+.done{display:flex;align-items:center;gap:10px;border:1px solid #3f8a6a;border-radius:14px;padding:11px 13px;background:#10261f99;color:#bdf5dc;font-size:13px}
+.done svg{width:22px;height:22px;flex:none}
+
+.fl{display:grid;gap:9px}
+.fr{display:flex;align-items:center;gap:11px;border:1px solid #3a3057;border-radius:15px;padding:10px 11px;background:#140e22;opacity:0;transform:translateY(8px);animation:fIn .5s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes fIn{to{opacity:1;transform:none}}
+.fr .av{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;background:radial-gradient(circle at 35% 30%,#3d2f63,#150e26);border:1px solid #6a58a0}
+.fr .mid{flex:1;min-width:0}
+.fr .nm{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr .bar{height:5px;border-radius:9px;background:#2a2040;margin-top:6px;overflow:hidden}
+.fr .bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#8a5cff,#e2c27a);transition:width 1s cubic-bezier(.2,.9,.3,1) .3s}
+.fr .st{flex:none;text-align:right;font-size:11px;color:var(--muted);line-height:1.3}
+.fr .st b{display:block;font:700 13px Georgia,serif;color:#fff3cf}
+.fr.paid{border-color:#3f8a6a;background:#10201c}
+.fr.paid .st b{color:#9dfad0}
+.fr.paid .bar i{background:linear-gradient(90deg,#3fae86,#9dfad0)}
+.empty{text-align:center;color:var(--muted);padding:14px 8px;font-size:13px}
+.empty big{display:block;font-size:30px;margin-bottom:4px;opacity:.8}
+.stats{display:flex;gap:9px;margin-bottom:12px}
+.stats div{flex:1;text-align:center;border:1px solid #3a3057;border-radius:13px;padding:8px 4px;background:#120c1e}
+.stats b{display:block;font:700 19px Georgia,serif;color:#fff3cf}
+.stats small{font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+/* промокоды */
+.letter{display:block;width:96px;height:96px;margin:0 auto 6px;filter:drop-shadow(0 6px 14px #0008)}
+.letter .seal{transform-origin:50% 50%;animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.06)}}
+.note{text-align:center;color:#7d7290;font-size:11.5px;margin-top:8px}
+.fx{position:fixed;pointer-events:none;z-index:120;font-style:normal;animation:fly 1.5s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);max-width:88%;z-index:300;background:#241a3af2;border:1px solid #8a6cd0;color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;font-size:13px}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}.code b,.fr{opacity:1;transform:none}}
+</style>
+<script src="../shared/vip.js"></script>
+<script src="../shared/fast.js"></script>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>sndMusic("calm")</script>
+</head>
+<body>
+<canvas id="dust"></canvas>
+<div class="wrap">
+  <header class="head">
+    <a class="back" id="back" href="../index.html">← Назад</a>
+    <div class="hd"><div class="eyebrow">Круг близких</div><h1>Приглашения</h1></div>
+    <div class="rb"><span id="rbg"></span><b id="rb">—</b></div>
+  </header>
+
+  <div class="tabs" id="tabs"><i></i><button type="button" class="on" data-p="1">Друзья</button><button type="button" data-p="2">Промокоды</button></div>
+
+  <section class="pane on" id="p1">
+    <div class="card hero">
+      <svg class="sig" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2">
+        <g class="r1"><circle cx="100" cy="100" r="92" stroke-dasharray="3 7"/><path d="M100 6v26M100 168v26M6 100h26M168 100h26" stroke-width="3"/></g>
+        <g class="r2"><circle cx="100" cy="100" r="68"/><circle cx="100" cy="100" r="46" stroke-dasharray="2 5"/></g>
+        <path d="M30 100Q100 40 170 100Q100 160 30 100z"/><circle cx="100" cy="100" r="17"/><circle cx="100" cy="100" r="6" fill="currentColor"/>
+      </svg>
+      <h3 style="margin-bottom:4px">Твой код приглашения</h3>
+      <p>Передай его тому, кому доверяешь. Туман запомнит вас обоих.</p>
+      <div class="code" id="code"></div>
+      <div class="btns">
+        <button type="button" class="btn g" id="bCopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Скопировать</span></button>
+        <button type="button" class="btn o" id="bShare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></svg><span>Поделиться</span></button>
+      </div>
+    </div>
+
+    <div class="rw">
+      <div class="rc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12Q12 5 20.5 12Q12 19 3.5 12z"/><circle cx="12" cy="12" r="2.4"/></svg></div><small>Друг получит</small><b>Печать Посвящённого</b><em>на 3 дня, придёт в сумку. Активируй когда удобно.</em></div>
+      <div class="rc rb2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12" stroke-opacity=".6"/></svg></div><small>Ты получишь</small><b>10 рубинов</b><em>когда друг достигнет 15 уровня.</em></div>
+    </div>
+
+    <div class="card" id="useCard"><h3>Тебя пригласили?</h3><div id="useBox"></div></div>
+
+    <div class="card"><h3>Твои приглашённые</h3>
+      <div class="stats"><div><b id="sTot">0</b><small>Приглашено</small></div><div><b id="sPaid">0</b><small>Дошли до 15</small></div><div><b id="sRb">0</b><small>Рубинов</small></div></div>
+      <div class="fl" id="fl"></div>
+    </div>
+  </section>
+
+  <section class="pane" id="p2">
+    <div class="card">
+      <svg class="letter" viewBox="0 0 96 96" fill="none">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a2d4a"/><stop offset="1" stop-color="#150e22"/></linearGradient><radialGradient id="sg" cx=".35" cy=".3"><stop offset="0" stop-color="#ff8aa0"/><stop offset=".6" stop-color="#c0263f"/><stop offset="1" stop-color="#6a0e22"/></radialGradient></defs>
+        <rect x="8" y="22" width="80" height="54" rx="9" fill="url(#lg)" stroke="#8a6a3a" stroke-width="1.5"/>
+        <path d="M10 26l38 28 38-28" stroke="#8a6a3a" stroke-width="1.5" stroke-linejoin="round"/>
+        <g class="seal"><circle cx="48" cy="54" r="12" fill="url(#sg)" stroke="#ffc0cb" stroke-opacity=".6"/><path d="M40 54q8-7 16 0q-8 7-16 0z" stroke="#ffd8de" stroke-width="1.3"/><circle cx="48" cy="54" r="2.2" fill="#ffd8de"/></g>
+      </svg>
+      <h3 style="text-align:center">Печать слов</h3>
+      <p style="margin:0 0 6px;text-align:center;color:var(--muted);font-size:12.5px">Тайные слова открывают дары: рубины, фунты, печати. Введи код, который тебе передали.</p>
+      <div class="inp"><input id="pIn" maxlength="24" placeholder="КОД" autocomplete="off" autocapitalize="characters" spellcheck="false"><button type="button" class="btn g" id="pGo"><span>Открыть</span></button></div>
+      <div class="msg" id="pMsg"></div>
+      <div class="note">Следи за новостями круга: новые слова будут появляться.</div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0b0814")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const esc=VIP.esc;
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+async function api(p){
+ if(!ACTION_URL)throw new Error("Нужен вход через бота.");
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Некорректный ответ сервера.");return d;
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2600)}
+$("back").href="../index.html"+location.search;
+$("rbg").innerHTML='<svg viewBox="0 0 24 24"><defs><linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8aa0"/><stop offset=".55" stop-color="#d4243f"/><stop offset="1" stop-color="#7a0e22"/></linearGradient></defs><path d="M6 3h12l4 6-10 12L2 9z" fill="url(#gA)" stroke="#ffc0cb" stroke-width=".8" stroke-linejoin="round"/><path d="M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12" fill="none" stroke="#ffd8de" stroke-opacity=".55" stroke-width=".7"/></svg>';
+const PATH={seer:"🔮",sailor:"⚓",hunter:"🏹","Провидец":"🔮","Матрос":"⚓","Охотник":"🏹"};
+let D=null,busy=false;
+
+function burst(x,y,list,n,dist){
+ if(reduce)return;
+ for(let i=0;i<n;i++){const d=document.createElement("i");d.className="fx";d.textContent=list[i%list.length];d.style.left=x+"px";d.style.top=y+"px";d.style.fontSize=rnd(12,24)+"px";
+  const a=rnd(0,6.283),r=rnd(dist*.4,dist);d.style.setProperty("--x",Math.cos(a)*r+"px");d.style.setProperty("--y",Math.sin(a)*r+"px");d.style.setProperty("--r",rnd(-200,200)+"deg");
+  document.body.appendChild(d);setTimeout(()=>d.remove(),1600)}
+}
+function burstAt(el,list,n,dist){const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,list,n,dist)}
+
+/* вкладки */
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+ const p=b.dataset.p;sfx("tap");
+ $("tabs").classList.toggle("p2",p==="2");
+ [...$("tabs").querySelectorAll("button")].forEach(x=>x.classList.toggle("on",x===b));
+ $("p1").classList.toggle("on",p==="1");$("p2").classList.toggle("on",p==="2");
+});
+
+/* код */
+function paintCode(c){
+ const a=c.slice(0,3),b=c.slice(3);let h="";
+ [...a].forEach((ch,i)=>h+='<b style="animation-delay:'+(i*90)+'ms">'+esc(ch)+'</b>');
+ h+='<span>·</span>';
+ [...b].forEach((ch,i)=>h+='<b style="animation-delay:'+(300+i*90)+'ms">'+esc(ch)+'</b>');
+ $("code").innerHTML=h;
+}
+async function copy(t){
+ try{await navigator.clipboard.writeText(t);return true}catch(_){}
+ try{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();const ok=document.execCommand("copy");a.remove();return ok}catch(_){return false}
+}
+$("bCopy").onclick=async()=>{
+ if(!D)return;const ok=await copy(D.code);sfx(ok?"good":"deny");
+ toast(ok?"Код скопирован: "+D.code:"Не удалось скопировать. Выдели код вручную.");
+ if(ok)burstAt($("bCopy"),["✦","·","✧"],10,90);
+};
+$("bShare").onclick=()=>{
+ if(!D)return;sfx("tap");
+ const txt="Присоединяйся к «Повелителю Тайн»! Мой код приглашения: "+D.code+". Введи его в разделе «Приглашения» и получи Печать Посвящённого на 3 дня.";
+ const link="https://t.me/ltmgame_bot";
+ const u="https://t.me/share/url?url="+encodeURIComponent(link)+"&text="+encodeURIComponent(txt);
+ try{if(tg&&tg.openTelegramLink){tg.openTelegramLink(u);return}}catch(_){}
+ window.open(u,"_blank");
+};
+
+/* ввод чужого кода */
+function paintUse(){
+ const b=$("useBox");
+ if(D.used){
+  b.innerHTML='<div class="done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.500l3 3 5-6"/></svg><span>Приглашение принято. Печать Посвящённого ищи в сумке.</span></div>';
+  return;
+ }
+ b.innerHTML='<p style="margin:0 0 8px;color:var(--muted);font-size:12.5px">Введи код друга и получи <b style="color:#fff3cf">Печать Посвящённого на 3 дня</b>. Принять приглашение можно один раз.</p><div class="inp"><input id="uIn" maxlength="8" placeholder="КОД" autocomplete="off" autocapitalize="characters" spellcheck="false"><button type="button" class="btn g" id="uGo"><span>Принять</span></button></div><div class="msg" id="uMsg"></div>';
+ $("uGo").onclick=useCode;
+ $("uIn").addEventListener("keydown",e=>{if(e.key==="Enter")useCode()});
+}
+async function useCode(){
+ if(busy)return;const v=$("uIn").value.trim();
+ if(!v){$("uMsg").className="msg bad";$("uMsg").textContent="Введи код друга.";sfx("deny");return}
+ busy=true;$("uGo").disabled=true;sfx("tap");
+ try{
+  const d=await api({action:"ref_use",code:v});
+  if(d.ok){
+   sfx("level");burstAt($("useCard"),["✦","💎","✧","·"],24,200);
+   D.used=true;paintUse();toast(d.text||"Приглашение принято.");
+  }else{$("uMsg").className="msg bad";$("uMsg").textContent=d.text||"Не удалось.";sfx("deny");$("uGo").disabled=false}
+ }catch(e){$("uMsg").className="msg bad";$("uMsg").textContent=e.message||"Нет связи.";$("uGo").disabled=false}
+ busy=false;
+}
+
+/* приглашённые */
+function paintList(){
+ const L=D.list||[],need=D.need_lv||15;
+ $("sTot").textContent=D.total;$("sPaid").textContent=D.paid;$("sRb").textContent=D.paid*(D.reward_r||10);
+ if(!L.length){$("fl").innerHTML='<div class="empty"><big>🌫️</big>Пока никого. Поделись кодом, и тут появятся твои спутники.</div>';return}
+ $("fl").innerHTML=L.map((f,i)=>{
+  const pc=Math.min(100,Math.round(f.lv/need*100)),left=Math.max(0,need-f.lv);
+  return '<div class="fr'+(f.p?" paid":"")+'" style="animation-delay:'+Math.min(i,10)*60+'ms"><div class="av'+VIP.f(f.v)+'">'+(PATH[f.path]||"👤")+'</div><div class="mid"><div class="nm">'+VIP.n(f.n,f.v)+'</div><div class="bar"><i data-w="'+(f.p?100:pc)+'"></i></div></div><div class="st">'+(f.p?'<b>+'+D.reward_r+' 💎</b>получено':'<b>ур. '+f.lv+'</b>ещё '+left)+'</div></div>';
+ }).join("");
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{$("fl").querySelectorAll(".bar i").forEach(i=>i.style.width=i.dataset.w+"%")}));
+}
+
+/* промокод */
+async function usePromo(){
+ if(busy)return;const v=$("pIn").value.trim();
+ if(!v){$("pMsg").className="msg bad";$("pMsg").textContent="Введи слово из послания.";sfx("deny");return}
+ busy=true;$("pGo").disabled=true;sfx("tap");
+ try{
+  const d=await api({action:"promo_use",code:v});
+  if(d.ok){
+   $("pMsg").className="msg ok";$("pMsg").textContent=d.text||"Печать принята.";sfx("level");burstAt($("pGo"),["✦","💎","💷","✧"],22,190);
+   if(d.rubies!=null){D.rubies=d.rubies;$("rb").textContent=d.rubies}
+   $("pIn").value="";
+  }else{$("pMsg").className="msg bad";$("pMsg").textContent=d.text||"Не удалось.";sfx("deny")}
+ }catch(e){$("pMsg").className="msg bad";$("pMsg").textContent=e.message||"Нет связи."}
+ busy=false;$("pGo").disabled=false;
+}
+$("pGo").onclick=usePromo;
+$("pIn").addEventListener("keydown",e=>{if(e.key==="Enter")usePromo()});
+
+/* пыль */
+(function(){
+ const c=$("dust"),x=c.getContext("2d");let W,H,P=[];
+ function size(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio}
+ size();addEventListener("resize",size);
+ const cols=["#e2c27a","#a9c8ff","#8a5cff","#e0425a"];
+ for(let i=0;i<40;i++)P.push({x:Math.random(),y:Math.random(),r:rnd(.6,2),s:rnd(.01,.04),a:rnd(.15,.55),c:cols[i%4],p:rnd(0,6)});
+ if(reduce)return;
+ (function f(){
+  x.clearRect(0,0,W,H);
+  for(const p of P){p.y-=p.s/60;p.p+=.01;if(p.y<-.02){p.y=1.02;p.x=Math.random()}
+   x.globalAlpha=p.a*(.6+.4*Math.sin(p.p));x.fillStyle=p.c;x.beginPath();x.arc((p.x+Math.sin(p.p)*.01)*W,p.y*H,p.r*devicePixelRatio,0,6.283);x.fill()}
+  requestAnimationFrame(f);
+ })();
+})();
+
+async function load(){
+ try{
+  D=await api({action:"ref_state"});
+  if(!D.ok)throw new Error(D.text||"Не удалось загрузить.");
+  $("rb").textContent=D.rubies;
+  paintCode(D.code);paintUse();paintList();
+  if(D.claimed>0){setTimeout(()=>{sfx("level");toast("Друг дошёл до 15 уровня: +"+D.claimed+" рубинов");burst(innerWidth/2,innerHeight/3,["💎","✦","✧"],20,200)},900)}
+ }catch(e){$("code").innerHTML='<div class="empty" style="width:100%">'+esc(e.message||"Нет связи")+'</div>'}
+}
+load();
+</script>
+</body>
+</html>
