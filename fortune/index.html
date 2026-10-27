@@ -7,84 +7,92 @@
 <title>Гадательный клуб</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--panel:rgba(24,19,32,.92);--line:#4a3d58;--text:#e6dfd2;--muted:#a99dba;--gold:#d6b779;--glow:#b48cff}
-*{box-sizing:border-box}
-html{min-height:100%;background:#0d0a14}
-body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-serif;background:radial-gradient(ellipse at 50% 0%,#3b2a5a66,transparent 55%),radial-gradient(ellipse at 50% 100%,#5a2a3a44,transparent 55%),#0d0a14;overflow-x:hidden}
+:root{--panel:rgba(20,16,28,.94);--line:#413650;--text:#e2dccd;--muted:#9a8fb0;--gold:#c8b078;--gold2:#9a8658;--glow:#9a88c8;--fog:#8d86a6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{min-height:100%;background:#0b0810}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-serif;background:radial-gradient(ellipse at 50% 0%,#2e2448aa,transparent 55%),radial-gradient(ellipse at 50% 100%,#3a1f2e55,transparent 55%),#0b0810;overflow-x:hidden}
 #dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
 .head{display:flex;align-items:center;gap:10px;padding:7px 0 12px}
-.back{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#19141fe0;font-size:12px}
+.back{color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#17121fe0;font-size:12px}
 .eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-.head h1{font-size:18px;margin:3px 0 0;font-weight:800}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px #0004}
+.head h1{font-size:18px;margin:3px 0 0;font-weight:800;letter-spacing:.5px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px #0006}
 
-/* гадалка */
+/* гадалка: шар с туманом */
 .teller{display:flex;gap:12px;align-items:center}
-.orb{position:relative;flex-shrink:0;width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8,#b48cff55 30%,#4a2c80 70%,#1b1030);box-shadow:0 0 22px #9a6bff88,inset 0 0 18px #0009;animation:pulse 3s ease-in-out infinite}
-.orb:after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid #b48cff55;animation:ring 3s ease-in-out infinite}
-.orb span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;filter:drop-shadow(0 0 6px #fff9)}
-@keyframes pulse{0%,100%{box-shadow:0 0 18px #9a6bff77,inset 0 0 18px #0009}50%{box-shadow:0 0 34px #b48cffcc,inset 0 0 14px #0009}}
-@keyframes ring{0%,100%{transform:scale(.96);opacity:.5}50%{transform:scale(1.12);opacity:1}}
+.orb{position:relative;flex-shrink:0;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#ffffff55,#8d86a633 26%,#2a2140 66%,#0f0a1a);box-shadow:0 0 20px #6a5a9a66,inset 0 0 18px #000c;overflow:hidden;border:1px solid #6a5f86}
+.orb i{position:absolute;left:-30%;top:-30%;width:160%;height:160%;background:radial-gradient(ellipse at 30% 40%,#b9b2d055,transparent 45%),radial-gradient(ellipse at 70% 65%,#8d86a644,transparent 50%);animation:orbFog 14s linear infinite}
+.orb i+i{animation-duration:23s;animation-direction:reverse;opacity:.7}
+@keyframes orbFog{to{transform:rotate(360deg)}}
+.orb svg{position:absolute;inset:18px;width:36px;height:36px;color:#d9cfa8;filter:drop-shadow(0 0 5px #c8b07888)}
+.orb:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 22%,#ffffff40,transparent 32%)}
 .tname{font-weight:800;font-size:13px}
 .trole{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
-#speech{margin-top:8px;font-size:12px;line-height:1.55;color:#d9cfe8;min-height:38px}
-#speech:after{content:"▌";opacity:.5;animation:blink 1s steps(2) infinite}
+#speech{margin-top:8px;font-size:12px;line-height:1.55;color:#cfc6e0;min-height:38px}
+#speech:after{content:"▌";opacity:.4;animation:blink 1.2s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 
 /* сцена */
-.stage{position:relative;height:178px;margin:6px 0 2px}
-.scard{position:absolute;left:50%;top:26px;width:70px;height:108px;margin-left:-35px;border-radius:9px;animation:shuf 1.7s ease-in-out infinite;animation-delay:calc(var(--i)*-110ms)}
+.stage{position:relative;height:178px;margin:6px 0 2px;overflow:visible}
+.stage:before,.stage:after{content:"";position:absolute;left:-4%;right:-4%;bottom:30px;height:80px;background:radial-gradient(ellipse at 30% 50%,#8d86a62e,transparent 65%),radial-gradient(ellipse at 75% 50%,#8d86a626,transparent 65%);animation:stFog 11s ease-in-out infinite alternate;pointer-events:none}
+.stage:after{animation-duration:16s;animation-direction:alternate-reverse;opacity:.7}
+@keyframes stFog{from{transform:translateX(-3%)}to{transform:translateX(3%)}}
+.scard{position:absolute;left:50%;top:26px;width:70px;height:108px;margin-left:-35px;border-radius:7px;animation:shuf 1.9s ease-in-out infinite;animation-delay:calc(var(--i)*-120ms)}
 @keyframes shuf{
 0%{transform:translateX(0) rotate(0)}
-25%{transform:translateX(calc(var(--d)*52px)) rotate(calc(var(--d)*9deg))}
-50%{transform:translateX(calc(var(--d)*-34px)) translateY(-12px) rotate(calc(var(--d)*-6deg))}
-75%{transform:translateX(calc(var(--d)*22px)) rotate(calc(var(--d)*4deg))}
+25%{transform:translateX(calc(var(--d)*46px)) rotate(calc(var(--d)*7deg))}
+50%{transform:translateX(calc(var(--d)*-30px)) translateY(-10px) rotate(calc(var(--d)*-5deg))}
+75%{transform:translateX(calc(var(--d)*18px)) rotate(calc(var(--d)*3deg))}
 100%{transform:translateX(0) rotate(0)}}
 .fan{position:relative;height:100%}
-.fcard{position:absolute;left:50%;bottom:6px;width:64px;height:100px;margin-left:-32px;border-radius:9px;transform-origin:50% 200%;transform:rotate(calc((var(--i) - 4)*8deg));cursor:pointer;transition:transform .25s,opacity .45s,filter .25s;animation:spread .8s backwards;animation-delay:calc(var(--i)*55ms)}
+.fcard{position:absolute;left:50%;bottom:6px;width:64px;height:100px;margin-left:-32px;transform-origin:50% 200%;transform:rotate(calc((var(--i) - 4)*8deg));cursor:pointer;border-radius:7px;animation:spread .9s backwards;animation-delay:calc(var(--i)*60ms);touch-action:manipulation}
+.fin{position:absolute;inset:0;border-radius:7px;transition:transform .22s,filter .22s,opacity .5s}
 @keyframes spread{from{transform:rotate(0) translateY(14px);opacity:0}to{transform:rotate(calc((var(--i) - 4)*8deg));opacity:1}}
-.fcard:hover,.fcard:active{transform:rotate(calc((var(--i) - 4)*8deg)) translateY(-14px);filter:brightness(1.3) drop-shadow(0 0 8px #b48cff)}
-.fcard.gone{opacity:0;pointer-events:none;transform:rotate(calc((var(--i) - 4)*8deg)) translateY(-70px) scale(.8)}
-.back-face{background:
- radial-gradient(circle at 50% 50%,#d6b77922 0 8px,transparent 9px),
- repeating-linear-gradient(45deg,#ffffff0a 0 4px,transparent 4px 8px),
- linear-gradient(145deg,#4a2c80,#241540 60%,#150c26);
- border:1px solid #8e7bb0;box-shadow:0 4px 10px #0007}
-.back-face:after{content:"𓂀";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#d6b779;font-size:20px;text-shadow:0 0 8px #d6b77988}
+@media(hover:hover){.fcard:hover .fin{transform:translateY(-12px);filter:brightness(1.25) drop-shadow(0 0 8px #9a88c8)}}
+.fcard.sel .fin{transform:translateY(-70px) scale(.85);opacity:0;filter:blur(2px) brightness(1.4);transition:transform .6s ease-out,opacity .6s,filter .6s}
+.fcard.gone{pointer-events:none;visibility:hidden}
+
+/* рубашка и лицо карты рисуются кодом */
+.back-face{background-color:#150f22;background-size:100% 100%;background-repeat:no-repeat;border-radius:7px;box-shadow:0 4px 10px #0009}
 
 /* слоты */
 .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .slot{text-align:center}
 .slotLabel{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
-.slotBox{position:relative;width:96px;height:150px;margin:0 auto;border:1px dashed #4a3d58;border-radius:11px;perspective:700px}
+.slotBox{position:relative;width:96px;height:150px;margin:0 auto;border:1px dashed #413650;border-radius:9px;perspective:700px}
 .c3d{position:absolute;inset:0;opacity:0}
-.c3d.deal{opacity:1;animation:deal .55s cubic-bezier(.2,.8,.3,1)}
-@keyframes deal{from{transform:translateY(-130px) rotate(-18deg) scale(.6);opacity:0}to{transform:none;opacity:1}}
-.inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.3,.7,.2,1)}
+.c3d.deal{opacity:1;animation:deal .6s cubic-bezier(.2,.8,.3,1)}
+@keyframes deal{from{transform:translateY(-130px) rotate(-14deg) scale(.6);opacity:0}to{transform:none;opacity:1}}
+.inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.3,.7,.2,1)}
 .c3d.flipped .inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:11px}
-.face.front{transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px;background:radial-gradient(circle at 50% 35%,#4a3a2a,#241a2c 70%,#150f1c);border:1px solid #d6b779;box-shadow:0 0 0 1px #0008 inset}
-.c3d.flipped .face.front{animation:glow 2.4s ease-in-out infinite}
-@keyframes glow{0%,100%{box-shadow:0 0 8px #d6b77955,0 0 0 1px #0008 inset}50%{box-shadow:0 0 22px #b48cffcc,0 0 0 1px #0008 inset}}
-.ic{font-size:38px;filter:drop-shadow(0 0 8px #d6b779aa)}
-.ic.rev{transform:rotate(180deg)}
-.nm{font-size:11px;font-weight:800;color:var(--gold);text-align:center;line-height:1.2}
-.rv{font-size:8px;letter-spacing:1px;color:#f0a3a3;text-transform:uppercase;min-height:10px}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:7px}
+.face.front{transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:9px 6px 8px;background:radial-gradient(ellipse at 50% 38%,#3a3048,#1c1626 70%,#100c18);border:1px solid var(--gold2);box-shadow:inset 0 0 0 3px #0c0914,inset 0 0 0 4px #9a865866,0 0 12px #9a88c844}
+.num{font:700 10px Georgia,serif;letter-spacing:3px;color:var(--gold2)}
+.gl{width:46px;height:46px;color:#d9cfa8;filter:drop-shadow(0 0 6px #c8b07866)}
+.gl.rev{transform:rotate(180deg);color:#cf9a9a}
+.nm{font:700 10.5px Georgia,serif;color:var(--gold);text-align:center;line-height:1.15;letter-spacing:.5px}
+.rv{font-size:7.5px;letter-spacing:1.5px;color:#cf9a9a;text-transform:uppercase;min-height:9px}
+.c3d.flipped .face.front:after{content:"";position:absolute;inset:0;border-radius:7px;background:linear-gradient(115deg,transparent 40%,#ffffff22 50%,transparent 60%);transform:translateX(-120%);animation:sheen 1.4s .4s ease-out 1 forwards}
+@keyframes sheen{to{transform:translateX(120%)}}
+.puff{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;border:1px solid #c8b078;pointer-events:none;animation:ring .9s ease-out forwards}
+.puff.f{background:radial-gradient(circle,#8d86a655,transparent 70%);border:0;animation-name:fogP;animation-duration:1.3s}
+@keyframes ring{to{transform:scale(7);opacity:0}}
+@keyframes fogP{from{transform:scale(1);opacity:.9}to{transform:scale(9);opacity:0}}
 
 /* предсказания */
 .readings{display:grid;gap:8px}
-.reading{border-left:2px solid var(--glow);background:#ffffff08;border-radius:0 9px 9px 0;padding:9px 11px;font-size:12px;line-height:1.55;animation:fadeUp .5s}
-.reading b{display:block;font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:3px}
-.verdict{margin-top:10px;font-size:12px;line-height:1.6;color:#d9cfe8;text-align:center;font-style:italic;min-height:18px}
+.reading{border-left:2px solid var(--gold2);background:#ffffff07;border-radius:0 9px 9px 0;padding:9px 11px;font-size:12px;line-height:1.55;animation:fadeUp .5s}
+.reading b{display:block;font:700 10px Georgia,serif;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:3px}
+.verdict{margin-top:10px;font-size:12px;line-height:1.6;color:#cfc6e0;text-align:center;font-style:italic;min-height:18px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
-.btn{display:block;width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 10px;background:#2a2234;color:var(--text);font:inherit;font-weight:750;font-size:13px;cursor:pointer;text-align:center;text-decoration:none}
-.btn.primary{color:#20190f;background:linear-gradient(135deg,#e4ca91,#b28c4d);border-color:#d4b779;box-shadow:0 0 18px #d6b77944}
+.btn{display:block;width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 10px;background:#241d2e;color:var(--text);font:inherit;font-weight:750;font-size:13px;cursor:pointer;text-align:center;text-decoration:none;touch-action:manipulation}
+.btn.primary{color:#1c160c;background:linear-gradient(135deg,#d8c48e,#a88a50);border-color:#c8b078;box-shadow:0 0 14px #c8b07833}
 .btn:active{transform:scale(.98)}
 .hidden{display:none!important}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-@media(max-width:360px){.slotBox{width:84px;height:132px}.ic{font-size:32px}}
+@media(max-width:360px){.slotBox{width:84px;height:132px}.gl{width:38px;height:38px}}
 </style>
 </head>
 <body>
@@ -92,12 +100,12 @@ body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-seri
 <div class="wrap">
 <header class="head">
 <a class="back" id="back" href="../index.html">← Город</a>
-<div><div class="eyebrow">Север · Тинген</div><h1>🔮 Гадательный клуб</h1></div>
+<div><div class="eyebrow">Север · Тинген</div><h1>Гадательный клуб</h1></div>
 </header>
 
 <section class="card">
 <div class="teller">
-<div class="orb"><span>🔮</span></div>
+<div class="orb"><i></i><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M2.500 12C6 6.500 18 6.500 21.500 12 18 17.500 6 17.500 2.500 12z"/><circle cx="12" cy="12" r="3.200"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3v2M5 5l1.200 1.500M19 5l-1.200 1.500" stroke-opacity=".6"/></svg></div>
 <div><div class="tname" id="tname">Мадам Нира</div><div class="trole">Гадалка</div></div>
 </div>
 <div id="speech"></div>
@@ -114,12 +122,13 @@ body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,Arial,sans-seri
 </section>
 
 <div class="actions">
-<button class="btn primary" id="startBtn" type="button">🃏 Погадать</button>
-<button class="btn primary hidden" id="againBtn" type="button">🔮 Погадать ещё</button>
+<button class="btn primary" id="startBtn" type="button">Погадать</button>
+<button class="btn primary hidden" id="againBtn" type="button">Погадать ещё</button>
 <a class="btn hidden" id="cityBtn" href="../index.html">← Вернуться в город</a>
 </div>
 </div>
 
+<script src="../shared/sound.js"></script>
 <script>
 "use strict";
 const tg=window.Telegram?.WebApp||null;
@@ -131,29 +140,30 @@ const home="../index.html"+location.search;
 $("back").href=home;$("cityBtn").href=home;
 
 const POS=["Прошлое","Настоящее","Будущее"];
+const GLY={"fool": "<path d=\"M3 14c3-7 15-7 18 0\"/><path d=\"M5 14l3 5 4-3 4 3 3-5\"/><circle cx=\"12\" cy=\"9\" r=\"1.300\"/><circle cx=\"5\" cy=\"14\" r=\"1\"/><circle cx=\"19\" cy=\"14\" r=\"1\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2\"/>", "moon": "<path d=\"M15 3a9 9 0 1 0 6 13 7.500 7.500 0 0 1-6-13z\"/><circle cx=\"6\" cy=\"6\" r=\".8\" fill=\"currentColor\"/><circle cx=\"19\" cy=\"6\" r=\".6\" fill=\"currentColor\"/>", "hang": "<path d=\"M12 2v5M7 7h10M10 7l-1 8M14 7l1 8M12 7v8\"/><circle cx=\"12\" cy=\"18\" r=\"2.500\"/>", "tower": "<path d=\"M8 21V8h8v13M7 8l5-5 5 5M10 12h4M11 21v-4h2v4\"/><path d=\"M19 3l-3 4h3l-2 4\" stroke-opacity=\".8\"/>", "star": "<path d=\"M12 2l2 7 7 3-7 3-2 7-2-7-7-3 7-3z\"/><circle cx=\"12\" cy=\"12\" r=\"1.200\"/>", "death": "<path d=\"M6 21L16 4c3 0 5 2 5 4-3-1-6 0-8 4\"/><path d=\"M4 8h5M5 5h4\" stroke-opacity=\".6\"/>", "wheel": "<circle cx=\"12\" cy=\"12\" r=\"8\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M12 4v6M12 14v6M4 12h6M14 12h6M6.300 6.300l3.500 3.500M14.200 14.200l3.500 3.500M17.700 6.300l-3.500 3.500M9.800 14.200l-3.500 3.500\" stroke-opacity=\".7\"/>", "justice": "<path d=\"M12 3v17M6 20h12M5 7h14M5 7l-3 7h6zM19 7l-3 7h6z\"/>", "hermit": "<path d=\"M9 8h6l1 4H8zM12 4v4M10 4h4M12 12v3M17 6v15\"/><circle cx=\"12\" cy=\"17\" r=\"1.500\" stroke-opacity=\".7\"/>", "empress": "<path d=\"M4 18l2-9 4 4 2-6 2 6 4-4 2 9zM5 21h14\"/>", "emperor": "<path d=\"M6 21V10l6-6 6 6v11M9 21v-6h6v6M12 4v-2\"/><circle cx=\"12\" cy=\"10\" r=\"1.500\"/>", "priest": "<path d=\"M6 3v18M18 3v18M4 3h4M16 3h4M4 21h4M16 21h4\"/><path d=\"M13 8a4 4 0 1 0 0 8 3.200 3.200 0 0 1 0-8z\"/>", "lovers": "<circle cx=\"9\" cy=\"12\" r=\"5\"/><circle cx=\"15\" cy=\"12\" r=\"5\"/><path d=\"M12 2v3\" stroke-opacity=\".7\"/>", "chariot": "<circle cx=\"7\" cy=\"17\" r=\"3.500\"/><circle cx=\"17\" cy=\"17\" r=\"3.500\"/><path d=\"M4 13h16M6 13V7h12v6M12 7V4\"/>", "strength": "<path d=\"M3 9c3-5 6 0 9 0s6-5 9 0c-3 5-6 0-9 0s-6 5-9 0z\"/><circle cx=\"12\" cy=\"17\" r=\"3.500\"/>", "temper": "<path d=\"M4 3h6l-1 6a2 2 0 0 1-4 0zM14 15h6l-1 6h-4zM9 9c3 3 3 3 6 6\" /><path d=\"M10 12c1 2 2 3 4 3\" stroke-opacity=\".6\"/>", "devil": "<path d=\"M5 3c0 4 2 6 4 6M19 3c0 4-2 6-4 6M7 9h10l-2 9-3 3-3-3z\"/><path d=\"M9.500 12h1M13.500 12h1M10 16h4\" stroke-opacity=\".7\"/>", "judge": "<path d=\"M3 15l11-8v12zM14 9c3 0 6 1 7 3M14 13c3 0 6-.5 7-2\"/><path d=\"M5 18l1 3\" stroke-opacity=\".6\"/>", "world": "<ellipse cx=\"12\" cy=\"12\" rx=\"8\" ry=\"9\"/><path d=\"M12 6l3 6-3 6-3-6z\" stroke-opacity=\".8\"/><circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"currentColor\"/>", "magus": "<path d=\"M3 9c3-5 6 0 9 0s6-5 9 0c-3 5-6 0-9 0s-6 5-9 0z\" transform=\"translate(0,-2)\"/><path d=\"M6 21l12-9M16 11l3 3\"/>", "hiero": "<path d=\"M12 2v20M8 6h8M7 11h10M9 16h6\"/>"};
 const CARDS=[
-{n:"Шут",i:"🃏",a:"Случай подбросил монету в твою пользу. Улыбнись удаче.",b:"Лёгкость обманчива: не принимай шутку за правду."},
-{n:"Солнце",i:"☀️",a:"Свет найдёт тебя даже в топях.",b:"Чей-то яркий обман слепит глаза."},
-{n:"Луна",i:"🌙",a:"Тени скажут то, о чём молчат люди.",b:"Не верь отражениям: вода лжёт."},
-{n:"Повешенный",i:"🪢",a:"Остановись, и увидишь дорогу иначе.",b:"Ты жертвуешь многим, а выигрыш мал."},
-{n:"Башня",i:"🗼",a:"Старое рухнет. На обломках проще строить.",b:"Беда рядом, но ты успеешь отойти."},
-{n:"Звезда",i:"⭐",a:"Надежда не гаснет в самый тёмный час.",b:"Ты ждёшь знака, а он уже был."},
-{n:"Смерть",i:"💀",a:"Конец одной главы — начало другой.",b:"Ты цепляешься за то, что давно мертво."},
-{n:"Колесо Судьбы",i:"🎡",a:"Колесо повернулось, и оно в твою пользу.",b:"Удача уходит, но вернётся с новым оборотом."},
-{n:"Правосудие",i:"⚖️",a:"Каждый поступок вернётся к тебе с процентами.",b:"Кто-то уходит от ответа. Это ненадолго."},
-{n:"Отшельник",i:"🏮",a:"Ответ внутри. Побудь в тишине.",b:"Одиночество затянулось, пора к людям."},
-{n:"Императрица",i:"👑",a:"Щедрость вернётся сторицей.",b:"Не трать силы на тех, кто не ценит."},
-{n:"Император",i:"🏛️",a:"Порядок и воля дадут тебе опору.",b:"Не командуй там, где можно договориться."},
-{n:"Жрица",i:"🌌",a:"Тайна совсем близко. Слушай шёпот.",b:"Секрет, который ты хранишь, тяготит."},
-{n:"Влюблённые",i:"💞",a:"Выбор сердца будет верным.",b:"Сомнения разрывают тебя надвое."},
-{n:"Колесница",i:"🛞",a:"Победа за теми, кто не сворачивает.",b:"Ты мчишься, но куда? Притормози."},
-{n:"Сила",i:"🦁",a:"Твоя тихая воля сильнее чужого крика.",b:"Страх шепчет громче, чем стоит."},
-{n:"Умеренность",i:"🏺",a:"Золотая середина спасёт от беды.",b:"Перекос в делах. Верни равновесие."},
-{n:"Дьявол",i:"🔥",a:"Искушение близко, а цена высока.",b:"Цепи слабее, чем кажутся. Сбрось их."},
-{n:"Суд",i:"📯",a:"Тебя призовут, и ты будешь готов.",b:"Прошлое просит пересмотра, не отмахивайся."},
-{n:"Мир",i:"🌍",a:"Круг замкнулся, пора праздновать.",b:"Осталось лишь последнее усилие."},
-{n:"Маг",i:"🪄",a:"У тебя есть всё, чтобы начать.",b:"Ловкость рук не заменит честности."},
-{n:"Иерофант",i:"📜",a:"Совет старшего окажется верным.",b:"Правила тесны, но сейчас лучше их соблюсти."}
+{n:"Шут",r:"0",g:"fool",a:"Случай подбросил монету в твою пользу. Улыбнись удаче.",b:"Лёгкость обманчива: не принимай шутку за правду."},
+{n:"Солнце",r:"XIX",g:"sun",a:"Свет найдёт тебя даже в топях.",b:"Чей-то яркий обман слепит глаза."},
+{n:"Луна",r:"XVIII",g:"moon",a:"Тени скажут то, о чём молчат люди.",b:"Не верь отражениям: вода лжёт."},
+{n:"Повешенный",r:"XII",g:"hang",a:"Остановись, и увидишь дорогу иначе.",b:"Ты жертвуешь многим, а выигрыш мал."},
+{n:"Башня",r:"XVI",g:"tower",a:"Старое рухнет. На обломках проще строить.",b:"Беда рядом, но ты успеешь отойти."},
+{n:"Звезда",r:"XVII",g:"star",a:"Надежда не гаснет в самый тёмный час.",b:"Ты ждёшь знака, а он уже был."},
+{n:"Смерть",r:"XIII",g:"death",a:"Конец одной главы — начало другой.",b:"Ты цепляешься за то, что давно мертво."},
+{n:"Колесо Судьбы",r:"X",g:"wheel",a:"Колесо повернулось, и оно в твою пользу.",b:"Удача уходит, но вернётся с новым оборотом."},
+{n:"Правосудие",r:"XI",g:"justice",a:"Каждый поступок вернётся к тебе с процентами.",b:"Кто-то уходит от ответа. Это ненадолго."},
+{n:"Отшельник",r:"IX",g:"hermit",a:"Ответ внутри. Побудь в тишине.",b:"Одиночество затянулось, пора к людям."},
+{n:"Императрица",r:"III",g:"empress",a:"Щедрость вернётся сторицей.",b:"Не трать силы на тех, кто не ценит."},
+{n:"Император",r:"IV",g:"emperor",a:"Порядок и воля дадут тебе опору.",b:"Не командуй там, где можно договориться."},
+{n:"Жрица",r:"II",g:"priest",a:"Тайна совсем близко. Слушай шёпот.",b:"Секрет, который ты хранишь, тяготит."},
+{n:"Влюблённые",r:"VI",g:"lovers",a:"Выбор сердца будет верным.",b:"Сомнения разрывают тебя надвое."},
+{n:"Колесница",r:"VII",g:"chariot",a:"Победа за теми, кто не сворачивает.",b:"Ты мчишься, но куда? Притормози."},
+{n:"Сила",r:"VIII",g:"strength",a:"Твоя тихая воля сильнее чужого крика.",b:"Страх шепчет громче, чем стоит."},
+{n:"Умеренность",r:"XIV",g:"temper",a:"Золотая середина спасёт от беды.",b:"Перекос в делах. Верни равновесие."},
+{n:"Дьявол",r:"XV",g:"devil",a:"Искушение близко, а цена высока.",b:"Цепи слабее, чем кажутся. Сбрось их."},
+{n:"Суд",r:"XX",g:"judge",a:"Тебя призовут, и ты будешь готов.",b:"Прошлое просит пересмотра, не отмахивайся."},
+{n:"Мир",r:"XXI",g:"world",a:"Круг замкнулся, пора праздновать.",b:"Осталось лишь последнее усилие."},
+{n:"Маг",r:"I",g:"magus",a:"У тебя есть всё, чтобы начать.",b:"Ловкость рук не заменит честности."},
+{n:"Иерофант",r:"V",g:"hiero",a:"Совет старшего окажется верным.",b:"Правила тесны, но сейчас лучше их соблюсти."}
 ];
 const CLOSING=[
 "Нити сплетены. Что будет дальше — решаешь ты.",
@@ -192,6 +202,7 @@ await sleep(22);
 }
 }
 
+function glyph(id,rev){return '<svg class="gl'+(rev?' rev':'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">'+(GLY[id]||"")+'</svg>'}
 function showStack(){
 const st=$("stage");st.replaceChildren();
 for(let i=0;i<8;i++){
@@ -204,7 +215,7 @@ function showFan(){
 const st=$("stage");st.replaceChildren();
 const fan=document.createElement("div");fan.className="fan";
 for(let i=0;i<9;i++){
-const c=document.createElement("div");c.className="fcard back-face";
+const c=document.createElement("div");c.className="fcard";c.innerHTML='<div class="fin back-face"></div>';
 c.style.setProperty("--i",i);
 c.addEventListener("click",()=>pick(i,c));
 fan.appendChild(c);
@@ -215,7 +226,7 @@ function buildSlots(){
 const box=$("slots");box.replaceChildren();
 POS.forEach((p,k)=>{
 const s=document.createElement("div");s.className="slot";
-s.innerHTML='<div class="slotLabel"></div><div class="slotBox"><div class="c3d" id="c'+k+'"><div class="inner"><div class="face back-face" style="position:absolute"></div><div class="face front"><div class="ic"></div><div class="nm"></div><div class="rv"></div></div></div></div></div>';
+s.innerHTML='<div class="slotLabel"></div><div class="slotBox"><div class="c3d" id="c'+k+'"><div class="inner"><div class="face back-face"></div><div class="face front"><div class="num"></div><div class="gw"></div><div><div class="nm"></div><div class="rv"></div></div></div></div></div></div>';
 s.querySelector(".slotLabel").textContent=p;
 box.appendChild(s);
 });
@@ -224,7 +235,8 @@ box.appendChild(s);
 function pick(i,el){
 if(busy||picks>=3||el.classList.contains("gone"))return;
 busy=true;haptic();
-el.classList.add("gone");
+el.classList.add("sel");setTimeout(()=>el.classList.add("gone"),650);
+snd("tap");
 const k=picks++;
 const item=order[i];
 revealSlot(k,item);
@@ -234,12 +246,12 @@ setTimeout(()=>{busy=false},700);
 function revealSlot(k,item){
 const rid=runId;
 const c=$("c"+k),card=item.c;
-c.querySelector(".ic").textContent=card.i;
-c.querySelector(".ic").classList.toggle("rev",item.rev);
+c.querySelector(".num").textContent=card.r;
+c.querySelector(".gw").innerHTML=glyph(card.g,item.rev);
 c.querySelector(".nm").textContent=card.n;
 c.querySelector(".rv").textContent=item.rev?"перевёрнута":"";
-c.classList.add("deal");
-setTimeout(()=>{if(rid!==runId)return;c.classList.add("flipped");haptic()},500);
+c.classList.add("deal");snd("paper");
+setTimeout(()=>{if(rid!==runId)return;c.classList.add("flipped");haptic();snd("divine");const bx=c.parentNode;["","f"].forEach(t=>{const p=document.createElement("i");p.className="puff "+t;bx.appendChild(p);setTimeout(()=>p.remove(),1500)})},550);
 
 queue=queue.then(async()=>{
 if(rid!==runId)return;
@@ -250,7 +262,7 @@ const d=document.createElement("div");d.className="reading";
 const b=document.createElement("b");b.textContent=POS[k]+" · "+card.n+(item.rev?" (перевёрнута)":"");
 const sp=document.createElement("span");
 d.append(b,sp);$("readings").appendChild(d);
-await typeInto(sp,item.rev?card.b:card.a,rid,20);
+snd("whisper",.4);await typeInto(sp,item.rev?card.b:card.a,rid,20);
 if(rid!==runId)return;
 if(k===2){
 await sleep(500);
@@ -258,7 +270,7 @@ if(rid!==runId)return;
 await typeInto($("verdict"),CLOSING[rnd(CLOSING.length)],rid,26);
 if(rid!==runId)return;
 $("againBtn").classList.remove("hidden");$("cityBtn").classList.remove("hidden");
-say("Хочешь спросить судьбу ещё раз? Карты не устают.");
+snd("bell");say("Хочешь спросить судьбу ещё раз? Карты не устают.");
 }
 });
 }
@@ -272,7 +284,7 @@ $("readings").replaceChildren();$("verdict").textContent="";$("readCard").classL
 buildSlots();
 showStack();
 say("Карты тасуются… Не отводи взгляд.");
-haptic();
+haptic();snd("scroll");
 await sleep(2100);
 if(rid!==runId)return;
 order=shuffle(CARDS).slice(0,9).map(c=>({c,rev:Math.random()<0.3}));
@@ -286,7 +298,14 @@ $("againBtn").addEventListener("click",start);
 buildSlots();
 say(INTRO[rnd(INTRO.length)]);
 
-/* мерцающая пыль на фоне */
+/* рубашка карты: рисуется кодом */
+(function(){
+const svg="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#2c2344'/><stop offset='1' stop-color='#0d0916'/></linearGradient><radialGradient id='h'><stop offset='0' stop-color='#9a88c855'/><stop offset='1' stop-color='#9a88c800'/></radialGradient></defs><rect width='64' height='100' rx='5' fill='url(#g)'/><circle cx='32' cy='50' r='24' fill='url(#h)'/><rect x='2.500' y='2.500' width='59' height='95' rx='4' fill='none' stroke='#9a8658' stroke-width='1'/><rect x='5.500' y='5.500' width='53' height='89' rx='2' fill='none' stroke='#9a865866' stroke-width='.6'/><circle cx='32' cy='50' r='17' fill='none' stroke='#9a8658' stroke-width='.8'/><circle cx='32' cy='50' r='13' fill='none' stroke='#9a865899' stroke-width='.6' stroke-dasharray='1.500 2'/><path d='M32 28v-9M32 72v9M12 50H8M56 50h-4M18 36l-3-3M46 36l3-3M18 64l-3 3M46 64l3 3' stroke='#9a865899' stroke-width='.7'/><path d='M19 50q13-12 26 0q-13 12-26 0z' fill='#0d0916' stroke='#c8b078' stroke-width='.9'/><circle cx='32' cy='50' r='4.200' fill='none' stroke='#c8b078' stroke-width='.9'/><circle cx='32' cy='50' r='1.500' fill='#c8b078'/><path d='M9 9l2 2-2 2-2-2zM55 9l2 2-2 2-2-2zM9 87l2 2-2 2-2-2zM55 87l2 2-2 2-2-2z' fill='#9a8658'/></svg>";
+const st=document.createElement("style");
+st.textContent=".back-face{background-image:url(\""+"data:image/svg+xml,"+encodeURIComponent(svg)+"\")}";
+document.head.appendChild(st);
+})();
+/* пыль на фоне */
 (function(){
 const cv=$("dust"),ctx=cv.getContext("2d");
 let w=0,h=0,dots=[];
@@ -299,7 +318,7 @@ for(const d of dots){
 d.y-=d.s;if(d.y<-4){d.y=h+4;d.x=Math.random()*w}
 const a=.25+.35*Math.sin(t/900+d.p);
 ctx.beginPath();ctx.arc(d.x+Math.sin(t/1500+d.p)*8,d.y,d.r,0,6.283);
-ctx.fillStyle="rgba(214,183,121,"+a.toFixed(2)+")";ctx.fill();
+ctx.fillStyle="rgba(200,176,120,"+a.toFixed(2)+")";ctx.fill();
 }
 if(!reduce&&!document.hidden)requestAnimationFrame(frame);
 else if(!reduce)setTimeout(()=>requestAnimationFrame(frame),500);
