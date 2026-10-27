@@ -2,6 +2,7 @@
 (function(){
 "use strict";
 var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+var LOW=false;try{LOW=(navigator.deviceMemory&&navigator.deviceMemory<=3)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)}catch(e){} /* слабое устройство: меньше частиц и кадров */
 var SC=.5; /* половинное разрешение — мягкий туман, дёшево для телефона */
 function mk(z,op){var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;z-index:"+z+";pointer-events:none;opacity:"+op;document.body.insertBefore(c,document.body.firstChild);return c}
 function sprite(rgb){
@@ -19,7 +20,7 @@ function size(){
  layers.forEach(function(L){L.c.width=W;L.c.height=H;L.x=L.c.getContext("2d")});
 }
 function seed(){
- layers.forEach(function(L){L.p=[];for(var i=0;i<L.n;i++){
+ layers.forEach(function(L){L.p=[];for(var i=0;i<(LOW?Math.ceil(L.n*.6):L.n);i++){
   L.p.push({x:rnd(-.2,1.2)*W,y:rnd(L.yr[0],L.yr[1])*H,s:rnd(L.sp[0],L.sp[1])*(Math.random()<.5?-1:1),z:rnd(L.sz[0],L.sz[1])*SC,a:rnd(L.al[0],L.al[1]),ph:rnd(0,6.28),pf:rnd(.15,.45),vy:rnd(.01,.05)*(Math.random()<.5?-1:1),img:TINT[(Math.random()*TINT.length)|0]})
  }});
 }
@@ -41,7 +42,7 @@ function draw(now){
 var last=0;
 function loop(now){
  if(!running)return;
- if(now-last>33){last=now;draw(now)} /* ~30 fps */
+ if(now-last>(LOW?50:33)){last=now;draw(now)} /* ~30 fps, на слабых ~20 */
  requestAnimationFrame(loop);
 }
 function start(){

@@ -279,7 +279,7 @@ function ring(kind){
 }
 function startPoll(){
  clearInterval(S.poll);
- S.poll=setInterval(function(){paint();if(!document.hidden)sync();if(S.open&&S.tab==="dm"&&!S.peer)loadList();if(S.open&&S.tab==="fr"&&!fFind.value.trim())loadFriends()},S.open?3500:25000);
+ var tick=0;S.poll=setInterval(function(){paint();if(document.hidden)return;tick++;sync();if(S.open&&S.tab==="dm"&&!S.peer&&tick%2===0)loadList();if(S.open&&S.tab==="fr"&&!fFind.value.trim()&&tick%4===0)loadFriends()},S.open?3500:25000);
 }
 
 function pathIco(p){return PATH[p]||"👤"}

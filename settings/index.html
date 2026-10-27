@@ -9,7 +9,7 @@
 :root{--gold:#d6b779;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.86)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 html{background:#0a0812}
-body{min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,#3a2a6a55,transparent 60%),linear-gradient(#0e0a18,#08060e);overflow-x:hidden}
+body{min-height:100vh;min-height:100dvh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,#3a2a6a55,transparent 60%),linear-gradient(#0e0a18,#08060e);overflow-x:hidden}
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.5;animation:tw 3s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:.8}}
@@ -119,8 +119,11 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
 
   <section class="card">
     <h3>🕯 Атмосфера</h3>
-    <div class="sub">Мрачный стиль — приглушённые цвета, туман и тёмная виньетка. Яркий отключает затемнение (и может быть легче для слабых телефонов).</div>
-    <div class="sRow"><span>Мрачный стиль</span><label class="sw"><input type="checkbox" id="tOn"><i></i></label></div>
+    <div class="sub">Полная — приглушённые цвета, туман и тёмная виньетка. Лёгкая выглядит почти так же, но работает плавнее на телефонах. Яркая убирает затемнение совсем.</div>
+    <div class="sRow"><span>Режим</span>
+      <select id="tMode" style="background:#150e24;color:#f0e8d2;border:1px solid #3a3057;border-radius:10px;padding:7px 9px;font:13px system-ui">
+        <option value="light">Лёгкая</option><option value="dark">Полная</option><option value="vivid">Яркая</option>
+      </select></div>
   </section>
 
   <section class="card">
@@ -289,9 +292,11 @@ async function changePath(){
   window.testChat=()=>{LOTM_SND.resume();snd(c.tone)};
 })();
 (function(){
-  let m="dark";try{m=localStorage.getItem("lotm_tone")||"dark"}catch(e){}
-  $("tOn").checked=m!=="vivid";
-  $("tOn").addEventListener("change",e=>{try{localStorage.setItem("lotm_tone",e.target.checked?"dark":"vivid")}catch(_){}location.reload()});
+  const ph=matchMedia("(pointer:coarse)").matches||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"");
+  let m=null;try{m=localStorage.getItem("lotm_tone")}catch(e){}
+  if(m!=="dark"&&m!=="light"&&m!=="vivid")m=ph?"light":"dark";
+  $("tMode").value=m;
+  $("tMode").addEventListener("change",e=>{try{localStorage.setItem("lotm_tone",e.target.value)}catch(_){}location.reload()});
 })();
 (function(){
   const box=$("ntfCard"),inputs=[...box.querySelectorAll("input[data-n]")];

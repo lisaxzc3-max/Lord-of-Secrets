@@ -13,6 +13,8 @@ var css=
 ".lt-sp{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;border:2px solid #ffffff44;border-top-color:#ffd98a;animation:ltsp .7s linear infinite;pointer-events:none;box-shadow:0 0 8px #ffd98a55}"+
 "@keyframes ltsp{to{transform:rotate(360deg)}}"+
 "#ltBar{position:fixed;left:0;top:0;height:2px;width:0;z-index:100000;background:linear-gradient(90deg,transparent,#ffd98a,#a98fd0);box-shadow:0 0 8px #ffd98a;opacity:0;pointer-events:none;transition:width .4s ease-out,opacity .3s}"+
+"a,button,[role=button],.btn,label,select,summary,input[type=checkbox],input[type=radio]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}"+
+"html{-webkit-text-size-adjust:100%;text-size-adjust:100%}"+
 "@media(prefers-reduced-motion:reduce){.lt-sp{animation-duration:2s}}";
 try{var st=document.createElement("style");st.textContent=css;document.head.appendChild(st)}catch(e){}
 /* --- верхняя полоска загрузки --- */
