@@ -19,6 +19,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}button:active{tran
 .eyebrow{font-size:9px;letter-spacing:.3em;color:var(--bronze);text-transform:uppercase}
 .head h1{font:400 20px Georgia,serif;letter-spacing:.1em;margin:2px 0 0;color:#e8dcc0;text-shadow:0 0 14px #a3262e}
 .hidden{display:none!important}
+.noan .card,.noan .it,.noan .logbox div,.noan .fx{animation:none!important}
 .card{position:relative;background:linear-gradient(160deg,#1a1120f2,#0c0810f7);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px;box-shadow:0 8px 26px #0009;animation:cin .5s ease-out backwards}
 @keyframes cin{from{opacity:0;transform:translateY(10px);filter:blur(4px)}}
 .card:before,.card:after{content:"";position:absolute;width:14px;height:14px;border:1px solid var(--bronze);opacity:.55;pointer-events:none}
@@ -31,14 +32,13 @@ button,input{font:inherit;color:inherit}button{cursor:pointer}button:active{tran
 .hero .ttl{position:absolute;left:0;right:0;bottom:8px;text-align:center;z-index:2}
 .hero .ttl b{display:block;font:400 22px Georgia,serif;letter-spacing:.26em;color:#e8dcc0;text-shadow:0 0 18px #d4343f}
 .hero .ttl small{font-size:11px;color:#b8a0a8;letter-spacing:.1em}
-.fl{animation:fl .18s steps(2) infinite alternate;transform-box:fill-box;transform-origin:50% 100%}@keyframes fl{to{opacity:.65;transform:scaleY(.9)}}
+.fl{transform-box:fill-box;transform-origin:50% 100%}
 /* кнопки */
 .btn{position:relative;overflow:hidden;border:1px solid #5a4a64;background:linear-gradient(180deg,#2c2034,#140d19);border-radius:10px;padding:9px 13px;font-size:12px;color:var(--bone);letter-spacing:.05em;box-shadow:inset 0 1px 0 #ffffff14,0 3px 12px #000a;transition:box-shadow .3s}
-.btn:before{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:bsh 5s ease-in-out infinite}
+.btn:before{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:none}
 @keyframes bsh{0%,70%{left:-60%}100%{left:130%}}
 .btn:hover{border-color:var(--vio);box-shadow:0 0 18px #6a3a9a88}
-.btn.main{border-color:#c0343e;background:linear-gradient(180deg,#5a1620,#220810);color:#fff0dc;box-shadow:0 0 14px #a3262e66;animation:mp 3.6s ease-in-out infinite}
-@keyframes mp{50%{box-shadow:0 0 26px #d4343faa}}
+.btn.main{border-color:#c0343e;background:linear-gradient(180deg,#5a1620,#220810);color:#fff0dc;box-shadow:0 0 14px #a3262e66}
 .btn.sm{padding:5px 9px;font-size:11px}.btn[disabled]{opacity:.4;pointer-events:none}
 .rip{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff55,transparent 70%);transform:scale(0);animation:rp .7s ease-out forwards;pointer-events:none}@keyframes rp{to{transform:scale(2.4);opacity:0}}
 input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:10px;padding:10px;outline:none}input:focus{border-color:var(--vio);box-shadow:0 0 12px #6a3a9a55}
@@ -70,7 +70,7 @@ input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:1
 .fgt.foe .pic{border-color:#8a2a34}.fgt.me .pic{border-color:#6a4a8a}
 .fgt .pic img{width:100%;height:100%;object-fit:cover;display:block}
 .fgt.foe .pic img{transform:scaleX(-1)}
-.fgt.turn .pic{animation:tp 1.6s ease-in-out infinite}@keyframes tp{50%{box-shadow:0 0 30px #ffd98a99}}
+.fgt.turn .pic{box-shadow:0 0 26px #ffd98a88;border-color:#ffd98a}
 .fgt .nm{margin-top:6px;font:400 14px Georgia,serif;color:#eadfc4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fgt .lv{font-size:10px;color:var(--muted);letter-spacing:.1em}
 .hp{height:10px;border-radius:6px;background:#000a;border:1px solid #3a2a3a;overflow:hidden;margin:6px 4px 2px;position:relative}
@@ -79,7 +79,7 @@ input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:1
 .hpt{font-size:11px;color:#c8bcd0;font-variant-numeric:tabular-nums}
 .fxs{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:4px;min-height:18px}
 .fx{font-size:9px;padding:1px 6px;border-radius:999px;border:1px solid;letter-spacing:.04em;animation:cin .4s}
-.vs{flex:0 0 38px;align-self:center;font:400 20px Georgia,serif;color:var(--crimb);text-shadow:0 0 14px #d4343f;animation:vp 2s ease-in-out infinite}@keyframes vp{50%{opacity:.5;transform:scale(.9)}}
+.vs{flex:0 0 38px;align-self:center;font:400 20px Georgia,serif;color:var(--crimb);text-shadow:0 0 14px #d4343f}
 .hit{animation:hit .5s}@keyframes hit{0%{transform:translateX(0)}20%{transform:translateX(-9px) rotate(-3deg);filter:brightness(2) saturate(2) hue-rotate(-20deg)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}100%{transform:none}}
 .heal{animation:heal .8s}@keyframes heal{40%{filter:brightness(1.6) hue-rotate(80deg);box-shadow:0 0 30px #6fd69a}}
 .dodge{animation:dg .5s}@keyframes dg{30%{transform:translateX(16px);opacity:.4}100%{transform:none}}
@@ -92,12 +92,13 @@ input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:1
 .ring circle{fill:none;stroke-width:4}
 .ring .bg{stroke:#2a1a2a}.ring .fg{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s;filter:drop-shadow(0 0 4px currentColor)}
 .ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 18px Georgia,serif;color:#eadfc4;font-variant-numeric:tabular-nums}
-.ring.low .fg{stroke:#ff4a5a}.ring.low b{color:#ff8a90;animation:vp .5s infinite}
+.ring.low .fg{stroke:#ff4a5a}.ring.low b{color:#ff8a90}
 .tl{font:400 13px Georgia,serif;letter-spacing:.12em;margin-top:5px;color:#eadfc4}.tl.my{color:var(--gold);text-shadow:0 0 12px #c9a45a}.tl.foe{color:#d08a90}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .act{position:relative;overflow:hidden;text-align:left;padding:9px 10px;border-radius:12px;border:1px solid #5a4a64;background:linear-gradient(180deg,#2a1e32,#130c18);display:flex;gap:9px;align-items:center;box-shadow:inset 0 1px 0 #ffffff12;transition:.25s}
 .act svg{flex:0 0 24px;width:24px;height:24px;color:var(--bone)}
 .act b{display:block;font:400 13px Georgia,serif;color:#eadfc4}.act small{display:block;font-size:10px;color:var(--muted);line-height:1.25}
+.ei{font-style:normal;font-size:20px;flex:0 0 24px;text-align:center;filter:drop-shadow(0 0 6px #a98fd0)}
 .act.sk{border-color:#6a3a8a}.act.sk svg{color:var(--vio)}
 .act:not([disabled]):hover{box-shadow:0 0 18px #a3262e88;border-color:var(--crimb)}
 .act[disabled]{opacity:.45;pointer-events:none}
@@ -159,7 +160,10 @@ async function call(p,snd){
 async function loadState(quiet){
  let d;try{d=await api({action:"arena_state"})}catch(e){if(!quiet&&e.message!=="need_start")toast(e.message,1);return}
  if(d.ok===false){toast(d.text,1);return}
+ const sig=JSON.stringify(d,(k,v)=>(k==="left"||k==="now")?undefined:v);
+ const same=sig===lastSig;lastSig=sig;
  S=d;if(d.fight)setFight(d.fight);else if(F&&F.st==="on"){F=null}
+ if(same&&quiet)return;
  render();
 }
 function setFight(f){
@@ -169,8 +173,10 @@ function setFight(f){
  if(F.st==="end"&&seenEnd!==F.id){seenEnd=F.id;setTimeout(showResult,900)}
 }
 /* ---------- рендер ---------- */
+let lastSig="",lastView="";
 function render(){
  const el=$("app");if(!S)return;
+ const vk=F?"f"+F.id:"l"+tab;el.classList.toggle("noan",vk===lastView);lastView=vk;
  if(F){el.innerHTML=fightHtml();bindFight();startTimer();return}
  el.innerHTML=lobbyHtml();bindLobby();
 }
@@ -206,8 +212,8 @@ function bindLobby(){
 }
 function fxChips(p){
  const x=p.fx,o=[];
- if(x.guard)o.push(["Покров","#8fb3a6"]);if(x.evade)o.push(["Маска","#a98fd0"]);if(x.rage)o.push(["Ярость ×"+x.rage,"#ff8a5a"]);
- if(x.weak)o.push(["Слабость ×"+x.weak,"#b8a0d0"]);if(x.bleed)o.push(["Кровь ×"+x.bleed,"#d4343f"]);if(x.stun)o.push(["Оглушён","#ffd98a"]);
+ if(x.evade)o.push(["Уклонение ×"+x.evade,"#a98fd0"]);if(x.pray)o.push(["Ярость шторма","#ff8a5a"]);
+ if(x.act)o.push(["Ослаблен","#b8a0d0"]);if(x.miss)o.push(["Провокация","#d4343f"]);if(x.echo)o.push(["Эхо кинжала","#f1e6c8"]);if(x.stun)o.push(["Не может ходить ×"+x.stun,"#ffd98a"]);
  return o.map(c=>'<span class="fx" style="color:'+c[1]+';border-color:'+c[1]+'">'+c[0]+'</span>').join("");
 }
 function fgt(p,cls,turn){
@@ -218,8 +224,8 @@ function fightHtml(){
  const f=F,my=f.turn==="me"&&f.st==="on";
  let h='<div class="stage"><div class="fighters">'+fgt(f.me,"me",f.turn==="me"&&f.st==="on")+'<div class="vs">VS</div>'+fgt(f.foe,"foe",f.turn==="foe"&&f.st==="on")+'</div>';
  h+='<div class="turnb"><div class="ring" id="ring"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="28"/><circle class="fg" id="rfg" cx="32" cy="32" r="28" stroke-dasharray="175.9" stroke-dashoffset="0"/></svg><b id="rt">'+f.left+'</b></div><div class="tl '+(my?"my":"foe")+'" id="tl">'+(f.st!=="on"?"Бой окончен":my?"Твой ход":"Ход соперника — "+esc(f.foe.n))+'</div></div></div>';
- h+='<div class="acts '+(my?"":"off")+'" id="acts"><button class="act" data-a="hit">'+ai("hit")+'<span><b>Удар</b><small>Обычная атака</small></span></button><button class="act" data-a="guard">'+ai("guard")+'<span><b>Тёмный Покров</b><small>Урон вдвое меньше, +5% здоровья</small></span></button>';
- f.sk.forEach((s,i)=>{const cd=f.me.cd[String(i+1)]|0;h+='<button class="act sk" data-a="s'+(i+1)+'" '+(cd>0?"disabled":"")+'>'+ai("s"+(i+1))+'<span><b>'+esc(s[0])+'</b><small>'+esc(s[1])+'</small></span>'+(cd>0?'<span class="cdn">'+cd+'</span>':"")+'</button>'});
+ h+='<div class="acts '+(my?"":"off")+'" id="acts"><button class="act" data-a="hit" style="grid-column:1/-1">'+ai("hit")+'<span><b>Удар</b><small>Обычная атака, без перезарядки</small></span></button>';
+ f.sk.forEach((s,i)=>{const cd=f.me.cd[String(i+1)]|0;h+='<button class="act sk" data-a="s'+(i+1)+'" '+(cd>0?"disabled":"")+'><em class="ei">'+esc(s[3]||"✦")+'</em><span><b>'+esc(s[0])+'</b><small>'+esc(s[1])+'</small></span>'+(cd>0?'<span class="cdn">'+cd+'</span>':"")+'</button>'});
  h+='</div><div style="display:flex;justify-content:flex-end;margin:8px 0"><button class="btn sm" id="flee">Сдаться</button></div>';
  h+='<div class="card" style="padding:10px"><h3>Летопись боя · ход '+f.n+'</h3><div class="logbox" id="lb">'+f.log.map(l=>'<div class="'+l.s+'"><span>'+l.n+'</span>'+esc(l.x)+'</div>').join("")+'</div></div>';
  return h;
@@ -231,7 +237,7 @@ function bindFight(){
 }
 async function act(a){
  if(!F||F.turn!=="me"||F.st!=="on")return;
- sfx(a==="guard"?"back":a==="hit"?"tap":"rune");
+ sfx(a==="hit"?"tap":"rune");
  const d=await call({action:"arena_act",act:a});if(d&&d.fight){setFight(d.fight);render()}
 }
 async function surrender(){const d=await call({action:"arena_surrender"},"deny");if(d&&d.fight){setFight(d.fight);render()}}
