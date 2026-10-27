@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08060a">
+<title>Церковь Ночи — Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--ink:#08060a;--panel:rgba(18,13,22,.95);--line:#3a2f44;--text:#d8cfb8;--muted:#8f8798;--bone:#cdbf9f;--bronze:#8a7a58;--crim:#a3262e;--crimb:#d4343f;--vio:#a98fd0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{min-height:100%;background:var(--ink)}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(120% 60% at 50% 0,#2a1238,#09060c 62%,#050306)}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}button:active{transform:scale(.97)}
+#cv{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 12px calc(50px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:6px 0 10px}
+.back{color:var(--bone);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#120c16cc;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:.3em;color:var(--bronze);text-transform:uppercase}
+.head h1{font:400 20px Georgia,serif;letter-spacing:.1em;margin:2px 0 0;color:#e8dcc0;text-shadow:0 0 14px #a3262e}
+.hidden{display:none!important}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px;box-shadow:0 8px 26px #0009;animation:cin .5s ease-out backwards}
+@keyframes cin{from{opacity:0;transform:translateY(10px);filter:blur(4px)}}
+.card h3{margin:0 0 8px;font:700 12px Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--bone)}
+.muted{color:var(--muted);font-size:12px}
+/* церковь */
+.church{position:relative;height:210px;border-radius:20px;overflow:hidden;border:1px solid #3a2a44;box-shadow:0 0 40px #4a1a5a55,inset 0 0 60px #000;margin-bottom:12px;animation:cin .8s ease-out}
+.church svg{position:absolute;inset:0;width:100%;height:100%}
+.church .ttl{position:absolute;left:0;right:0;bottom:10px;text-align:center;z-index:2}
+.church .ttl b{display:block;font:400 22px Georgia,serif;letter-spacing:.24em;color:#e8dcc0;text-shadow:0 0 18px #a3262e}
+.church .ttl small{font-size:11px;color:#a89cb8;letter-spacing:.1em}
+.glass{animation:glw 5s ease-in-out infinite}@keyframes glw{50%{opacity:.6}}
+.cfl{animation:cf .2s steps(2) infinite alternate}@keyframes cf{to{opacity:.65}}
+/* баннер клана */
+.ban{position:relative;border-radius:20px;border:1px solid var(--ec);padding:14px;margin-bottom:12px;background:radial-gradient(120% 140% at 0% 0%,var(--eg),transparent 65%),linear-gradient(160deg,#1c1224,#0a070d);overflow:hidden;box-shadow:0 0 30px var(--eg)}
+.ban:after{content:"";position:absolute;top:0;bottom:0;width:70px;left:-90px;background:linear-gradient(100deg,transparent,#ffffff14,transparent);transform:skewX(-18deg);animation:shn 7s ease-in-out infinite}
+@keyframes shn{0%,65%{left:-90px}100%{left:120%}}
+.ban .row{display:flex;gap:12px;align-items:center;position:relative;z-index:1}
+.emb{flex:0 0 64px;height:64px;border-radius:16px;background:#050306cc;border:1px solid var(--ec);display:flex;align-items:center;justify-content:center;color:var(--ec);box-shadow:inset 0 0 16px #000,0 0 18px var(--eg);animation:ep 4.5s ease-in-out infinite}
+@keyframes ep{50%{box-shadow:inset 0 0 16px #000,0 0 30px var(--eg)}}
+.emb svg{width:38px;height:38px;filter:drop-shadow(0 0 5px var(--eg))}
+.ban h2{margin:0;font:400 20px Georgia,serif;letter-spacing:.05em;color:#eadfc4}
+.ban .tg{color:var(--ec);font-size:12px;letter-spacing:.2em}
+.bar{height:6px;border-radius:6px;background:#000a;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#4a1a6a,var(--ec));box-shadow:0 0 8px var(--ec);transition:width .8s}
+.motd{position:relative;z-index:1;margin-top:10px;padding:8px 10px;border-left:2px solid var(--ec);background:#0006;border-radius:0 8px 8px 0;font-style:italic;font-size:12px;color:#c9bfd8}
+.stats{display:flex;gap:8px;margin-top:10px;position:relative;z-index:1}
+.stats div{flex:1;text-align:center;border:1px solid #ffffff12;border-radius:10px;padding:6px 2px;background:#0005;font-size:10px;color:var(--muted)}
+.stats b{display:block;font-size:15px;color:var(--bone)}
+/* вкладки */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:#120c16;font-size:12px;letter-spacing:.04em;color:var(--muted);transition:.25s}
+.tab.on{color:#eadfc4;border-color:var(--ec);background:linear-gradient(#2a1430,#120c16);box-shadow:0 0 14px var(--eg)}
+.tab .dot{display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:var(--crim);color:#fff;font-size:10px;text-align:center;margin-left:5px}
+/* списки */
+.it{display:flex;gap:10px;align-items:center;padding:9px 10px;border:1px solid #2c2234;border-radius:12px;background:linear-gradient(145deg,#1a1220,#0d0910);margin-bottom:8px;animation:cin .4s ease-out backwards}
+.it .l{flex:1;min-width:0}.it b{display:block;color:#e0d4b8;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.it small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+.me{border-color:var(--ec);box-shadow:0 0 12px var(--eg)}
+.rk{flex:0 0 34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#050306;display:flex;align-items:center;justify-content:center;font:700 13px Georgia,serif;color:var(--bone)}
+.rk.r4{color:#ffd98a;border-color:#8a6a28;box-shadow:0 0 12px #c9a45a66}.rk.r3{color:#c9b8e8;border-color:#6a4a8a}
+.tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:999px;border:1px solid #4a3a5a;color:#b8a8d8;margin-left:5px;vertical-align:1px}
+.on1{color:#8fd6a6!important}
+.btn{border:1px solid var(--line);background:linear-gradient(#241a2c,#120c16);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--bone);letter-spacing:.03em}
+.btn.main{border-color:var(--crim);background:linear-gradient(#4a1219,#22090e);color:#f1e6d0}
+.btn.sm{padding:5px 9px;font-size:11px}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.btn.bad{border-color:#6a2028;color:#e08a90}
+.row2{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input,textarea,select{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--text);outline:none}
+input:focus,textarea:focus{border-color:var(--vio);box-shadow:0 0 12px #6a3a9a55}
+label{display:block;font-size:11px;color:var(--muted);margin:8px 0 4px;letter-spacing:.06em}
+.big{font:400 34px Georgia,serif;color:#ffd98a;text-shadow:0 0 18px #c9a45a88;text-align:center;font-variant-numeric:tabular-nums}
+.pg{display:flex;gap:3px;margin-top:4px}.pg i{flex:1;height:5px;border-radius:3px;background:#000a;border:1px solid #2c2234}.pg i.f{background:var(--ec);box-shadow:0 0 6px var(--ec);border-color:var(--ec)}
+.ico{flex:0 0 38px;height:38px;border-radius:10px;background:#050306;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--bone)}
+.ico svg{width:24px;height:24px}
+.embpick{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+.embpick button{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);background:#0a060d;display:flex;align-items:center;justify-content:center;padding:0}
+.embpick button svg{width:60%;height:60%}.embpick button.on{box-shadow:0 0 12px currentColor;border-color:currentColor}
+.ter{position:relative;overflow:hidden}
+.ter.mine{border-color:#6fae92;box-shadow:0 0 16px #2a7a5a55}
+.ter.hos{border-color:#6a2028}
+.sk .pt{font:700 11px Georgia;color:var(--bone)}
+.lg{font-size:12px;padding:7px 0;border-bottom:1px solid #ffffff0d;color:#b8afc4}.lg time{color:var(--bronze);font-size:10px;margin-right:6px}
+.empty{text-align:center;color:var(--muted);padding:18px 8px;font-style:italic;font-size:12px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);z-index:60;background:#1a0f20f0;border:1px solid var(--crim);color:#eadfc4;padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;max-width:90%;text-align:center;box-shadow:0 0 24px #a3262e66}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.sheet{position:fixed;inset:0;z-index:70;background:#000b;display:flex;align-items:flex-end;justify-content:center;animation:sIn .25s}
+@keyframes sIn{from{opacity:0}}
+.sheet>div{width:100%;max-width:480px;background:linear-gradient(#1c1224,#0b0710);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom));animation:sUp .3s ease-out;box-shadow:0 -10px 40px #4a1a5a66}
+@keyframes sUp{from{transform:translateY(60px)}}
+.sheet h4{margin:0 0 10px;font:400 17px Georgia,serif;color:#eadfc4;letter-spacing:.06em}
+.sheet .btn{display:block;width:100%;margin:6px 0;padding:11px;text-align:center}
+.seal{position:fixed;inset:0;z-index:90;background:radial-gradient(circle,#2a0a30,#030204 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:sIn .6s;text-align:center;padding:20px}
+.seal .emb{width:110px;height:110px;flex-basis:auto;border-radius:26px}.seal .emb svg{width:70px;height:70px}
+.seal h2{font:400 24px Georgia,serif;letter-spacing:.14em;color:#eadfc4;margin:18px 0 6px;text-shadow:0 0 18px #a3262e}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="wrap">
+  <div class="head"><a class="back" id="back" href="../index.html">← Город</a><div><div class="eyebrow">Центр · Тинген</div><h1>Церковь Ночи</h1></div></div>
+  <div id="app"><div class="empty">Свечи зажигаются…</div></div>
+</div>
+<div class="toast" id="toast"></div>
+<div id="layer"></div>
+<script src="../shared/auth.js"></script>
+<script src="../shared/alchemy.js"></script>
+<script src="../shared/sound.js"></script>
+<script>
+"use strict";
+const A=window.LOTM_ALCH,tg=window.Telegram&&window.Telegram.WebApp;
+try{tg&&tg.ready();tg&&tg.expand()}catch(_){}
+const qs=new URLSearchParams(location.search),aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+$("back").href="../index.html"+location.search;
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+async function api(p){
+ if(!ACTION_URL)return Promise.reject(new Error("need_start"));
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Некорректный ответ.");return d;
+}
+function toast(t,bad){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2800);if(bad)sfx("deny")}
+/* ---------- эмблемы ---------- */
+const EMB=[
+ '<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>',
+ '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ '<path d="M5 12a7 7 0 1 1 14 0v3l-2 1v3H7v-3l-2-1z"/><circle cx="9.5" cy="12" r="1.3"/><circle cx="14.5" cy="12" r="1.3"/><path d="M11 17v2M13 17v2"/>',
+ '<path d="M3 18c5 0 8-3 9-8l4-4 5 2-3 2 2 2-5 1c-1 4-5 7-12 7z"/><circle cx="17" cy="8" r=".6"/>',
+ '<circle cx="8" cy="8" r="4"/><path d="M11 11l9 9M16 16l2-2M18 18l2-2"/>',
+ '<path d="M12 2l3 10-3 3-3-3z"/><path d="M8 15h8M12 15v7"/>',
+ '<path d="M12 22V10M12 15l-5-4M12 13l5-5M12 10L9 5M12 8l4-4"/>',
+ '<path d="M12 2c2 3 2 5 0 6-2-1-2-3 0-6zM9 11h6v11H9z"/><path d="M12 9v2"/>'
+];
+const ECOL=["#a98fd0","#c9a45a","#cdbf9f","#8fb3a6","#d6b779","#d4343f","#6fae92","#e0a050"];
+const ENAME=["Луна","Око","Череп","Ворон","Ключ","Кинжал","Древо","Свеча"];
+const embSvg=(i,cls)=>'<svg class="'+(cls||"")+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'+(EMB[i%8]||EMB[0])+'</svg>';
+const ecss=i=>"--ec:"+ECOL[i%8]+";--eg:"+ECOL[i%8]+"44";
+const IC={
+ coin:'<circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 10h6M9 14h6"/>',
+ chest:'<rect x="3" y="9" width="18" height="11" rx="2"/><path d="M3 13h18M4 9a8 5 0 0 1 16 0M12 12v3"/>',
+ crown:'<path d="M3 18l2-10 5 5 2-7 2 7 5-5 2 10z"/>',
+ scroll:'<path d="M6 3h12v15a3 3 0 0 1-3 3H6zM6 3a3 3 0 0 0-3 3v1h3M9 8h6M9 12h6M9 16h4"/>',
+ land:'<path d="M3 20l5-9 4 6 3-4 6 7zM12 3v5M12 3l4 2-4 2"/>',
+ star:'<path d="M12 2l2.6 6.4 6.9.5-5.3 4.4 1.7 6.7L12 16.5 6.1 20l1.7-6.7L2.5 8.9l6.9-.5z"/>'
+};
+const ico=n=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'+IC[n]+'</svg>';
+const ROM=["I","II","III","IV","V"];
+function ago(ts){if(!ts)return"—";const d=Math.max(0,(S.now||Date.now()/1000)-ts);if(d<120)return"только что";if(d<3600)return(d/60|0)+" мин назад";if(d<86400)return(d/3600|0)+" ч назад";return(d/86400|0)+" дн назад"}
+function left(s){s=Math.max(0,s|0);const h=s/3600|0,m=(s%3600)/60|0;return h>=24?(h/24|0)+" д "+h%24+" ч":h+" ч "+m+" мин"}
+let S=null,tab="mem",busy=false,view="find",lastLv=null;
+/* ---------- загрузка ---------- */
+async function load(q){
+ try{S=await api({action:"clan_state",q:q||""})}catch(e){if(e.message!=="need_start")toast(e.message,1);return}
+ if(S.ok===false){toast(S.text||"Ошибка",1);return}
+ if(S.in&&lastLv!==null&&S.lv>lastLv){sfx("level");sfx("bell")}
+ if(S.in)lastLv=S.lv;
+ render();
+}
+async function act(p,okSnd){
+ if(busy)return null;busy=true;
+ try{
+  const d=await api(p);
+  if(d.ok===false){toast(d.text||d.error||"Не вышло",1);return null}
+  sfx(okSnd||"tap");
+  if(d.in!==undefined){S=d;if(S.in){if(lastLv!==null&&S.lv>lastLv){sfx("level");sfx("bell")}lastLv=S.lv}render();if(d.msg)toast(d.msg)}
+  else if(d.left){S=null;lastLv=null;toast(d.text);await load()}
+  else if(d.applied){toast(d.text);await load()}
+  else{toast(d.text||"Готово")}
+  return d;
+ }catch(e){toast(e.message,1);return null}
+ finally{busy=false}
+}
+/* ---------- рендер ---------- */
+function render(){
+ const el=$("app");if(!S){return}
+ if(!S.in){el.innerHTML=renderOut();bindOut();return}
+ document.body.style.cssText=ecss(S.e);
+ el.innerHTML=renderIn();bindIn();
+}
+function churchSvg(){return '<svg viewBox="0 0 360 210" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="chs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0614"/><stop offset="1" stop-color="#34173a"/></linearGradient><radialGradient id="chg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e8c8ff"/><stop offset=".5" stop-color="#8a4ad0"/><stop offset="1" stop-color="#3a1a5a"/></radialGradient><radialGradient id="chm" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#cdbf9f" stop-opacity=".5"/><stop offset="1" stop-color="#cdbf9f" stop-opacity="0"/></radialGradient></defs><rect width="360" height="210" fill="url(#chs)"/><g fill="#fff" opacity=".5"><circle cx="40" cy="30" r=".8"/><circle cx="310" cy="40" r=".8"/><circle cx="90" cy="64" r=".6"/><circle cx="260" cy="22" r=".7"/></g><circle cx="300" cy="50" r="46" fill="url(#chm)"/><circle cx="300" cy="50" r="18" fill="#cdbf9f"/><path d="M120 210V110L140 84V60L150 40L160 60V84L180 52L200 84V60L210 40L220 60V84L240 110V210Z" fill="#07040a" stroke="#2a1e32"/><path d="M180 52V22M174 30h12" stroke="#6a2a3a" stroke-width="2"/><circle class="glass" cx="180" cy="104" r="17" fill="url(#chg)" stroke="#2a1e32" stroke-width="2"/><path d="M180 87v34M163 104h34M168 92l24 24M192 92l-24 24" stroke="#07040a" stroke-width="1.5"/><path class="glass" d="M150 150v-24a6 6 0 0 1 12 0v24zM198 150v-24a6 6 0 0 1 12 0v24z" fill="#6a3a9a" opacity=".8"/><path d="M168 210v-40a12 12 0 0 1 24 0v40z" fill="#030205" stroke="#3a2a40"/><path d="M60 210v-60M300 210v-70M60 170l-14-14M60 160l12-12M300 164l14-14M300 154l-12-12" stroke="#050306" stroke-width="4" stroke-linecap="round"/><rect x="100" y="176" width="5" height="12" fill="#cdbf9f"/><path class="cfl" d="M102.5 168q-3 5 0 8q3-3 0-8z" fill="#ffb25a"/><rect x="256" y="176" width="5" height="12" fill="#cdbf9f"/><path class="cfl" d="M258.5 168q-3 5 0 8q3-3 0-8z" fill="#ffb25a"/><rect y="196" width="360" height="14" fill="#050306"/></svg>'}
+function renderOut(){
+ const cr=view==="create";
+ let h='<div class="church">'+churchSvg()+'<div class="ttl"><b>ЦЕРКОВЬ НОЧИ</b><small>Здесь собираются те, кто не боится темноты</small></div></div>';
+ h+='<div class="tabs" style="--ec:#a98fd0;--eg:#a98fd044"><button class="tab '+(!cr?"on":"")+'" data-v="find">Найти клан</button><button class="tab '+(cr?"on":"")+'" data-v="create">Основать клан</button></div>';
+ if(!cr){
+  h+='<div class="card"><input id="q" placeholder="Название или тег…" maxlength="20"><div class="muted" style="margin-top:6px">Кланов в городе: '+(S.total|0)+'</div></div>';
+  if(!S.list.length)h+='<div class="empty">Пока нет ни одного клана. Стань первым.</div>';
+  S.list.forEach((c,i)=>{
+   const ap=S.apply===c.id;
+   h+='<div class="it" style="'+ecss(c.e)+';animation-delay:'+i*60+'ms"><div class="ico" style="color:var(--ec);border-color:var(--ec)">'+embSvg(c.e)+'</div><div class="l"><b>'+esc(c.n)+' <span class="tag">'+esc(c.t)+'</span></b><small>Ур. '+c.lv+' · '+c.mem+'/'+c.cap+' · сила '+c.pw+' · '+(c.open?"открыт":"по заявке")+(c.minlv>1?" · от "+c.minlv+" ур.":"")+'</small>'+(c.d?'<small style="font-style:italic">'+esc(c.d)+'</small>':"")+'</div>'+(ap?'<button class="btn sm" data-cancel="1">Отозвать</button>':'<button class="btn sm main" data-join="'+esc(c.id)+'" '+(c.mem>=c.cap?"disabled":"")+'>'+(c.open?"Вступить":"Заявка")+'</button>')+'</div>';
+  });
+ }else{
+  h+='<div class="card"><h3>Ритуал основания</h3><div class="muted">Цена — 500 ₤, нужен 3 уровень. У тебя: '+S.pounds+' ₤, ур. '+S.level+'.</div><label>Название (3–20)</label><input id="cn" maxlength="20" placeholder="Орден Багровой Луны"><label>Тег (2–4)</label><input id="ct" maxlength="4" placeholder="BML" style="text-transform:uppercase"><label>Эмблема</label><div class="embpick" id="ep">'+EMB.map((_,i)=>'<button type="button" data-e="'+i+'" class="'+(i===(window._emb|0)?"on":"")+'" style="color:'+ECOL[i]+'" title="'+ENAME[i]+'">'+embSvg(i)+'</button>').join("")+'</div><div style="margin-top:14px"><button class="btn main" id="mk" style="width:100%;padding:12px">Основать клан · 500 ₤</button></div></div>';
+ }
+ return h;
+}
+function bindOut(){
+ document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{view=b.dataset.v;sfx("tap");render()});
+ const q=$("q");if(q){let t;q.oninput=()=>{clearTimeout(t);t=setTimeout(()=>load(q.value),400)}}
+ document.querySelectorAll("[data-join]").forEach(b=>b.onclick=async()=>{const d=await act({action:"clan_join",cid:b.dataset.join},"win");if(d&&d.in)seal(S,"Добро пожаловать")});
+ document.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=()=>act({action:"clan_apply_cancel"},"back").then(()=>load()));
+ document.querySelectorAll("#ep [data-e]").forEach(b=>b.onclick=()=>{window._emb=+b.dataset.e;sfx("rune");document.querySelectorAll("#ep button").forEach(x=>x.classList.toggle("on",x===b))});
+ const mk=$("mk");if(mk)mk.onclick=async()=>{const d=await act({action:"clan_create",name:$("cn").value,tag:$("ct").value,emb:window._emb|0},"stamp");if(d&&d.in){sfx("bell");setTimeout(()=>sfx("whisper"),700);seal(S,"Клан основан")}}
+}
+const TABS=[["mem","Состав"],["gold","Казна"],["store","Склад"],["ct","Контракты"],["terr","Земли"],["sk","Навыки"],["log","Журнал"]];
+function renderIn(){
+ const p=S.perm,nx=S.nx?Math.min(100,Math.max(0,(S.xp-(S.lv>1?[0,60,200,450,800,1300,2000,3000,4500,6500][S.lv-1]:0))/(S.nx-[0,60,200,450,800,1300,2000,3000,4500,6500][S.lv-1])*100)):100;
+ let h='<div class="ban" style="'+ecss(S.e)+'"><div class="row"><div class="emb">'+embSvg(S.e)+'</div><div style="flex:1;min-width:0"><div class="tg">['+esc(S.tg)+']</div><h2>'+esc(S.n)+'</h2><div class="muted">Уровень '+S.lv+' · '+(S.nx?S.xp+' / '+S.nx+' влияния':"предел")+'</div><div class="bar"><i style="width:'+nx+'%"></i></div></div></div>';
+ if(S.motd)h+='<div class="motd">«'+esc(S.motd)+'»</div>';
+ h+='<div class="stats"><div><b>'+S.mem.length+'/'+S.cap+'</b>братьев</div><div><b>'+S.gold+'</b>в казне ₤</div><div><b>'+S.held+'</b>земель</div><div><b>'+S.kills+'</b>охот</div></div></div>';
+ const tabs=TABS.concat(p.panel?[["adm","Управление"]]:[]);
+ h+='<div class="tabs" style="'+ecss(S.e)+'">'+tabs.map(t=>'<button class="tab '+(tab===t[0]?"on":"")+'" data-t="'+t[0]+'">'+t[1]+(t[0]==="adm"&&S.ap.length?'<span class="dot">'+S.ap.length+'</span>':"")+'</button>').join("")+'</div>';
+ h+='<div id="pane" style="'+ecss(S.e)+'">'+pane()+'</div>';
+ return h;
+}
+function pane(){
+ return ({mem:pMem,gold:pGold,store:pStore,ct:pCt,terr:pTerr,sk:pSk,log:pLog,adm:pAdm}[tab]||pMem)();
+}
+function rankName(m){return S.ranks[m.r]}
+function pMem(){
+ return S.mem.map((m,i)=>'<div class="it '+(m.me?"me":"")+'" data-m="'+esc(m.uid)+'" style="animation-delay:'+i*40+'ms"><div class="rk r'+m.r+'">'+ROM[m.r]+'</div><div class="l"><b>'+esc(m.n)+(m.p?'<span class="tag">'+esc(S.posts[m.p])+'</span>':"")+'</b><small>'+esc(rankName(m))+' · ур. '+m.l+' · вклад '+m.c+'</small></div><small class="'+((S.now-m.s)<300?"on1":"")+'">'+((S.now-m.s)<300?"в сети":ago(m.s))+'</small></div>').join("");
+}
+function pGold(){
+ const p=S.perm;
+ let h='<div class="card"><h3>Казна клана</h3><div class="big">'+S.gold+' ₤</div><div class="muted" style="text-align:center">Твои фунты: '+S.pounds+' ₤</div>';
+ h+='<label>Сумма</label><input id="amt" type="number" min="1" inputmode="numeric" placeholder="100"><div class="row2" style="margin-top:8px"><button class="btn main" id="dep">Внести</button>'+(p.withdraw?'<button class="btn" id="wd">Забрать</button>':'')+'<span class="muted" id="qk"></span></div>';
+ h+='<div class="row2" style="margin-top:8px">'+[50,200,1000].map(n=>'<button class="btn sm" data-q="'+n+'">'+n+'</button>').join("")+'</div>';
+ if(!p.withdraw)h+='<div class="muted" style="margin-top:8px">Забирать монеты могут Казначей Теней и Предводитель.</div>';
+ h+='</div><div class="card"><h3>Щедрейшие</h3>';
+ const top=S.mem.slice().sort((a,b)=>b.c-a.c).slice(0,5);
+ h+=top.map((m,i)=>'<div class="it"><div class="rk">'+(i+1)+'</div><div class="l"><b>'+esc(m.n)+'</b></div><b style="flex:none;color:#ffd98a">'+m.c+'</b></div>').join("")+'</div>';
+ return h;
+}
+function pStore(){
+ const p=S.perm,A_=A;let h='<div class="card"><h3>Склад клана</h3>';
+ const si=Object.keys(S.si),sp=Object.keys(S.sp);
+ if(!si.length&&!sp.length)h+='<div class="empty">Склад пуст.</div>';
+ sp.forEach(k=>{const P=A_.POT[k];if(!P)return;h+=row('<span style="color:'+P.c+'">'+A_.potion(k)+'</span>',P.n,"Зелье · ×"+S.sp[k],p.take?'<button class="btn sm" data-take="p:'+k+'">Взять</button>':"")});
+ si.forEach(k=>{const I=A_.ING[k];if(!I)return;h+=row('<span style="color:'+A_.RAR[I.r]+'">'+A_.glyph(k)+'</span>',I.n,A_.RARN[I.r]+" · ×"+S.si[k],p.take?'<button class="btn sm" data-take="i:'+k+'">Взять</button>':"")});
+ h+='</div><div class="card"><h3>Твои запасы</h3>';
+ const mi=Object.keys(S.my_ingr),mp=Object.keys(S.my_pots);
+ if(!mi.length&&!mp.length)h+='<div class="empty">В сумке нет ни ингредиентов, ни зелий.</div>';
+ mp.forEach(k=>{const P=A_.POT[k];if(!P)return;h+=row('<span style="color:'+P.c+'">'+A_.potion(k)+'</span>',P.n,"×"+S.my_pots[k],'<button class="btn sm" data-put="p:'+k+'">Сдать</button>')});
+ mi.forEach(k=>{const I=A_.ING[k];if(!I)return;h+=row('<span style="color:'+A_.RAR[I.r]+'">'+A_.glyph(k)+'</span>',I.n,"×"+S.my_ingr[k],'<button class="btn sm" data-put="i:'+k+'">+1</button><button class="btn sm" data-put5="i:'+k+'">все</button>')});
+ return h+'</div>';
+}
+function row(ic,n,sub,btn){return '<div class="it"><div class="ico">'+ic+'</div><div class="l"><b>'+esc(n)+'</b><small>'+sub+'</small></div><div class="row2">'+btn+'</div></div>'}
+function pCt(){
+ const p=S.perm;let h='<div class="card"><h3>Действующие контракты <span class="muted">'+S.ct.length+'/3</span></h3>';
+ if(!S.ct.length)h+='<div class="empty">Нет активных контрактов.</div>';
+ S.ct.forEach(c=>{const pc=Math.min(100,c.p/c.need*100);h+='<div class="it" style="display:block"><div class="row2" style="justify-content:space-between"><b>'+esc(c.n)+'</b><small>'+left(c.left)+'</small></div><small>'+esc(c.d)+'</small><div class="bar"><i style="width:'+pc+'%"></i></div><div class="row2" style="justify-content:space-between;margin-top:6px"><small>'+c.p+' / '+c.need+' · награда '+c.rg+' ₤ и '+c.rx+' влияния</small>'+(c.kind==="ingr"?'<button class="btn sm main" data-give="'+c.i+'">Отдать</button>':'<small>идёт охота…</small>')+'</div></div>'});
+ h+='</div><div class="card"><h3>Доска контрактов</h3>';
+ S.board.forEach(b=>{const on=S.ct.some(c=>c.id===b.id);h+=row('<span>'+ico("scroll")+'</span>',b.n,esc(b.d)+" · "+b.rg+" ₤ · "+b.rx+" вл.",p.contract?'<button class="btn sm" data-ctake="'+b.id+'" '+(on||S.ct.length>=3?"disabled":"")+'>Взять</button>':"")});
+ if(!p.contract)h+='<div class="muted">Контракты принимают Жрецы-Советники, Предводитель и Летописец.</div>';
+ return h+'</div>';
+}
+function pTerr(){
+ const p=S.perm;let h='';
+ if(S.pending>0||S.held>0)h+='<div class="card"><h3>Дань</h3><div class="row2" style="justify-content:space-between"><div><b style="font-size:20px;color:#ffd98a">'+S.pending+' ₤</b><div class="muted">накоплено (до суток)</div></div>'+(p.terr?'<button class="btn main" id="col" '+(S.pending>0?"":"disabled")+'>Собрать</button>':"")+'</div></div>';
+ h+='<div class="muted" style="margin:0 4px 8px">Земель: '+S.held+' из '+S.held_max+' (растёт с уровнем клана)</div>';
+ S.terr.forEach((t,i)=>{
+  const cls=t.mine?"mine":(t.oc?"hos":"");
+  let b="";
+  if(p.terr&&!t.mine){const cost=t.oc?t.cost*2:t.cost;b='<button class="btn sm '+(t.oc?"bad":"main")+'" data-claim="'+t.id+'" '+(S.lv<t.minlv?"disabled":"")+'>'+(t.oc?"Захватить":"Занять")+' · '+cost+'</button>'}
+  h+='<div class="it ter '+cls+'" style="animation-delay:'+i*60+'ms"><div class="ico">'+ico("land")+'</div><div class="l"><b>'+esc(t.n)+'</b><small>'+(t.mine?"под вашей рукой":t.oc?"владеет «"+esc(t.on)+"» (сила "+t.opw+")":"никому не принадлежит")+' · доход '+t.inc+'/сут · от ур. '+t.minlv+'</small></div>'+b+'</div>';
+ });
+ if(!p.terr)h+='<div class="muted">Земли берут Жрецы-Советники, Предводитель и Казначей Теней. Чужую землю можно отнять, если ваш клан сильнее.</div>';
+ return h;
+}
+function pSk(){
+ const p=S.perm;
+ return S.sk.map((s,i)=>'<div class="it sk" style="display:block;animation-delay:'+i*60+'ms"><div class="row2" style="justify-content:space-between"><b>'+esc(s.n)+'</b><span class="pt">'+s.lv+'/'+s.max+'</span></div><small>'+esc(s.d)+'</small><div class="pg">'+[1,2,3,4,5].map(n=>'<i class="'+(n<=s.lv?"f":"")+'"></i>').join("")+'</div>'+(p.skill?'<div style="margin-top:8px"><button class="btn sm main" data-sk="'+s.k+'" '+(s.open&&s.lv<5?"":"disabled")+'>'+(s.lv>=5?"Предел":s.open?"Усилить · "+s.cost+" ₤":"Нужен уровень клана")+'</button></div>':"")+'</div>').join("")+(p.skill?"":'<div class="muted">Навыки развивают Жрецы-Советники, Предводитель и Казначей, тратя казну.</div>');
+}
+function pLog(){
+ const d=new Date();
+ return '<div class="card"><h3>Журнал</h3>'+(S.log.length?S.log.map(l=>{const t=new Date(l.t*1000);return '<div class="lg"><time>'+String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+" "+String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0")+'</time>'+esc(l.x)+'</div>'}).join(""):'<div class="empty">Летопись пуста.</div>')+'</div>';
+}
+function pAdm(){
+ const p=S.perm;let h='';
+ h+='<div class="card"><h3>Заявки</h3>';
+ if(!S.ap.length)h+='<div class="empty">Заявок нет.</div>';
+ S.ap.forEach(a=>{h+=row('<span>'+ico("star")+'</span>',a.n,"ур. "+a.l+" · "+ago(a.t),'<button class="btn sm main" data-acc="'+esc(a.uid)+'">Принять</button><button class="btn sm bad" data-dec="'+esc(a.uid)+'">✕</button>')});
+ h+='</div>';
+ h+='<div class="card"><h3>Объявление и устав</h3>';
+ if(p.motd)h+='<label>Объявление клана (до 160)</label><textarea id="motd" rows="2" maxlength="160">'+esc(S.motd)+'</textarea><div style="margin-top:6px"><button class="btn sm" id="svMotd">Сохранить объявление</button></div>';
+ if(p.settings){
+  h+='<label>Описание (до 80)</label><input id="dsc" maxlength="80" value="'+esc(S.d)+'"><label>Минимальный уровень</label><input id="mlv" type="number" min="1" max="20" value="'+S.minlv+'"><label>Вступление</label><div class="row2"><button class="btn sm '+(S.open?"main":"")+'" data-op="1">Свободное</button><button class="btn sm '+(!S.open?"main":"")+'" data-op="0">По заявкам</button></div><label>Эмблема</label><div class="embpick" id="ep2">'+EMB.map((_,i)=>'<button type="button" data-e2="'+i+'" class="'+(i===S.e?"on":"")+'" style="color:'+ECOL[i]+'">'+embSvg(i)+'</button>').join("")+'</div><div style="margin-top:10px"><button class="btn main" id="svSet">Сохранить устав</button></div>';
+ }
+ h+='</div><div class="card"><h3>Опасная черта</h3><div class="row2">';
+ h+='<button class="btn bad" id="leave">Покинуть клан</button>'+(p.leader?'<button class="btn bad" id="disb">Распустить клан</button>':"")+'</div></div>';
+ return h;
+}
+/* ---------- обработчики ---------- */
+function bindIn(){
+ document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{tab=b.dataset.t;sfx(tab==="log"?"scroll":"tap");render()});
+ bindPane();
+}
+function bindPane(){
+ const q=s=>document.querySelectorAll(s);
+ q("[data-m]").forEach(b=>b.onclick=()=>memberSheet(b.dataset.m));
+ const amt=()=>parseInt($("amt").value)||0;
+ q("[data-q]").forEach(b=>b.onclick=()=>{$("amt").value=b.dataset.q;sfx("tap")});
+ if($("dep"))$("dep").onclick=()=>act({action:"clan_deposit",n:amt()},"coin");
+ if($("wd"))$("wd").onclick=()=>act({action:"clan_withdraw",n:amt()},"coin");
+ q("[data-put]").forEach(b=>{const[k,id]=b.dataset.put.split(":");b.onclick=()=>act({action:"clan_put",kind:k,key:id,n:1},"chest")});
+ q("[data-put5]").forEach(b=>{const[k,id]=b.dataset.put5.split(":");b.onclick=()=>act({action:"clan_put",kind:k,key:id,n:S.my_ingr[id]||1},"chest")});
+ q("[data-take]").forEach(b=>{const[k,id]=b.dataset.take.split(":");b.onclick=()=>act({action:"clan_take",kind:k,key:id,n:1},"chest")});
+ q("[data-ctake]").forEach(b=>b.onclick=()=>act({action:"clan_ct_take",tid:b.dataset.ctake},"stamp"));
+ q("[data-give]").forEach(b=>b.onclick=()=>act({action:"clan_ct_give",i:+b.dataset.give,n:99},"dew"));
+ q("[data-claim]").forEach(b=>b.onclick=async()=>{const d=await act({action:"clan_terr_claim",tid:b.dataset.claim},"stamp");if(d){sfx("bell")}});
+ if($("col"))$("col").onclick=()=>act({action:"clan_terr_collect"},"coin");
+ q("[data-sk]").forEach(b=>b.onclick=async()=>{const d=await act({action:"clan_skill",k:b.dataset.sk},"level");if(d)sfx("whisper")});
+ q("[data-acc]").forEach(b=>b.onclick=()=>act({action:"clan_member",op:"accept",uid:b.dataset.acc},"win"));
+ q("[data-dec]").forEach(b=>b.onclick=()=>act({action:"clan_member",op:"decline",uid:b.dataset.dec},"back"));
+ if($("svMotd"))$("svMotd").onclick=()=>act({action:"clan_set",motd:$("motd").value},"scroll");
+ let op=null;window._e2=S.e;
+ q("[data-op]").forEach(b=>b.onclick=()=>{op=b.dataset.op;sfx("tap");q("[data-op]").forEach(x=>x.classList.toggle("main",x===b))});
+ q("[data-e2]").forEach(b=>b.onclick=()=>{window._e2=+b.dataset.e2;sfx("rune");q("#ep2 button").forEach(x=>x.classList.toggle("on",x===b))});
+ if($("svSet"))$("svSet").onclick=()=>{const p={action:"clan_set",d:$("dsc").value,minlv:$("mlv").value,emb:window._e2};if(op!==null)p.open=op;act(p,"stamp")};
+ if($("leave"))$("leave").onclick=()=>confirmBox("Покинуть клан?","Ты потеряешь доступ к казне, складу и землям.",async()=>{const d=await act({action:"clan_leave"},"back");if(d)view="find"});
+ if($("disb"))$("disb").onclick=()=>confirmBox("Распустить клан?","Казна, склад и земли будут утеряны навсегда.",async()=>{const d=await act({action:"clan_disband",confirm:"1"},"bad");if(d)view="find"});
+}
+function sheet(html){closeSheet();const d=document.createElement("div");d.className="sheet";d.innerHTML="<div>"+html+"</div>";d.onclick=e=>{if(e.target===d){sfx("back");d.remove()}};$("layer").appendChild(d);sfx("open");return d}
+function closeSheet(){$("layer").innerHTML=""}
+function confirmBox(t,s,fn){const d=sheet('<h4>'+esc(t)+'</h4><div class="muted" style="margin-bottom:8px">'+esc(s)+'</div><button class="btn bad" id="y">Да, подтверждаю</button><button class="btn" id="n">Отмена</button>');d.querySelector("#y").onclick=()=>{closeSheet();fn()};d.querySelector("#n").onclick=()=>{closeSheet();sfx("back")}}
+function memberSheet(uid){
+ const m=S.mem.find(x=>x.uid===uid);if(!m)return;const p=S.perm;
+ let h='<h4>'+esc(m.n)+'</h4><div class="muted" style="margin-bottom:8px">'+esc(rankName(m))+(m.p?" · "+esc(S.posts[m.p]):"")+' · ур. '+m.l+' · вклад '+m.c+'</div>';
+ if(!m.me){
+  const eff=Math.max(p.rank,p.post==="recruiter"?2:0);
+  if(p.promote&&m.r<p.rank){
+   if(m.r+1<p.rank)h+='<button class="btn" data-op="promote">▲ Возвысить до «'+esc(S.ranks[m.r+1])+'»</button>';
+   if(m.r>0)h+='<button class="btn" data-op="demote">▼ Понизить до «'+esc(S.ranks[m.r-1])+'»</button>';
+  }
+  if(p.post_set&&(m.r<p.rank||p.rank>=4)){h+='<div class="muted" style="margin:8px 0 2px">Назначить пост</div>';Object.keys(S.posts).forEach(k=>{h+='<button class="btn" data-post="'+k+'" '+(m.p===k?"disabled":"")+'>'+esc(S.posts[k])+'</button>'});if(m.p)h+='<button class="btn" data-post="">Снять с поста</button>'}
+  if(p.kick&&m.r<eff)h+='<button class="btn bad" data-op="kick">Изгнать из клана</button>';
+  if(p.leader)h+='<button class="btn bad" data-op="leader">Передать печать Предводителя</button>';
+ }else h+='<div class="muted">Это ты.</div>';
+ h+='<button class="btn" id="cl">Закрыть</button>';
+ const d=sheet(h);
+ d.querySelector("#cl").onclick=()=>{closeSheet();sfx("back")};
+ d.querySelectorAll("[data-op]").forEach(b=>b.onclick=()=>{const op=b.dataset.op;const go=async()=>{closeSheet();await act({action:"clan_member",op,uid},op==="kick"?"hurt":"good")};if(op==="kick"||op==="leader")confirmBox(op==="kick"?"Изгнать "+m.n+"?":"Передать печать?",op==="kick"?"Он потеряет место в клане.":"Ты станешь Жрецом-Советником.",go);else go()});
+ d.querySelectorAll("[data-post]").forEach(b=>b.onclick=async()=>{closeSheet();await act({action:"clan_member",op:"post",uid,val:b.dataset.post},"stamp")});
+}
+function seal(s,t){
+ const d=document.createElement("div");d.className="seal";d.style.cssText=ecss(s.e);
+ d.innerHTML='<div class="emb">'+embSvg(s.e)+'</div><h2>'+esc(t)+'</h2><div class="muted">['+esc(s.tg)+'] '+esc(s.n)+'</div><button class="btn main" style="margin-top:22px;padding:11px 28px">Войти</button>';
+ d.querySelector("button").onclick=()=>{d.remove();sfx("open")};
+ document.body.appendChild(d);
+}
+/* ---------- атмосфера ---------- */
+(function(){
+ const cv=$("cv"),x=cv.getContext("2d");let w,h;
+ const fit=()=>{w=cv.width=innerWidth;h=cv.height=innerHeight};fit();addEventListener("resize",fit);
+ const RU="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒ",P=[],F=[];
+ for(let i=0;i<30;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,v:.12+Math.random()*.35,a:Math.random()*6.28,r:.5+Math.random()*1.3,g:Math.random()<.3?RU[Math.random()*RU.length|0]:null});
+ for(let i=0;i<6;i++)F.push({x:Math.random()*innerWidth,y:innerHeight*(.3+Math.random()*.7),r:120+Math.random()*140,v:.1+Math.random()*.2,d:Math.random()<.5?1:-1});
+ if(!reduce)(function loop(){
+  x.clearRect(0,0,w,h);const t=Date.now()/1000;
+  F.forEach(f=>{f.x+=f.v*f.d;if(f.x>w+f.r)f.x=-f.r;if(f.x<-f.r)f.x=w+f.r;const g=x.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r);g.addColorStop(0,"rgba(120,80,160,.10)");g.addColorStop(1,"rgba(120,80,160,0)");x.fillStyle=g;x.beginPath();x.arc(f.x,f.y,f.r,0,6.28);x.fill()});
+  P.forEach(p=>{p.y-=p.v;p.x+=Math.sin(t+p.a)*.35;if(p.y<-10){p.y=h+10;p.x=Math.random()*w}x.globalAlpha=.15+.4*Math.abs(Math.sin(t*.7+p.a));
+   if(p.g){x.fillStyle="#b48bd0";x.font="13px serif";x.fillText(p.g,p.x,p.y)}else{x.fillStyle="#d4a05a";x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill()}});
+  x.globalAlpha=1;requestAnimationFrame(loop);
+ })();
+ setInterval(()=>{if(!document.hidden&&Math.random()<.6)sfx("whisper")},13000);
+ setInterval(()=>{if(!document.hidden&&Math.random()<.5)sfx("bell")},21000);
+ try{window.sndMusic&&sndMusic("city")}catch(e){}
+})();
+load();
+setInterval(()=>{if(!document.hidden&&!busy&&S&&S.in&&!document.querySelector(".sheet,.seal")&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||"")&&!document.querySelector("#amt[value],#motd:focus"))load()},30000);
+</script>
+</body>
+</html>

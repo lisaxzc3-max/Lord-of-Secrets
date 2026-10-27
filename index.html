@@ -1619,8 +1619,7 @@ async function doUnequip(slot) {
 const cityData = {
   "Центр": { icon: "🏛", sub: "Сердце города", places: [
     { icon: "🏛", name: "Ратуша", npc: "Зал славы · топ игроков", key: "top" },
-    { icon: "👥", name: "Площадь", npc: "Скоро" },
-    { icon: "🌙", name: "Церковь Ночи", npc: "Скоро" }
+    { icon: "🌙", name: "Церковь Ночи", npc: "Кланы · Братства", key: "clan" }
   ]},
   "Север": { icon: "❄️", sub: "Рынок, таверна и клуб гадалок", places: [
     { icon: "🍎", name: "Рынок", npc: "Торговец", key: "market" },
@@ -1650,6 +1649,7 @@ function openPlace(key) {
   try { window.snd && window.snd("tap"); } catch (_) {}
   if (key === "fortune") return openFortune();
   if (key === "top") return openTop();
+  if (key === "clan") { location.href = buildPageUrl("./clan/index.html"); return; }
   if (key === "home") { location.href = buildPageUrl("./home/index.html"); return; }
   openLoc(key);
 }
