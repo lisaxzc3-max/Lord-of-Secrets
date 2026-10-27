@@ -371,6 +371,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 }
 </style>
 <script src="../shared/skills.js"></script>
+<script src="../shared/vip.js"></script>
 <script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
@@ -1059,6 +1060,7 @@ async function loadProfile() {
   const data = await fetchApi(PROFILE_URL, {});
 
   setText("nick", data.nickname || "Без имени");
+  if (window.VIP) { if (data.vip) $("nick").innerHTML = VIP.n(data.nickname || "Без имени", data.vip, true); VIP.frame($("portrait"), data.vip); }
 
   const level = Math.max(1, Math.floor(number(data.level, 1)));
   setNum("lvl", level);

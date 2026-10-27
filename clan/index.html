@@ -152,6 +152,7 @@ label{display:block;font-size:11px;color:var(--muted);margin:8px 0 4px;letter-sp
 </div>
 <div class="toast" id="toast"></div>
 <div id="layer"></div>
+<script src="../shared/vip.js"></script>
 <script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/alchemy.js"></script>
@@ -276,7 +277,7 @@ function pane(){
 }
 function rankName(m){return S.ranks[m.r]}
 function pMem(){
- return S.mem.map((m,i)=>'<div class="it '+(m.me?"me":"")+'" data-m="'+esc(m.uid)+'" style="animation-delay:'+i*40+'ms"><div class="rk r'+m.r+'">'+ROM[m.r]+'</div><div class="l"><b>'+esc(m.n)+(m.p?'<span class="tag">'+esc(S.posts[m.p])+'</span>':"")+'</b><small>'+esc(rankName(m))+' · ур. '+m.l+' · вклад '+m.c+'</small></div><small class="'+((S.now-m.s)<300?"on1":"")+'">'+((S.now-m.s)<300?"в сети":ago(m.s))+'</small></div>').join("");
+ return S.mem.map((m,i)=>'<div class="it '+(m.me?"me":"")+'" data-m="'+esc(m.uid)+'" style="animation-delay:'+i*40+'ms"><div class="rk r'+m.r+'">'+ROM[m.r]+'</div><div class="l"><b>'+VIP.n(m.n,m.v)+(m.p?'<span class="tag">'+esc(S.posts[m.p])+'</span>':"")+'</b><small>'+esc(rankName(m))+' · ур. '+m.l+' · вклад '+m.c+'</small></div><small class="'+((S.now-m.s)<300?"on1":"")+'">'+((S.now-m.s)<300?"в сети":ago(m.s))+'</small></div>').join("");
 }
 function pGold(){
  const p=S.perm;

@@ -485,10 +485,15 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 #sideMenu .smIt:hover{border-color:#cdb27a;box-shadow:0 0 18px #cdb27a33}
 #sideMenu .smIc{flex:0 0 40px;height:40px;border-radius:12px;border:1px solid #8f7a4c;background:radial-gradient(circle at 35% 30%,#4a3a6a,#1a1230);display:flex;align-items:center;justify-content:center;color:#cdb27a}
 #sideMenu .smIc svg{width:22px;height:22px}
+#sideMenu .smIt.vip{border-color:#8a6a3a;background:linear-gradient(160deg,#3a1a34ee,#1a0d22ee)}
+#sideMenu .smIt.vip .smIc{color:#ffb6c4;border-color:#8a4a5a}
+#sideMenu .smIt.vip:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffe9a826 50%,transparent 65%);transform:translateX(-120%);animation:smSweep 4.5s ease-in-out infinite}
+@keyframes smSweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 #sideMenu .smIt small{display:block;margin-top:1px;font:11px Inter,system-ui,sans-serif;color:#9d92b2}
 #sideMenu .smFoot{margin-top:auto;position:relative;z-index:2;text-align:center;font:italic 12px Georgia,serif;color:#7f7494;padding-top:14px}
 @media(prefers-reduced-motion:reduce){#sideMenu *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
+<script src="./shared/vip.js"></script>
 <script src="./shared/fast.js"></script>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -512,15 +517,19 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
     <div class="smHead"><span class="smTtl">Меню</span><button type="button" class="smX" onclick="closeMenu()" aria-label="Закрыть">✕</button></div>
     <div class="smLine"></div>
     <div class="smList">
-      <button type="button" class="smIt" style="--i:0" onclick="menuGo('quests')">
+      <button type="button" class="smIt vip" style="--i:0" onclick="menuGo('vip')">
+        <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12" stroke-opacity=".6"/></svg></span>
+        <span>Тайный круг<small>VIP, рамки, бонусы, автобой</small></span>
+      </button>
+      <button type="button" class="smIt" style="--i:1" onclick="menuGo('quests')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9.5L19 7v13.5H6z"/><path d="M15.5 3.5V7H19M9 11h7M9 14.5h7M9 18h4"/></svg></span>
         <span>Задания дня<small>Журнал поручений и награды</small></span>
       </button>
-      <button type="button" class="smIt" style="--i:1" onclick="menuGo('daily')">
+      <button type="button" class="smIt" style="--i:2" onclick="menuGo('daily')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16.5 4v3M15 5.5h3"/></svg></span>
         <span>Награда дня<small>Дар Богини за каждый заход</small></span>
       </button>
-      <button type="button" class="smIt" style="--i:2" onclick="menuGo('settings')">
+      <button type="button" class="smIt" style="--i:3" onclick="menuGo('settings')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></span>
         <span>Настройки<small>Звук, уведомления, ник, путь</small></span>
       </button>
@@ -1051,7 +1060,9 @@ async function loadProfile() {
       throw new Error("Сервер вернул некорректные характеристики персонажа");
     }
 
-    byId("nick").textContent = data.nickname || "Без имени";
+    byId("nick").innerHTML = (window.VIP && data.vip) ? VIP.n(data.nickname || "Без имени", data.vip, true) : "";
+    if (!(window.VIP && data.vip)) byId("nick").textContent = data.nickname || "Без имени";
+    if (window.VIP) VIP.frame(byId("hudAv"), data.vip);
     try { setHudAvatar(data); } catch (e) {}
     byId("lvl").textContent = data.level ?? "—";
     byId("hp").textContent = hp + "/" + maxHp;
@@ -1260,6 +1271,7 @@ function menuGo(key) {
   if (key === "settings") openSettings();
   else if (key === "quests") openQuests();
   else if (key === "daily") openDaily();
+  else if (key === "vip") location.href = buildPageUrl("./vip/index.html");
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenu(); });
 

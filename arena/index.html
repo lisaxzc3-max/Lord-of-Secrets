@@ -123,6 +123,7 @@ input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:1
 </div>
 <div class="toast" id="toast"></div>
 <div id="layer"></div>
+<script src="../shared/vip.js"></script>
 <script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
@@ -185,7 +186,7 @@ const hero='<div class="hero"><svg viewBox="0 0 360 170" preserveAspectRatio="xM
 function lobbyHtml(){
  const m=S.me,lc=LGC[m.lg];
  let h=hero;
- h+='<div class="card"><div class="mecard"><div class="av"><img src="'+avSrc(m.g,m.pk,m.sq)+'" alt=""></div><div style="flex:1"><div style="font:400 17px Georgia,serif;color:#eadfc4">'+esc(m.n)+'</div><span class="lg" style="--lc:'+lc+';--lcg:'+lc+'55">'+esc(S.lgs[m.lg])+'</span><div class="rt" style="margin-top:4px">'+m.r+'</div></div></div><div class="st3"><div><b>'+(m.rank||"—")+'</b>место</div><div><b>'+m.w+'</b>побед</div><div><b>'+m.l+'</b>поражений</div></div></div>';
+ h+='<div class="card"><div class="mecard"><div class="av'+VIP.f(m.v)+'"><img src="'+avSrc(m.g,m.pk,m.sq)+'" alt=""></div><div style="flex:1"><div style="font:400 17px Georgia,serif;color:#eadfc4">'+VIP.n(m.n,m.v,true)+'</div><span class="lg" style="--lc:'+lc+';--lcg:'+lc+'55">'+esc(S.lgs[m.lg])+'</span><div class="rt" style="margin-top:4px">'+m.r+'</div></div></div><div class="st3"><div><b>'+(m.rank||"—")+'</b>место</div><div><b>'+m.w+'</b>побед</div><div><b>'+m.l+'</b>поражений</div></div></div>';
  if(S.inv.length){h+='<div class="card" style="border-color:var(--crimb);box-shadow:0 0 24px #d4343f55"><h3>⚔ Тебя вызывают</h3>';S.inv.forEach(v=>{h+='<div class="it"><div class="l"><b>'+esc(v.fn)+'</b><small>'+esc(PATHN[v.pk]||"")+' · ур. '+v.lv+' · '+Math.max(0,v.left)+' с</small></div><button class="btn main sm" data-acc="'+esc(v.id)+'">Принять</button><button class="btn sm" data-dec="'+esc(v.id)+'">✕</button></div>'});h+='</div>'}
  h+='<div class="tabs"><button class="tab '+(tab==="duel"?"on":"")+'" data-t="duel">Вызов</button><button class="tab '+(tab==="top"?"on":"")+'" data-t="top">Зал Теней</button></div>';
  if(tab==="duel"){
@@ -196,7 +197,7 @@ function lobbyHtml(){
  }else{
   h+='<div class="card"><h3>Зал Теней · '+S.total+'</h3>';
   if(!S.top.length)h+='<div class="empty">Пока никого.</div>';
-  S.top.forEach((x,i)=>{h+='<div class="it '+(x.me?"mine":"")+'" style="animation-delay:'+i*35+'ms"><div class="pos p'+x.pos+'">'+x.pos+'</div><div class="sav"><img src="'+avSrc(x.g,x.pk,x.sq)+'" alt=""></div><div class="l"><b>'+esc(x.n)+'</b><small style="color:'+LGC[x.lg]+'">'+esc(S.lgs[x.lg])+' · '+x.w+"П/"+x.l+'Пр</small></div><div class="rr">'+x.r+'</div>'+(x.me?'':'<button class="btn sm" data-ch="'+esc(x.uid)+'">⚔</button>')+'</div>'});
+  S.top.forEach((x,i)=>{h+='<div class="it '+(x.me?"mine":"")+'" style="animation-delay:'+i*35+'ms"><div class="pos p'+x.pos+'">'+x.pos+'</div><div class="sav'+VIP.f(x.v)+'"><img src="'+avSrc(x.g,x.pk,x.sq)+'" alt=""></div><div class="l"><b>'+VIP.n(x.n,x.v,true)+'</b><small style="color:'+LGC[x.lg]+'">'+esc(S.lgs[x.lg])+' · '+x.w+"П/"+x.l+'Пр</small></div><div class="rr">'+x.r+'</div>'+(x.me?'':'<button class="btn sm" data-ch="'+esc(x.uid)+'">⚔</button>')+'</div>'});
   h+='</div><div class="card"><h3>Ступени славы</h3>'+S.lgs.map((n,i)=>'<div class="it" style="padding:6px 10px"><div class="l"><b style="color:'+LGC[i]+'">'+esc(n)+'</b></div><small>от '+S.lgr[i]+'</small></div>').join("")+'</div>';
  }
  return h;
@@ -219,7 +220,7 @@ function fxChips(p){
 }
 function fgt(p,cls,turn){
  const pc=Math.max(0,p.hp/p.mhp*100);
- return '<div class="fgt '+cls+(turn?" turn":"")+'" id="f_'+cls+'"><div class="pic"><img src="'+avSrc(p.g,p.pk,p.sq)+'" alt=""></div><div class="nm">'+esc(p.n)+'</div><div class="lv">'+esc(PATHN[p.pk]||"")+' · ур. '+p.lv+'</div><div class="hp"><i class="lag" style="width:'+pc+'%"></i><i style="width:'+pc+'%"></i></div><div class="hpt">'+p.hp+' / '+p.mhp+'</div><div class="fxs">'+fxChips(p)+'</div></div>';
+ return '<div class="fgt '+cls+(turn?" turn":"")+'" id="f_'+cls+'"><div class="pic'+VIP.f(p.v)+'"><img src="'+avSrc(p.g,p.pk,p.sq)+'" alt=""></div><div class="nm">'+VIP.n(p.n,p.v,true)+'</div><div class="lv">'+esc(PATHN[p.pk]||"")+' · ур. '+p.lv+'</div><div class="hp"><i class="lag" style="width:'+pc+'%"></i><i style="width:'+pc+'%"></i></div><div class="hpt">'+p.hp+' / '+p.mhp+'</div><div class="fxs">'+fxChips(p)+'</div></div>';
 }
 function fightHtml(){
  const f=F,my=f.turn==="me"&&f.st==="on";

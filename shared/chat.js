@@ -55,6 +55,7 @@ css.textContent=
 ".chRow.me .chBub{background:linear-gradient(160deg,#5b3fa0,#3a2870);border-color:#8a6fe0;border-radius:14px 14px 4px 14px}"+
 ".chNm{font-size:11px;font-weight:800;color:#e2c27a;cursor:pointer;display:flex;gap:6px;align-items:baseline}"+
 ".chNm span{font-weight:600;color:#9488ab;font-size:10px}"+
+".chNm .vN{font-weight:800;color:inherit;font-size:inherit}"+
 ".chTx{font-size:13px;line-height:1.35;color:#f0e8d2;word-break:break-word;margin-top:1px}"+
 ".chTm{font-size:9px;color:#8f84a6;text-align:right;margin-top:1px}"+
 ".chEmpty{margin:auto;text-align:center;color:#8f84a6;font-size:12px;padding:20px}"+
@@ -179,10 +180,10 @@ function scrollDown(c,force){
 function msgRow(m,i){
  var mine=String(m.uid)===String(S.me);
  var r=el("div","chRow"+(mine?" me":""));r.dataset.id=m.id;
- var av=el("div","chAv",PATH[m.path]||"👤");
+ var av=el("div","chAv"+(window.VIP?VIP.f(m.v):""),PATH[m.path]||"👤");
  var bub=el("div","chBub");
  if(!mine){
-  var nm=el("div","chNm",m.nick);nm.appendChild(el("span",null,"ур."+m.lvl));
+  var nm=el("div","chNm");if(window.VIP&&m.v){var nb=el("div");nb.innerHTML=VIP.n(m.nick,m.v);nm.appendChild(nb)}else nm.textContent=m.nick;nm.appendChild(el("span",null,"ур."+m.lvl));
   var go=function(){openThread(String(m.uid),m.nick)};
   nm.addEventListener("click",go);av.addEventListener("click",go);bub.appendChild(nm);
  }
@@ -251,13 +252,14 @@ function loadList(){
   dList.replaceChildren();
   if(!l.length){var e=el("div","chEmpty");e.append(el("big",null,"✉"),"Бесед пока нет.\nНайди игрока по нику или нажми на имя в чате Мира.");e.style.whiteSpace="pre-line";dList.appendChild(e);return}
   dList.appendChild(el("div","chSec","Беседы"));
-  l.forEach(function(c,i){dList.appendChild(convRow(c.uid,c.nick,c.last,c.unread,i,"👤"))});
+  l.forEach(function(c,i){dList.appendChild(convRow(c.uid,c.nick,c.last,c.unread,i,"👤",c.v))});
  },function(){});
 }
-function convRow(uid,nick,last,unread,i,ico){
+function convRow(uid,nick,last,unread,i,ico,v){
  var b=el("button","chCv");b.type="button";b.style.setProperty("--i",i);
- b.appendChild(el("div","chAv",ico));
- var t=el("div");t.append(el("div","nm",nick),el("div","ls",last||""));b.appendChild(t);
+ b.appendChild(el("div","chAv"+(window.VIP?VIP.f(v):""),ico));
+ var nmE=el("div","nm");if(window.VIP&&v)nmE.innerHTML=VIP.n(nick,v);else nmE.textContent=nick;
+ var t=el("div");t.append(nmE,el("div","ls",last||""));b.appendChild(t);
  if(unread>0)b.appendChild(el("div","un",String(unread)));
  b.addEventListener("click",function(){openThread(uid,nick)});return b;
 }
@@ -268,7 +270,7 @@ function doFind(){
   dList.replaceChildren();
   var u=Array.isArray(d.users)?d.users:[];
   if(!u.length){var e=el("div","chEmpty","Никого не нашлось.");dList.appendChild(e);return}
-  u.forEach(function(x,i){dList.appendChild(convRow(x.uid,x.nick,"Ур. "+x.lvl,0,i,pathIco(x.path)))});
+  u.forEach(function(x,i){dList.appendChild(convRow(x.uid,x.nick,"Ур. "+x.lvl,0,i,pathIco(x.path),x.v))});
  },function(){});
 }
 function openThread(uid,nick){
