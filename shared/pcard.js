@@ -114,9 +114,24 @@ function open(uid,nick,opts){
     else go();
    };
   }
+  var ib=null;
+  if(d.can_invite&&!d.me){
+   ib=document.createElement("button");ib.type="button";ib.className="pcBtn";ib.style.flexBasis="100%";
+   var inv=!!d.invited;
+   var paintI=function(){ib.textContent=inv?"⚜ Приглашение отправлено":d.clan_full?"⚜ В клане нет мест":"⚜ Пригласить в клан";ib.disabled=inv||!!d.clan_full;ib.style.opacity=ib.disabled?".6":"1"};
+   paintI();
+   ib.onclick=function(){
+    if(ib.disabled)return;ib.disabled=true;ib.textContent="Отправляю…";
+    fetch(URL_,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"clan_invite",uid:String(d.uid)}),cache:"no-store"})
+    .then(function(r){return r.json()}).then(function(x){x=unwrap(x);
+     if(x&&x.ok){inv=true;paintI();sfx("win")}
+     else{ib.disabled=false;ib.textContent=(x&&x.text)||"Не получилось";setTimeout(paintI,2200)}
+    }).catch(function(){ib.disabled=false;ib.textContent="Нет связи";setTimeout(paintI,2200)});
+   };
+  }
   var c=document.createElement("button");c.type="button";c.className="pcBtn";c.textContent="Закрыть";c.onclick=close;
-  if(fb){bt.appendChild(fb);var bt2=document.createElement("div");bt2.className="pcBtns";bt2.style.marginTop="8px";bt2.appendChild(c);box.appendChild(bt);box.appendChild(bt2)}
-  else{bt.appendChild(c);box.appendChild(bt)}
+  if(fb){bt.appendChild(fb);var bt2=document.createElement("div");bt2.className="pcBtns";bt2.style.marginTop="8px";if(ib)bt2.appendChild(ib);bt2.appendChild(c);box.appendChild(bt);box.appendChild(bt2)}
+  else{if(ib)bt.appendChild(ib);bt.appendChild(c);box.appendChild(bt)}
  }).catch(function(e){
   var m=e&&e.message?e.message:"ошибка";
   var why=m==="timeout"?"Сервер долго не отвечает.":/^http|bad json|Failed to fetch|NetworkError|Load failed/.test(m)?"Нет связи с сервером ("+m+").":m;

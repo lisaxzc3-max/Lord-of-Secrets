@@ -90,7 +90,7 @@ css.textContent=
 "@media(prefers-reduced-motion:reduce){#chPanel,#chBack,.chRow,.chCv,.chPane.on,.chTh.on{transition:none!important;animation:none!important}#chFab,#chFab::after{animation:none!important}}";
 document.head.appendChild(css);
 
-var S={open:false,tab:"world",cs:0,cseen:parseInt(ls("lotm_chat_cs")||"0",10)||0,newClan:0,cn:"",fq:0,ws:0,wseen:parseInt(ls("lotm_chat_ws")||"0",10)||0,unreadDm:0,newWorld:0,peer:null,peerNick:"",ds:0,me:"",busy:false,poll:null,booted:false};
+var S={open:false,tab:"world",cs:0,cseen:parseInt(ls("lotm_chat_cs")||"0",10)||0,newClan:0,cn:"",fq:0,ci:0,ws:0,wseen:parseInt(ls("lotm_chat_ws")||"0",10)||0,unreadDm:0,newWorld:0,peer:null,peerNick:"",ds:0,me:"",busy:false,poll:null,booted:false};
 var fab,back,panel,wMsgs,wIn,wGo,dList,thread,tMsgs,tIn,tGo,err,tabW,tabD,tabC,tabF,cMsgs,cIn,cInfo,fList,fFind,fBody,find,findRes;
 
 function build(){
@@ -190,13 +190,13 @@ function markClan(){if(S.cs>S.cseen){S.cseen=S.cs;ls("lotm_chat_cs",String(S.cse
 function markWorld(){if(S.ws>S.wseen){S.wseen=S.ws;ls("lotm_chat_ws",String(S.wseen))}}
 function paint(){
  var C=cfg();fab.style.display=C.fab?"":"none";
- var n=(C.dm?S.unreadDm:0)+(C.world&&!(S.open&&S.tab==="world")?S.newWorld:0)+(!(S.open&&S.tab==="clan")?S.newClan:0)+S.fq;
+ var n=(C.dm?S.unreadDm:0)+(C.world&&!(S.open&&S.tab==="world")?S.newWorld:0)+(!(S.open&&S.tab==="clan")?S.newClan:0)+S.fq+S.ci;
  var b=fab.querySelector("b");b.textContent=n>0?(n>99?"99+":String(n)):"";
  fab.classList.toggle("has",n>0);
  var i=tabD.querySelector("i");i.textContent=S.unreadDm>0?String(S.unreadDm):"";
  var j=tabW.querySelector("i");j.textContent=(S.open&&S.tab!=="world"&&S.newWorld>0)?String(S.newWorld):"";
  var k=tabC.querySelector("i");k.textContent=(S.open&&S.tab!=="clan"&&S.newClan>0)?String(S.newClan):"";
- var f=tabF.querySelector("i");f.textContent=S.fq>0?String(S.fq):"";
+ var f=tabF.querySelector("i");f.textContent=(S.fq+S.ci)>0?String(S.fq+S.ci):"";
 }
 function scrollDown(c,force){
  var near=c.scrollHeight-c.scrollTop-c.clientHeight<90;
@@ -248,7 +248,7 @@ function sync(){
   }else if(!wMsgs.children.length){appendMsgs(wMsgs,[],true)}
   var cl=Array.isArray(d.clan)?d.clan:[];
   var hadClan=!!S.cn;S.cn=d.cn||"";
-  S.fq=d.fq|0;
+  S.fq=d.fq|0;S.ci=d.ci|0;
   cInfo.textContent=S.cn?"⚜ "+S.cn:"";
   if(!S.cbooted){S.cbooted=true;
    if(cl.length){S.cs=cl[cl.length-1].id;if(!ls("lotm_chat_cs")){S.cseen=S.cs;ls("lotm_chat_cs",String(S.cs))}}
@@ -351,16 +351,39 @@ function frOp(op,uid){
 }
 window.__lotmFriendOp=frOp;window.__lotmFriendsChanged=function(){if(S.open&&S.tab==="fr"&&!fFind.value.trim())loadFriends();else sync()};
 function loadFriends(force){
- call({action:"friend_list"}).then(function(d){
+ Promise.all([call({action:"friend_list"}),call({action:"clan_inv_list"}).catch(function(){return{ok:false}})]).then(function(rr){
+  var d=rr[0],iv=rr[1];
   if(!d.ok||(fFind.value.trim()&&!force))return;
   fList.replaceChildren();
-  var rq=d.requests||[],fl=d.friends||[],se=d.sent||[];S.fq=rq.length;paint();
+  var rq=d.requests||[],fl=d.friends||[],se=d.sent||[],il=(iv&&iv.ok&&iv.inv)||[];S.fq=rq.length;S.ci=il.length;paint();
+  if(il.length){fList.appendChild(el("div","chSec","Приглашения в клан"));il.forEach(function(x,i){fList.appendChild(invRow(x,i))})}
   if(rq.length){fList.appendChild(el("div","chSec","Заявки в друзья"));rq.forEach(function(x,i){fList.appendChild(frRow(x,i,"req"))})}
   fList.appendChild(el("div","chSec","Друзья · "+fl.length+"/"+(d.cap||50)));
   if(!fl.length){var e=el("div","chEmpty");e.append(el("big",null,"👥"),"Друзей пока нет.\nНайди игрока по нику или нажми на его имя в чате.");e.style.whiteSpace="pre-line";fList.appendChild(e)}
   fl.forEach(function(x,i){fList.appendChild(frRow(x,i,"friend"))});
   if(se.length){fList.appendChild(el("div","chSec","Отправленные заявки"));se.forEach(function(x,i){fList.appendChild(frRow(x,i,"sent"))})}
  },function(){});
+}
+function invRow(x,i){
+ var r=el("div","chFr");r.style.setProperty("--i",i);
+ r.appendChild(el("div","chAv","⚜"));
+ var mid=el("div","mid");mid.appendChild(el("div","nm","["+x.t+"] "+x.n));
+ mid.appendChild(el("div","ls","от "+x.from+" · "+x.mem+"/"+x.cap+" · ур. клана "+x.lv));
+ r.appendChild(mid);
+ var acts=el("div","acts");
+ var ok=el("button","ok","✓ Вступить");ok.type="button";
+ var no=el("button","no","✕");no.type="button";
+ ok.addEventListener("click",function(){
+  ok.disabled=true;
+  call({action:"clan_inv_accept",cid:x.cid}).then(function(d){
+   if(!d.ok){ok.disabled=false;showErr(d.text||"Не получилось");sfx("bad");return}
+   sfx("win");showErr("Ты принят в «"+x.n+"»");S.cn="";sync();loadFriends(true);
+  },function(){ok.disabled=false;showErr("Нет связи с сервером")});
+ });
+ no.addEventListener("click",function(){
+  call({action:"clan_inv_decline",cid:x.cid}).then(function(){sfx("back");loadFriends(true)},function(){showErr("Нет связи с сервером")});
+ });
+ acts.append(ok,no);r.appendChild(acts);return r;
 }
 function doFindFr(){
  var q=fFind.value.trim();if(!q){loadFriends();return}
