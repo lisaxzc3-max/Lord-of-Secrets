@@ -353,6 +353,16 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .invCard.out{transform:scale(.7) translateY(-30px);opacity:0}
 .invCard.new{animation:bgNew .8s cubic-bezier(.2,.8,.2,1) backwards}
 @keyframes bgNew{0%{transform:scale(.6);box-shadow:0 0 30px var(--rc)}}
+.alH{margin:16px 2px 8px;font:700 12px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:#cdbf9f;display:flex;justify-content:space-between;align-items:center}
+.alH a{font:600 11px inherit;font-family:inherit;letter-spacing:0;text-transform:none;color:#8a7a58;border:1px solid #3a3040;border-radius:99px;padding:4px 10px;text-decoration:none;cursor:pointer}
+.alGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.alCard{position:relative;display:flex;gap:9px;align-items:center;border:1px solid var(--rc,#3a3040);border-radius:13px;padding:9px;background:linear-gradient(145deg,#17121a,#0d0a10);animation:bgIn .4s ease-out backwards}
+.alCard .g{flex:0 0 34px;height:34px;border-radius:9px;background:#0008;display:flex;align-items:center;justify-content:center;color:var(--rc,#cdbf9f)}
+.alCard .g svg{width:24px;height:24px}
+.alCard .g.pt svg{width:26px;height:32px}
+.alCard .nm{font-size:12px;line-height:1.2;color:#cdbf9f}
+.alCard .rr{font-size:10px;color:#8f8798;margin-top:2px}
+.alCard .cn{position:absolute;right:8px;top:5px;font-size:11px;font-weight:800;color:#cdbf9f}
 .bgEmpty{grid-column:1/-1;text-align:center;padding:26px 10px;color:#8a7ea1;font-size:12px}
 .bgEmpty .big{font-size:38px;display:block;margin-bottom:6px;animation:bgFloat 3s ease-in-out infinite;filter:grayscale(.5)}
 .bgSpark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;background:var(--c,#e2c27a);box-shadow:0 0 8px var(--c,#e2c27a);animation:bgSp .7s ease-out forwards}
@@ -377,6 +387,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
+<script src="./shared/alchemy.js"></script>
 <script src="./shared/tutorial.js"></script>
 <script src="./shared/fog.js" defer></script>
 <script>sndMusic("city")</script>
@@ -533,6 +544,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
   <div class="bgSub">Предметы</div>
   <div id="bagFilter" class="bgFilter"></div>
   <div id="invList" class="invGrid"></div>
+  <div id="alchBag"></div>
 </div>
 
 <div id="eventCard" class="card hidden">
@@ -1433,6 +1445,48 @@ function renderBagFromJ(data) {
     e.append(big, total ? "Здесь ничего нет" : "Сумка пуста — добудь что-нибудь в походах");
     invList.appendChild(e);
   }
+  try { renderAlchBag(data); } catch (e) {}
+}
+
+function renderAlchBag(data) {
+  const box = byId("alchBag");
+  if (!box || !window.LOTM_ALCH) return;
+  const A = window.LOTM_ALCH, ing = data.ingr || {}, pots = data.pots || {};
+  const ids = A.ORDER.filter(k => (ing[k] | 0) > 0);
+  const pids = Object.keys(pots).filter(k => pots[k] > 0 && A.POT[k]);
+  box.replaceChildren();
+  const h = document.createElement("div");
+  h.className = "alH";
+  const n = ids.reduce((a, k) => a + (ing[k] | 0), 0);
+  h.innerHTML = "<span>Алхимия · " + (n + pids.reduce((a, k) => a + pots[k], 0)) + "</span>";
+  const lk = document.createElement("a");
+  lk.textContent = "Котёл →";
+  lk.addEventListener("click", () => { try { snd("open"); } catch (e) {} location.href = buildPageUrl("./lab/index.html"); });
+  h.appendChild(lk);
+  box.appendChild(h);
+  const g = document.createElement("div");
+  g.className = "alGrid";
+  pids.forEach(k => {
+    const P = A.POT[k], c = document.createElement("div");
+    c.className = "alCard";
+    c.style.setProperty("--rc", P.c);
+    c.innerHTML = '<span class="g pt">' + A.potion(k) + '</span><span><div class="nm">' + P.n + '</div><div class="rr">Посл. 8 · зелье</div></span><span class="cn">×' + pots[k] + "</span>";
+    g.appendChild(c);
+  });
+  ids.forEach(k => {
+    const it = A.ING[k], c = document.createElement("div");
+    c.className = "alCard";
+    c.style.setProperty("--rc", A.RAR[it.r]);
+    c.innerHTML = '<span class="g">' + A.glyph(k) + '</span><span><div class="nm">' + it.n + '</div><div class="rr">' + A.RARN[it.r] + ' ингредиент</div></span><span class="cn">×' + ing[k] + "</span>";
+    g.appendChild(c);
+  });
+  if (!ids.length && !pids.length) {
+    const e = document.createElement("div");
+    e.className = "bgEmpty";
+    e.textContent = "Ингредиентов пока нет. Их приносят монстры, события, квесты и сад.";
+    g.appendChild(e);
+  }
+  box.appendChild(g);
 }
 
 function renderBag() {

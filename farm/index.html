@@ -299,6 +299,17 @@ function plant(i,el){
  S.gold-=c.seed;S.plots[i]={c:c.id,t:Date.now(),a:rollAura()};
  sfx("plant");const[x,y]=centerOf(el);burst(x,y,["🟤","🌱"],6);float("−"+c.seed+" 💷",x,y);save();renderAll();
 }
+/* ингредиенты за сбор урожая: сервер сам решает шанс и дневной лимит */
+const _aEnc=new URLSearchParams(location.search).get("a_enc")||new URLSearchParams(location.search).get("a")||"";
+let _ingBusy=false;
+async function ingrFarm(){
+ if(!_aEnc||_ingBusy)return;_ingBusy=true;
+ try{
+  const r=await fetch("https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(_aEnc),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"ingr_farm"}),cache:"no-store"});
+  let d=await r.json();for(let i=0;i<3;i++){if(d&&d.result&&typeof d.result==="object")d=d.result;else break}
+  if(d&&d.find){setTimeout(()=>{toast("🧪 Найдено в саду: "+d.find);sfx("dew")},700)}
+ }catch(e){}finally{setTimeout(()=>{_ingBusy=false},2200)}
+}
 function harvest(i,el,quiet){
  const p=S.plots[i];if(!p||p.sh||plotProg(p,Date.now())<1)return false;
  const c=CROPS.find(x=>x.id===p.c),au=AURAS[p.a];
@@ -324,7 +335,7 @@ function harvest(i,el,quiet){
 function harvestAll(){
  let n=0;S.plots.forEach((p,i)=>{const el=$("plots").children[i];if(harvest(i,el,n>0))n++});
  if(!n){sfx("deny");toast("Пока ничего не созрело")}
- else toast("Собрано: "+n);
+ else{toast("Собрано: "+n);ingrFarm()}
  checkAch();save();renderAll();
 }
 function tapPlot(i){
@@ -335,7 +346,7 @@ function tapPlot(i){
   p.t+=now-p.sh;p.sh=0;sfx("whisper");const[x,y]=centerOf(el);burst(x,y,["👁","✨","💨"],8);flash("#8a5cff");
   gainXp(2);if(Math.random()<.3){S.gold+=3;float("+3 💷",x,y)}toast("Ты изгнал Тень с грядки");save();return renderAll();
  }
- if(plotProg(p,now)>=1){harvest(i,el);checkAch();save();return renderAll()}
+ if(plotProg(p,now)>=1){harvest(i,el);ingrFarm();checkAch();save();return renderAll()}
  // роса
  if(S.dew<1){sfx("deny");return toast("Лунная роса ещё не собралась")}
  S.dew--;p.b=(p.b||0)+plotTotal(p)*.25;sfx("dew");const[x,y]=centerOf(el);burst(x,y,["💧","✨"],6);float("−25% времени",x,y);save();renderAll();

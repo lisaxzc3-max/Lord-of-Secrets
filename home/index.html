@@ -108,9 +108,9 @@ p {
 
   <div class="card" aria-label="Помещения дома">
 
-    <button class="btn" type="button" disabled>
+    <a class="btn" id="labButton" href="../lab/index.html">
       🧪 Лаборатория
-    </button>
+    </a>
 
     <a class="btn" id="petsButton" href="../pets/index.html">
       🐾 Вольер
@@ -137,6 +137,8 @@ p {
 
   const farmButton = document.getElementById("farmButton");
   farmButton.href = "../farm/index.html" + location.search;
+  const labButton = document.getElementById("labButton");
+  if (labButton) labButton.href = "../lab/index.html" + location.search;
   const petsButton = document.getElementById("petsButton");
   if (petsButton) petsButton.href = "../pets/index.html" + location.search;
 })();
