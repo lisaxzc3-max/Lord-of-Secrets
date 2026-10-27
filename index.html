@@ -1639,13 +1639,23 @@ window.tutApi = async function (payload) {
 
 async function doEquip(index) {
   try {
+    const it = G.inv[index];
     const data = await api({
       action: "equip",
       idx: index
     });
 
     if (data.ok) {
-      await loadProfileWithRetry();
+      if (it && it.slot) {
+        const old = G.eq[it.slot];
+        G.eq[it.slot] = it;
+        G.inv.splice(index, 1);
+        if (old) G.inv.push(old);
+        renderBagFromJ({ inventory: G.inv, equipped: G.eq });
+        loadProfileWithRetry(false);
+      } else {
+        await loadProfileWithRetry();
+      }
     } else {
       showLoadError(data.error || "Не удалось надеть предмет.");
     }
@@ -1656,13 +1666,21 @@ async function doEquip(index) {
 
 async function doUnequip(slot) {
   try {
+    const it = G.eq[slot];
     const data = await api({
       action: "unequip",
       slot
     });
 
     if (data.ok) {
-      await loadProfileWithRetry();
+      if (it) {
+        delete G.eq[slot];
+        G.inv.push(it);
+        renderBagFromJ({ inventory: G.inv, equipped: G.eq });
+        loadProfileWithRetry(false);
+      } else {
+        await loadProfileWithRetry();
+      }
     } else {
       showLoadError(data.error || "Не удалось снять предмет.");
     }

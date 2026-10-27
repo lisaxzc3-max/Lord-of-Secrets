@@ -249,7 +249,8 @@ function coins(from,n){
 document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest(".btn");if(!b||b.disabled)return;const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height),x=document.createElement("span");x.className="rip";x.style.cssText="width:"+s+"px;height:"+s+"px;left:"+(e.clientX-r.left-s/2)+"px;top:"+(e.clientY-r.top-s/2)+"px";b.appendChild(x);setTimeout(()=>x.remove(),700)});
 /* ---------- действия ---------- */
 const readForm=()=>{const g=id=>$(id)?$(id).value:null;let v;if((v=g("f_nick"))!==null)fm.nick=v;if((v=g("f_note"))!==null)fm.note=v;if((v=g("f_tn"))!==null)fm.tn=v;if((v=g("f_ta"))!==null)fm.ta=v};
-async function act(p,snd,fx){const d=await call(p,snd);if(!d)return null;await load(true);if(fx)fx(d);return d}
+async function after(d){if(d&&d.st&&d.st.ok!==false){apply(d.st);lastMail=d.st.mail.length;if(window.LOTM_FAST)LOTM_FAST.set("mk_state",d.st)}else await load(true)}
+async function act(p,snd,fx){const d=await call(p,snd);if(!d)return null;await after(d);if(fx)fx(d);return d}
 document.addEventListener("click",async e=>{
  const t=e.target.closest("[data-t],[data-s],[data-buy],[data-sellg],[data-sell1],[data-sellall],[data-act],[data-lbuy],[data-lcancel],[data-oacc],[data-odec],[data-ocan],[data-mcl],[data-mall],[data-pg],[data-pm]");
  if(!t||!S)return;const D=t.dataset;
@@ -277,7 +278,7 @@ document.addEventListener("click",async e=>{
   if(pickMode==="lot"){const pr=num($("f_price")&&$("f_price").value);fm.price=pr?String(pr):"";
    if(isEmpty({g:C.g,i:C.i,p:C.p,m:0})){toast("Выбери, что выставить.",1);return}
    const d=await call({action:"mk_list_add",cart:{g:C.g,i:C.i,p:C.p},price:pr},"stamp");
-   if(d){C=empty();fm.price="";closeSheet();await load(true);seal("Лот на витрине")}return}
+   if(d){C=empty();fm.price="";closeSheet();await after(d);seal("Лот на витрине")}return}
   if(pickMode==="want"&&$("f_wg"))fm.wg=$("f_wg").value;
   sfx("rune");closeSheet();return}
  if(D.act==="send"){
@@ -285,11 +286,11 @@ document.addEventListener("click",async e=>{
   if(isEmpty(C)){toast("Корзина пуста.",1);return}
   const tr=!isEmpty(W)||!!fm.wg.trim();
   const d=await call({action:"mk_send",nick:fm.nick,cart:{g:C.g,i:C.i,p:C.p,m:C.m},want:{g:fm.wg.split(",").map(x=>x.trim()).filter(Boolean),i:W.i,p:W.p,m:W.m},note:fm.note},null);
-  if(d){C=empty();W=empty();fm.wg="";fm.note="";await load(true);seal(tr?"Предложение улетело":"Дар отправлен",tr?"stamp":"chest")}return}
+  if(d){C=empty();W=empty();fm.wg="";fm.note="";await after(d);seal(tr?"Предложение улетело":"Дар отправлен",tr?"stamp":"chest")}return}
  if(D.act==="xfer"){
   readForm();
   const d=await call({action:"mk_send",nick:fm.tn,cart:{m:num(fm.ta)}},null);
-  if(d){fm.ta="";await load(true);seal("Монеты ушли в тень","coin")}return}
+  if(d){fm.ta="";await after(d);seal("Монеты ушли в тень","coin")}return}
 });
 function keepM(){const m=$("f_m");if(m){(pickMode==="want"?W:C).m=Math.max(0,num(m.value))}}
 document.addEventListener("input",e=>{if(e.target.id==="f_wg")fm.wg=e.target.value;if(e.target.id==="f_m")keepM()});
