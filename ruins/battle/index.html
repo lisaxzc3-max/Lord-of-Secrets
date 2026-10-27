@@ -519,7 +519,7 @@ $("arena").classList.toggle("boss",!!boss);sndMusic(boss?"boss":"battle");
 function cleanBattleText(value){
 const text=String(value??"").trim();
 const messages={
-no_battle:"Сражение не найдено на сервере. Возможно, бой ещё не начался.",
+no_battle:"Сражение завершено. Если не атаковать больше 3 минут, бой прерывается сам.",
 cooldown:"Способность ещё восстанавливается.",
 dead:"Персонаж не может продолжать бой."
 };
@@ -681,7 +681,7 @@ setTimeout(()=>{banner("БОСС: ВЕРХОВНЫЙ ЖРЕЦ","#ff8a3a");shakeS
 initialized=true;
 }
 if(state?.error==="no_battle"||state?.type==="no_battle"){
-setMessage("Сервер не обнаружил активное сражение. Вернись в руины и начни столкновение заново.","БОЙ НЕ НАЙДЕН","⚠️");
+setMessage(state?.idle?"Бой прерван: ты не атаковал больше 3 минут. Вернись в руины и начни столкновение заново.":"Сервер не обнаружил активное сражение. Вернись в руины и начни столкновение заново.",state?.idle?"БОЙ ПРЕРВАН":"БОЙ НЕ НАЙДЕН","⏳");
 addLog("Активное сражение не найдено на сервере.","info");
 }else if(state?.ok===false&&state?.error){
 setMessage(cleanBattleText(state.error),"СОСТОЯНИЕ БОЯ","⚠️");
