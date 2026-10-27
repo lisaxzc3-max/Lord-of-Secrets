@@ -2,6 +2,14 @@
    Работает сам: следит за <img src=".../avatars/m_(seer|sailor|hunter)[8].svg"> во всей странице. */
 (function(){
 "use strict";
+var BASE=(function(){try{var u=document.currentScript.src;return u.slice(0,u.indexOf("shared/avatar.js"))}catch(e){return ""}})();
+var MAP={seer:"seer",sailor:"sailor",hunter:"hunter","Провидец":"seer","Матрос":"sailor","Охотник":"hunter"};
+var st=document.createElement("style");st.textContent=".avMini{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}.pav:has(.avMini),.row .av:has(.avMini),.fr .av:has(.avMini),.chAv:has(.avMini),.ch:has(.avMini){overflow:hidden}";(document.head||document.documentElement).appendChild(st);
+window.LOTM_AV={
+ key:function(p){return MAP[p]||null},
+ html:function(p,fb){var k=MAP[p];return k?'<img class="avMini" alt="" src="'+BASE+'avatars/s_'+k+'.webp">':(fb||"👤")},
+ fill:function(node,p,fb){var k=MAP[p];if(!node)return;if(!k){node.textContent=fb||"👤";return}node.textContent="";var i=new Image();i.className="avMini";i.alt="";i.src=BASE+"avatars/s_"+k+".webp";i.onerror=function(){i.remove();node.textContent=fb||"👤"};node.appendChild(i)}
+};
 var RE=/(^|\/)avatars\/m_(seer|sailor|hunter)8?\.svg(\?.*)?$/;
 var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
 var phone=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent||"");

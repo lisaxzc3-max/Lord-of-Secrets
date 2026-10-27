@@ -127,7 +127,7 @@ async function api(payload){
  return d;
 }
 function esc(t){const d=document.createElement("div");d.textContent=String(t);return d.innerHTML}
-function ico(p){return PATH[p]||"👤"}
+function ico(p){return window.LOTM_AV?LOTM_AV.html(p,PATH[p]||"👤"):(PATH[p]||"👤")}
 
 let leftSec=0,tick=null;
 function fmt(s){s=Math.max(0,s|0);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
