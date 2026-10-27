@@ -1675,6 +1675,7 @@ const cityData = {
     { icon: "🏛", name: "Ратуша", npc: "Зал славы · топ игроков", key: "top" },
     { icon: "⚔️", name: "Арена Теней", npc: "Дуэли · Рейтинг", key: "arena" },
     { icon: "🕯️", name: "Рынок Безликих", npc: "Торговля · Обмен", key: "bazaar" },
+    { icon: "📜", name: "Бюро Безымянных", npc: "Ремёсла · Заказы", key: "bureau" },
     { icon: "🌙", name: "Церковь Ночи", npc: "Кланы · Братства", key: "clan" }
   ]},
   "Север": { icon: "❄️", sub: "Рынок, таверна и клуб гадалок", places: [
@@ -1706,6 +1707,7 @@ function openPlace(key) {
   if (key === "fortune") return openFortune();
   if (key === "top") return openTop();
   if (key === "arena") { location.href = buildPageUrl("./arena/index.html"); return; }
+  if (key === "bureau") { location.href = buildPageUrl("./bureau/index.html"); return; }
   if (key === "bazaar") { location.href = buildPageUrl("./market/index.html"); return; }
   if (key === "clan") { location.href = buildPageUrl("./clan/index.html"); return; }
   if (key === "home") { location.href = buildPageUrl("./home/index.html"); return; }
