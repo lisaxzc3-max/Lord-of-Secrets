@@ -77,6 +77,15 @@ h3{font-size:14px;color:var(--gold);margin-bottom:4px;letter-spacing:.05em}
 .sw input:checked+i{background:#4a3a1a;border-color:var(--gold)}.sw input:checked+i:after{left:25px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
 .nSel{background:#150e24;color:#f0e8d2;border:1px solid #3a3057;border-radius:10px;padding:6px 8px;font:13px system-ui}
+.acH{cursor:pointer;display:flex;align-items:center;gap:8px;margin:0;padding:4px 0;user-select:none;-webkit-user-select:none}
+.acH:after{content:"";margin-left:auto;width:9px;height:9px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(45deg) translate(-2px,-2px);transition:transform .35s;margin-right:4px;opacity:.8}
+.card.ac.open .acH:after{transform:rotate(-135deg) translate(-2px,-2px)}
+.acW{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s ease}
+.card.ac.open .acW{grid-template-rows:1fr}
+.acB{overflow:hidden;min-height:0;opacity:0;transition:opacity .3s}
+.card.ac.open .acB{opacity:1;padding-top:8px}
+.card.ac{padding:12px 14px}
+.card.ac.open{border-color:#8f7a4c}
 </style>
 <script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
@@ -311,6 +320,17 @@ async function changePath(){
   const qs2=()=>set("q",[+$("nQa").value,+$("nQb").value]);
   $("nQa").addEventListener("change",qs2);$("nQb").addEventListener("change",qs2);
   api({action:"ntf_get"}).then(d=>{if(d&&d.ok){st=d.p;paint()}else $("ntfNote").textContent="Настройки недоступны."}).catch(()=>{$("ntfNote").textContent="Настройки недоступны."});
+})();
+(function(){
+  document.querySelectorAll("section.card").forEach(sec=>{
+    const h=sec.querySelector(":scope > h3");if(!h)return;
+    const w=document.createElement("div"),b=document.createElement("div");w.className="acW";b.className="acB";
+    const rest=[];let n=h.nextSibling;while(n){rest.push(n);n=n.nextSibling}
+    rest.forEach(x=>b.appendChild(x));w.appendChild(b);sec.appendChild(w);
+    sec.classList.add("ac");h.classList.add("acH");h.setAttribute("role","button");h.tabIndex=0;h.setAttribute("aria-expanded","false");
+    const t=()=>{const o=sec.classList.toggle("open");h.setAttribute("aria-expanded",o?"true":"false");try{snd(o?"open":"back")}catch(_){}};
+    h.addEventListener("click",t);h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();t()}});
+  });
 })();
 function testSnd(){LOTM_SND.resume();["divine","storm","fire","win"].forEach((n,i)=>snd(n,i*0.9))}
 load().catch(()=>{});

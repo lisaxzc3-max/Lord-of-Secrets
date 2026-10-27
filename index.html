@@ -457,6 +457,35 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 #seqBox,#seqBox .sqT,#seqBox .sqC,body.seqOn #seqVeil,body.seqOn #hudAv,body.seqOn .wrap{animation:none}
 /* без резких вздрагиваний */
 #seqBox .sqT,#seqBox .sqC,body.seqOn #hudAv,body.seqOn .wrap{animation:none}
+/* боковое меню */
+.burger{flex-direction:column;gap:4px;padding:0}
+.burger i{display:block;width:16px;height:2px;border-radius:2px;background:#cdb27a;transition:transform .3s,opacity .3s}
+.burger:active{transform:scale(.92)}
+#sideMenu{position:fixed;inset:0;z-index:9000;visibility:hidden;pointer-events:none}
+#sideMenu.on{visibility:visible;pointer-events:auto}
+#sideMenu .smDim{position:absolute;inset:0;background:#030208cc;opacity:0;transition:opacity .45s}
+#sideMenu.show .smDim{opacity:1}
+#sideMenu .smPanel{position:absolute;top:0;right:0;bottom:0;width:100%;overflow:hidden;background:radial-gradient(ellipse at 80% -10%,#3b2a5a99,transparent 55%),radial-gradient(ellipse at 10% 110%,#4a1f3a55,transparent 55%),linear-gradient(180deg,#130d22,#07050d);transform:translateX(100%);transition:transform .5s cubic-bezier(.2,.85,.25,1);padding:calc(16px + env(safe-area-inset-top)) 18px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;border-left:1px solid #5a4a3a}
+#sideMenu.show .smPanel{transform:none}
+#sideMenu .smFog{position:absolute;left:-30%;width:160%;height:40%;bottom:0;pointer-events:none;background:radial-gradient(ellipse at 30% 60%,#9d92b230,transparent 60%),radial-gradient(ellipse at 80% 70%,#8d86a626,transparent 60%);animation:smFog 24s ease-in-out infinite alternate}
+@keyframes smFog{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
+#sideMenu .smSig{position:absolute;right:-70px;top:90px;width:300px;height:300px;opacity:.12;color:#cdb27a;animation:smSpin 90s linear infinite;pointer-events:none}
+@keyframes smSpin{to{transform:rotate(360deg)}}
+#sideMenu .smHead{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:6px}
+#sideMenu .smTtl{font:700 12px Georgia,serif;letter-spacing:5px;color:#cdb27a;text-transform:uppercase}
+#sideMenu .smX{width:38px;height:38px;border-radius:12px;border:1px solid #6a5a8a;background:#1b1330;color:#e8e0cf;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#sideMenu .smLine{height:1px;margin:10px 0 18px;background:linear-gradient(90deg,#cdb27a00,#cdb27acc,#cdb27a00);position:relative;z-index:2}
+#sideMenu .smList{position:relative;z-index:2;display:grid;gap:11px}
+#sideMenu .smIt{display:flex;align-items:center;gap:15px;padding:16px 15px;border-radius:16px;border:1px solid #4a3d64;background:linear-gradient(160deg,#241a38ee,#130d20ee);color:#efe5cc;font:17px Georgia,serif;text-align:left;cursor:pointer;opacity:0;transform:translateX(26px);position:relative;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+#sideMenu.show .smIt{animation:smIn .55s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(.18s + var(--i)*.08s)}
+@keyframes smIn{to{opacity:1;transform:none}}
+#sideMenu .smIt:active{transform:scale(.98)}
+#sideMenu .smIt:hover{border-color:#cdb27a;box-shadow:0 0 18px #cdb27a33}
+#sideMenu .smIc{flex:0 0 40px;height:40px;border-radius:12px;border:1px solid #8f7a4c;background:radial-gradient(circle at 35% 30%,#4a3a6a,#1a1230);display:flex;align-items:center;justify-content:center;color:#cdb27a}
+#sideMenu .smIc svg{width:22px;height:22px}
+#sideMenu .smIt small{display:block;margin-top:1px;font:11px Inter,system-ui,sans-serif;color:#9d92b2}
+#sideMenu .smFoot{margin-top:auto;position:relative;z-index:2;text-align:center;font:italic 12px Georgia,serif;color:#7f7494;padding-top:14px}
+@media(prefers-reduced-motion:reduce){#sideMenu *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 <script src="./shared/fast.js"></script>
 <script src="./shared/auth.js"></script>
@@ -473,6 +502,22 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 
 <div class="wrap">
 
+<div id="sideMenu" aria-hidden="true">
+  <div class="smDim" onclick="closeMenu()"></div>
+  <aside class="smPanel" role="dialog" aria-label="Меню">
+    <svg class="smSig" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1"><circle cx="100" cy="100" r="92" stroke-dasharray="2 5"/><circle cx="100" cy="100" r="70"/><circle cx="100" cy="100" r="46" stroke-dasharray="1 3"/><path d="M30 100Q100 40 170 100Q100 160 30 100z"/><circle cx="100" cy="100" r="16"/><circle cx="100" cy="100" r="5" fill="currentColor"/><path d="M100 8v22M100 170v22M8 100h22M170 100h22"/></svg>
+    <div class="smFog"></div>
+    <div class="smHead"><span class="smTtl">Меню</span><button type="button" class="smX" onclick="closeMenu()" aria-label="Закрыть">✕</button></div>
+    <div class="smLine"></div>
+    <div class="smList">
+      <button type="button" class="smIt" style="--i:0" onclick="menuGo('settings')">
+        <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></span>
+        <span>Настройки<small>Звук, уведомления, ник, путь</small></span>
+      </button>
+    </div>
+    <div class="smFoot">Туман хранит всё, что ты ему доверил…</div>
+  </aside>
+</div>
 <div class="top" id="topCard">
   <div class="avatar" id="hudAv" onclick="openProfile()"><span>𓂀</span></div>
   <div class="info" onclick="openProfile()">
@@ -490,7 +535,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
     </div>
   </div>
   <div class="side">
-    <div class="gear" onclick="openSettings(event)">⚙️</div>
+    <button type="button" class="gear burger" id="menuBtn" aria-label="Меню" onclick="openMenu(event)"><i></i><i></i><i></i></button>
     <div class="uid">UID <span id="uid">—</span></div>
   </div>
 </div>
@@ -1189,6 +1234,28 @@ function openDaily() {
 function openFortune() {
   location.href = buildPageUrl("./fortune/index.html");
 }
+
+function openMenu(event) {
+  event?.stopPropagation();
+  const m = byId("sideMenu");
+  m.classList.add("on");
+  m.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add("show")));
+  try { window.snd && window.snd("open"); } catch (_) {}
+}
+function closeMenu() {
+  const m = byId("sideMenu");
+  if (!m.classList.contains("on")) return;
+  m.classList.remove("show");
+  m.setAttribute("aria-hidden", "true");
+  try { window.snd && window.snd("back"); } catch (_) {}
+  setTimeout(() => { if (!m.classList.contains("show")) m.classList.remove("on"); }, 520);
+}
+function menuGo(key) {
+  try { window.snd && window.snd("tap"); } catch (_) {}
+  if (key === "settings") openSettings();
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenu(); });
 
 function openSettings(event) {
   event?.stopPropagation();
