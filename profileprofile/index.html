@@ -950,6 +950,7 @@ function setPortrait(data) {
   const pk = LOTM_SKILLS.pathKey(data.path_key || data.path);
   if (!pk || !data.gender) return;
   window._seqName = ((data.sequence|0) && (data.sequence|0) <= 8) ? (data.sequence_name || "") : "";
+  window._seqNum = (data.sequence|0) || 9;
   const g = data.gender === "female" ? "f" : "m";
   const box = $("portrait");
   let img = box.querySelector("img");
@@ -1011,7 +1012,7 @@ function renderSkills(path) {
   if (pk) {
     const names = { seer: "𓂀 Провидец", sailor: "⚔ Матрос", hunter: "🏹 Охотник" };
     title = names[pk];
-    if (window._seqName) title = "✦ " + window._seqName;
+    { const sn = window._seqNum || 9; title = title.replace(/^\S+\s/, "") ; title = (window._seqName ? "✦ " : (names[pk].split(" ")[0] + " ")) + sn + " · " + (window._seqName || title); }
     subtitle = LOTM_SKILLS.PATHNAME[pk][0].toUpperCase();
     LOTM_SKILLS.list(pk).forEach(sk => { skills.push([sk.icon, sk.name, sk.tag, sk.desc, false]); keys.push(sk.key); });
     { const ps = LOTM_SKILLS.PASS[pk]; skills.push([ps[0], ps[1], ps[2], ps[3], true]); }
