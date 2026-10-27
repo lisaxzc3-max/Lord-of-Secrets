@@ -444,6 +444,17 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 @keyframes arP{50%{box-shadow:0 0 38px #ff4a5aaa;border-color:#ff6a78}}
 .arBan .arI{font-size:24px;filter:drop-shadow(0 0 6px #d4343f)}
 .arBan b{display:block;font:400 14px Georgia,serif;letter-spacing:.05em}.arBan small{display:block;font-size:10px;color:#c0a0a8}.arBan i{margin-left:auto;font-style:normal;color:#d08a90}
+/* без миганий на главной */
+.top.low{animation:cardIn .7s ease backwards}
+.timerBox.dead,.timerBox.regen{animation:none}
+.stars i{animation:none;opacity:.6}
+.hero .city .win,.hero .city .lamp,.ctyWin rect,.ctyLamps circle{animation:none}
+.sigil i:nth-child(3),.lvBadge i:nth-child(2){animation:none}
+.hg.low svg{animation:none;filter:drop-shadow(0 0 10px #c0545e66)}
+.cta{animation:none}
+.ctyName,.bagWrap::before,.tile.hasNew::after{animation:none}
+.buff{animation:bfIn .6s cubic-bezier(.2,.9,.3,1.2)}
+#seqBox,#seqBox .sqT,#seqBox .sqC,body.seqOn #seqVeil,body.seqOn #hudAv,body.seqOn .wrap{animation:none}
 </style>
 <script src="./shared/fast.js"></script>
 <script src="./shared/auth.js"></script>
