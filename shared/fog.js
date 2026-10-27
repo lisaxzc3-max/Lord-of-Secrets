@@ -49,7 +49,7 @@ function loop(now){
 function start(){
  if(!document.body){return document.addEventListener("DOMContentLoaded",start)}
 if(PH)layers=[layers[0]];
-layers.forEach(function(L){L.c=mk(L.z,0);L.c.style.transition="opacity 1.6s ease";setTimeout(function(){L.c.style.opacity=L.o},900)});
+layers.forEach(function(L){L.c=mk(L.z,0);L.c.style.transition="opacity 1.6s ease";(function(c,o){var go=function(){setTimeout(function(){c.style.opacity=o},1400)};if(document.readyState==="complete")go();else addEventListener("load",go)})(L.c,L.o)});
  size();seed();draw(performance.now());
  if(!reduce)requestAnimationFrame(loop);
  addEventListener("resize",function(){size();seed();draw(performance.now())});

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0b0912">
 <title>Повелитель Тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -10,8 +11,8 @@
 <style>
 :root{--gold:#d6b779;--gold2:#b28c4d;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.82)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-html{background:#0b0912}
-html{background:#0b0912}
+html{background:#0b0912;color-scheme:dark}
+html{background:#0b0912;color-scheme:dark}
 html:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,#2a1f4a 0%,transparent 60%),radial-gradient(ellipse at 50% 100%,#1c1230 0%,transparent 60%),linear-gradient(#0d0a18,#07050d)}
 body{min-height:100vh;min-height:100dvh;color:var(--text);background:transparent;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 30% at 20% 30%,#5b3fa044,transparent 70%),radial-gradient(35% 28% at 80% 70%,#a03a5a33,transparent 70%);animation:fog 22s ease-in-out infinite alternate}
@@ -743,7 +744,9 @@ var SP={"139,107,255":sprite("139,107,255"),"214,183,121":sprite("214,183,121")}
 var cv=document.getElementById("fx"),ctx=cv.getContext("2d"),w=0,h=0,dots=[];
 function resize(){w=cv.width=innerWidth;h=cv.height=innerHeight;dots=[];for(var i=0;i<34;i++)dots.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.7+.4,s:Math.random()*.35+.08,p:Math.random()*6,c:Math.random()<.25?"139,107,255":"214,183,121"})}
 resize();addEventListener("resize",resize);
+var _ph=false;try{_ph=matchMedia("(pointer:coarse)").matches}catch(e){}var _lt=0;
 function frame(t){
+if(_ph&&t-_lt<50){if(!reduce&&!document.hidden)requestAnimationFrame(frame);return}_lt=t;
 ctx.clearRect(0,0,w,h);
 for(var i=0;i<dots.length;i++){
 var d=dots[i];d.y-=d.s;if(d.y<-6){d.y=h+6;d.x=Math.random()*w}
