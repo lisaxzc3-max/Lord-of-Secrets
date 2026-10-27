@@ -26,8 +26,8 @@ css.textContent=
 ".pcR{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:12px;background:#0b0714aa;border:1px solid #2f2745}"+
 ".pcR i{font-style:normal;font-size:17px;flex:0 0 22px;text-align:center}"+
 ".pcR span{flex:1;min-width:0}.pcR b{display:block;font:700 13px Georgia,serif;color:#eadfc6}.pcR small{display:block;font:600 10px system-ui,sans-serif;letter-spacing:.08em;color:#8f84a6;text-transform:uppercase;margin-bottom:1px}"+
-".pcBtns{display:flex;gap:8px;margin-top:14px}"+
-".pcBtn{flex:1;border:1px solid #3a3057;background:#120c1e;color:#d6b779;border-radius:12px;padding:11px 8px;font:700 13px system-ui,sans-serif;cursor:pointer}"+
+".pcBtns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}"+
+".pcBtn{flex:1 1 40%;border:1px solid #3a3057;background:#120c1e;color:#d6b779;border-radius:12px;padding:11px 8px;font:700 13px system-ui,sans-serif;cursor:pointer}"+
 ".pcBtn.main{border-color:#8a6cd0;background:linear-gradient(180deg,#3a2a66,#21163d);color:#f1e3bd}"+
 ".pcBtn:active{transform:scale(.97)}"+
 ".pcLoad{padding:34px 0;color:#9488ab;font:600 13px system-ui,sans-serif}"+
@@ -75,6 +75,7 @@ function open(uid,nick,opts){
   if(d.clan)h+=row("⚜","Клан","["+d.clan.tag+"] "+d.clan.name+" · "+d.clan.rank_name+(d.clan.post_name?" · "+d.clan.post_name:""));
   else h+=row("⚜","Клан","Не состоит в клане");
   if(d.arena)h+=row("⚔","Арена",d.arena.league+" · "+d.arena.rating);
+  if(typeof d.seen==="number"&&!d.me)h+=row("🕯","Активность",d.seen<180?"В сети":d.seen<3600?"Был "+Math.round(d.seen/60)+" мин назад":d.seen<86400?"Был "+Math.round(d.seen/3600)+" ч назад":"Был "+Math.round(d.seen/86400)+" дн назад");
   if(d.rank)h+=row("🏆","Рейтинг","№ "+d.rank+" по уровню");
   var rows=document.createElement("div");rows.className="pcRows";rows.innerHTML=h;box.appendChild(rows);
   var bt=document.createElement("div");bt.className="pcBtns";
@@ -83,8 +84,32 @@ function open(uid,nick,opts){
    var w=document.createElement("button");w.type="button";w.className="pcBtn main";w.textContent="✉ Написать";
    w.onclick=function(){close();setTimeout(function(){dm(String(d.uid),d.nick)},120)};bt.appendChild(w);
   }
-  var c=document.createElement("button");c.type="button";c.className="pcBtn";c.textContent="Закрыть";c.onclick=close;bt.appendChild(c);
-  box.appendChild(bt);
+  var fb=null;
+  if(!d.me){
+   fb=document.createElement("button");fb.type="button";fb.className="pcBtn";
+   var LBL={none:"＋ В друзья",sent:"Заявка отправлена · отозвать",incoming:"✓ Принять заявку",friend:"✓ Друзья · удалить"};
+   var OPS={none:"add",sent:"cancel",incoming:"accept",friend:"remove"};
+   var st=d.fr||"none";
+   var paintF=function(){fb.textContent=LBL[st];fb.classList.toggle("main",st==="none"||st==="incoming")};
+   paintF();
+   fb.onclick=function(){
+    if(fb.disabled)return;
+    var op=OPS[st];
+    var go=function(){
+     fb.disabled=true;
+     fetch(URL_,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"friend_op",op:op,uid:String(d.uid)}),cache:"no-store"})
+     .then(function(r){return r.json()}).then(function(x){x=unwrap(x);fb.disabled=false;
+      if(x&&x.ok){st=x.state||"none";paintF();sfx("win");try{if(window.__lotmFriendsChanged)window.__lotmFriendsChanged()}catch(e){}}
+      else{fb.textContent=(x&&x.text)||"Не получилось";setTimeout(paintF,1800)}
+     }).catch(function(){fb.disabled=false;fb.textContent="Нет связи";setTimeout(paintF,1800)});
+    };
+    if(op==="remove"){if(fb.dataset.sure){go()}else{fb.dataset.sure="1";fb.textContent="Точно удалить?";setTimeout(function(){delete fb.dataset.sure;paintF()},2500)}}
+    else go();
+   };
+  }
+  var c=document.createElement("button");c.type="button";c.className="pcBtn";c.textContent="Закрыть";c.onclick=close;
+  if(fb){bt.appendChild(fb);var bt2=document.createElement("div");bt2.className="pcBtns";bt2.style.marginTop="8px";bt2.appendChild(c);box.appendChild(bt);box.appendChild(bt2)}
+  else{bt.appendChild(c);box.appendChild(bt)}
  }).catch(function(e){
   box.innerHTML='<div class="pcLoad">'+esc(e&&e.message&&e.message!=="http"&&e.message!=="fail"?e.message:"Не удалось открыть досье.")+'</div><div class="pcBtns"><button class="pcBtn" type="button" id="pcX">Закрыть</button></div>';
   box.querySelector("#pcX").onclick=close;
