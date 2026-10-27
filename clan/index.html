@@ -261,7 +261,7 @@ const TI={mem:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><pat
 const tico=k=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+(TI[k]||"")+'</svg>';
 function renderIn(){
  const p=S.perm,nx=S.nx?Math.min(100,Math.max(0,(S.xp-(S.lv>1?[0,60,200,450,800,1300,2000,3000,4500,6500][S.lv-1]:0))/(S.nx-[0,60,200,450,800,1300,2000,3000,4500,6500][S.lv-1])*100)):100;
- let h='<div class="ban" style="'+ecss(S.e)+'"><div class="row"><div class="emb">'+embSvg(S.e)+'</div><div style="flex:1;min-width:0"><div class="tg">['+esc(S.tg)+']</div><h2>'+esc(S.n)+'</h2><div class="muted">Уровень '+S.lv+' · '+(S.nx?S.xp+' / '+S.nx+' влияния':"предел")+'</div><div class="bar"><i style="width:'+nx+'%"></i></div></div></div>';
+ let h='<div class="ban" style="'+ecss(S.e)+'"><div class="row"><div class="emb">'+embSvg(S.e)+'</div><div style="flex:1;min-width:0"><div class="tg">['+esc(S.tg)+']</div><h2>'+esc(S.n)+'</h2><div class="muted">Уровень '+S.lv+' · '+(S.nx?S.xp+' / '+S.nx+' влияния':"предел")+'</div><div class="bar"><i style="width:'+nx+'%"></i></div><div style="margin-top:6px;font-size:11px;color:var(--ec);letter-spacing:.06em">✦ Твоё звание: '+esc(S.ranks[p.rank])+(p.post?' · '+esc(S.posts[p.post]):'')+'</div></div></div>';
  if(S.motd)h+='<div class="motd">«'+esc(S.motd)+'»</div>';
  h+='<div class="stats"><div><b>'+S.mem.length+'/'+S.cap+'</b>братьев</div><div><b>'+S.gold+'</b>в казне ₤</div><div><b>'+S.held+'</b>земель</div><div><b>'+S.kills+'</b>охот</div></div></div>';
  const tabs=TABS.concat(p.panel?[["adm","Управление"]]:[]);
