@@ -31,6 +31,8 @@ css.textContent=
 ".pcBtn.main{border-color:#8a6cd0;background:linear-gradient(180deg,#3a2a66,#21163d);color:#f1e3bd}"+
 ".pcBtn:active{transform:scale(.97)}"+
 ".pcLoad{padding:34px 0;color:#9488ab;font:600 13px system-ui,sans-serif}"+
+".pcSp{display:block;width:26px;height:26px;margin:0 auto 12px;border-radius:50%;border:2px solid #ffffff2a;border-top-color:#e2c27a;animation:pcSpin .8s linear infinite}"+
+"@keyframes pcSpin{to{transform:rotate(360deg)}}"+
 "@media(prefers-reduced-motion:reduce){#pcBack,#pcBox{transition:none}}";
 document.head.appendChild(css);
 
@@ -56,14 +58,19 @@ function open(uid,nick,opts){
  var old=document.getElementById("pcBack");if(old)old.remove();
  var back=document.createElement("div");back.id="pcBack";
  var box=document.createElement("div");box.id="pcBox";
- box.innerHTML='<div class="pcLoad">'+(nick?esc(nick)+" · ":"")+'Открываю досье…</div>';
+ box.innerHTML='<div class="pcLoad"><i class="pcSp"></i>'+(nick?esc(nick)+" · ":"")+'Открываю досье…</div>';
  back.appendChild(box);document.body.appendChild(back);
  back.addEventListener("click",function(e){if(e.target===back)close()});
  requestAnimationFrame(function(){back.classList.add("on")});sfx("open");
  if(!URL_){box.innerHTML='<div class="pcLoad">Нет связи с игрой.</div><div class="pcBtns"><button class="pcBtn" type="button" id="pcX">Закрыть</button></div>';box.querySelector("#pcX").onclick=close;return}
- fetch(URL_,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"player_card",uid:String(uid)}),cache:"no-store"})
- .then(function(r){if(!r.ok)throw new Error("http");return r.json()}).then(function(d){
-  d=unwrap(d);if(!d||d.ok===false)throw new Error((d&&d.text)||"fail");
+ var dead=false;
+ var timer=new Promise(function(_,rej){setTimeout(function(){dead=true;rej(new Error("timeout"))},15000)});
+ var req=fetch(URL_,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"player_card",uid:String(uid)}),cache:"no-store"})
+ .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.text()}).then(function(t){
+  var j;try{j=JSON.parse(t)}catch(e){throw new Error("bad json")}return j});
+ Promise.race([req,timer]).then(function(d){
+  if(dead)return;
+  d=unwrap(d);if(!d||typeof d!=="object")throw new Error("пустой ответ");if(d.ok===false)throw new Error(d.text||d.error||"fail");
   box.replaceChildren();
   box.appendChild(avatar(d));
   var nm=document.createElement("div");nm.className="pcNm";
@@ -111,8 +118,10 @@ function open(uid,nick,opts){
   if(fb){bt.appendChild(fb);var bt2=document.createElement("div");bt2.className="pcBtns";bt2.style.marginTop="8px";bt2.appendChild(c);box.appendChild(bt);box.appendChild(bt2)}
   else{bt.appendChild(c);box.appendChild(bt)}
  }).catch(function(e){
-  box.innerHTML='<div class="pcLoad">'+esc(e&&e.message&&e.message!=="http"&&e.message!=="fail"?e.message:"Не удалось открыть досье.")+'</div><div class="pcBtns"><button class="pcBtn" type="button" id="pcX">Закрыть</button></div>';
-  box.querySelector("#pcX").onclick=close;
+  var m=e&&e.message?e.message:"ошибка";
+  var why=m==="timeout"?"Сервер долго не отвечает.":/^http|bad json|Failed to fetch|NetworkError|Load failed/.test(m)?"Нет связи с сервером ("+m+").":m;
+  box.innerHTML='<div class="pcLoad">'+esc(why)+'</div><div class="pcBtns"><button class="pcBtn main" type="button" id="pcR2">Повторить</button><button class="pcBtn" type="button" id="pcX">Закрыть</button></div>';
+  box.querySelector("#pcX").onclick=close;box.querySelector("#pcR2").onclick=function(){open(uid,nick,opts)};
  });
 }
 window.PCard={open:open,close:close};
