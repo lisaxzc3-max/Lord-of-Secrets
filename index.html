@@ -1890,6 +1890,7 @@ const cityData = {
   ]},
   "Восток": { icon: "🌅", sub: "Жилые кварталы", places: [
     { icon: "🏠", name: "Твой дом", npc: "Вольер · Сад · Лаборатория", key: "home" },
+    { icon: "⚓", name: "Пристань", npc: "Рыбалка · Улов · Рекорды", key: "pier" },
     { icon: "🏥", name: "Лечебница", npc: "Скоро" }
   ]},
   "Запад": { icon: "🌇", sub: "Бульвар и банк", places: [
@@ -1907,7 +1908,7 @@ function toggleDistrict(district, force) {
   try { window.snd && window.snd(open ? "open" : "back"); } catch (_) {}
 }
 
-const PLACE_URL = { arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html" };
+const PLACE_URL = { arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html", pier: "./pier/index.html" };
 try { LOTM_FAST.idle(() => Object.keys(PLACE_URL).forEach(k => LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[k])))); } catch (_) {}
 function openPlace(key) {
   try { window.snd && window.snd("tap"); } catch (_) {}
@@ -1918,6 +1919,7 @@ function openPlace(key) {
   if (key === "bazaar") { location.href = buildPageUrl("./market/index.html"); return; }
   if (key === "clan") { location.href = buildPageUrl("./clan/index.html"); return; }
   if (key === "home") { location.href = buildPageUrl("./home/index.html"); return; }
+  if (key === "pier") { location.href = buildPageUrl("./pier/index.html"); return; }
   openLoc(key);
 }
 
