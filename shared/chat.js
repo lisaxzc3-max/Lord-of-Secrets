@@ -184,7 +184,7 @@ function msgRow(m,i){
  var bub=el("div","chBub");
  if(!mine){
   var nm=el("div","chNm");if(window.VIP&&m.v){var nb=el("div");nb.innerHTML=VIP.n(m.nick,m.v);nm.appendChild(nb)}else nm.textContent=m.nick;nm.appendChild(el("span",null,"ур."+m.lvl));
-  var go=function(){openThread(String(m.uid),m.nick)};
+  var go=function(){if(window.PCard)PCard.open(String(m.uid),m.nick);else openThread(String(m.uid),m.nick)};
   nm.addEventListener("click",go);av.addEventListener("click",go);bub.appendChild(nm);
  }
  bub.appendChild(el("div","chTx",m.txt));bub.appendChild(el("div","chTm",hhmm(m.t)));
@@ -282,6 +282,7 @@ function openThread(uid,nick){
  tMsgs.replaceChildren();thread.classList.add("on");sfx("scroll");
  S.busy=false;sync();setTimeout(function(){try{tIn.focus()}catch(e){}},300);
 }
+window.__lotmDm=openThread;
 function closeThread(){S.peer=null;thread.classList.remove("on");sfx("back");find.value="";loadList();sync()}
 
 function boot(){
