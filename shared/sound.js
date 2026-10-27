@@ -151,6 +151,18 @@ lull:function(t){[67,63,60,55].forEach(function(m,i){osc("sine",N(m),t+i*0.26,1.
 masks:function(t){osc("sine",N(58),t,0.9,0.2,{to:N(51),vib:6,wet:0.8});osc("sine",N(63),t+0.18,1,0.14,{to:N(56),vib:6,wet:0.8})}
 };
 for(var _k in DK)SFX[_k]=DK[_k];
+/* ===== переход / лаборатория ===== */
+DK.seqwhisper=function(t){var b=[[1400,700],[2300,1100],[900,500],[3100,1500]];for(var i=0;i<4;i++)noise(t+i*0.35+Math.random()*0.2,1.4,0.2,"bandpass",b[i][0],b[i][1],5,{attack:0.5,wet:0.85});osc("sine",N(34),t,2.6,0.18,{wet:0.7,attack:0.6,vib:3});osc("sawtooth",N(40)*1.04,t+0.3,2.2,0.05,{wet:0.8,attack:0.8,vib:5})};
+DK.seqpulse=function(t){osc("sine",58,t,0.2,0.6,{to:36});osc("sine",52,t+0.26,0.26,0.5,{to:32});noise(t,0.08,0.15,"lowpass",300,90)};
+DK.seqdone=function(t){[36,43,48,51,55,60].forEach(function(m,i){osc("sine",N(m),t+i*0.25,3.2,0.17,{wet:0.95,attack:0.2,vib:3})});osc("sawtooth",N(24),t,3,0.2,{wet:0.6,attack:0.4});noise(t,2.2,0.2,"bandpass",1200,300,3,{attack:0.8,wet:0.9})};
+DK.seqstart=function(t){noise(t,2.4,0.3,"lowpass",2200,80,1,{attack:0.2,wet:0.8});osc("sawtooth",N(30),t,2.4,0.22,{to:N(24),wet:0.7,vib:7});osc("sine",N(60),t+0.1,2.4,0.1,{to:N(56),wet:0.95});for(var i=0;i<5;i++)noise(t+0.4+i*0.25,0.9,0.14,"bandpass",1000+i*500,600,6,{attack:0.3,wet:0.9})};
+DK.bubble=function(t){var f=160+Math.random()*260;osc("sine",f,t,0.12,0.14,{to:f*1.8,wet:0.5});noise(t,0.05,0.05,"bandpass",1800,900,3)};
+DK.swirl=function(t){noise(t,1.6,0.2,"bandpass",300,1400,2,{attack:0.5,wet:0.7});osc("sine",N(38),t,1.8,0.14,{to:N(43),wet:0.8,attack:0.4,vib:4})};
+DK.sizzle=function(t){noise(t,0.7,0.22,"highpass",4000,9000,0.7,{attack:0.05,wet:0.4});osc("sine",N(36),t,0.8,0.14,{wet:0.7})};
+DK.rune=function(t){osc("sine",N(67),t,1.4,0.1,{wet:0.95,attack:0.05,vib:5});osc("sine",N(67)*1.5,t+0.05,1.2,0.05,{wet:0.95});noise(t,0.3,0.06,"bandpass",3500,2500,5,{wet:0.8})};
+DK.brewdone=function(t){osc("sine",N(36),t,2.8,0.35,{to:N(32),wet:0.8});[55,58,62,67].forEach(function(m,i){osc("sine",N(m),t+0.5+i*0.18,2.2,0.13,{wet:0.95,attack:0.1,vib:4})});noise(t,1.2,0.2,"bandpass",600,1800,2,{attack:0.3,wet:0.9})};
+for(var _k2 in DK)SFX[_k2]=DK[_k2];
+
 function sfx(name,delay){
 if(!st.on||!AC)return;
 if(!init())return;

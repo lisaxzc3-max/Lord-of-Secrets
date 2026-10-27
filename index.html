@@ -384,6 +384,40 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .buff .bfTx small{opacity:.8;font-size:11px;color:#e6d7ae;font-variant-numeric:tabular-nums}
 .buff .bfSh{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#fff5,transparent);transform:skewX(-20deg);animation:sweep 3s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.buff,.buff *{animation:none!important}}
+
+/* ===== переход на следующую последовательность ===== */
+#seqBox{display:none;position:relative;margin:10px 0;padding:14px 14px 12px;border-radius:16px;border:1px solid #6a2a4a;background:radial-gradient(120% 140% at 50% 0%,#2a1030,#0b060e 70%);overflow:hidden;text-align:center;box-shadow:0 0 26px #7a1a5a55,inset 0 0 30px #000;animation:seqBreath 4s ease-in-out infinite}
+#seqBox.on{display:block}
+@keyframes seqBreath{50%{box-shadow:0 0 44px #a3262e88,inset 0 0 40px #000;border-color:#a3262e}}
+#seqBox .sqT{font-size:11px;letter-spacing:.22em;color:#b48bd0;text-transform:uppercase;position:relative;z-index:2;animation:sqFlick 3.7s steps(1) infinite}
+@keyframes sqFlick{0%,92%,100%{opacity:1}93%{opacity:.25}95%{opacity:1}97%{opacity:.4}}
+#seqBox .sqN{font-size:15px;color:#cdbf9f;margin:4px 0;position:relative;z-index:2;font-weight:700;text-shadow:0 0 12px #a3262e}
+#seqBox .sqC{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;color:#e8dcc0;position:relative;z-index:2;text-shadow:0 0 18px #a3262e,2px 0 #3a7a9a66,-2px 0 #a3262e88;animation:sqGl 2.6s infinite}
+@keyframes sqGl{0%,88%,100%{transform:none}90%{transform:translateX(-2px) skewX(6deg)}93%{transform:translateX(2px)}}
+#seqBox .sqS{font-size:10px;color:#8f8798;position:relative;z-index:2;margin-top:2px}
+#seqBox .sqBar{height:5px;border-radius:5px;background:#000a;margin:9px 4px 0;overflow:hidden;position:relative;z-index:2}
+#seqBox .sqBar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4a1a6a,#a3262e,#d4343f);box-shadow:0 0 10px #d4343f}
+#seqBox canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#seqVeil{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity 2s;background:radial-gradient(ellipse at 50% 50%,transparent 38%,#1a051099 100%);mix-blend-mode:multiply}
+body.seqOn #seqVeil{opacity:1;animation:vPulse 5s ease-in-out infinite}
+@keyframes vPulse{50%{background:radial-gradient(ellipse at 50% 50%,transparent 26%,#2a0818bb 100%)}}
+body.seqOn #hudAv{animation:avWarp 6s ease-in-out infinite;box-shadow:0 0 18px #a3262e}
+@keyframes avWarp{0%,80%,100%{filter:none;transform:none}84%{filter:hue-rotate(60deg) contrast(1.5);transform:translateX(-2px) skewX(-4deg)}88%{filter:invert(.85);transform:translateX(2px)}92%{filter:none}}
+body.seqOn .wrap{animation:wrapTw 9s infinite}
+@keyframes wrapTw{0%,93%,100%{transform:none}94%{transform:translate(1px,-1px)}96%{transform:translate(-1px,1px)}}
+.seqWh{position:fixed;z-index:51;pointer-events:none;font-style:italic;color:#c9b8d8;font-size:15px;letter-spacing:.12em;opacity:0;text-shadow:0 0 10px #a3262e;animation:whF 5.5s ease-in-out forwards}
+@keyframes whF{0%{opacity:0;transform:translateY(8px) scale(.96);filter:blur(5px)}25%{opacity:.8;filter:blur(0)}70%{opacity:.55}100%{opacity:0;transform:translateY(-22px) scale(1.04);filter:blur(7px)}}
+#seqDone{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#2a0a30,#030204 75%);text-align:center;padding:24px}
+#seqDone.on{display:flex;animation:sdIn 1.2s ease-out}
+@keyframes sdIn{from{opacity:0;filter:blur(14px) brightness(3)}}
+#seqDone img{width:190px;height:190px;border-radius:18px;border:1px solid #8a7a58;box-shadow:0 0 60px #a3262e99;animation:sdAv 5s ease-in-out infinite}
+@keyframes sdAv{50%{box-shadow:0 0 90px #d4343faa;transform:scale(1.03)}}
+#seqDone h2{margin:18px 0 4px;color:#e8dcc0;letter-spacing:.14em;font-size:22px;text-shadow:0 0 16px #a3262e}
+#seqDone p{color:#b8a8c8;font-size:13px;margin:4px 0;max-width:300px}
+#seqDone button{margin-top:18px;padding:10px 26px;border-radius:12px;border:1px solid #8a7a58;background:#1a0f1c;color:#cdbf9f;font-size:14px}
+.alDrink{margin-top:4px;padding:3px 9px;border-radius:8px;border:1px solid #a3262e;background:#2a0a12;color:#e8dcc0;font-size:11px}
+.alDrink[disabled]{opacity:.45;border-color:#4a3a4a;background:#140f16}
+.alNote{grid-column:1/-1;font-size:10px;color:#8f8798;text-align:center}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -420,6 +454,16 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
     <div class="uid">UID <span id="uid">—</span></div>
   </div>
 </div>
+
+<div id="seqBox"><canvas id="seqCv"></canvas>
+  <div class="sqT">🌀 Переход · идёт трансформация</div>
+  <div class="sqN" id="sqN">Ты становишься кем-то другим…</div>
+  <div class="sqC" id="sqC">--:--</div>
+  <div class="sqS">Исследовать нельзя, пока длится переход. Чем выше безумие, тем дольше.</div>
+  <div class="sqBar"><i id="sqBar"></i></div>
+</div>
+<div id="seqVeil"></div>
+<div id="seqDone"><img id="sdImg" alt=""><h2 id="sdH">НОВАЯ ПОСЛЕДОВАТЕЛЬНОСТЬ</h2><p id="sdP"></p><p>Все характеристики +10. Безумие обнулено, предел безумия — 200%.</p><button type="button" onclick="seqDoneClose()">Принять</button></div>
 
 <div id="loadError" class="card hidden" role="status">
   <div id="loadErrorText" class="status">Не удалось загрузить игру.</div>
@@ -622,7 +666,7 @@ function syncHud(){
 var m=$("hp").textContent.split("/"),a=num(m[0]),b=num(m[1]);
 if(a!=null&&b){var f=Math.max(0,Math.min(100,a/b*100));$("orbHp").style.setProperty("--f",f+"%");$("orbHpTxt").textContent=a+"/"+b;document.querySelector(".hpOrb").classList.toggle("low",f<=25)}
 var md=num($("madTxt").textContent);
-if(md!=null){$("orbMad").style.setProperty("--f",Math.max(0,Math.min(100,md))+"%");$("orbMadTxt").textContent=Math.round(md)+"%"}
+if(md!=null){$("orbMad").style.setProperty("--f",Math.max(0,Math.min(100,md/(window.MADMAX||100)*100))+"%");$("orbMadTxt").textContent=Math.round(md)+"%"}
 $("orbLv").textContent=$("lvl").textContent;
 var pt=$("path").textContent;$("orbPath").textContent=pt&&pt!=="—"?pt:"Путь";
 }
@@ -927,10 +971,13 @@ async function loadProfile() {
     setWidth("hpbar", hpPercent);
     setWidth("hpbar2", hpPercent);
 
-    const madness = clamp(data.madness ?? 0, 0, 100);
+    const madMax = Number(data.mad_max) || 100;
+    window.MADMAX = madMax;
+    const madness = clamp(data.madness ?? 0, 0, madMax);
 
     byId("madTxt").textContent = madness;
-    setWidth("madBar", madness);
+    setWidth("madBar", madness / madMax * 100);
+    try { seqUpdate(data); } catch (e) {}
 
     byId("pounds").textContent = data.pounds ?? 0;
     byId("exp").textContent = data.exp ?? 0;
@@ -1199,7 +1246,7 @@ function setHudAvatar(data) {
   const box = byId("hudAv");
   let img = box.querySelector("img");
   if (!img) { box.replaceChildren(); img = document.createElement("img"); img.alt = ""; box.appendChild(img); }
-  const src = "./avatars/" + g + "_" + pk + ".svg";
+  const src = "./avatars/" + g + "_" + pk + ((data.sequence|0) && (data.sequence|0) <= 8 ? "8" : "") + ".svg";
   if (!img.src.endsWith(src.slice(1))) img.src = src;
 }
 
@@ -1473,6 +1520,21 @@ function renderAlchBag(data) {
     c.innerHTML = '<span class="g pt">' + A.potion(k) + '</span><span><div class="nm">' + P.n + '</div><div class="rr">Посл. 8 · зелье</div></span><span class="cn">×' + pots[k] + "</span>";
     g.appendChild(c);
   });
+  try {
+    const pc = g.querySelectorAll(".alCard"), pkk = LOTM_SKILLS.pathKey(data.path_key || data.path);
+    pids.forEach((k, i) => {
+      if (A.POT[k].p !== pkk || (data.sequence | 0) <= 8 || !pc[i]) return;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "alDrink"; b.textContent = "Выпить";
+      const need = [];
+      if ((data.level | 0) < 15) need.push("нужен 15 ур.");
+      if ((Number(data.potion) || 0) < 100) need.push("усвоение " + (Number(data.potion) || 0) + "/100%");
+      if (need.length) { b.disabled = true; b.title = need.join(", "); b.textContent = "Выпить · " + need.join(", "); }
+      if (SEQ.on) b.disabled = true;
+      b.addEventListener("click", () => drinkPotion(b));
+      pc[i].querySelector("span:nth-child(2)").appendChild(b);
+    });
+  } catch (e) {}
   ids.forEach(k => {
     const it = A.ING[k], c = document.createElement("div");
     c.className = "alCard";
@@ -1681,6 +1743,85 @@ document.addEventListener("visibilitychange", () => {
 });
 
 loadProfileWithRetry();
+</script>
+
+<script>
+/* ===== переход на следующую последовательность ===== */
+var SEQ={left:0,dur:0,end:0,on:false,t:null,fx:null,wh:null,seen:false};
+var SEQ_WH=["…отпусти…","ты слышишь нас?","маска прирастает","смейся","кто ты теперь?","не оглядывайся","он смотрит","глубже… глубже…","лица, лица, лица","ты — не ты"];
+function seqFmt(n){n=Math.max(0,n|0);var m=(n/60)|0,s=n%60;return (m<10?"0":"")+m+":"+(s<10?"0":"")+s}
+function seqActive(){return SEQ.on&&Date.now()<SEQ.end}
+function seqUpdate(d){
+  if(d&&d.seq_done){seqShowDone(d)}
+  var left=Number(d&&d.seq_left)||0;
+  if(left>0){
+    SEQ.dur=Number(d.seq_dur)||left;SEQ.end=Date.now()+left*1000;
+    if(!SEQ.on){seqStart(d)}
+    var nm=byId("sqN");if(nm&&d.sequence_name!==undefined)nm.textContent="Путь к последовательности 8";
+  }else if(SEQ.on&&Date.now()>=SEQ.end){seqStop(true)}
+}
+function seqStart(){
+  SEQ.on=true;byId("seqBox").classList.add("on");document.body.classList.add("seqOn");
+  try{snd("seqstart")}catch(e){}
+  clearInterval(SEQ.t);SEQ.t=setInterval(seqTick,500);seqTick();
+  seqFxRun();
+  clearInterval(SEQ.wh);var n=0;SEQ.wh=setInterval(function(){
+    n++;try{snd(n%2?"seqwhisper":"seqpulse");if(n%3==0)snd("seqpulse")}catch(e){}
+    var e=document.createElement("div");e.className="seqWh";e.textContent=SEQ_WH[(Math.random()*SEQ_WH.length)|0];
+    e.style.left=(8+Math.random()*60)+"%";e.style.top=(12+Math.random()*70)+"%";
+    document.body.appendChild(e);setTimeout(function(){e.remove()},5600);
+  },4500);
+}
+function seqTick(){
+  var l=Math.max(0,Math.ceil((SEQ.end-Date.now())/1000));
+  byId("sqC").textContent=seqFmt(l);
+  byId("sqBar").style.width=(SEQ.dur?Math.min(100,(1-l/SEQ.dur)*100):0)+"%";
+  if(l<=0){seqStop(true)}
+}
+function seqStop(reload){
+  SEQ.on=false;clearInterval(SEQ.t);clearInterval(SEQ.wh);cancelAnimationFrame(SEQ.fx);
+  byId("seqBox").classList.remove("on");document.body.classList.remove("seqOn");
+  if(reload){setTimeout(function(){try{loadProfileWithRetry(false)}catch(e){}},800)}
+}
+function seqFxRun(){
+  var cv=byId("seqCv"),box=byId("seqBox");if(!cv)return;
+  var w=cv.width=box.clientWidth||320,h=cv.height=box.clientHeight||150,x=cv.getContext("2d");
+  var RU="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ𓂀☽",P=[];
+  for(var i=0;i<26;i++)P.push({x:Math.random()*w,y:Math.random()*h,v:.1+Math.random()*.35,c:RU[(Math.random()*RU.length)|0],a:Math.random()*6.28,s:10+Math.random()*14});
+  (function f(){
+    if(!SEQ.on)return;x.clearRect(0,0,w,h);var t=Date.now()/1000;
+    x.strokeStyle="rgba(163,38,46,.35)";x.lineWidth=1;
+    for(var r=0;r<3;r++){x.beginPath();x.arc(w/2,h/2,24+r*22+Math.sin(t*1.3+r)*5,0,6.28);x.setLineDash([3+r*3,6]);x.lineDashOffset=t*14*(r%2?-1:1);x.stroke()}
+    x.setLineDash([]);
+    P.forEach(function(p){p.y-=p.v;p.x+=Math.sin(t+p.a)*.3;if(p.y<-20){p.y=h+10;p.x=Math.random()*w}
+      x.globalAlpha=.15+.3*Math.abs(Math.sin(t*.8+p.a));x.fillStyle="#b48bd0";x.font=p.s+"px serif";x.fillText(p.c,p.x,p.y)});
+    x.globalAlpha=1;SEQ.fx=requestAnimationFrame(f);
+  })();
+}
+function seqShowDone(d){
+  var g=d.gender==="female"?"f":"m",pk=LOTM_SKILLS.pathKey(d.path_key||d.path);
+  if(pk)byId("sdImg").src="./avatars/"+g+"_"+pk+"8.svg";
+  byId("sdH").textContent=(d.sequence_name||"Новая ступень").toUpperCase();
+  byId("sdP").textContent="Последовательность 8. Ты проснулся другим.";
+  byId("seqDone").classList.add("on");
+  try{snd("seqdone");setTimeout(function(){snd("whisper")},1200);setTimeout(function(){snd("bell")},2400)}catch(e){}
+}
+function seqDoneClose(){byId("seqDone").classList.remove("on");try{snd("back")}catch(e){}}
+async function drinkPotion(btn){
+  if(btn)btn.disabled=true;
+  try{
+    var d=await api({action:"potion_drink"});
+    if(d&&d.ok){
+      try{snd("seqstart")}catch(e){}
+      await loadProfileWithRetry(false);
+    }else{alert((d&&(d.text||d.error))||"Не получилось");if(btn)btn.disabled=false}
+  }catch(e){alert(e.message||e);if(btn)btn.disabled=false}
+}
+(function(){
+  var _ol=window.openLake,_oc=window.openCemetery,_of=window.openForest;
+  function guard(fn){return function(){if(seqActive()){try{snd("deny")}catch(e){}alert("🌀 Идёт переход. Исследовать нельзя ещё "+seqFmt((SEQ.end-Date.now())/1000));return}return fn.apply(this,arguments)}}
+  window.openLake=guard(_ol);window.openCemetery=guard(_oc);window.openForest=guard(_of);
+})();
 </script>
 </body>
 </html>

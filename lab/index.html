@@ -119,6 +119,19 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,40px);opacity:0;z-index:90;background:#120e16f2;border:1px solid var(--bronze);border-radius:12px;padding:10px 14px;font-size:12px;transition:.3s;pointer-events:none;max-width:90%;text-align:center}
 .toast.show{transform:translate(-50%,0);opacity:1}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* атмосфера */
+.scene #labCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.scene .eyeG{position:absolute;width:6px;height:6px;border-radius:50%;background:#d4343f;box-shadow:0 0 8px #d4343f;opacity:0;z-index:2;animation:eyeB 11s infinite}
+@keyframes eyeB{0%,70%,100%{opacity:0}72%,76%{opacity:.9}74%{opacity:0}}
+.scene .cflick i{animation-duration:.9s}
+.scene.boil:after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 62%,#a3262e55,transparent 60%);animation:bGl .6s ease-in-out infinite alternate}
+@keyframes bGl{from{opacity:.4}to{opacity:1}}
+.scene.boil{animation:sceneShk 1.8s ease-in-out}
+@keyframes sceneShk{0%,100%{filter:none}30%{filter:hue-rotate(-30deg) brightness(1.25)}60%{filter:hue-rotate(40deg) saturate(1.5)}}
+.scene.flash:before{background:#cdbf9f55;opacity:1;transition:none}
+.wispT{position:fixed;z-index:30;pointer-events:none;color:#c9b8d8;font-style:italic;font-size:13px;letter-spacing:.1em;opacity:0;text-shadow:0 0 8px #a3262e;animation:whF2 5s ease-in-out forwards}
+@keyframes whF2{0%{opacity:0;filter:blur(5px)}30%{opacity:.7;filter:blur(0)}100%{opacity:0;transform:translateY(-20px);filter:blur(6px)}}
 </style>
 <script src="../shared/auth.js"></script>
 <script src="../shared/alchemy.js"></script>
@@ -160,6 +173,7 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
   <i class="bub" style="left:78px;top:98px;width:10px;height:10px"></i><i class="bub" style="left:112px;top:104px;width:14px;height:14px;animation-delay:-.9s"></i><i class="bub" style="left:150px;top:100px;width:9px;height:9px;animation-delay:-1.7s"></i><i class="bub" style="left:130px;top:96px;width:6px;height:6px;animation-delay:-.4s"></i>
  </div>
  <div class="steam"></div><div class="steam s2"></div><div class="steam s3"></div>
+ <canvas id="labCv"></canvas><i class="eyeG" style="left:14px;top:60px"></i><i class="eyeG" style="left:20px;top:60px;animation-delay:.05s"></i><i class="eyeG" style="right:18px;top:96px;animation-delay:-5s"></i><i class="eyeG" style="right:24px;top:96px;animation-delay:-4.95s"></i>
  <div class="poof" id="poof"></div>
 </div>
 
@@ -241,7 +255,7 @@ function renderIngs(){
 }
 function addIng(k,btn){
  if(busy||have(k)<=0||potTotal()>=MAX)return;
- pot[k]=(pot[k]|0)+1;sfx("plant");
+ pot[k]=(pot[k]|0)+1;sfx("plant");sfx("rune");
  if(!reduce){
   const r=btn.getBoundingClientRect(),t=$("potWrap").getBoundingClientRect();
   const d=document.createElement("div");d.className="drop";d.innerHTML=A.glyph(k);d.style.left=(r.left+10)+"px";d.style.top=(r.top+6)+"px";document.body.appendChild(d);
@@ -294,11 +308,11 @@ $("fill").onclick=()=>{
 $("brew").onclick=async()=>{
  if(busy||!potTotal())return;
  busy=true;render();
- $("scene").classList.add("boil");sfx("brew");
+ $("scene").classList.add("boil");window.labBoil&&window.labBoil(1);sfx("seqstart");sfx("swirl");[500,1000,1400].forEach((ms,i)=>setTimeout(()=>sfx(i==1?"sizzle":"rune"),ms));
  const items=Object.assign({},pot);
  let d=null,err=null;
  try{const [r]=await Promise.all([api({action:"lab_brew",items}),new Promise(r=>setTimeout(r,1800))]);d=r}catch(e){err=e;await new Promise(r=>setTimeout(r,900))}
- $("scene").classList.remove("boil");
+ $("scene").classList.remove("boil");window.labBoil&&window.labBoil(0);
  busy=false;
  if(err||!d||d.ok===false){toast(String((d&&(d.text||d.error))||(err&&err.message)||"Не удалось сварить."));if(d&&d.error==="dead"){}pot={};await load();return}
  S.ingr=d.ingr||S.ingr;S.pots=d.pots||S.pots;S.recipe=d.recipe||S.recipe;S.others=d.others||S.others;
@@ -310,7 +324,7 @@ function result(d){
  if(d.success){
   const P=A.POT[d.potion.id];
   ov.innerHTML='<div class="res" style="--pc:'+P.c+'88"><div class="bt">'+A.potion(d.potion.id)+'</div><h2>'+P.n+'</h2><p>'+P.info+'</p><p>'+P.d+'</p><p style="color:#8fb3a6">Зелье лежит в сумке.</p><button class="btn main" type="button">Забрать</button></div>';
-  sfx("win");setTimeout(()=>sfx("bell"),900);
+  sfx("brewdone");setTimeout(()=>sfx("bell"),900);{const sc=$("scene");sc.classList.add("flash");setTimeout(()=>sc.classList.remove("flash"),400)}
  }else{
   const h=d.hint||{};
   ov.innerHTML='<div class="res" style="--pc:#0008"><div class="fail">'+A.glyph("warn")+'</div><h2>Варево вышло мутным</h2><p>Ингредиенты сгорели в котле.</p><p>Ближе всего к «'+(h.name||"?")+'»: верно '+(h.ok|0)+' из '+(h.need|0)+'.</p><button class="btn" type="button">Понятно</button></div>';
@@ -330,6 +344,38 @@ async function load(){
  }catch(e){if(e&&e.message!=="need_start")toast(e.message||"Не удалось загрузить")}
  render();renderBook();
 }
+
+/* ===== атмосфера лаборатории ===== */
+(function(){
+ const sc=$("scene"),cv=$("labCv");if(!cv)return;
+ const x=cv.getContext("2d");let w=0,h=0;
+ function fit(){w=cv.width=sc.clientWidth;h=cv.height=sc.clientHeight}fit();addEventListener("resize",fit);
+ const RU="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ",M=[];
+ for(let i=0;i<22;i++)M.push({x:Math.random()*w,y:Math.random()*h,v:.12+Math.random()*.3,a:Math.random()*6.28,r:.6+Math.random()*1.6,g:Math.random()<.25?RU[(Math.random()*RU.length)|0]:null});
+ let boil=0;window.labBoil=v=>{boil=v};
+ function loop(){
+  const t=Date.now()/1000;x.clearRect(0,0,w,h);
+  // руническое кольцо на полу
+  x.save();x.translate(w/2,h-26);x.scale(1,.22);
+  const k=boil?1.8:1;
+  for(let r=0;r<3;r++){x.beginPath();x.arc(0,0,92+r*26,0,6.28);x.strokeStyle="rgba(163,38,46,"+(boil?.75:.32)+")";x.lineWidth=2.2;x.setLineDash([4+r*4,7]);x.lineDashOffset=t*(18*k)*(r%2?-1:1);x.stroke()}
+  x.setLineDash([]);x.fillStyle="rgba(180,139,208,"+(boil?.9:.45)+")";x.font="16px serif";
+  for(let i=0;i<12;i++){const a=i/12*6.28+t*(.15*k);x.save();x.translate(Math.cos(a)*118,Math.sin(a)*118);x.scale(1,4.5);x.fillText(RU[i*2%RU.length],-6,5);x.restore()}
+  x.restore();
+  // пылинки и руны
+  M.forEach(p=>{p.y-=p.v*(boil?3:1);p.x+=Math.sin(t+p.a)*.4;if(p.y<-12){p.y=h+8;p.x=Math.random()*w}
+   x.globalAlpha=.2+.5*Math.abs(Math.sin(t*.7+p.a));
+   if(p.g){x.fillStyle="#b48bd0";x.font="12px serif";x.fillText(p.g,p.x,p.y)}else{x.fillStyle=boil?"#ff9a5a":"#cdbf9f";x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill()}});
+  x.globalAlpha=1;
+  requestAnimationFrame(loop);
+ }
+ if(!reduce)loop();
+ // фоновые звуки: пузыри, шёпот, редкий колокол
+ const WH=["…ещё…","добавь кровь","он слышит","не мешай","варево живо","отдай ему имя","тише…"];
+ setInterval(()=>{if(document.hidden)return;sfx("bubble");if(Math.random()<.5)setTimeout(()=>sfx("bubble"),180)},2600);
+ setInterval(()=>{if(document.hidden)return;sfx("whisper");const e=document.createElement("div");e.className="wispT";e.textContent=WH[(Math.random()*WH.length)|0];e.style.left=(10+Math.random()*60)+"%";e.style.top=(18+Math.random()*30)+"%";document.body.appendChild(e);setTimeout(()=>e.remove(),5200)},11000);
+ setInterval(()=>{if(!document.hidden&&Math.random()<.4)sfx("bell")},24000);
+})();
 dust();render();renderBook();load();
 </script>
 </body>

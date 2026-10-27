@@ -611,7 +611,7 @@ document.body.classList.remove("defeatFx");
 setBusy(true,"Загрузка…");hideError();
 try{
 const profile=await loadProfile();
-PLAYER_PATH=profile.path||"";try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+".svg"}catch(e){}
+PLAYER_PATH=profile.path||"";try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+((profile.sequence|0)&&(profile.sequence|0)<=8?"8":"")+".svg"}catch(e){}
 $("playerName").textContent=profile.nickname||"Путешественник";
 $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
 setHealth("player",profile.hp,profile.max_hp);
