@@ -510,7 +510,15 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
     <div class="smHead"><span class="smTtl">Меню</span><button type="button" class="smX" onclick="closeMenu()" aria-label="Закрыть">✕</button></div>
     <div class="smLine"></div>
     <div class="smList">
-      <button type="button" class="smIt" style="--i:0" onclick="menuGo('settings')">
+      <button type="button" class="smIt" style="--i:0" onclick="menuGo('quests')">
+        <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9.5L19 7v13.5H6z"/><path d="M15.5 3.5V7H19M9 11h7M9 14.5h7M9 18h4"/></svg></span>
+        <span>Задания дня<small>Журнал поручений и награды</small></span>
+      </button>
+      <button type="button" class="smIt" style="--i:1" onclick="menuGo('daily')">
+        <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16.5 4v3M15 5.5h3"/></svg></span>
+        <span>Награда дня<small>Дар Богини за каждый заход</small></span>
+      </button>
+      <button type="button" class="smIt" style="--i:2" onclick="menuGo('settings')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></span>
         <span>Настройки<small>Звук, уведомления, ник, путь</small></span>
       </button>
@@ -1254,6 +1262,8 @@ function closeMenu() {
 function menuGo(key) {
   try { window.snd && window.snd("tap"); } catch (_) {}
   if (key === "settings") openSettings();
+  else if (key === "quests") openQuests();
+  else if (key === "daily") openDaily();
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenu(); });
 
