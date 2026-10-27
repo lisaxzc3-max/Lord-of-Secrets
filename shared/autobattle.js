@@ -66,6 +66,8 @@ function paint(){
  btn.className="abBtn";
  if(!S.tier){btn.classList.add("lk");btn.innerHTML=ICON+"<span>Автобой <small>· для посвящённых</small></span>";return}
  var T=S.tiers[S.tier-1];
+ var need=(S.locmin&&S.locmin[loc])||1;
+ if((S.level||1)<need){btn.classList.add("lk");btn.innerHTML=ICON+"<span>Автобой <small>· с "+need+" уровня</small></span>";return}
  if(S.auto_left>0){btn.classList.add("cd");btn.innerHTML=ICON+"<span>Автобой <small>· через "+mm(S.auto_left)+"</small></span>";return}
  btn.classList.add("rdy");btn.innerHTML=ICON+"<span>Автобой <small>· "+T.auto+" боёв с бонусом</small></span>";
 }
@@ -148,6 +150,8 @@ function mount(){
   if(busy)return;
   if(!S){sfx("deny");return}
   if(!S.tier){sfx("tap");askVip();return}
+  var nd=(S.locmin&&S.locmin[loc])||1;
+  if((S.level||1)<nd){sfx("deny");var m0=document.getElementById("msg");if(m0)m0.textContent="Автобой здесь доступен с "+nd+" уровня.";return}
   if(S.auto_left>0){sfx("deny");var m=document.getElementById("msg");if(m)m.textContent="Автобой восстановится через "+mm(S.auto_left)+".";return}
   run();
  });
