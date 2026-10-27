@@ -418,6 +418,11 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 .alDrink{margin-top:4px;padding:3px 9px;border-radius:8px;border:1px solid #a3262e;background:#2a0a12;color:#e8dcc0;font-size:11px}
 .alDrink[disabled]{opacity:.45;border-color:#4a3a4a;background:#140f16}
 .alNote{grid-column:1/-1;font-size:10px;color:#8f8798;text-align:center}
+
+.arBan{display:flex;align-items:center;gap:12px;margin:10px 0;padding:11px 14px;border-radius:14px;border:1px solid #d4343f;background:linear-gradient(135deg,#4a0e18,#14060a);color:#eadfc4;text-decoration:none;cursor:pointer;box-shadow:0 0 22px #d4343f66;animation:arP 1.8s ease-in-out infinite}
+@keyframes arP{50%{box-shadow:0 0 38px #ff4a5aaa;border-color:#ff6a78}}
+.arBan .arI{font-size:24px;filter:drop-shadow(0 0 6px #d4343f)}
+.arBan b{display:block;font:400 14px Georgia,serif;letter-spacing:.05em}.arBan small{display:block;font-size:10px;color:#c0a0a8}.arBan i{margin-left:auto;font-style:normal;color:#d08a90}
 </style>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
@@ -978,6 +983,7 @@ async function loadProfile() {
     byId("madTxt").textContent = madness;
     setWidth("madBar", madness / madMax * 100);
     try { seqUpdate(data); } catch (e) {}
+    try { arenaBanner(data); } catch (e) {}
 
     byId("pounds").textContent = data.pounds ?? 0;
     byId("exp").textContent = data.exp ?? 0;
@@ -1619,6 +1625,7 @@ async function doUnequip(slot) {
 const cityData = {
   "Центр": { icon: "🏛", sub: "Сердце города", places: [
     { icon: "🏛", name: "Ратуша", npc: "Зал славы · топ игроков", key: "top" },
+    { icon: "⚔️", name: "Арена Теней", npc: "Дуэли · Рейтинг", key: "arena" },
     { icon: "🌙", name: "Церковь Ночи", npc: "Кланы · Братства", key: "clan" }
   ]},
   "Север": { icon: "❄️", sub: "Рынок, таверна и клуб гадалок", places: [
@@ -1649,6 +1656,7 @@ function openPlace(key) {
   try { window.snd && window.snd("tap"); } catch (_) {}
   if (key === "fortune") return openFortune();
   if (key === "top") return openTop();
+  if (key === "arena") { location.href = buildPageUrl("./arena/index.html"); return; }
   if (key === "clan") { location.href = buildPageUrl("./clan/index.html"); return; }
   if (key === "home") { location.href = buildPageUrl("./home/index.html"); return; }
   openLoc(key);
@@ -1822,6 +1830,22 @@ async function drinkPotion(btn){
   function guard(fn){return function(){if(seqActive()){try{snd("deny")}catch(e){}alert("🌀 Идёт переход. Исследовать нельзя ещё "+seqFmt((SEQ.end-Date.now())/1000));return}return fn.apply(this,arguments)}}
   window.openLake=guard(_ol);window.openCemetery=guard(_oc);window.openForest=guard(_of);
 })();
+</script>
+
+<script>
+/* приглашение на дуэль */
+var ARB={shown:false};
+function arenaBanner(d){
+  var n=(d&&d.arena_inv)|0,fg=!!(d&&d.arena_fight),b=document.getElementById("arenaBan");
+  if(!b){b=document.createElement("a");b.id="arenaBan";b.className="arBan";b.style.display="none";
+    b.addEventListener("click",function(){try{snd("open")}catch(e){}location.href=buildPageUrl("./arena/index.html")});
+    var w=document.querySelector(".wrap");if(w)w.insertBefore(b,w.children[1]||null)}
+  if(n>0||fg){
+    b.innerHTML="<span class='arI'>⚔</span><span><b>"+(fg?"Твой бой на арене ждёт хода":"Тебя вызвали на дуэль")+"</b><small>Арена Теней · нажми, чтобы войти</small></span><i>›</i>";
+    b.style.display="flex";
+    if(!ARB.shown){ARB.shown=true;try{snd("bell");setTimeout(function(){snd("whisper")},500)}catch(e){}}
+  }else{b.style.display="none";ARB.shown=false}
+}
 </script>
 </body>
 </html>
