@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050c0c">
+<title>Лечебница — Повелитель тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--ink:#050c0c;--line:#2c4a46;--text:#e6f2ee;--muted:#8fa8a2;--mint:#7fe8c8;--red:#ff5a6a;--vio:#b48cff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html{background:var(--ink);min-height:100%}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;touch-action:manipulation;
+ background:radial-gradient(ellipse at 50% 0,#1a4a44aa,transparent 55%),radial-gradient(ellipse at 50% 110%,#1a2a4a66,transparent 60%),var(--ink)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.45;background:repeating-linear-gradient(0deg,transparent 0 38px,#7fe8c80a 38px 39px),repeating-linear-gradient(90deg,transparent 0 38px,#7fe8c80a 38px 39px)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+#dust{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:480px;margin:auto;padding:10px 14px calc(40px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:6px 0 4px}
+.back{flex:none;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#0a1a1aaa;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--mint);text-transform:uppercase}
+.head h1{margin:2px 0 0;font:700 22px Georgia,serif;background:linear-gradient(90deg,#e6fff6,#7fe8c8,#a8e0ff,#7fe8c8,#e6fff6);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+.pn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #5a5a2a;border-radius:99px;padding:6px 12px;background:#1a180acc;font:700 13px Georgia,serif;color:#ffe9a8}
+
+.lamp{position:absolute;top:-4px;left:50%;width:2px;height:34px;margin-left:-1px;background:#3a5a56;transform-origin:50% 0;animation:swing 6s ease-in-out infinite;z-index:2;pointer-events:none}
+.lamp:after{content:"";position:absolute;left:50%;bottom:-12px;width:26px;height:14px;margin-left:-13px;border-radius:14px 14px 3px 3px;background:linear-gradient(180deg,#9fe8d8,#3a8a80);box-shadow:0 8px 40px 10px #7fe8c855}
+@keyframes swing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.panel{position:relative;border:1px solid var(--line);border-radius:22px;padding:14px;margin-top:12px;background:linear-gradient(160deg,#0f2824e8,#081514e8);overflow:hidden}
+.panel h3{margin:0 0 10px;font:700 12px Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);display:flex;justify-content:space-between;align-items:center}
+.panel h3 em{font-style:normal;font:11px Inter,system-ui;color:var(--muted);letter-spacing:0;text-transform:none}
+
+.mon{position:relative;border-radius:16px;background:#031010;border:1px solid #1c3a36;height:84px;overflow:hidden}
+.mon canvas{position:absolute;inset:0;width:100%;height:100%}
+.mon .bpm{position:absolute;right:10px;top:6px;font:700 12px Georgia,serif;color:var(--mint);display:flex;align-items:center;gap:5px}
+.mon .bpm i{font-style:normal;display:inline-block;animation:beat var(--bt,1s) ease-in-out infinite;color:var(--red)}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.28)}30%{transform:scale(1)}}
+.lbl{display:flex;justify-content:space-between;align-items:baseline;margin:12px 2px 5px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lbl b{font:700 15px Georgia,serif;color:#fff;letter-spacing:0;text-transform:none}
+.tube{position:relative;height:30px;border-radius:99px;background:#06100f;border:1.5px solid #3a5a56;overflow:hidden;box-shadow:inset 0 3px 8px #000a}
+.tube:after{content:"";position:absolute;left:8px;right:8px;top:4px;height:6px;border-radius:99px;background:linear-gradient(90deg,#ffffff44,#ffffff08);pointer-events:none}
+.liq{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;transition:width 1.4s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.liq:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 14px,#ffffff22 14px 22px);background-size:44px 100%;animation:flow 3.5s linear infinite}
+@keyframes flow{to{background-position:44px 0}}
+.liq.hp{background:linear-gradient(180deg,#ff8a96,#d8283a 60%,#8a1220)}
+.liq.hp.ok{background:linear-gradient(180deg,#9dffd8,#2ac88a 60%,#0e6a4a)}
+.liq.md{background:linear-gradient(180deg,#d8c0ff,#8a5ae0 60%,#4a2a8a)}
+.note{margin:8px 2px 0;font-size:12px;color:#a9c4be;line-height:1.45}
+.note b{color:#e3d0ff}
+
+.doc{display:flex;gap:12px;align-items:flex-end}
+.doc svg{flex:none;width:96px;height:116px;overflow:visible}
+.bub{position:relative;flex:1;padding:11px 13px;border-radius:16px 16px 16px 4px;background:#102a26;border:1px solid #2c5a52;font:italic 13.5px/1.5 Georgia,serif;color:#cfeee6;min-height:66px;transition:opacity .35s}
+.eye{animation:glow 4s ease-in-out infinite}
+@keyframes glow{50%{opacity:.55}}
+.acts{display:grid;gap:9px;margin-top:12px}
+.act{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border-radius:16px;border:1px solid #2c5a52;background:linear-gradient(160deg,#12302b,#0a1b19);text-align:left;transition:border-color .25s,box-shadow .25s,transform .15s}
+.act:active{transform:scale(.985)}
+.act .ic{flex:none;width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#0a1b19;border:1px solid #2c5a52}
+.act div{flex:1;min-width:0}
+.act b{display:block;font:700 14.5px Georgia,serif;color:#fff}
+.act small{display:block;font-size:11.5px;color:var(--muted);line-height:1.3;margin-top:1px}
+.act .pr{flex:none;padding:7px 11px;border-radius:99px;font:700 12.5px Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#ffbf6a);white-space:nowrap}
+.act .pr.fr{color:#052018;background:linear-gradient(135deg,#9dffd8,#4ae0a8)}
+.act[disabled]{opacity:.45;pointer-events:none}
+.act.heal{border-color:#3a8a70;box-shadow:0 0 18px #4ae0a822}
+.act.heal:hover{box-shadow:0 0 22px #4ae0a844}
+.act.vio{border-color:#5a4a8a}
+.act.vio .ic{background:#1a1230;border-color:#5a4a8a}
+
+.morgue{position:relative;text-align:center;padding:22px 14px 14px}
+.morgue .sk{font-size:58px;display:block;animation:flt 5s ease-in-out infinite}
+@keyframes flt{50%{transform:translateY(-6px)}}
+.morgue h2{margin:6px 0 4px;font:700 21px Georgia,serif;color:#ffd0d6}
+.morgue p{margin:0;color:#c9a8ae;font-size:13px}
+.morgue .tm{display:block;margin:10px 0 4px;font:700 34px Georgia,serif;color:#fff;letter-spacing:.06em}
+.rev{position:relative;overflow:hidden;width:100%;margin-top:14px;padding:16px;border-radius:16px;font:700 16px Georgia,serif;letter-spacing:.05em;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78);box-shadow:0 8px 28px #4ae0a844,inset 0 1px 0 #fff9}
+.rev:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#fff9 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.8s ease-in-out infinite}
+@keyframes sweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.rev[disabled]{filter:grayscale(.8) brightness(.7)}
+
+.hov{position:fixed;inset:0;z-index:99994;background:radial-gradient(ellipse at 50% 45%,#0a2a30,#030808 75%);opacity:0;pointer-events:none;transition:opacity .5s;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.hov.on{opacity:1;pointer-events:auto}
+.hov h2{margin:0 0 4px;font:700 20px Georgia,serif;color:#d8fff0}
+.hov .hint{margin:0 0 6px;color:#9fc4bc;font-size:12.5px;min-height:36px;max-width:300px}
+.bw{position:relative;width:min(80vw,300px);aspect-ratio:1}
+.bw canvas{position:absolute;inset:0;width:100%;height:100%}
+.bw .ph{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);font:italic 22px Georgia,serif;color:#e6fff6;text-shadow:0 0 18px #7fe8c8;pointer-events:none}
+.pins{display:flex;gap:10px;margin:10px 0 2px;justify-content:center}
+.pin{width:14px;height:14px;border-radius:50%;background:#0a2a26;border:1px solid #3a6a62;transition:.3s}
+.pin.ok{background:#9dffd8;border-color:#9dffd8;box-shadow:0 0 12px #9dffd8}
+.pin.bad{background:#ff6a7a;border-color:#ff6a7a;box-shadow:0 0 12px #ff6a7a}
+.tap{width:min(84vw,320px);margin-top:12px;padding:18px;border-radius:17px;font:700 17px Georgia,serif;letter-spacing:.08em;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78);box-shadow:0 8px 28px #4ae0a844;touch-action:none}
+.tap:active{transform:scale(.97);filter:brightness(1.12)}
+.hres{position:fixed;inset:0;z-index:99996;display:flex;align-items:center;justify-content:center;padding:20px;background:#030808e8;opacity:0;pointer-events:none;transition:opacity .4s}
+.hres.on{opacity:1;pointer-events:auto}
+.hres .box{width:100%;max-width:340px;border-radius:24px;padding:24px 18px 18px;text-align:center;background:linear-gradient(180deg,#12302b,#081514);border:1px solid var(--bc,#3a8a70);box-shadow:0 0 50px var(--bg,#4ae0a844);transform:translateY(20px) scale(.95);transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+.hres.on .box{transform:none}
+.box .ic{font-size:54px}
+.box h2{margin:6px 0 4px;font:700 22px Georgia,serif;color:#fff}
+.box p{margin:0 0 6px;color:#b9d4ce;font-size:13.5px;line-height:1.5}
+.box .big{font:700 28px Georgia,serif;margin:8px 0}
+.box .ok{width:100%;margin-top:12px;padding:14px;border-radius:14px;font:700 15px Georgia,serif;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78)}
+.fx{position:fixed;pointer-events:none;z-index:99997;font-style:normal;animation:fly 1.7s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);max-width:88%;z-index:99999;background:#0f2a26f2;border:1px solid #3a8a70;color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;font-size:13px;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+<script src="../shared/vip.js"></script>
+<script src="../shared/fast.js"></script>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>try{sndMusic("calm")}catch(_){}</script>
+</head>
+<body>
+<canvas id="dust"></canvas>
+<div class="wrap">
+  <header class="head">
+    <a class="back" id="back" href="../index.html">← Назад</a>
+    <div><div class="eyebrow">Приют тихих свечей</div><h1>Лечебница</h1></div>
+    <div class="pn">💷 <span id="pn">0</span></div>
+  </header>
+
+  <section class="panel" id="vitals">
+    <div class="lamp"></div>
+    <div class="mon"><canvas id="ecg"></canvas><div class="bpm"><i>♥</i><span id="bpm">72</span> уд/мин</div></div>
+    <div class="lbl"><span>Здоровье</span><b id="hpT">0 / 0</b></div>
+    <div class="tube"><div class="liq hp" id="hpL"></div></div>
+    <div class="lbl"><span>Безумие</span><b id="mdT">0</b></div>
+    <div class="tube"><div class="liq md" id="mdL"></div></div>
+    <div class="note" id="mdN"></div>
+  </section>
+
+  <section class="panel" id="morgue" hidden>
+    <div class="morgue"><span class="sk">💀</span><h2>Ты мёртв</h2><p>Тело лежит в приёмном покое. Либо жди, либо заплати врачу.</p>
+      <span class="tm" id="dLeft">--:--</span><p>до естественного пробуждения</p>
+      <button type="button" class="rev" id="revB">Воскресить срочно</button></div>
+  </section>
+
+  <section class="panel" id="care">
+    <h3>Доктор Мор</h3>
+    <div class="doc">
+      <svg viewBox="0 0 96 116"><defs><linearGradient id="cl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2a2c"/><stop offset="1" stop-color="#070d0e"/></linearGradient></defs>
+        <path d="M6 116C8 80 24 66 48 64c24 2 40 16 42 52z" fill="url(#cl)" stroke="#2c4a46" stroke-width="1.5"/>
+        <path d="M30 70L48 100L66 70" fill="none" stroke="#3a5a56" stroke-width="1.5"/>
+        <circle cx="48" cy="40" r="22" fill="#0e1618" stroke="#2c4a46" stroke-width="1.5"/>
+        <path d="M18 26Q48 -2 78 26L84 30Q48 20 12 30z" fill="#0a1214" stroke="#2c4a46" stroke-width="1.5"/>
+        <path d="M44 42Q48 78 70 84Q56 58 52 42z" fill="#d8cdb0" stroke="#3a3020" stroke-width="1.2"/>
+        <circle cx="38" cy="38" r="7.5" fill="#06100f" stroke="#7a6a3a" stroke-width="1.6"/><circle cx="58" cy="38" r="7.5" fill="#06100f" stroke="#7a6a3a" stroke-width="1.6"/>
+        <circle class="eye" cx="38" cy="38" r="3.6" fill="#ffc86a"/><circle class="eye" cx="58" cy="38" r="3.6" fill="#ffc86a" style="animation-delay:-.7s"/>
+        <path d="M38 96v10M58 96v10" stroke="#2c4a46" stroke-width="1.5"/>
+      </svg>
+      <div class="bub" id="bub">…</div>
+    </div>
+    <div class="acts">
+      <button type="button" class="act heal" id="aHeal"><span class="ic">✚</span><div><b>Подлечить</b><small id="aHealS">Мгновенно вернёт здоровье</small></div><span class="pr" id="aHealP">—</span></button>
+    </div>
+  </section>
+
+  <section class="panel" id="ward">
+    <h3>Палата тишины <em id="rcd"></em></h3>
+    <div class="acts" style="margin-top:0">
+      <button type="button" class="act vio" id="aDose"><span class="ic">🧪</span><div><b>Успокоительная настойка</b><small id="aDoseS">Снимает до 10 безумия</small></div><span class="pr" id="aDoseP">—</span></button>
+      <button type="button" class="act vio" id="aFull"><span class="ic">🛁</span><div><b>Полный курс</b><small>Очистит разум до конца</small></div><span class="pr" id="aFullP">—</span></button>
+      <button type="button" class="act vio" id="aRit"><span class="ic">🕯</span><div><b>Дыхательный сеанс</b><small id="aRitS">5 вдохов. Попади в такт и сними до 15 безумия. Раз в час</small></div><span class="pr fr" id="aRitP">Бесплатно</span></button>
+    </div>
+  </section>
+</div>
+
+<div class="hov" id="hov">
+  <h2>Дыхательный сеанс</h2>
+  <p class="hint" id="bHint">Когда круг достигнет кольца, нажми. Дыши вместе с ним.</p>
+  <div class="bw"><canvas id="bc"></canvas><div class="ph" id="bph"></div></div>
+  <div class="pins" id="bpins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><i class="pin"></i><i class="pin"></i></div>
+  <button type="button" class="tap" id="bTap">В ТАКТ</button>
+</div>
+<div class="hres" id="hres"><div class="box" id="hbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#050c0c")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+const hap=t=>{try{tg?.HapticFeedback?.impactOccurred(t||"light")}catch(_){}};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+async function api(p){
+ if(!ACTION_URL)throw new Error("Нужен вход через бота.");
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера ("+r.status+").");
+ const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Некорректный ответ сервера.");return d;
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2600)}
+$("back").href="../index.html"+location.search;
+const fmt=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const fmtT=s=>{s=Math.max(0,s|0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h>0?h+"ч "+m+"м":m+":"+String(s%60).padStart(2,"0")};
+const fmtM=s=>{s=Math.max(0,s|0);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+
+/* пыль в холодном свете */
+(function(){
+ const c=$("dust"),x=c.getContext("2d");let W,H,P=[];
+ function size(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio}
+ size();addEventListener("resize",size);
+ for(let i=0;i<34;i++)P.push({x:Math.random(),y:Math.random(),r:rnd(.6,1.8),s:rnd(.006,.02),a:rnd(.12,.4),p:rnd(0,6)});
+ if(reduce)return;
+ (function f(){x.clearRect(0,0,W,H);for(const p of P){p.y+=p.s/60;p.p+=.008;if(p.y>1.02){p.y=-.02;p.x=Math.random()}
+  x.globalAlpha=p.a*(.6+.4*Math.sin(p.p));x.fillStyle="#a8fff0";x.beginPath();x.arc((p.x+Math.sin(p.p)*.012)*W,p.y*H,p.r*devicePixelRatio,0,6.283);x.fill()}requestAnimationFrame(f)})();
+})();
+function burst(x,y,list,n,dist,up){
+ if(reduce)return;
+ for(let i=0;i<n;i++){const d=document.createElement("i");d.className="fx";d.textContent=list[i%list.length];d.style.left=x+"px";d.style.top=y+"px";d.style.fontSize=rnd(14,28)+"px";
+  const a=rnd(0,6.283),r=rnd(dist*.4,dist);d.style.setProperty("--x",Math.cos(a)*r*.7+"px");d.style.setProperty("--y",(up?-rnd(40,dist*1.3):Math.sin(a)*r)+"px");d.style.setProperty("--r",rnd(-120,120)+"deg");
+  document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
+}
+
+/* ЭКГ */
+const ec=$("ecg"),ex=ec.getContext("2d");let EW=0,EH=0,eT=0,flat=false,bpm=72,ecgPts=[];
+function ecgFit(){const r=ec.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);EW=r.width;EH=r.height;ec.width=EW*d;ec.height=EH*d;ex.setTransform(d,0,0,d,0,0)}
+addEventListener("resize",ecgFit);
+function beat(p){ // p 0..1 внутри удара
+ if(p<.1)return 0;if(p<.18)return .14*Math.sin((p-.1)/.08*Math.PI);
+ if(p<.24)return 0;if(p<.27)return -.14*((p-.24)/.03);if(p<.31)return -.14+1.14*((p-.27)/.04);if(p<.36)return 1-1.3*((p-.31)/.05);if(p<.4)return -.3+.3*((p-.36)/.04);
+ if(p<.55)return 0;if(p<.7)return .22*Math.sin((p-.55)/.15*Math.PI);return 0}
+let lastE=performance.now();
+(function ecgLoop(now){
+ const dt=Math.min(.05,(now-lastE)/1000);lastE=now;eT+=dt;
+ if(EW){
+  ex.clearRect(0,0,EW,EH);
+  ex.strokeStyle="rgba(127,232,200,.08)";ex.lineWidth=1;for(let x=0;x<EW;x+=22){ex.beginPath();ex.moveTo(x,0);ex.lineTo(x,EH);ex.stroke()}
+  const per=60/bpm,sp=EW/3.2,mid=EH*.58,amp=EH*.36;
+  ex.lineWidth=2;ex.lineJoin="round";ex.strokeStyle=flat?"#ff6a7a":"#7fe8c8";ex.shadowColor=flat?"#ff6a7a":"#7fe8c8";ex.shadowBlur=8;ex.beginPath();
+  for(let x=0;x<=EW;x+=2){const t=eT-(EW-x)/sp;const ph=((t%per)+per)%per/per;const y=mid-(flat?0:beat(ph))*amp;x?ex.lineTo(x,y):ex.moveTo(x,y)}
+  ex.stroke();ex.shadowBlur=0;
+  const g=ex.createLinearGradient(0,0,EW*.45,0);g.addColorStop(0,"#031010");g.addColorStop(1,"transparent");ex.fillStyle=g;ex.fillRect(0,0,EW*.45,EH);
+ }
+ requestAnimationFrame(ecgLoop);
+})(performance.now());
+
+const LINES=["Не волнуйтесь. Большинство моих пациентов быстро перестаёт жаловаться.","Кровь не страшна. Страшно, когда её нет.","Присядьте. Нет, не туда, там лежал предыдущий.","Безумие лечится. Если вовремя прийти. Вы пришли вовремя? Нет?","Тише. Здесь слышно всё, особенно то, что вам кажется.","Я видел, как выживали с худшим. Правда, недолго.","Закройте глаза. Если кто-то заговорит из угла, не отвечайте.","Каждый шрам рассказывает историю. Ваши в основном однотипны."];
+let li=0,bt;
+function say(t){const b=$("bub");b.style.opacity=0;setTimeout(()=>{b.textContent=t;b.style.opacity=1},300)}
+function nextLine(){li=(li+1+Math.floor(Math.random()*3))%LINES.length;say(LINES[li])}
+
+let S=null,dead=null;
+function paint(){
+ if(!S)return;
+ $("pn").textContent=fmt(S.pounds);
+ const hpp=S.hp/S.max*100;
+ $("hpT").textContent=S.hp+" / "+S.max;
+ const L=$("hpL");L.style.width=clamp(hpp,0,100)+"%";L.classList.toggle("ok",hpp>=100);
+ $("mdT").textContent=S.mad+" / "+S.madcap;$("mdL").style.width=clamp(S.mad/S.madcap*100,0,100)+"%";
+ bpm=Math.round(clamp(58+(1-hpp/100)*52+S.mad*.25,56,130));$("bpm").textContent=bpm;$("bpm").previousElementSibling.style.setProperty("--bt",(60/bpm)+"s");
+ $("mdN").innerHTML=S.mad>0?"Переход на новую Последовательность займёт <b>"+Math.round(S.mad)+" мин</b>. Чем меньше безумия, тем короче дорога.":"Разум чист. Переход на новую Последовательность будет быстрым.";
+ const h=$("aHeal");
+ if(S.battle){h.disabled=true;$("aHealS").textContent="Врач не лечит посреди боя";$("aHealP").textContent="—"}
+ else if(S.heal<=0){h.disabled=true;$("aHealS").textContent="Ты полностью здоров";$("aHealP").textContent="—"}
+ else{h.disabled=false;$("aHealS").textContent="Мгновенно вернёт "+(S.max-S.hp)+" здоровья";$("aHealP").textContent=fmt(S.heal)+" 💷"}
+ const md=S.mad>0;
+ $("aDose").disabled=!md;$("aFull").disabled=!md;
+ $("aDoseS").textContent=md?"Снимает "+S.dosep+" безумия":"Разум чист";$("aDoseP").textContent=md?fmt(S.dose)+" 💷":"—";
+ $("aFullP").textContent=md?fmt(S.full)+" 💷":"—";
+ const r=S.rl>0;$("aRit").disabled=r||!md;$("aRitP").textContent=r?fmtT(S.rl):(md?"Бесплатно":"—");$("rcd").textContent=r?"сеанс через "+fmtT(S.rl):"";
+}
+setInterval(()=>{if(S&&S.rl>0){S.rl--;paint()}if(dead){dead.left--;$("dLeft").textContent=fmtM(dead.left);if(dead.left<=0){dead.left=6;load()}}},1000);
+
+function setDead(on){
+ $("morgue").hidden=!on;$("care").hidden=on;$("ward").hidden=on;$("vitals").style.opacity=on?.7:1;flat=on;
+ if(on){$("hpT").textContent="0";$("hpL").style.width="0";$("bpm").textContent="0"}
+}
+async function load(){
+ try{
+  let d=await api({action:"clinic_state"});
+  if(d.error==="dead"){
+   dead={left:d.left};setDead(true);
+   const q=await api({action:"clinic_revive",quote:1});
+   if(q.ok){dead.price=q.price;dead.left=q.left;$("revB").textContent="Воскресить срочно · "+fmt(q.price)+" 💷";$("revB").disabled=q.pounds<q.price;$("pn").textContent=fmt(q.pounds)}
+   $("dLeft").textContent=fmtM(dead.left);
+   $("mdT").textContent="—";return}
+  if(!d.ok)throw new Error(d.text||"Закрыто");
+  dead=null;setDead(false);S=d;paint();say(LINES[li]);
+ }catch(e){$("bub").textContent=e.message}
+}
+$("revB").onclick=async()=>{
+ if(!dead)return;$("revB").disabled=true;sfx("tap");
+ try{const d=await api({action:"clinic_revive"});
+  if(!d.ok){toast(d.text||"Не вышло");sfx("deny");$("revB").disabled=false;return}
+  sfx("divine");hap("heavy");burst(innerWidth/2,innerHeight*.4,["✚","✦","✧"],26,220,true);toast("Ты вернулся. Заплачено "+fmt(d.price)+" 💷");
+  flat=false;await wait(900);dead=null;await load();
+ }catch(e){toast(e.message);$("revB").disabled=false}
+};
+$("aHeal").onclick=async()=>{
+ const b=$("aHeal");if(b.disabled)return;b.disabled=true;sfx("tap");
+ try{const d=await api({action:"clinic_heal"});
+  if(!d.ok){toast(d.text||"Не вышло");sfx("deny");paint();return}
+  S=d;sfx("heal");hap("medium");const r=$("hpL").getBoundingClientRect();burst(r.left+r.width/2,r.top,["✚","✚","✧","·"],18,150,true);
+  say("Готово. Не благодарите, лучше не возвращайтесь.");paint();
+ }catch(e){toast(e.message);paint()}
+};
+async function calm(mode){
+ const b=mode==="dose"?$("aDose"):$("aFull");if(b.disabled)return;b.disabled=true;sfx("tap");
+ try{const d=await api({action:"clinic_calm",mode});
+  if(!d.ok){toast(d.text||"Не вышло");sfx("deny");paint();return}
+  S=d;sfx("scroll");hap("light");const r=$("mdL").getBoundingClientRect();burst(r.left+r.width/2,r.top,["✧","·","💧","🌀"],16,150,true);
+  toast("Безумие −"+d.cut);say("Шёпот стих. Но не навсегда.");paint();
+ }catch(e){toast(e.message);paint()}
+}
+$("aDose").onclick=()=>calm("dose");$("aFull").onclick=()=>calm("full");
+
+/* дыхательный сеанс */
+const bcv=$("bc"),bx=bcv.getContext("2d");let BW=0;
+function bFit(){const r=bcv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);BW=r.width;bcv.width=BW*d;bcv.height=BW*d;bx.setTransform(d,0,0,d,0,0)}
+let B_={on:false};
+const PER=[4.0,3.8,3.6,3.4,3.2];
+$("aRit").onclick=async()=>{
+ if($("aRit").disabled)return;sfx("open");$("aRit").disabled=true;
+ let d;try{d=await api({action:"clinic_rit_start"})}catch(e){toast(e.message);paint();return}
+ if(!d.ok){toast(d.text||"Не вышло");if(d.left){S.rl=d.left}paint();return}
+ S.rl=3600;
+ B_={on:true,i:0,n:0,t:0,t0:performance.now(),last:performance.now(),state:"intro",st:0,res:[],pause:0};
+ document.querySelectorAll("#bpins .pin").forEach(p=>p.className="pin");
+ $("hov").classList.add("on");bFit();$("bHint").textContent="Дыши вместе с кругом. Нажми, когда он достигнет кольца.";$("bph").textContent="Приготовься…";
+ requestAnimationFrame(bLoop);
+};
+function bLoop(now){
+ const b=B_;if(!b.on)return;
+ const dt=Math.min(.05,(now-b.last)/1000);b.last=now;b.st+=dt;
+ const T=PER[Math.min(b.i,4)];let p=0;
+ if(b.state==="intro"){if(b.st>1.6){b.state="run";b.st=0;b.t=0}}
+ else if(b.state==="run"){b.t+=dt;p=(b.t%T)/T;
+  if(b.t>T*.78){miss()}}
+ else if(b.state==="pause"){if(b.st>.9){b.state="run";b.st=0;b.t=0}}
+ draw(p,b.state);
+ requestAnimationFrame(bLoop);
+}
+function draw(p,state){
+ const c=BW/2,x=bx;x.clearRect(0,0,BW,BW);
+ const rmax=BW*.4,rmin=BW*.16,rr=state==="run"?rmin+(rmax-rmin)*(.5-.5*Math.cos(p*Math.PI*2)):(state==="intro"?rmin+Math.sin(B_.st*3)*3:B_.last_r||rmin);
+ B_.last_r=rr;
+ let g=x.createRadialGradient(c,c,rr*.2,c,c,rr*1.9);g.addColorStop(0,"rgba(127,232,200,.35)");g.addColorStop(1,"transparent");x.fillStyle=g;x.fillRect(0,0,BW,BW);
+ x.beginPath();x.arc(c,c,rr,0,6.283);x.fillStyle="rgba(127,232,200,.18)";x.fill();x.lineWidth=3;x.strokeStyle="#7fe8c8";x.stroke();
+ x.setLineDash([4,6]);x.lineWidth=2;x.strokeStyle="#ffe9a8";x.beginPath();x.arc(c,c,rmax,0,6.283);x.stroke();x.setLineDash([]);
+ $("bph").textContent=state==="intro"?"Приготовься…":(state==="pause"?(B_.msg||""):(p<.5?"Вдох":"Выдох"));
+}
+function judge(){
+ const b=B_;const T=PER[Math.min(b.i,4)],p=(b.t%T)/T,dist=Math.abs(p-.5),ok=dist<=.1;
+ const pins=document.querySelectorAll("#bpins .pin");
+ if(ok){b.n++;pins[b.i].className="pin ok";sfx("hit");hap("medium");b.msg=dist<=.04?"Идеально":"Хорошо"}
+ else{pins[b.i].className="pin bad";sfx("deny");b.msg="Мимо"}
+ b.i++;b.state="pause";b.st=0;
+ if(b.i>=5){b.on=false;endRit()}
+}
+function miss(){B_.t=B_.t;judge()}
+$("bTap").addEventListener("pointerdown",e=>{e.preventDefault();if(B_.on&&B_.state==="run"&&B_.t>.4)judge()});
+async function endRit(){
+ $("bph").textContent="…";$("bHint").textContent="Сеанс подходит к концу.";
+ const ms=Math.round(performance.now()-B_.t0),n=B_.n;await wait(900);
+ let d;try{d=await api({action:"clinic_rit_end",n,ms})}catch(e){toast(e.message);$("hov").classList.remove("on");return}
+ $("hov").classList.remove("on");
+ if(!d.ok){toast(d.text||"Не вышло");return}
+ S=d;paint();
+ const bxx=$("hbox"),hr=$("hres");let ic,t,pp,col;
+ if(d.n>=4){ic="🕊";t="Покой";pp="Разум просветлел, шёпот затих.";col="#7fe8c8";sfx("divine");burst(innerWidth/2,innerHeight*.4,["✧","✦","·"],24,220,true)}
+ else if(d.n>=2){ic="🕯";t="Лучше";pp="Часть тревог ушла вместе с дыханием.";col="#9fd8ff";sfx("heal")}
+ else{ic="🌀";t="Не вышло";pp="Дыхание сбилось. Попробуй в другой раз.";col="#b48cff";sfx("lose")}
+ bxx.style.setProperty("--bc",col);bxx.style.setProperty("--bg",col+"55");
+ bxx.innerHTML='<div class="ic">'+ic+'</div><h2>'+t+'</h2><p>'+pp+'</p><div class="big" style="color:'+col+'">'+(d.cut>0?"Безумие −"+d.cut:"Без изменений")+'</div><button type="button" class="ok" id="hOk">Хорошо</button>';
+ hr.classList.add("on");$("hOk").onclick=()=>{sfx("tap");hr.classList.remove("on")};
+}
+ecgFit();
+$("bub").onclick=()=>{sfx("tap");nextLine()};
+bt=setInterval(()=>{if(!dead&&!B_.on)nextLine()},9000);
+load();
+</script>
+</body>
+</html>
