@@ -39,6 +39,20 @@ function pend(b){
  var done=false;
  return function(){if(done)return;done=true;try{b.classList.remove("lt-pend");sp.remove()}catch(e){}};
 }
+/* --- прогрев: после простоя команда api_action на сервере поднимается долго (первый ход мог висеть ~18 с).
+   Лёгкий запрос при входе и раз в 3 минуты, пока страница открыта. --- */
+(function(){
+ var a=qs.get("a_enc")||qs.get("a")||"";if(!a||!window.fetch)return;
+ var url="https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(a),busy=false,lastW=0;
+ function ping(){
+  if(busy||document.hidden)return;busy=true;lastW=Date.now();
+  var ctl=window.AbortController?new AbortController():null,tm=setTimeout(function(){try{ctl&&ctl.abort()}catch(e){}},30000);
+  window.fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"ping"}),cache:"no-store",signal:ctl?ctl.signal:undefined})
+   .then(function(r){return r.text()}).catch(function(){}).then(function(){busy=false;clearTimeout(tm)});
+ }
+ setTimeout(ping,1500);setInterval(ping,180000);
+ document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-lastW>150000)ping()});
+})();
 /* --- обёртка fetch: только запросы к серверу игры --- */
 var of=window.fetch;
 if(of){
