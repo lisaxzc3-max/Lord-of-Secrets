@@ -12,7 +12,6 @@
 :root{--gold:#d6b779;--gold2:#b28c4d;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.82)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 html{background:#0b0912;color-scheme:dark}
-html{background:#0b0912;color-scheme:dark}
 html:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,#2a1f4a 0%,transparent 60%),radial-gradient(ellipse at 50% 100%,#1c1230 0%,transparent 60%),linear-gradient(#0d0a18,#07050d)}
 body{min-height:100vh;min-height:100dvh;color:var(--text);background:transparent;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 30% at 20% 30%,#5b3fa044,transparent 70%),radial-gradient(35% 28% at 80% 70%,#a03a5a33,transparent 70%);animation:fog 22s ease-in-out infinite alternate}
@@ -65,21 +64,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 
 /* зал */
 #hallProfileHint{text-align:center;padding:16px 0;color:var(--muted);font-size:12px}
-.sigil{position:relative;width:96px;height:96px;margin:2px auto 12px}
-.sigil i{position:absolute;inset:0;border-radius:50%;border:1px solid #d6b77966}
-.sigil i:nth-child(1){animation:spin 14s linear infinite;border-style:dashed}
-.sigil i:nth-child(2){inset:12px;animation:spin 9s linear infinite reverse;border-color:#8b6bff88}
-.sigil i:nth-child(3){inset:26px;animation:pulseS 3s ease-in-out infinite;border-color:#d6b779aa;box-shadow:0 0 18px #d6b77966}
-.sigil b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--gold);text-shadow:0 0 14px var(--gold);animation:floatY 4s ease-in-out infinite}
-.quote{margin:10px 0;background:rgba(28,22,42,.9);border:1px solid #3d3550;border-left:3px solid var(--gold);border-radius:12px;padding:11px;font-size:12px;line-height:1.5;font-style:italic;color:#d8cfe8}
-.startInput{width:100%;background:#16111f;border:1px solid #4a3f62;border-radius:12px;padding:12px;text-align:center;color:#efe8d8;font-size:16px;outline:none;transition:box-shadow .3s,border-color .3s}
-.startInput:focus{border-color:var(--gold);box-shadow:0 0 14px #d6b77944}
-.startHint{display:flex;justify-content:space-between;font-size:10px;opacity:.5;margin:4px 2px}
-.pathCard{border:1px solid #3d3550;border-radius:13px;padding:11px;background:rgba(28,22,42,.85);cursor:pointer;transition:all .3s}
-.pathCard:active{transform:scale(.98)}
-.pathCard.sel{border-color:var(--gold);background:linear-gradient(145deg,#3a2f52,#241b36);box-shadow:0 0 18px #d6b77944}
-.gbtn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px!important}.gimg{width:100%;max-width:130px;aspect-ratio:1;border-radius:14px;display:block;background:#150f20}.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
-.genderRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
 
 /* таймеры */
 .timerRow{display:flex;gap:8px;margin:10px 0}
@@ -91,11 +75,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .district{margin:8px 0;border:1px solid #2f2745;border-radius:14px;overflow:hidden;background:rgba(22,17,34,.6)}
 .districtHead{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;padding:12px 13px;cursor:pointer;background:linear-gradient(145deg,#2e2542,#221a33);font-size:13px;font-weight:700;color:#e0d4b8;transition:background .3s}
 .districtHead:active{background:#3a2f52}
-.districtBody{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:9px;background:rgba(14,11,22,.6)}
-.districtBody:not(.hidden) .btn{animation:pop .4s backwards}
-.districtBody:not(.hidden) .btn:nth-child(2){animation-delay:.07s}
-.districtBody:not(.hidden) .btn:nth-child(3){animation-delay:.14s}
-.districtBody:not(.hidden) .btn:nth-child(4){animation-delay:.21s}
 #locInfo{font-size:12px;margin-top:8px;white-space:pre-wrap}
 
 /* инвентарь */
@@ -248,7 +227,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .vitals{margin-top:12px;font-size:11px}
 /* город */
 .districtHead{font-size:14px;letter-spacing:.4px}
-.districtBody .btn{display:flex;flex-direction:column;gap:3px;padding:14px 8px;font-size:12px;line-height:1.35}
 /* переключение вкладок */
 .card:not(.hidden){animation:tabIn .4s cubic-bezier(.2,.9,.3,1)}
 @keyframes tabIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -460,7 +438,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 .timerBox.dead,.timerBox.regen{animation:none}
 .stars i{animation:none;opacity:.6}
 .hero .city .win,.hero .city .lamp,.ctyWin rect,.ctyLamps circle{animation:none}
-.sigil i:nth-child(3),.lvBadge i:nth-child(2){animation:none}
+.lvBadge i:nth-child(2){animation:none}
 .hg.low svg{animation:none;filter:drop-shadow(0 0 10px #c0545e66)}
 .cta{animation:none}
 .ctyName,.bagWrap::before,.tile.hasNew::after{animation:none}
@@ -2126,5 +2104,6 @@ function arenaBanner(d){
   }else{b.style.display="none";ARB.shown=false}
 }
 </script>
+<script src="./shared/icons.js?v=i1"></script>
 </body>
 </html>

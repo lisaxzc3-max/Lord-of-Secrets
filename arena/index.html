@@ -311,5 +311,6 @@ document.addEventListener("pointerdown",e=>{const el=e.target.closest&&e.target.
 loadState();
 let _at=0;setInterval(()=>{if(document.hidden||busy)return;if(F&&F.st==="on"){_at=0;pollNow();return}if(++_at%4===0&&!document.querySelector("#res")&&!/INPUT/.test((document.activeElement||{}).tagName||""))loadState(true)},2500);
 </script>
+<script src="../shared/icons.js?v=i1"></script>
 </body>
 </html>
