@@ -491,6 +491,8 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 #sideMenu .smIt:hover{border-color:#cdb27a;box-shadow:0 0 18px #cdb27a33}
 #sideMenu .smIc{flex:0 0 40px;height:40px;border-radius:12px;border:1px solid #8f7a4c;background:radial-gradient(circle at 35% 30%,#4a3a6a,#1a1230);display:flex;align-items:center;justify-content:center;color:#cdb27a}
 #sideMenu .smIc svg{width:22px;height:22px}
+#sideMenu .smIt.tmp{border-color:#6a4a7a;background:linear-gradient(160deg,#2a1a3eee,#150c24ee)}
+#sideMenu .smIt.tmp .smIc{color:#e8c3ff;border-color:#6a4a8a}
 #sideMenu .smIt.vip{border-color:#8a6a3a;background:linear-gradient(160deg,#3a1a34ee,#1a0d22ee)}
 #sideMenu .smIt.vip .smIc{color:#ffb6c4;border-color:#8a4a5a}
 #sideMenu .smIt.vip:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffe9a826 50%,transparent 65%);transform:translateX(-120%);animation:smSweep 4.5s ease-in-out infinite}
@@ -527,19 +529,23 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12" stroke-opacity=".6"/></svg></span>
         <span>Тайный круг<small>VIP, рамки, бонусы, автобой</small></span>
       </button>
-      <button type="button" class="smIt ref" style="--i:1" onclick="menuGo('ref')">
+      <button type="button" class="smIt tmp" style="--i:1" onclick="menuGo('temple')">
+        <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7.5"/><circle cx="12" cy="13" r="3.5" stroke-opacity=".7"/><path d="M12 2.5c-1 1.2-1 2.200 0 3.200 1-1 1-2 0-3.200z"/></svg></span>
+        <span>Храм<small>Ритуальный круг, молитва, желание</small></span>
+      </button>
+      <button type="button" class="smIt ref" style="--i:2" onclick="menuGo('ref')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5" stroke-opacity=".6"/></svg></span>
         <span>Приглашения<small>Код друга, награды, промокоды</small></span>
       </button>
-      <button type="button" class="smIt" style="--i:2" onclick="menuGo('quests')">
+      <button type="button" class="smIt" style="--i:3" onclick="menuGo('quests')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9.5L19 7v13.5H6z"/><path d="M15.5 3.5V7H19M9 11h7M9 14.5h7M9 18h4"/></svg></span>
         <span>Задания дня<small>Журнал поручений и награды</small></span>
       </button>
-      <button type="button" class="smIt" style="--i:3" onclick="menuGo('daily')">
+      <button type="button" class="smIt" style="--i:4" onclick="menuGo('daily')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M16.5 4v3M15 5.5h3"/></svg></span>
         <span>Награда дня<small>Дар Богини за каждый заход</small></span>
       </button>
-      <button type="button" class="smIt" style="--i:4" onclick="menuGo('settings')">
+      <button type="button" class="smIt" style="--i:5" onclick="menuGo('settings')">
         <span class="smIc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></span>
         <span>Настройки<small>Звук, уведомления, ник, путь</small></span>
       </button>
@@ -1282,6 +1288,7 @@ function menuGo(key) {
   else if (key === "quests") openQuests();
   else if (key === "daily") openDaily();
   else if (key === "ref") location.href = buildPageUrl("./ref/index.html");
+  else if (key === "temple") location.href = buildPageUrl("./temple/index.html");
   else if (key === "vip") location.href = buildPageUrl("./vip/index.html");
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenu(); });
