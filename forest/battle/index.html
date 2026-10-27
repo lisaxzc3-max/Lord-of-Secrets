@@ -93,6 +93,7 @@ button{font:inherit}
 .rewardGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
 .reward{border:1px solid #4a4147;background:#211e25;border-radius:11px;padding:12px 7px}
 .rewardValue{font-size:19px;font-weight:850;color:var(--gold)}
+.ingDrop{grid-column:1/-1;border-color:#6a4a8a;background:linear-gradient(145deg,#241830,#15101c);animation:ingIn .8s ease-out .5s backwards;box-shadow:0 0 18px #6a3a9a55}.ingDrop .rewardValue{font-size:14px;color:#c9b8e8;font-weight:700;line-height:1.35}@keyframes ingIn{from{opacity:0;transform:scale(.9);filter:blur(5px)}}
 .rewardLabel{font-size:10px;color:var(--muted);margin-top:3px}
 .resultActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
 .actionBtn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 9px;background:#29252f;color:var(--text);text-decoration:none;font-weight:750;font-size:12px;cursor:pointer}
@@ -244,6 +245,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <div class="rewardGrid">
 <div class="reward"><div class="rewardValue">+<span id="vTenge">—</span></div><div class="rewardLabel">£ Фунты</div></div>
 <div class="reward"><div class="rewardValue">+<span id="vExp">—</span></div><div class="rewardLabel">✨ Опыт</div></div>
+<div class="reward ingDrop hidden" id="vIngBox"><div class="rewardValue" id="vIng">—</div><div class="rewardLabel">🧪 Ингредиенты</div></div>
 </div>
 <div class="resultActions"><button class="actionBtn primary" id="exploreAgainBtn" type="button">⌕ Исследовать снова</button><button class="actionBtn" id="victoryCloseBtn" type="button">Закрыть</button></div>
 </section>
@@ -612,6 +614,7 @@ sndStop();snd("win");
 ended=true;setStatus("Победа");$("roundLabel").textContent="✦ Противник повержен";
 $("vTenge").textContent=data.tenge==null?"—":Number(data.tenge);
 $("vExp").textContent=data.exp_add==null?"—":Number(data.exp_add);
+try{const m=String(data.text||"").match(/🧪\s*(.+)$/m),b=$("vIngBox");if(m){$("vIng").textContent=m[1].replace(/^Найдено:\s*/,"");b.classList.remove("hidden");setTimeout(()=>snd("dew"),700)}else b.classList.add("hidden")}catch(e){}
 $("victoryCard").classList.remove("hidden");$("defeatCard").classList.add("hidden");
 $("skillCard").classList.add("hidden");hideError();
 setMessage("Сражение завершено. Награда обработана игровой системой.","ИСХОД СРАЖЕНИЯ","✦");
