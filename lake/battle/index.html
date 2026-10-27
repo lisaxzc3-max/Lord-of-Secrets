@@ -196,7 +196,6 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 .portraitFrame.coiled .emo,.portraitFrame.coiled img{filter:brightness(.8) hue-rotate(40deg)}
 </style>
 <script src="../../shared/fast.js"></script>
-<script src="../../shared/avatar.js?v=a1"></script>
 <script src="../../shared/skills.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
@@ -292,14 +291,13 @@ const $=id=>document.getElementById(id);
 const skillInfo=LOTM_SKILLS.SK;
 /* Картинки монстров лежат в lake/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Утопленник":"../img/m-drowned.webp",
-"Жаба":"../img/m-toad.webp",
-"Лягушка":"../img/m-toad.webp",
-"Змей":"../img/m-snake.webp"
+"Утопленник":"../img/drowned.svg",
+"Жаба":"../img/toad.svg",
+"Лягушка":"../img/toad.svg",
+"Змей":"../img/serpent.svg"
 };
 const EMO={"Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
-const DISP={"Утопленник":"Утопленица"};const dn=n=>DISP[n]||n;
-const ROLE={"Утопленник":"Утонувшая дева","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
+const ROLE={"Утопленник":"Утопленник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
 let curEnemy="";
 
 /* ===== ЭФФЕКТЫ ===== */
@@ -506,15 +504,14 @@ $("logCount").textContent=count+" "+(count===1?"запись":count>=2&&count<=4
 $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":""):"Хроника пуста";
 }
 function setImageForEnemy(enemy){
-const img=$("enemyImg"),emo=$("enemyEmo"),fr=$("enemyFrame");
+const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌊";
-const src=pics[enemy];
-const mon=()=>{try{window.LOTM_MON&&LOTM_MON.red(enemy==="Змей"&&$("arena").classList.contains("phase2"));window.LOTM_MON&&LOTM_MON.sync(fr,img)}catch(e){}};
+const src=(enemy==="Змей"&&$("arena").classList.contains("phase2"))?"../img/serpent2.svg":pics[enemy];
 if(src){
-img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden");mon()};
-img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden");try{window.LOTM_MON&&LOTM_MON.off()}catch(e){}};
-if(!img.src.endsWith(src.replace("..","")))img.src=src;else{img.classList.remove("hidden");emo.classList.add("hidden");mon()}
-}else{img.classList.add("hidden");emo.classList.remove("hidden");try{window.LOTM_MON&&LOTM_MON.off()}catch(e){}}
+img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
+img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
+if(!img.src.endsWith(src.replace("..","")))img.src=src;else{img.classList.remove("hidden");emo.classList.add("hidden")}
+}else{img.classList.add("hidden");emo.classList.remove("hidden")}
 }
 function lakeUrl(){
 const params=new URLSearchParams(location.search);
@@ -637,12 +634,12 @@ let state=null;
 try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
 const enemy=getEnemyName(state?.enemy);curEnemy=enemy;
-$("enemyLabel").textContent=dn(enemy);setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
+$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
 if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 else setHealth("enemy",null,null);
 renderSkills(state?.cds||{});
 if(!initialized){
-addLog("Ты столкнулся с противником: "+dn(enemy)+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
+addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 if(state?.boss){
 setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
 setTimeout(()=>{banner("БОСС: ЗМЕЙ","#c45a6a");shakeScreen()},500);
@@ -769,7 +766,6 @@ for(var j=0;j<12;j++){var b=document.createElement("i");b.className="bub";b.styl
 for(var k=0;k<9;k++){var f=document.createElement("i");f.className="fly";f.style.left=r(4,96)+"%";f.style.top=r(40,88)+"%";f.style.setProperty("--x",r(-50,50)+"px");f.style.setProperty("--y",r(-60,20)+"px");f.style.setProperty("--t",r(5,10)+"s");f.style.setProperty("--d",r(-8,0)+"s");sc.appendChild(f)}
 })();
 </script>
-<script src="../../shared/monster.js?v=m1"></script>
 <script src="../../shared/enemyinfo.js"></script>
 </body>
 </html>

@@ -26,7 +26,7 @@ h1{font-size:20px;margin:4px 0 0;line-height:1.2}
 .label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .type{font-size:10px;color:var(--gold);text-align:right}
 .artWrap{position:relative;min-height:190px;margin:13px 13px 0;overflow:hidden;border:1px solid #2d5a6a;border-radius:13px;background:#04121a}
-.art{display:block;width:100%;max-width:min(320px,40vh);aspect-ratio:1;height:auto;margin:0 auto;object-fit:cover}
+.art{display:block;width:100%;max-width:min(270px,34vh);aspect-ratio:1;height:auto;margin:0 auto;object-fit:cover}
 .fallback{height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;background:radial-gradient(ellipse at 50% 40%,#b79be82e,transparent 65%)}
 .symbol{font-size:65px;filter:drop-shadow(0 0 18px #d6b77940)}
 .caption{font-size:10px;letter-spacing:3px;color:var(--muted);text-align:center}
@@ -85,11 +85,9 @@ h1{font-size:20px;margin:4px 0 0;line-height:1.2}
 @keyframes shk{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}}
 </style>
 <script src="../../shared/fast.js"></script>
-<script src="../../shared/avatar.js?v=a1"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
 <script>sndMusic("lake")</script>
-<script src="../../shared/scene.js?v=s1"></script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
@@ -201,13 +199,13 @@ const eventMeta={
     title:"🐸 Царевна-жаба",
     type:"Странная встреча",
     symbol:"🐸",
-    images:["../img/e-frog.webp","../img/frog.svg"]
+    images:["../img/frog.svg"]
   },
   chest:{
     title:"📦 Сундук в омуте",
     type:"Таинственная находка",
     symbol:"📦",
-    images:["../img/e-chest.webp","../img/chest.svg"]
+    images:["../img/chest.svg"]
   },
   unknown:{
     title:"🌫️ Событие у озера",
@@ -316,14 +314,12 @@ function tryImageList(images,index=0){
   if(index>=images.length){
     img.classList.add("hidden");
     img.removeAttribute("src");
-    try{window.LOTM_SCENE&&LOTM_SCENE.off()}catch(e){}
     fallback.classList.remove("hidden");
     return;
   }
   img.onload=()=>{
     img.classList.remove("hidden");
     fallback.classList.add("hidden");
-    try{window.LOTM_SCENE&&LOTM_SCENE.sync(document.querySelector(".artWrap"),img)}catch(e){}
   };
   img.onerror=()=>tryImageList(images,index+1);
   img.src=images[index];

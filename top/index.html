@@ -87,7 +87,6 @@ body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:14px Int
 </style>
 <script src="../shared/vip.js"></script>
 <script src="../shared/fast.js"></script>
-<script src="../shared/avatar.js?v=a1"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
 <script>sndMusic("city")</script>
@@ -127,7 +126,7 @@ async function api(payload){
  return d;
 }
 function esc(t){const d=document.createElement("div");d.textContent=String(t);return d.innerHTML}
-function ico(p){return window.LOTM_AV?LOTM_AV.html(p,PATH[p]||"👤"):(PATH[p]||"👤")}
+function ico(p){return PATH[p]||"👤"}
 
 let leftSec=0,tick=null;
 function fmt(s){s=Math.max(0,s|0);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}

@@ -110,7 +110,6 @@ button{cursor:pointer;border:0;background:none}
 </style>
 <script src="../shared/vip.js"></script>
 <script src="../shared/fast.js"></script>
-<script src="../shared/avatar.js?v=a1"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
 <script>sndMusic("calm")</script>
@@ -272,7 +271,7 @@ function paintList(){
  if(!L.length){$("fl").innerHTML='<div class="empty"><big>🌫️</big>Пока никого. Поделись кодом, и тут появятся твои спутники.</div>';return}
  $("fl").innerHTML=L.map((f,i)=>{
   const pc=Math.min(100,Math.round(f.lv/need*100)),left=Math.max(0,need-f.lv);
-  return '<div class="fr'+(f.p?" paid":"")+'" style="animation-delay:'+Math.min(i,10)*60+'ms"><div class="av'+VIP.f(f.v)+'">'+(window.LOTM_AV?LOTM_AV.html(f.path,PATH[f.path]||"👤"):(PATH[f.path]||"👤"))+'</div><div class="mid"><div class="nm">'+VIP.n(f.n,f.v)+'</div><div class="bar"><i data-w="'+(f.p?100:pc)+'"></i></div></div><div class="st">'+(f.p?'<b>+'+D.reward_r+' 💎</b>получено':'<b>ур. '+f.lv+'</b>ещё '+left)+'</div></div>';
+  return '<div class="fr'+(f.p?" paid":"")+'" style="animation-delay:'+Math.min(i,10)*60+'ms"><div class="av'+VIP.f(f.v)+'">'+(PATH[f.path]||"👤")+'</div><div class="mid"><div class="nm">'+VIP.n(f.n,f.v)+'</div><div class="bar"><i data-w="'+(f.p?100:pc)+'"></i></div></div><div class="st">'+(f.p?'<b>+'+D.reward_r+' 💎</b>получено':'<b>ур. '+f.lv+'</b>ещё '+left)+'</div></div>';
  }).join("");
  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("fl").querySelectorAll(".bar i").forEach(i=>i.style.width=i.dataset.w+"%")}));
 }
