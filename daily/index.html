@@ -79,6 +79,7 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}.day{opacity:1;transform:none}}
 </style>
+<script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
 <script>sndMusic("quests")</script>
@@ -157,7 +158,8 @@ function render(d){
  startTimer(d.reset_in||0);
 }
 async function load(){
- try{const d=await api({action:"daily_reward"});if(!d.ok){toast(d.text||d.error||"Ошибка");return}render(d)}
+ if(!D&&window.LOTM_FAST){const c=LOTM_FAST.get("daily_reward",300000);if(c&&c.ok)render(c)}
+ try{const d=await api({action:"daily_reward"});if(!d.ok){toast(d.text||d.error||"Ошибка");return}if(window.LOTM_FAST)LOTM_FAST.set("daily_reward",d);render(d)}
  catch(e){if(e.message!=="need_start")$("main").innerHTML='<div class="note" style="grid-column:1/-1;color:#f0c8cc">'+e.message+' <br><button class="claim" style="animation:none" onclick="load()">Повторить</button></div>'}
 }
 $("claim").addEventListener("click",async e=>{

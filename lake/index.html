@@ -49,6 +49,7 @@ body.going:after { content: ""; position: fixed; inset: 0; z-index: 20; backgrou
 @keyframes fly{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}60%{transform:translate(var(--x),var(--y));opacity:.5}100%{opacity:0;transform:translate(calc(var(--x)*-.5),calc(var(--y)*1.4))}}
 @media(prefers-reduced-motion:reduce){.scene *{animation:none!important}}
 </style>
+<script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
 <script>sndMusic("lake")</script>

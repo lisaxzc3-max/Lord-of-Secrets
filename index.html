@@ -433,6 +433,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 .arBan .arI{font-size:24px;filter:drop-shadow(0 0 6px #d4343f)}
 .arBan b{display:block;font:400 14px Georgia,serif;letter-spacing:.05em}.arBan small{display:block;font-size:10px;color:#c0a0a8}.arBan i{margin-left:auto;font-style:normal;color:#d08a90}
 </style>
+<script src="./shared/fast.js"></script>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js"></script>
 <script src="./shared/alchemy.js"></script>
@@ -1702,6 +1703,8 @@ function toggleDistrict(district, force) {
   try { window.snd && window.snd(open ? "open" : "back"); } catch (_) {}
 }
 
+const PLACE_URL = { arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html" };
+try { LOTM_FAST.idle(() => Object.keys(PLACE_URL).forEach(k => LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[k])))); } catch (_) {}
 function openPlace(key) {
   try { window.snd && window.snd("tap"); } catch (_) {}
   if (key === "fortune") return openFortune();
@@ -1740,6 +1743,7 @@ function openPlace(key) {
       b.style.setProperty("--k", k);
       b.innerHTML = '<span class="pi">' + p.icon + '</span><b>' + p.name + '</b><small>' + p.npc + '</small><span class="tg">' + (p.key ? "Войти" : "Скоро") + '</span>';
       if (p.key) b.addEventListener("click", () => openPlace(p.key));
+      if (p.key && PLACE_URL[p.key]) b.addEventListener("pointerdown", () => { try { LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[p.key])); } catch (_) {} });
       else { b.disabled = true; }
       body.appendChild(b);
     });

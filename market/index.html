@@ -91,6 +91,7 @@ label.l2{display:block;font-size:10px;letter-spacing:.14em;text-transform:upperc
 <div class="toast" id="toast"></div>
 <div class="veil" id="veil"></div>
 <div class="sheet" id="sheet"></div>
+<script src="../shared/fast.js"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js"></script>
 <script src="../shared/alchemy.js"></script>
@@ -141,8 +142,11 @@ async function call(p,snd){
  try{const d=await api(p);if(d.ok===false){toast(d.text||"Не вышло",1);return null}if(snd)sfx(snd);return d}
  catch(e){if(e.message!=="need_start")toast(e.message,1);else toast("Открой игру через бота",1);return null}finally{busy=false}
 }
+function apply(d,cached){got=Date.now();S=d;lastMail=lastMail<0?d.mail.length:lastMail;if(!$("sheet").classList.contains("on"))render()}
 async function load(quiet){
+ if(!quiet&&!S&&window.LOTM_FAST){const c=LOTM_FAST.get("mk_state",600000);if(c)apply(c,true)}
  let d;try{d=await api({action:"mk_state"})}catch(e){if(!quiet&&e.message!=="need_start")toast(e.message,1);return}
+ if(d&&d.ok!==false&&window.LOTM_FAST)LOTM_FAST.set("mk_state",d);
  if(d.ok===false){if(!quiet)toast(d.text,1);return}
  got=Date.now();S=d;
  if(lastMail>=0&&d.mail.length>lastMail){sfx("bell");toast("🕯 Тебе прилетел ворон — загляни в почту")}
