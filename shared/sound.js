@@ -181,6 +181,7 @@ pets:{root:40,scale:[0,3,5,7,10,12],pad:[[0,7,12],[-4,3,8],[-2,5,9]],bpm:28,bell
 quests:{root:39,scale:[0,2,3,7,8,12],pad:[[0,7,12],[-4,3,8],[-3,4,9]],bpm:30,bell:0.3,heart:0.1,whisp:0.2,dis:0.15,wind:0,water:0,drum:0,vol:0.9},
 garden:{root:36,scale:[0,1,3,7,8,12],pad:[[0,7,12],[-2,5,9],[1,8,13]],bpm:24,bell:0.25,heart:0.15,whisp:0.3,dis:0.2,wind:1,water:1,drum:0,vol:0.9},
 cemetery:{root:33,scale:[0,1,3,5,6,8],pad:[[0,6,12],[-4,3,8],[1,8,13]],bpm:20,bell:0.3,heart:0.4,whisp:0.45,dis:0.45,wind:1,water:0,drum:0,vol:1},
+ruins:{root:31,scale:[0,1,4,5,7,8],pad:[[0,7,12],[-5,2,7],[1,8,13]],bpm:22,bell:0.35,heart:0.3,whisp:0.3,dis:0.5,wind:1,water:0,drum:0.15,vol:1},
 battle:{root:33,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,8]],bpm:78,bell:0.1,heart:0,whisp:0,dis:0.3,wind:0,water:0,drum:1,vol:1},
 boss:{root:29,scale:[0,1,3,6,7,10],pad:[[0,6],[1,7],[-1,5]],bpm:96,bell:0.1,heart:0,whisp:0,dis:0.5,wind:0,water:0,drum:2,vol:1.1}
 };

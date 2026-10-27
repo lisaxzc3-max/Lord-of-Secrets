@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0605">
+<title>Руины · Событие</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--panel:rgba(24,14,11,.95);--line:#5a3a2c;--text:#eadccb;--muted:#b29a8a;--gold:#e0b46a;--moss:#ff9a5a}
+*{box-sizing:border-box}
+html{min-height:100%;background:#0a0605}
+body{margin:0;min-height:100vh;color:var(--text);font:14px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -10%,#8a3a1a50,transparent 55%),linear-gradient(#0d0806,#050304)}
+button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}
+.wrap{position:relative;z-index:2;max-width:520px;margin:auto;padding:12px 12px calc(32px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:center;gap:10px;padding:6px 0 15px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#1e110de8;font-size:12px}
+.eyebrow{font-size:9px;letter-spacing:3px;color:var(--moss)}
+h1{font-size:20px;margin:4px 0 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;box-shadow:0 10px 30px #0005;overflow:hidden}
+/* сцена */
+.stage{position:relative;height:200px;margin:13px 13px 0;border:1px solid #5a3a2c;border-radius:13px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#4a2216,#0d0806 75%)}
+.stage .symbol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px;filter:drop-shadow(0 0 22px var(--glow,#ff8a3a88));animation:bob 4s ease-in-out infinite}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.body{padding:16px}
+.title{font-size:21px;font-weight:850;margin:0 0 10px}
+.text{font-size:14px;line-height:1.7;color:#e6d4c2;white-space:pre-wrap;overflow-wrap:anywhere}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#7a4a3a,transparent);margin:16px 0}
+.actions{display:grid;gap:8px}
+.action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 12px;border:1px solid #6a4030;border-radius:12px;color:var(--text);background:linear-gradient(145deg,#3a1f16,#1d100c);cursor:pointer;transition:transform .12s,box-shadow .2s}
+.action:active:not(:disabled){transform:scale(.98);box-shadow:0 0 16px #ff8a3a44}
+.action:disabled{opacity:.5}
+.arrow{margin-left:auto;color:var(--gold);font-size:21px}
+.aName{font-size:13px;font-weight:800;line-height:1.4}
+.btn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 10px;background:#2a1812;color:var(--text);font-weight:800;font-size:13px;cursor:pointer;margin-top:10px}
+.btn.primary{color:#2a1408;background:linear-gradient(135deg,#ffd9a8,#d9842a);border-color:#ffc080}
+.result{padding:16px;border-color:#9a5a3a;background:linear-gradient(155deg,#3a1f14f5,#140a07f5)}
+.result.bad{border-color:#7a3b42;background:linear-gradient(155deg,#341920f5,#120d0ff5)}
+.badge{font-size:10px;letter-spacing:3px;color:var(--moss);margin-bottom:8px}
+.rgrid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}
+.rchip{font-weight:850;font-size:14px;padding:7px 11px;border-radius:10px;border:1px solid #4a4147;background:#1b1e26;animation:pop .5s backwards}
+.rchip.up{color:#8ff0aa;border-color:#3f7a52}.rchip.down{color:#ff8a92;border-color:#7a3b42}.rchip.mad{color:#c9a8ff;border-color:#62487f}
+@keyframes pop{from{opacity:0;transform:scale(.4)}}
+.hidden{display:none!important}
+.err{padding:13px;border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.6}
+/* ---- эффекты событий ---- */
+.glitch{animation:glitch 1.6s steps(2,end) infinite}
+@keyframes glitch{0%,90%,100%{transform:none;text-shadow:none}92%{transform:translateX(-2px);text-shadow:2px 0 #f0f,-2px 0 #0ff}95%{transform:translateX(2px);text-shadow:-2px 0 #f0f,2px 0 #0ff}}
+.eye{position:absolute;width:20px;height:7px;opacity:0;animation:eye var(--t,6s) ease-in-out var(--d,0s) infinite}
+.eye:before,.eye:after{content:"";position:absolute;top:0;width:7px;height:7px;border-radius:50%;background:#ffd24a;box-shadow:0 0 8px 2px #ffb300aa}
+.eye:before{left:0}.eye:after{right:0}
+@keyframes eye{0%,35%,100%{opacity:0}42%,58%{opacity:1}50%{opacity:.1}}
+.spore{position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;background:radial-gradient(#e4ecff,#8fb4ff88);box-shadow:0 0 10px 3px #8fb4ff66;animation:spore var(--t) linear var(--d) infinite}
+@keyframes spore{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),-220px);opacity:0}}
+.ring{position:absolute;left:50%;top:62%;width:150px;height:46px;margin:-23px 0 0 -75px;border-radius:50%;border:2px dashed #cfe8c8;box-shadow:0 0 22px #bfe8c088,inset 0 0 22px #bfe8c055;animation:ringP 2.4s ease-in-out infinite}
+@keyframes ringP{50%{transform:scale(1.12);opacity:.6}}
+.fire{position:absolute;left:50%;bottom:16px;font-size:34px;transform:translateX(-50%);animation:fire .5s ease-in-out infinite alternate}
+@keyframes fire{from{transform:translateX(-50%) scale(1);filter:drop-shadow(0 0 10px #ff9a3a)}to{transform:translateX(-50%) scale(1.15) rotate(3deg);filter:drop-shadow(0 0 22px #ff6a1a)}}
+.paw{position:absolute;font-size:22px;opacity:0;animation:pawIn .6s ease-out forwards}
+@keyframes pawIn{from{opacity:0;transform:scale(.3)}to{opacity:.75;transform:scale(1) rotate(var(--r))}}
+.rune{position:absolute;font-size:22px;color:#ffd27a;text-shadow:0 0 10px #ff9a3a;opacity:0;animation:rune 3s ease-in-out var(--d) infinite}
+@keyframes rune{0%,100%{opacity:0}50%{opacity:1}}
+.loopbar{animation:loop 1.4s linear infinite}
+@keyframes loop{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.crow{position:absolute;top:var(--y);font-size:20px;animation:crow 7s linear var(--d) infinite}
+@keyframes crow{from{transform:translateX(-30px)}to{transform:translateX(420px)}}
+.page{position:absolute;right:16px;bottom:12px;font-size:30px;animation:page 1.8s ease-in-out infinite;transform-origin:left center}
+@keyframes page{0%,100%{transform:rotateY(0)}50%{transform:rotateY(-70deg)}}
+.fog{position:absolute;left:-40%;width:180%;height:46px;background:radial-gradient(ellipse at center,#cfe0ff30,transparent 70%);animation:fog var(--t) linear var(--d) infinite;pointer-events:none}
+@keyframes fog{from{transform:translateX(-12%)}to{transform:translateX(12%)}}
+.soul{position:absolute;top:70%;font-size:22px;opacity:0;filter:drop-shadow(0 0 8px #b9a0ff);animation:soul var(--t) ease-in var(--d) infinite}
+@keyframes soul{0%{opacity:0;transform:translateY(0) scale(.7)}25%{opacity:.8}100%{opacity:0;transform:translateY(-150px) scale(1.2)}}
+.feather{position:absolute;top:10%;font-size:16px;opacity:0;animation:feather var(--t) ease-in var(--d) infinite}
+@keyframes feather{0%{opacity:0;transform:translate(0,0) rotate(0)}20%{opacity:.9}100%{opacity:0;transform:translate(var(--x),150px) rotate(240deg)}}
+.candle{position:absolute;top:60%;font-size:22px;filter:drop-shadow(0 0 10px #ffb85a);animation:candle 1.2s ease-in-out var(--d) infinite alternate}
+@keyframes candle{from{filter:drop-shadow(0 0 6px #ff9a3a);transform:scale(1)}to{filter:drop-shadow(0 0 16px #ffd27a);transform:scale(1.1)}}
+@keyframes march{from{margin-left:-20%}to{margin-left:90%}}
+.halo{position:absolute;left:50%;top:18%;width:90px;height:90px;margin-left:-45px;border-radius:50%;box-shadow:0 0 40px 10px #cfe0ff66;animation:halo 3s ease-in-out infinite alternate}
+@keyframes halo{from{opacity:.4;transform:scale(.9)}to{opacity:1;transform:scale(1.15)}}
+.toll{animation:toll 2.4s ease-in-out infinite;transform-origin:top center}
+@keyframes toll{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+/* реакция на выбор */
+.fx-heal:after,.fx-hurt:after,.fx-mad:after,.fx-poison:after,.fx-rune:after,.fx-calm:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;animation:flash 1.1s ease-out forwards}
+.fx-heal:after{background:radial-gradient(circle,#ffd9a8aa,transparent 70%)}
+.fx-hurt:after{background:radial-gradient(circle,transparent 30%,#c4252fcc)}
+.fx-mad:after{background:radial-gradient(circle,#9a5fffaa,transparent 70%)}
+.fx-poison:after{background:radial-gradient(circle,#ff8a3a88,transparent 70%)}
+.fx-rune:after{background:radial-gradient(circle,#ffd27acc,transparent 70%)}
+.fx-calm:after{background:radial-gradient(circle,#ffffff22,transparent 70%)}
+@keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.shake{animation:shk .7s ease-in-out}
+@keyframes shk{30%{transform:translate(-2px,1px)}60%{transform:translate(2px,-1px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+<script src="../../shared/fast.js"></script>
+<script src="../../shared/auth.js"></script>
+<script src="../../shared/sound.js"></script>
+<script>sndMusic("ruins")</script>
+</head>
+<body>
+<div class="wrap">
+<header class="head">
+ <a class="back" id="backCem" href="../index.html">← Руины</a>
+ <div><div class="eyebrow">LORD OF THE MYSTERIES</div><h1 id="hTitle">Событие</h1></div>
+</header>
+<main>
+ <section class="card" id="sceneCard">
+  <div class="stage" id="stage"><div class="symbol" id="symbol">🏛</div><img id="evImg" class="hidden" alt=""><div class="layer" id="layer"></div></div>
+  <div class="body">
+   <h2 class="title" id="evTitle">Руины</h2>
+   <div class="text" id="evText">Загрузка…</div>
+   <div class="divider"></div>
+   <div class="actions" id="actions"></div>
+  </div>
+ </section>
+ <section class="card result hidden" id="resultCard">
+  <div class="badge">◆ ПОСЛЕДСТВИЯ ◆</div>
+  <div class="text" id="resText"></div>
+  <div class="rgrid" id="rgrid"></div>
+  <button class="btn primary" id="again" type="button">🔍 Исследовать дальше</button>
+  <button class="btn" id="toCem" type="button">← В руины</button>
+ </section>
+ <section class="card err hidden" id="errCard" role="alert"><div id="errText"></div><button class="btn" id="errBack" type="button">← В руины</button></section>
+</main>
+</div>
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0a0605")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+/* вход только по личным ссылкам бота */
+let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+let busy=false,done=false,ev=null,evKey="";
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const rnd=(a,b)=>a+Math.random()*(b-a);
+
+/* Картинки событий лежат в ruins/img. Чтобы заменить на фото, поменяй путь. */
+const META={
+altar:{t:"🩸 Алтарь Багровой Звезды",s:"🩸",glow:"#ff4a3a88"},
+cache:{t:"🗝 Тайник сектантов",s:"🗝",glow:"#ffb85a77"},
+mural:{t:"🖼 Фреска пророчества",s:"🖼",glow:"#ff5a3a77"},
+hermit:{t:"🧙 Отшельник Фаркарда",s:"🧙",glow:"#ffb04a77"},
+well:{t:"⛲ Колодец пепла",s:"⛲",glow:"#ffd27a77"},
+bell:{t:"🔔 Колокол без языка",s:"🔔",glow:"#d9b26a88"}
+};
+const IMG={};["altar","cache","mural","hermit","well","bell"].forEach(k=>IMG[k]="../img/"+k+".svg");
+const ICON={r_altar_blood:"🩸",r_altar_gold:"💷",r_altar_defile:"💥",r_altar_leave:"↩",r_cache_pick:"🔧",r_cache_smash:"🔨",r_cache_check:"🔍",r_cache_leave:"↩",r_mural_read:"📖",r_mural_copy:"✍",r_mural_deface:"🧽",r_mural_leave:"↩",r_hermit_buy:"🧪",r_hermit_talk:"💬",r_hermit_leave:"↩",r_well_drink:"🥤",r_well_toss:"🪙",r_well_look:"👁",r_well_leave:"↩",r_bell_ring:"🔔",r_bell_listen:"👂",r_bell_leave:"↩"};
+
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+async function ensure(){
+ if(ACTION_URL)return;
+ const r=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+ if(!r.ok)throw new Error("Не удалось подключиться к игре (HTTP "+r.status+").");
+ const d=unwrap(await r.json());const a=d?.action_url||d?.ACTION_URL;
+ if(typeof a!=="string"||!a)throw new Error("Сервер не вернул адрес действий.");
+ ACTION_URL=new URL(a).href;
+}
+async function api(payload){
+ await ensure();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());
+ if(!d||typeof d!=="object")throw new Error("Сервер вернул некорректный ответ.");
+ return d;
+}
+function cemUrl(){const p=new URLSearchParams(location.search);p.delete("event_data");p.delete("enemy");const q=p.toString();return "../index.html"+(q?"?"+q:"")}
+function goCem(){location.href=cemUrl()}
+$("backCem").href=cemUrl();
+function showErr(t){$("errText").textContent=t;$("errCard").classList.remove("hidden")}
+function mk(cls,css,txt){const d=document.createElement("i");d.className=cls;if(css)for(const k in css)d.style.setProperty(k,css[k]);if(txt)d.textContent=txt;$("layer").appendChild(d);return d}
+
+/* ---- сцены (у каждого события свои эффекты) ---- */
+function buildScene(k){
+ const L=$("layer");L.replaceChildren();
+ $("stage").style.setProperty("--glow",META[k]?.glow||"#ff8a3a88");
+ if(reduce)return;
+ for(let i=0;i<4;i++)mk("fog",{top:rnd(40,90)+"%","--t":rnd(9,16)+"s","--d":rnd(-12,0)+"s"});
+ const ember=(n,c)=>{for(let i=0;i<n;i++)mk("spore",{left:rnd(8,92)+"%","--x":rnd(-30,30)+"px","--t":rnd(2.5,5)+"s","--d":rnd(-5,0)+"s",background:c||"radial-gradient(#ffd9a8,#ff7a2288)"})};
+ if(k==="altar"){ember(14);for(let i=0;i<4;i++)mk("candle",{left:(14+i*22)+"%","--d":rnd(-2,0)+"s"},"🔥");["ᚠ","ᚱ","ᛟ","ᛉ","ᚦ"].forEach((r,i)=>mk("rune",{left:rnd(8,86)+"%",top:rnd(8,60)+"%","--d":(i*.5)+"s"},r))}
+ else if(k==="cache"){ember(8,"radial-gradient(#ffe9b0,#d9a24a88)")}
+ else if(k==="mural"){ember(8);["ᚠ","ᚱ","ᛟ"].forEach((r,i)=>mk("rune",{left:rnd(12,80)+"%",top:rnd(8,50)+"%","--d":(i*.7)+"s"},r))}
+ else if(k==="hermit"){for(let i=0;i<3;i++)mk("candle",{left:(18+i*30)+"%",top:"64%","--d":rnd(-2,0)+"s"},"🕯️");ember(6)}
+ else if(k==="well"){for(let i=0;i<8;i++)mk("soul",{left:rnd(30,70)+"%","--t":rnd(3,6)+"s","--d":rnd(-6,0)+"s"},"✨");ember(10,"radial-gradient(#d8c8b0,#8a7a6a88)")}
+ else if(k==="bell"){ember(6);$("symbol").classList.add("toll")}
+}
+function setImage(k){
+ const src=IMG[k];const img=$("evImg");
+ if(!src){img.classList.add("hidden");return}
+ img.onload=()=>{img.classList.remove("hidden");$("symbol").classList.add("hidden")};
+ img.onerror=()=>img.classList.add("hidden");
+ img.src=src;
+}
+function renderEvent(d){
+ ev=d;evKey=String(d.event||d.image||"");
+ const m=META[evKey]||{t:"🏛 Событие в руинах",s:"🏛"};
+ $("evTitle").textContent=m.t;$("hTitle").textContent="Руины · Событие";
+ $("symbol").textContent=m.s;
+ $("evText").textContent=d.text||"Пепел шевелится между колоннами.";
+ buildScene(evKey);setImage(evKey);try{snd(evKey==="altar"?"rune":evKey==="bell"?"bell":evKey==="mural"?"whisper":evKey==="cache"?"chest":"event")}catch(_){}
+ const box=$("actions");box.replaceChildren();
+ const acts=Array.isArray(d.actions)?d.actions:[];
+ if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← В руины";b.onclick=goCem;box.appendChild(b);return}
+ acts.forEach(a=>{
+  const b=document.createElement("button");b.type="button";b.className="action";
+  const ic=document.createElement("span");ic.style.fontSize="20px";ic.textContent=ICON[a.id]||"•";
+  const nm=document.createElement("span");nm.className="aName";nm.textContent=String(a.label||a.id).replace(/^\S+\s/,"")||a.label;
+  const ar=document.createElement("span");ar.className="arrow";ar.textContent="›";
+  b.append(ic,nm,ar);b.addEventListener("click",()=>choose(a.id));box.appendChild(b);
+ });
+}
+async function choose(id){
+ if(busy||done)return;busy=true;
+ document.querySelectorAll("#actions button").forEach(b=>b.disabled=true);
+ try{
+  const r=await api({action:"event_choice",move:id});
+  if(r.ok===false||r.error){
+   const t=String(r.error||r.text||"Сервер не принял выбор.");
+   showErr(t==="unknown_event_move"?"Это событие уже закончилось.":t);
+   document.querySelectorAll("#actions button").forEach(b=>b.disabled=false);
+   return;
+  }
+  done=true;showResult(r);
+ }catch(e){showErr(e.message||"Ошибка связи.");document.querySelectorAll("#actions button").forEach(b=>b.disabled=false)}
+ finally{busy=false}
+}
+function showResult(r){
+ const fx=r.fx||"calm";
+ snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
+ const st=$("stage");st.classList.remove("fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx-"+fx);
+ if(fx==="hurt"||fx==="poison"){$("sceneCard").classList.add("shake");setTimeout(()=>$("sceneCard").classList.remove("shake"),520)}
+ try{tg?.HapticFeedback?.notificationOccurred(fx==="hurt"||fx==="poison"?"error":"success")}catch(_){}
+ $("evText").textContent=r.text||"Твой выбор изменил ход событий.";
+ $("actions").replaceChildren();
+ $("resText").textContent="";
+ const g=$("rgrid");g.replaceChildren();
+ const chip=(txt,cls,i)=>{const c=document.createElement("span");c.className="rchip "+cls;c.textContent=txt;c.style.animationDelay=(i*.12)+"s";g.appendChild(c)};
+ let i=0;
+ if(r.d_hp)chip((r.d_hp>0?"+":"")+r.d_hp+" ❤️",r.d_hp>0?"up":"down",i++);
+ if(r.d_pounds)chip((r.d_pounds>0?"+":"")+r.d_pounds+" £",r.d_pounds>0?"up":"down",i++);
+ if(r.d_mad)chip((r.d_mad>0?"+":"")+r.d_mad+" 🌀",r.d_mad>0?"mad":"up",i++);
+ if(typeof r.tracks==="number"&&r.tracks>0&&/r_(mural_read|hermit_talk|well_look|altar_defile)/.test(r.event||""))chip("🔥 "+r.tracks+"/3",r.tracks>=3?"up":"mad",i++);
+ $("resultCard").classList.toggle("bad",fx==="hurt"||fx==="poison");
+ $("resultCard").classList.remove("hidden");
+ setTimeout(()=>$("resultCard").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),150);
+}
+$("toCem").addEventListener("click",goCem);
+$("errBack").addEventListener("click",goCem);
+$("again").addEventListener("click",async()=>{
+ if(busy)return;busy=true;
+ try{
+  const d=await api({action:"explore_ruins"});
+  if(d.error==="cooldown"){showErr("Подожди ещё "+(d.left||3)+" сек.");return}
+  if(d.ok===false||d.error){showErr(String(d.text||d.error));return}
+  const p=new URLSearchParams(location.search);
+  if(d.type==="event"){p.set("event_data",JSON.stringify(d));location.href="./index.html?"+p.toString();return}
+  p.delete("event_data");if(d.enemy)p.set("enemy",d.enemy);
+  location.href="../battle/index.html?"+p.toString();
+ }catch(e){showErr(e.message||"Ошибка связи.")}finally{busy=false}
+});
+(function init(){
+ const raw=qs.get("event_data");
+ if(!raw){$("evTitle").textContent="Событие не найдено";$("evText").textContent="Вернись в руины и нажми «Исследовать».";
+  const b=document.createElement("button");b.className="btn primary";b.textContent="← В руины";b.onclick=goCem;$("actions").appendChild(b);return}
+ try{const d=unwrap(JSON.parse(raw));if(!d||typeof d!=="object")throw 0;renderEvent(d)}
+ catch(_){$("evTitle").textContent="Не удалось прочитать событие";$("evText").textContent="Данные повреждены. Вернись в руины и начни заново.";
+  const b=document.createElement("button");b.className="btn primary";b.textContent="← В руины";b.onclick=goCem;$("actions").appendChild(b)}
+})();
+</script>
+</body>
+</html>

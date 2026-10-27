@@ -232,6 +232,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .loc{position:relative;display:flex;width:100%;margin:9px 0;padding:0;overflow:hidden;border-radius:16px;cursor:pointer;text-align:left;color:var(--text);border:1px solid #3f6a7a;background:linear-gradient(145deg,#112a36,#0a1620);transition:transform .15s,box-shadow .3s}
 .loc.forest{border-color:#4f8a5c;background:linear-gradient(145deg,#143a24,#0a160e)}
 .loc.cemetery{border-color:#5a6d8f;background:linear-gradient(145deg,#1b2436,#0a0d14)}.loc.cemetery:hover{box-shadow:0 0 22px #8fb4e855}
+.loc.ruins{border-color:#9a5a3a;background:linear-gradient(145deg,#3a1a10,#120806)}.loc.ruins:hover{box-shadow:0 0 22px #ff8a3a55}
 .loc:active{transform:scale(.98)}
 .loc:hover{box-shadow:0 0 22px #7fd0dc44}.loc.forest:hover{box-shadow:0 0 22px #7fc58e44}
 .loc:after{content:"";position:absolute;top:0;left:-60%;width:30%;height:100%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:sweep 5s ease-in-out infinite}
@@ -662,6 +663,11 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
     <span class="locBody"><b>Кладбище Тингена</b><small>Туман, склепы и неупокоенные. Здесь ночует Некромант.</small>
     <span class="tags"><i>Ур. 10–15</i><i>💀💀💀</i><i class="boss">Босс: Некромант</i></span></span>
   </button>
+  <button type="button" class="loc ruins" onclick="openRuins()">
+    <span class="locArt"><img src="./ruins/img/priest.svg" alt="" loading="lazy"></span>
+    <span class="locBody"><b>Руины Фаркарда</b><small>Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.</small>
+    <span class="tags"><i>Ур. 15–20</i><i>💀💀💀💀</i><i class="boss">Босс: Верховный жрец</i></span></span>
+  </button>
   <div class="vitals">
     <div>❤️ <span id="hp2">—</span> · 🌀 <span id="madTxt">—</span>%</div>
     <div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
@@ -854,7 +860,7 @@ var tips=["Тинген никогда не спит. Если слышишь ш
 var i=Math.floor(Math.random()*tips.length),el=$("tipTxt");
 if(el){el.textContent=tips[i];setInterval(function(){if(document.hidden)return;el.style.opacity=0;setTimeout(function(){i=(i+1)%tips.length;el.textContent=tips[i];el.style.opacity=1},400)},7000)}
 var k="";try{k=localStorage.getItem("lotm_last_loc")||""}catch(_){}
-var tx=$("ctaTx");if(tx)tx.textContent=k==="forest"?"В поход: Лес · Чаща":k==="cemetery"?"В поход: Кладбище Тингена":k==="lake"?"В поход: Озёра · Топи":"Отправиться в поход";
+var tx=$("ctaTx");if(tx)tx.textContent=k==="forest"?"В поход: Лес · Чаща":k==="cemetery"?"В поход: Кладбище Тингена":k==="ruins"?"В поход: Руины Фаркарда":k==="lake"?"В поход: Озёра · Топи":"Отправиться в поход";
 })();
 })();
 </script>
@@ -1219,6 +1225,7 @@ function goLast() {
   try { k = localStorage.getItem("lotm_last_loc") || ""; } catch (_) {}
   if (k === "forest") openForest();
   else if (k === "cemetery") openCemetery();
+  else if (k === "ruins") openRuins();
   else if (k === "lake") openLake();
   else showTab("travel");
 }
@@ -1231,6 +1238,11 @@ function openLake() {
 function openCemetery() {
   rememberLoc("cemetery");
   location.href = buildPageUrl("./cemetery/index.html");
+}
+
+function openRuins() {
+  rememberLoc("ruins");
+  location.href = buildPageUrl("./ruins/index.html");
 }
 
 function openForest() {
