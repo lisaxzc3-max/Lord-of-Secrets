@@ -308,7 +308,7 @@ document.addEventListener("pointerdown",e=>{const el=e.target.closest&&e.target.
  try{window.sndMusic&&sndMusic("city")}catch(e){}
 })();
 loadState();
-setInterval(()=>{if(document.hidden||busy)return;if(F&&F.st==="on")pollNow();else if(!document.querySelector("#res")&&!/INPUT/.test((document.activeElement||{}).tagName||""))loadState(true)},2500);
+let _at=0;setInterval(()=>{if(document.hidden||busy)return;if(F&&F.st==="on"){_at=0;pollNow();return}if(++_at%4===0&&!document.querySelector("#res")&&!/INPUT/.test((document.activeElement||{}).tagName||""))loadState(true)},2500);
 </script>
 </body>
 </html>

@@ -307,7 +307,7 @@ document.addEventListener("input",e=>{if(e.target.id==="f_wg")fm.wg=e.target.val
 })();
 sfx("whisper");
 load();
-setInterval(()=>{const a=document.activeElement;if(!document.hidden&&!$("sheet").classList.contains("on")&&!busy&&!(a&&/INPUT|TEXTAREA/.test(a.tagName))){readForm();load(true)}},9000);
+setInterval(()=>{const a=document.activeElement;if(!document.hidden&&!$("sheet").classList.contains("on")&&!busy&&!(a&&/INPUT|TEXTAREA/.test(a.tagName))){readForm();load(true)}},25000);
 </script>
 </body>
 </html>
