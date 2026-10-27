@@ -94,6 +94,53 @@ label{display:block;font-size:11px;color:var(--muted);margin:8px 0 4px;letter-sp
 .seal{position:fixed;inset:0;z-index:90;background:radial-gradient(circle,#2a0a30,#030204 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:sIn .6s;text-align:center;padding:20px}
 .seal .emb{width:110px;height:110px;flex-basis:auto;border-radius:26px}.seal .emb svg{width:70px;height:70px}
 .seal h2{font:400 24px Georgia,serif;letter-spacing:.14em;color:#eadfc4;margin:18px 0 6px;text-shadow:0 0 18px #a3262e}
+
+/* ===== оформление v2 ===== */
+.card{position:relative;background:linear-gradient(160deg,#1a1120f2,#0c0810f7)}
+.card:before,.card:after{content:"";position:absolute;width:14px;height:14px;border:1px solid var(--bronze);opacity:.55;pointer-events:none}
+.card:before{top:6px;left:6px;border-right:0;border-bottom:0;border-radius:6px 0 0 0}
+.card:after{bottom:6px;right:6px;border-left:0;border-top:0;border-radius:0 0 6px 0}
+.card h3{display:flex;align-items:center;gap:10px}
+.card h3:after{content:"ᛟ";margin-left:auto;color:var(--bronze);opacity:.5;font-size:14px;animation:rn 4s ease-in-out infinite}
+@keyframes rn{50%{opacity:1;color:var(--vio);text-shadow:0 0 8px var(--vio)}}
+.btn{position:relative;overflow:hidden;border:1px solid #5a4a64;background:linear-gradient(180deg,#2c2034,#140d19);box-shadow:inset 0 1px 0 #ffffff14,0 3px 12px #000a;transition:box-shadow .3s,transform .15s,border-color .3s;letter-spacing:.05em}
+.btn:before{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:bsh 5s ease-in-out infinite}
+@keyframes bsh{0%,70%{left:-60%}100%{left:130%}}
+.btn:hover{border-color:var(--vio);box-shadow:0 0 18px #6a3a9a88,inset 0 0 12px #6a3a9a44}
+.btn.main{border-color:#c0343e;background:linear-gradient(180deg,#5a1620,#220810);color:#fff0dc;box-shadow:inset 0 1px 0 #ffffff1a,0 0 14px #a3262e66;animation:mp 3.6s ease-in-out infinite}
+@keyframes mp{50%{box-shadow:inset 0 1px 0 #ffffff1a,0 0 26px #d4343faa}}
+.btn.bad{background:linear-gradient(180deg,#2a1014,#12070a)}
+.rip{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffffff55,transparent 70%);transform:scale(0);animation:rp .7s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(2.4);opacity:0}}
+.tab{position:relative;overflow:hidden;display:flex;align-items:center;gap:6px;background:linear-gradient(#1a1220,#0c080f)}
+.tab svg{width:14px;height:14px;opacity:.8}
+.tab.on:after{content:"";position:absolute;left:12%;right:12%;bottom:0;height:2px;background:var(--ec);box-shadow:0 0 8px var(--ec);animation:ul 2.5s ease-in-out infinite}
+@keyframes ul{50%{left:2%;right:2%}}
+.it{position:relative;transition:transform .2s,box-shadow .3s,border-color .3s}
+.it:hover{border-color:#5a4a64;box-shadow:0 0 16px #6a3a9a44}
+.it[data-m]{cursor:pointer}.it[data-m]:active{transform:scale(.99)}
+.ban .emb:before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px dashed var(--ec);opacity:.5;animation:spn 24s linear infinite}
+.emb{position:relative}
+@keyframes spn{to{transform:rotate(360deg)}}
+.ban:before{content:"ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ";position:absolute;right:10px;top:6px;letter-spacing:.4em;font-size:12px;color:var(--ec);opacity:.25;animation:rn 5s infinite}
+.stats div{transition:.3s;background:linear-gradient(#150e1a,#0a060d)}.stats div:hover{border-color:var(--ec);box-shadow:0 0 12px var(--eg)}
+/* война за континенты */
+.war{position:relative;border-radius:16px;padding:12px 14px;margin-bottom:12px;border:1px solid #4a3a5a;background:linear-gradient(135deg,#1a1022,#0b070f);overflow:hidden}
+.war.sun{border-color:var(--crimb);background:linear-gradient(135deg,#3a0c14,#0e060a);animation:wsun 2.4s ease-in-out infinite}
+@keyframes wsun{50%{box-shadow:0 0 30px #d4343f77}}
+.war b{display:block;font:400 15px Georgia,serif;letter-spacing:.08em;color:#eadfc4}
+.war .tm{font:400 24px Georgia,serif;color:#ffd98a;font-variant-numeric:tabular-nums;text-shadow:0 0 14px #c9a45a77}
+.mapw{position:relative;border-radius:18px;overflow:hidden;border:1px solid #3a2f44;background:radial-gradient(ellipse at 50% 50%,#1a1024,#07050a);margin-bottom:12px;box-shadow:inset 0 0 50px #000}
+.mapw svg{display:block;width:100%;height:auto}
+.land{cursor:pointer;transition:filter .3s;stroke-width:1.6}.land:hover{filter:brightness(1.5)}
+.land.mine{animation:lm 3s ease-in-out infinite}@keyframes lm{50%{filter:brightness(1.6) drop-shadow(0 0 8px currentColor)}}
+.land.hot{animation:lh 1.2s ease-in-out infinite}@keyframes lh{50%{filter:brightness(1.8) drop-shadow(0 0 10px #d4343f)}}
+.lbl{font:700 10px Georgia,serif;letter-spacing:.2em;fill:#eadfc4;pointer-events:none;text-anchor:middle;text-shadow:0 0 4px #000}
+.lbl2{font:9px Inter,sans-serif;fill:#b8afc4;pointer-events:none;text-anchor:middle}
+.wv{animation:wvf 6s ease-in-out infinite}@keyframes wvf{50%{transform:translateY(3px);opacity:.6}}
+.cmp{animation:cmpr 40s linear infinite;transform-origin:180px 135px}@keyframes cmpr{to{transform:rotate(360deg)}}
+.cl{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+.cl .bar{flex:1;margin:0}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -210,13 +257,15 @@ function bindOut(){
  const mk=$("mk");if(mk)mk.onclick=async()=>{const d=await act({action:"clan_create",name:$("cn").value,tag:$("ct").value,emb:window._emb|0},"stamp");if(d&&d.in){sfx("bell");setTimeout(()=>sfx("whisper"),700);seal(S,"Клан основан")}}
 }
 const TABS=[["mem","Состав"],["gold","Казна"],["store","Склад"],["ct","Контракты"],["terr","Земли"],["sk","Навыки"],["log","Журнал"]];
+const TI={mem:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 1 6 5"/>',gold:IC.coin,store:IC.chest,ct:IC.scroll,terr:IC.land,sk:IC.star,log:'<path d="M5 4h11l3 3v13H5zM8 10h8M8 14h8M8 18h5"/>',adm:IC.crown};
+const tico=k=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+(TI[k]||"")+'</svg>';
 function renderIn(){
  const p=S.perm,nx=S.nx?Math.min(100,Math.max(0,(S.xp-(S.lv>1?[0,60,200,450,800,1300,2000,3000,4500,6500][S.lv-1]:0))/(S.nx-[0,60,200,450,800,1300,2000,3000,4500,6500][S.lv-1])*100)):100;
  let h='<div class="ban" style="'+ecss(S.e)+'"><div class="row"><div class="emb">'+embSvg(S.e)+'</div><div style="flex:1;min-width:0"><div class="tg">['+esc(S.tg)+']</div><h2>'+esc(S.n)+'</h2><div class="muted">Уровень '+S.lv+' · '+(S.nx?S.xp+' / '+S.nx+' влияния':"предел")+'</div><div class="bar"><i style="width:'+nx+'%"></i></div></div></div>';
  if(S.motd)h+='<div class="motd">«'+esc(S.motd)+'»</div>';
  h+='<div class="stats"><div><b>'+S.mem.length+'/'+S.cap+'</b>братьев</div><div><b>'+S.gold+'</b>в казне ₤</div><div><b>'+S.held+'</b>земель</div><div><b>'+S.kills+'</b>охот</div></div></div>';
  const tabs=TABS.concat(p.panel?[["adm","Управление"]]:[]);
- h+='<div class="tabs" style="'+ecss(S.e)+'">'+tabs.map(t=>'<button class="tab '+(tab===t[0]?"on":"")+'" data-t="'+t[0]+'">'+t[1]+(t[0]==="adm"&&S.ap.length?'<span class="dot">'+S.ap.length+'</span>':"")+'</button>').join("")+'</div>';
+ h+='<div class="tabs" style="'+ecss(S.e)+'">'+tabs.map(t=>'<button class="tab '+(tab===t[0]?"on":"")+'" data-t="'+t[0]+'">'+tico(t[0])+t[1]+(t[0]==="adm"&&S.ap.length?'<span class="dot">'+S.ap.length+'</span>':"")+'</button>').join("")+'</div>';
  h+='<div id="pane" style="'+ecss(S.e)+'">'+pane()+'</div>';
  return h;
 }
@@ -261,18 +310,52 @@ function pCt(){
  if(!p.contract)h+='<div class="muted">Контракты принимают Жрецы-Советники, Предводитель и Летописец.</div>';
  return h+'</div>';
 }
+const LAND={
+ north:{d:"M95 18 Q180 0 265 18 L248 68 Q180 82 112 68 Z",x:180,y:42,l:"СЕВЕР"},
+ west:{d:"M12 95 Q40 82 80 94 L92 148 L80 198 Q45 204 14 180 Q0 140 12 95Z",x:46,y:142,l:"ЗАПАД"},
+ center:{d:"M118 92 Q180 80 242 92 L258 145 L242 188 Q180 176 118 188 L102 145 Z",x:180,y:132,l:"ЦЕНТР"},
+ east:{d:"M280 94 Q320 82 348 95 Q362 140 346 182 Q315 204 280 198 L268 148Z",x:314,y:142,l:"ВОСТОК"},
+ south:{d:"M112 200 Q180 186 248 200 L238 246 Q180 262 122 246 Z",x:180,y:226,l:"ЮГ"}
+};
+function dhm(s){s=Math.max(0,s|0);const d=s/86400|0,h=(s%86400)/3600|0,m=(s%3600)/60|0;return d+" д "+h+" ч "+m+" мин"}
 function pTerr(){
- const p=S.perm;let h='';
- if(S.pending>0||S.held>0)h+='<div class="card"><h3>Дань</h3><div class="row2" style="justify-content:space-between"><div><b style="font-size:20px;color:#ffd98a">'+S.pending+' ₤</b><div class="muted">накоплено (до суток)</div></div>'+(p.terr?'<button class="btn main" id="col" '+(S.pending>0?"":"disabled")+'>Собрать</button>':"")+'</div></div>';
- h+='<div class="muted" style="margin:0 4px 8px">Земель: '+S.held+' из '+S.held_max+' (растёт с уровнем клана)</div>';
+ const p=S.perm,w=S.war;let h="";
+ h+='<div class="war '+(w.sun?"sun":"")+'">'+(w.sun?'<b>⚔ День завоевания</b><div class="muted">Победы над монстрами приносят очки. Подсчёт — в конце дня. Монстр = 1 очко, босс = 5.</div>':'<b>До дня завоевания</b><div class="tm" id="wtm">'+dhm(w.to_sun)+'</div><div class="muted">Вызов можно бросить только в воскресенье, раз в неделю.</div>')+(w.my?'<div style="margin-top:6px;color:#ffd98a;font-size:12px">Ваш клан бьётся за: '+esc(S.terr.find(t=>t.id===w.my).n)+'</div>':'')+'</div>';
+ h+='<div class="mapw"><svg viewBox="0 0 360 262"><defs><radialGradient id="mgl" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#4a2a6a" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><rect width="360" height="262" fill="url(#mgl)"/>';
+ for(let i=0;i<5;i++)h+='<path class="wv" d="M'+(10+i*70)+' '+(250-i*3)+' q10 -6 20 0 t20 0" stroke="#3a4a6a" fill="none" opacity=".5" style="animation-delay:'+i*.7+'s"/>';
+ h+='<g class="cmp" opacity=".18" stroke="#a98fd0" fill="none"><circle cx="180" cy="135" r="120"/><circle cx="180" cy="135" r="100" stroke-dasharray="3 6"/><path d="M180 12v246M57 135h246"/></g>';
+ S.terr.forEach(t=>{
+  const L=LAND[t.id],col=t.oc?ECOL[t.oe%8]:"#6a6070",hot=w.sun&&t.cls.length>0;
+  h+='<path class="land '+(t.mine?"mine":"")+(hot?" hot":"")+'" data-land="'+t.id+'" d="'+L.d+'" fill="'+col+(t.oc?"44":"22")+'" stroke="'+col+'" style="color:'+col+'"'+(t.oc?"":' stroke-dasharray="5 4"')+'/>';
+  h+='<text class="lbl" x="'+L.x+'" y="'+L.y+'">'+L.l+'</text><text class="lbl2" x="'+L.x+'" y="'+(L.y+13)+'">'+(t.oc?esc(t.on.length>12?t.on.slice(0,11)+"…":t.on):"ничья")+'</text>';
+  if(t.cls.length)h+='<text x="'+L.x+'" y="'+(L.y+27)+'" class="lbl2" style="fill:#ff8a90">⚔ '+t.cls.length+'</text>';
+ });
+ h+='</svg></div>';
+ if(S.pending>0||S.held>0)h+='<div class="card"><h3>Дань</h3><div class="row2" style="justify-content:space-between"><div><b style="font-size:22px;color:#ffd98a;font-family:Georgia">'+S.pending+' ₤</b><div class="muted">накоплено (до суток)</div></div>'+(p.terr?'<button class="btn main" id="col" '+(S.pending>0?"":"disabled")+'>Собрать дань</button>':"")+'</div></div>';
  S.terr.forEach((t,i)=>{
   const cls=t.mine?"mine":(t.oc?"hos":"");
-  let b="";
-  if(p.terr&&!t.mine){const cost=t.oc?t.cost*2:t.cost;b='<button class="btn sm '+(t.oc?"bad":"main")+'" data-claim="'+t.id+'" '+(S.lv<t.minlv?"disabled":"")+'>'+(t.oc?"Захватить":"Занять")+' · '+cost+'</button>'}
-  h+='<div class="it ter '+cls+'" style="animation-delay:'+i*60+'ms"><div class="ico">'+ico("land")+'</div><div class="l"><b>'+esc(t.n)+'</b><small>'+(t.mine?"под вашей рукой":t.oc?"владеет «"+esc(t.on)+"» (сила "+t.opw+")":"никому не принадлежит")+' · доход '+t.inc+'/сут · от ур. '+t.minlv+'</small></div>'+b+'</div>';
+  h+='<div class="it ter '+cls+'" data-land="'+t.id+'" style="animation-delay:'+i*60+'ms;cursor:pointer"><div class="ico">'+ico("land")+'</div><div class="l"><b>'+esc(t.n)+'</b><small>'+(t.mine?"под вашей рукой":t.oc?"владеет «"+esc(t.on)+"»":"никому не принадлежит")+' · дань '+t.inc+'/сут'+(t.cls.length?' · претендентов: '+t.cls.length:"")+'</small></div><span style="color:var(--bronze)">›</span></div>';
  });
- if(!p.terr)h+='<div class="muted">Земли берут Жрецы-Советники, Предводитель и Казначей Теней. Чужую землю можно отнять, если ваш клан сильнее.</div>';
+ const lr=(w.last&&w.last.r)||[];
+ if(lr.length)h+='<div class="card"><h3>Итоги прошлого завоевания</h3>'+lr.map(r=>'<div class="lg">'+esc(S.terr.find(t=>t.id===r.t).n)+' — <b style="color:#ffd98a">'+esc(r.w)+'</b> · '+r.p+' оч. · претендентов: '+r.n+'</div>').join("")+'</div>';
+ h+='<div class="muted" style="margin:4px 4px 0">Континенты завоёвывают Жрецы-Советники, Предводитель и Казначей Теней. Земля остаётся за клан, пока её не отнимут.</div>';
  return h;
+}
+function landSheet(id){
+ const t=S.terr.find(x=>x.id===id),w=S.war,p=S.perm;if(!t)return;
+ const mx=Math.max(1,...t.cls.map(c=>c.p));
+ let h='<h4>'+esc(t.n)+'</h4><div class="muted" style="margin-bottom:8px">'+(t.oc?"Владеет клан «"+esc(t.on)+"»":"Земля никому не принадлежит")+' · дань '+t.inc+' ₤ в сутки</div>';
+ h+='<div class="muted" style="margin:6px 0 2px">Претенденты этой недели</div>';
+ if(!t.cls.length)h+='<div class="empty" style="padding:8px">Пока никто не бросил вызов.</div>';
+ t.cls.forEach(c=>{h+='<div class="cl" style="'+ecss(c.e)+'"><div class="ico" style="width:28px;height:28px;flex:0 0 28px;color:var(--ec)">'+embSvg(c.e)+'</div><div style="flex:0 0 84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.n)+(c.mine?" ★":"")+'</div><div class="bar"><i style="width:'+c.p/mx*100+'%"></i></div><b style="width:34px;text-align:right;color:#ffd98a">'+c.p+'</b></div>'});
+ let why="";
+ if(!p.terr)why="Нет права: нужен ранг Жреца-Советника или пост Казначея.";
+ else if(!w.sun)why="Вызов — только в воскресенье. Осталось: "+dhm(w.to_sun);
+ else if(w.wk)why="Ваш клан уже бросил вызов на этой неделе.";
+ h+='<button class="btn main" id="dc" style="margin-top:12px" '+(why?"disabled":"")+'>⚔ '+(t.mine?"Удержать":"Завоевать")+'</button>'+(why?'<div class="muted" style="margin-top:6px">'+esc(why)+'</div>':'')+'<button class="btn" id="cl2">Закрыть</button>';
+ const d=sheet(h);
+ d.querySelector("#cl2").onclick=()=>{closeSheet();sfx("back")};
+ const dc=d.querySelector("#dc");if(dc)dc.onclick=async()=>{closeSheet();const r=await act({action:"clan_terr_claim",tid:id},"stamp");if(r){sfx("bell");setTimeout(()=>sfx("whisper"),500)}};
 }
 function pSk(){
  const p=S.perm;
@@ -314,7 +397,7 @@ function bindPane(){
  q("[data-take]").forEach(b=>{const[k,id]=b.dataset.take.split(":");b.onclick=()=>act({action:"clan_take",kind:k,key:id,n:1},"chest")});
  q("[data-ctake]").forEach(b=>b.onclick=()=>act({action:"clan_ct_take",tid:b.dataset.ctake},"stamp"));
  q("[data-give]").forEach(b=>b.onclick=()=>act({action:"clan_ct_give",i:+b.dataset.give,n:99},"dew"));
- q("[data-claim]").forEach(b=>b.onclick=async()=>{const d=await act({action:"clan_terr_claim",tid:b.dataset.claim},"stamp");if(d){sfx("bell")}});
+ q("[data-land]").forEach(b=>b.onclick=()=>{sfx("rune");landSheet(b.dataset.land)});
  if($("col"))$("col").onclick=()=>act({action:"clan_terr_collect"},"coin");
  q("[data-sk]").forEach(b=>b.onclick=async()=>{const d=await act({action:"clan_skill",k:b.dataset.sk},"level");if(d)sfx("whisper")});
  q("[data-acc]").forEach(b=>b.onclick=()=>act({action:"clan_member",op:"accept",uid:b.dataset.acc},"win"));
@@ -373,6 +456,8 @@ function seal(s,t){
  setInterval(()=>{if(!document.hidden&&Math.random()<.5)sfx("bell")},21000);
  try{window.sndMusic&&sndMusic("city")}catch(e){}
 })();
+document.addEventListener("pointerdown",e=>{const el=e.target.closest&&e.target.closest(".btn,.tab");if(!el)return;const r=el.getBoundingClientRect(),z=Math.max(r.width,r.height),sp=document.createElement("span");sp.className="rip";sp.style.cssText="width:"+z+"px;height:"+z+"px;left:"+(e.clientX-r.left-z/2)+"px;top:"+(e.clientY-r.top-z/2)+"px";el.appendChild(sp);setTimeout(()=>sp.remove(),700)});
+setInterval(()=>{const e=$("wtm");if(e&&S&&S.war){S.war.to_sun=Math.max(0,S.war.to_sun-1);e.textContent=dhm(S.war.to_sun)}},1000);
 load();
 setInterval(()=>{if(!document.hidden&&!busy&&S&&S.in&&!document.querySelector(".sheet,.seal")&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||"")&&!document.querySelector("#amt[value],#motd:focus"))load()},30000);
 </script>
