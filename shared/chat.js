@@ -207,7 +207,7 @@ function scrollDown(c,force){
 function msgRow(m,i){
  var mine=String(m.uid)===String(S.me);
  var r=el("div","chRow"+(mine?" me":""));r.dataset.id=m.id;
- var av=el("div","chAv"+(window.VIP?VIP.f(m.v):""),PATH[m.path]||"👤");
+ var av=el("div","chAv"+(window.VIP?VIP.f(m.v):""),PATH[m.path]||"👤");fillAv(av,m.path,m.g,true);
  var bub=el("div","chBub");
  if(!mine){
   var nm=el("div","chNm");if(window.VIP&&m.v){var nb=el("div");nb.innerHTML=VIP.n(m.nick,m.v);nm.appendChild(nb)}else nm.textContent=m.nick;nm.appendChild(el("span",null,"ур."+m.lvl));
@@ -294,6 +294,7 @@ function startPoll(){
 }
 
 function pathIco(p){return PATH[p]||"👤"}
+function fillAv(n,p,g,st){try{if(window.LOTM_AV&&LOTM_AV.key(p))LOTM_AV.fill(n,p,PATH[p],g,st)}catch(e){}}
 function loadList(){
  if(S.peer)return;
  call({action:"dm_list"}).then(function(d){
@@ -305,9 +306,9 @@ function loadList(){
   l.forEach(function(c,i){dList.appendChild(convRow(c.uid,c.nick,c.last,c.unread,i,"👤",c.v))});
  },function(){});
 }
-function convRow(uid,nick,last,unread,i,ico,v){
+function convRow(uid,nick,last,unread,i,ico,v,g){
  var b=el("button","chCv");b.type="button";b.style.setProperty("--i",i);
- b.appendChild(el("div","chAv"+(window.VIP?VIP.f(v):""),ico));
+ var _av=el("div","chAv"+(window.VIP?VIP.f(v):""),pathIco(ico));if(PATH[ico])fillAv(_av,ico,g,i>=12);b.appendChild(_av);
  var nmE=el("div","nm");if(window.VIP&&v)nmE.innerHTML=VIP.n(nick,v);else nmE.textContent=nick;
  var t=el("div");t.append(nmE,el("div","ls",last||""));b.appendChild(t);
  if(unread>0)b.appendChild(el("div","un",String(unread)));
@@ -320,7 +321,7 @@ function doFind(){
   dList.replaceChildren();
   var u=Array.isArray(d.users)?d.users:[];
   if(!u.length){var e=el("div","chEmpty","Никого не нашлось.");dList.appendChild(e);return}
-  u.forEach(function(x,i){dList.appendChild(convRow(x.uid,x.nick,"Ур. "+x.lvl,0,i,pathIco(x.path),x.v))});
+  u.forEach(function(x,i){dList.appendChild(convRow(x.uid,x.nick,"Ур. "+x.lvl,0,i,x.path,x.v,x.g))});
  },function(){});
 }
 function seenTxt(sec){
@@ -332,7 +333,7 @@ function seenTxt(sec){
 }
 function frRow(x,i,mode){
  var r=el("div","chFr");r.style.setProperty("--i",i);
- var av=el("div","chAv"+(window.VIP?VIP.f(x.v):""),pathIco(x.path));
+ var av=el("div","chAv"+(window.VIP?VIP.f(x.v):""),pathIco(x.path));fillAv(av,x.path,x.g,i>=12);
  var mid=el("div","mid");var nmE=el("div","nm");if(window.VIP&&x.v)nmE.innerHTML=VIP.n(x.nick,x.v);else nmE.textContent=x.nick;
  var sub;
  if(mode==="friend"){var sn=seenTxt(x.seen==null?-1:x.seen);sub=el("div","ls"+(sn.on?" on":""),(sn.on?"● ":"")+"Ур. "+x.lvl+" · "+sn.t)}

@@ -126,7 +126,7 @@ async function api(payload){
  return d;
 }
 function esc(t){const d=document.createElement("div");d.textContent=String(t);return d.innerHTML}
-function ico(p){return PATH[p]||"👤"}
+function ico(p,g,st){return window.LOTM_AV?LOTM_AV.html(p,PATH[p]||"👤",g,st):(PATH[p]||"👤")}
 
 let leftSec=0,tick=null;
 function fmt(s){s=Math.max(0,s|0);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
@@ -144,7 +144,7 @@ function render(d){
  const pod=document.createElement("div");pod.className="podium";
  order.forEach(r=>{
   const k=r.rank;const el=document.createElement("div");el.className="pod p"+k+(r.me?" me":"");
-  el.innerHTML=(k===1?'<span class="crown">👑</span>':"")+'<div class="pav'+VIP.f(r.v)+'">'+ico(r.path)+'</div><div class="pn">'+VIP.n(r.nick,r.v,true)+'</div><div class="pl">УР. '+r.level+'</div><div class="base">'+k+'</div>';
+  el.innerHTML=(k===1?'<span class="crown">👑</span>':"")+'<div class="pav'+VIP.f(r.v)+'">'+ico(r.path,r.g)+'</div><div class="pn">'+VIP.n(r.nick,r.v,true)+'</div><div class="pl">УР. '+r.level+'</div><div class="base">'+k+'</div>';
   el.style.cursor="pointer";el.onclick=()=>{if(r.uid&&window.PCard)PCard.open(r.uid,r.nick)};
   pod.appendChild(el);
  });
@@ -153,7 +153,7 @@ function render(d){
  rows.slice(3).forEach((r,i)=>{
   const el=document.createElement("div");el.className="row"+(r.me?" me":"")+(r.level>=MAXL?" maxed":"");
   el.style.animationDelay=(0.6+i*0.05)+"s";
-  el.innerHTML='<div class="rk">'+r.rank+'</div><div class="av'+VIP.f(r.v)+'">'+ico(r.path)+'</div><div class="mid"><div class="nm">'+VIP.n(r.nick,r.v,true)+(r.me?" · это ты":"")+'</div><div class="bar"><i data-w="'+Math.round(r.level/MAXL*100)+'"></i></div></div><div class="lv"><b>'+r.level+'</b><small>УРОВЕНЬ</small></div>';
+  el.innerHTML='<div class="rk">'+r.rank+'</div><div class="av'+VIP.f(r.v)+'">'+ico(r.path,r.g,r.rank>12)+'</div><div class="mid"><div class="nm">'+VIP.n(r.nick,r.v,true)+(r.me?" · это ты":"")+'</div><div class="bar"><i data-w="'+Math.round(r.level/MAXL*100)+'"></i></div></div><div class="lv"><b>'+r.level+'</b><small>УРОВЕНЬ</small></div>';
   el.style.cursor="pointer";el.onclick=()=>{if(r.uid&&window.PCard)PCard.open(r.uid,r.nick)};
   list.appendChild(el);
  });

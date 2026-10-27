@@ -53,6 +53,18 @@ function pend(b){
  setTimeout(ping,1500);setInterval(ping,180000);
  document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-lastW>150000)ping()});
 })();
+/* --- мини-аватары путей (анимированные svg; для длинных списков и чатов — статичные копии) --- */
+(function(){
+ var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}
+ var MAP={seer:"seer",sailor:"sailor",hunter:"hunter","Провидец":"seer","Матрос":"sailor","Охотник":"hunter"};
+ function src(pk,g,st){return BASE+"avatars/"+(st?"st/":"")+(g==="f"||g==="female"?"f":"m")+"_"+pk+".svg"}
+ try{var cs=document.createElement("style");cs.textContent=".avMini{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}.avWrap:has(.avMini),.chAv:has(.avMini),.pav:has(.avMini),.row .av:has(.avMini),.fr .av:has(.avMini),.ch:has(.avMini){overflow:hidden}";document.head.appendChild(cs)}catch(e){}
+ window.LOTM_AV={
+  key:function(p){return MAP[p]||null},
+  html:function(p,fb,g,st){var k=MAP[p];return k?'<img class="avMini" alt="" decoding="async" src="'+src(k,g,st)+'">':(fb||"👤")},
+  fill:function(n,p,fb,g,st){if(!n)return;var k=MAP[p];if(!k){n.textContent=fb||"👤";return}n.textContent="";var i=new Image();i.className="avMini";i.alt="";i.decoding="async";i.src=src(k,g,st);i.onerror=function(){i.remove();n.textContent=fb||"👤"};n.appendChild(i)}
+ };
+})();
 /* --- обёртка fetch: только запросы к серверу игры --- */
 var of=window.fetch;
 if(of){

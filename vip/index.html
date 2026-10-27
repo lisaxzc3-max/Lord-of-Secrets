@@ -227,7 +227,7 @@ function paintPv(){
  VIP.frame($("pvAv"),v);
  $("pvN").innerHTML=VIP.n(ME.nick,v,true);
  $("pvCn").innerHTML=VIP.n(ME.nick,v);
- $("pvCh").className="ch"+VIP.f(v);$("pvCh").textContent=PATH[ME.pk]||"👤";
+ $("pvCh").className="ch"+VIP.f(v);if(window.LOTM_AV)LOTM_AV.fill($("pvCh"),ME.pk,PATH[ME.pk],ME.g);else $("pvCh").textContent=PATH[ME.pk]||"👤";
 }
 $("pvT").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;pvTier=+b.dataset.v;sfx("tap");paintPv()});
 

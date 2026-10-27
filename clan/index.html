@@ -54,7 +54,7 @@ button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}button:ac
 .tab .dot{display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:var(--crim);color:#fff;font-size:10px;text-align:center;margin-left:5px}
 /* списки */
 .it{display:flex;gap:10px;align-items:center;padding:9px 10px;border:1px solid #2c2234;border-radius:12px;background:linear-gradient(145deg,#1a1220,#0d0910);margin-bottom:8px;animation:cin .4s ease-out backwards}
-.it .l{flex:1;min-width:0}.it b{display:block;color:#e0d4b8;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cav{flex:none;width:34px;height:34px;border-radius:50%;overflow:hidden;border:1px solid #5a4a80;background:#150f20;display:flex;align-items:center;justify-content:center;font-size:16px}.it .l{flex:1;min-width:0}.it b{display:block;color:#e0d4b8;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .it small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
 .me{border-color:var(--ec);box-shadow:0 0 12px var(--eg)}
 .rk{flex:0 0 34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#050306;display:flex;align-items:center;justify-content:center;font:700 13px Georgia,serif;color:var(--bone)}
@@ -277,7 +277,7 @@ function pane(){
 }
 function rankName(m){return S.ranks[m.r]}
 function pMem(){
- return S.mem.map((m,i)=>'<div class="it '+(m.me?"me":"")+'" data-m="'+esc(m.uid)+'" style="animation-delay:'+i*40+'ms"><div class="rk r'+m.r+'">'+ROM[m.r]+'</div><div class="l"><b data-pf="'+esc(m.uid)+'" style="cursor:pointer;text-decoration:underline dotted #6a58a0;text-underline-offset:3px">'+VIP.n(m.n,m.v)+(m.p?'<span class="tag">'+esc(S.posts[m.p])+'</span>':"")+'</b><small>'+esc(rankName(m))+' · ур. '+m.l+' · вклад '+m.c+'</small></div><small class="'+((S.now-m.s)<300?"on1":"")+'">'+((S.now-m.s)<300?"в сети":ago(m.s))+'</small></div>').join("");
+ return S.mem.map((m,i)=>'<div class="it '+(m.me?"me":"")+'" data-m="'+esc(m.uid)+'" style="animation-delay:'+i*40+'ms"><div class="rk r'+m.r+'">'+ROM[m.r]+'</div><div class="cav">'+(window.LOTM_AV?LOTM_AV.html(m.pk,"👤",m.g,i>=12):"👤")+'</div><div class="l"><b data-pf="'+esc(m.uid)+'" style="cursor:pointer;text-decoration:underline dotted #6a58a0;text-underline-offset:3px">'+VIP.n(m.n,m.v)+(m.p?'<span class="tag">'+esc(S.posts[m.p])+'</span>':"")+'</b><small>'+esc(rankName(m))+' · ур. '+m.l+' · вклад '+m.c+'</small></div><small class="'+((S.now-m.s)<300?"on1":"")+'">'+((S.now-m.s)<300?"в сети":ago(m.s))+'</small></div>').join("");
 }
 function pGold(){
  const p=S.perm;
