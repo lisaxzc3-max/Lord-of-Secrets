@@ -129,6 +129,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   font-size:10px;max-width:100%;overflow-wrap:anywhere;
 }
 
+.profChip{display:flex;align-items:center;gap:9px;margin-top:8px;padding:7px 10px;border-radius:12px;border:1px solid var(--pc,#8f8798);background:linear-gradient(135deg,#17111f,#0b070f);text-decoration:none;color:#e0d4b8;box-shadow:0 0 12px color-mix(in srgb,var(--pc,#8f8798) 30%,transparent)}
+.profChip .ce{flex:0 0 30px;height:30px;border-radius:9px;background:#050306;border:1px solid var(--pc);display:flex;align-items:center;justify-content:center;color:var(--pc)}
+.profChip .ce svg{width:19px;height:19px}.profChip .ct{flex:1;min-width:0}.profChip b{display:block;font:400 13px Georgia,serif;letter-spacing:.04em}
+.profChip small{display:block;font-size:10px;color:var(--pc);letter-spacing:.06em}.profChip .ar{font-style:normal;color:var(--muted)}
+.pfBar{display:block;height:3px;border-radius:2px;background:#ffffff14;margin-top:4px;overflow:hidden}.pfBar i{display:block;height:100%;background:var(--pc);box-shadow:0 0 6px var(--pc)}
 .arenaChip{display:flex;align-items:center;gap:9px;margin-top:8px;padding:7px 10px;border-radius:12px;border:1px solid var(--ac,#8f8798);background:linear-gradient(135deg,#1c1118,#0b070f);text-decoration:none;color:#e0d4b8;box-shadow:0 0 12px var(--ag,#8f879844)}
 .arenaChip .ce{flex:0 0 30px;height:30px;border-radius:9px;background:#050306;border:1px solid var(--ac);display:flex;align-items:center;justify-content:center;color:var(--ac)}
 .arenaChip .ce svg{width:19px;height:19px}.arenaChip .ct{flex:1;min-width:0}.arenaChip b{display:block;font:400 13px Georgia,serif;letter-spacing:.04em}
@@ -402,6 +407,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
         <div class="heroCaption">Путник · Последователь мистерий</div>
         <a class="clanChip hidden" id="clanChip" href="../clan/index.html"><span class="ce" id="clanEmb"></span><span class="ct"><b id="clanName">—</b><small id="clanRank">—</small></span><i>›</i></a>
         <a class="arenaChip hidden" id="arenaChip" href="../arena/index.html"><span class="ce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-1-1-3zM3 21l6-6"/></svg></span><span class="ct"><b id="arLeague">—</b><small id="arSub">—</small></span><i>›</i></a>
+        <a class="profChip hidden" id="profChip" href="../bureau/index.html"><span class="ce" id="pfEmb"></span><span class="ct"><b id="pfName">—</b><small id="pfSub">—</small><span class="pfBar"><i id="pfFill"></i></span></span><i class="ar">›</i></a>
       </div>
     </div>
 
@@ -953,6 +959,21 @@ function setPortrait(data) {
 
 const CLAN_EMB=['<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>','<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>','<path d="M5 12a7 7 0 1 1 14 0v3l-2 1v3H7v-3l-2-1z"/><circle cx="9.5" cy="12" r="1.3"/><circle cx="14.5" cy="12" r="1.3"/><path d="M11 17v2M13 17v2"/>','<path d="M3 18c5 0 8-3 9-8l4-4 5 2-3 2 2 2-5 1c-1 4-5 7-12 7z"/>','<circle cx="8" cy="8" r="4"/><path d="M11 11l9 9M16 16l2-2M18 18l2-2"/>','<path d="M12 2l3 10-3 3-3-3z"/><path d="M8 15h8M12 15v7"/>','<path d="M12 22V10M12 15l-5-4M12 13l5-5M12 10L9 5M12 8l4-4"/>','<path d="M12 2c2 3 2 5 0 6-2-1-2-3 0-6zM9 11h6v11H9z"/>'];
 const CLAN_COL=["#a98fd0","#c9a45a","#cdbf9f","#8fb3a6","#d6b779","#d4343f","#6fae92","#e0a050"];
+const PF_D={gather:["Сборщик Тумана","#7fc9b0",'<path d="M4 16c3-1 4-3 8-3s5 2 8 1M5 11c3-1 5-3 7-3s4 1 7 0M8 6c2-1 3-1 5 0"/>'],antiq:["Антиквар Безликих","#ffd98a",'<path d="M8 3h8l-1 4c3 2 4 5 4 8 0 4-3 6-7 6s-7-2-7-6c0-3 1-6 4-8z"/>'],track:["Следопыт Ночи","#ff8a5a",'<path d="M12 3l3 4-3 3-3-3z"/><path d="M5 20l7-9 7 9"/>'],mortician:["Могильный Лекарь","#a98fd0",'<path d="M12 3c-3 0-5 2-5 5 0 2 1 3 2 4v3h6v-3c1-1 2-2 2-4 0-3-2-5-5-5z"/><path d="M9 21v-3h6v3"/>'],relic:["Хранитель Реликвий","#8fb3ff",'<circle cx="8" cy="8" r="4"/><path d="M11 11l9 9"/>']};
+const PF_RK=["Новичок","Ученик","Подмастерье","Знаток","Искусник","Мастер","Старший мастер","Хранитель тайн","Великий мастер","Безликий"];
+function renderProf(data) {
+  const ch = $("profChip"), p = data.prof;
+  if (!ch) return;
+  const d = p && PF_D[p.id];
+  if (!d) { ch.classList.add("hidden"); return; }
+  ch.style.setProperty("--pc", d[1]);
+  $("pfEmb").innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + d[2] + "</svg>";
+  $("pfName").textContent = d[0];
+  $("pfSub").textContent = PF_RK[p.level - 1] + " · " + p.level + "/10";
+  $("pfFill").style.width = (p.level >= 10 ? 100 : Math.min(100, p.xp / p.need * 100)) + "%";
+  ch.href = buildPageUrl("../bureau/index.html");
+  ch.classList.remove("hidden");
+}
 const AR_COL=["#8f8798","#8fb3a6","#a98fd0","#d6b779","#d4343f","#ffd98a"];
 function renderArena(data) {
   const ch = $("arenaChip"), a = data.arena;
@@ -1058,6 +1079,7 @@ async function loadProfile() {
   setPortrait(data);
   try { renderClan(data); } catch (e) {}
   try { renderArena(data); } catch (e) {}
+  try { renderProf(data); } catch (e) {}
   renderSkills(data.path_key || data.path || "");
 }
 
