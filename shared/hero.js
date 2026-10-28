@@ -66,6 +66,19 @@ function start(){
   col+=vec3(1.,.3,.15)*exp(-pow(cd/.03,2.))*(.2+.15*sin(t*.8+1.))*o;
   /* красный отсвет на нижних улицах */
   col+=vec3(.4,.05,.03)*smoothstep(.6,1.,u.y)*(.05+.04*sin(t*.5+u.x*6.))*o;
+  /* звёздные нити света, свисающие сверху по всей сцене */
+  float cx=u.x*ar*11.;float ci=floor(cx);float fx=fract(cx);
+  float hs=h21(vec2(ci,3.7));
+  float pos=.2+.6*h21(vec2(ci,9.1));
+  float strand=exp(-pow((fx-pos)/(.05+.06*hs),2.));
+  float lenf=.28+.42*h21(vec2(ci,5.3));
+  float vf=1.-smoothstep(.0,lenf,u.y);
+  float on=step(.3,hs);
+  float sp=h21(vec2(ci*13.+floor((fx-pos)*46.),floor(u.y*240.)));
+  float tw=.5+.5*sin(t*(1.+sp*2.)+sp*60.);
+  float spark=step(.78,sp)*tw;
+  float behind=.35+.65*smoothstep(.07,.16,L);
+  col+=vec3(1.,.88,.6)*on*vf*behind*(strand*(.07+spark*.95))*o;
   /* блик на облаках */
   float sw=exp(-pow((fract(u.x*.5-t*.02)-.5)/.1,2.));
   col+=vec3(.5,.2,.2)*sw*sky*pow(L,1.5)*.25*o;
@@ -88,7 +101,7 @@ function start(){
  var seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
  var stars=[],i2;for(i2=0;i2<50&&S.length;i2++){var s=S[Math.floor(rnd()*S.length)];stars.push({x:s[0],y:s[1],ph:rnd()*6.28,sp:.5+rnd()*1.3,sz:.5+rnd()*1.1+s[2]*.6})}
  var embers=[],bats=[],sand=[];
- for(i2=0;i2<64;i2++)sand.push({x:rnd(),y:rnd()*.9,v:.012+rnd()*.03,ph:rnd()*6.28,r:.5+rnd()*1.1,l:.01+rnd()*.03});
+ for(i2=0;i2<26;i2++)sand.push({x:rnd(),y:rnd()*.9,v:.012+rnd()*.03,ph:rnd()*6.28,r:.5+rnd()*1.1,l:.01+rnd()*.03});
  for(i2=0;i2<36;i2++)embers.push({life:rnd()*5,max:4,x:rnd(),y:.7,dx:0,v:.04,r:1,ph:rnd()*6});
  for(i2=0;i2<4;i2++)bats.push({x:rnd(),y:.12+rnd()*.35,v:.03+rnd()*.05,ph:rnd()*6,r:.8+rnd()*.7});
  hero.insertBefore(fx,hero.firstChild);hero.insertBefore(gl,hero.firstChild);
