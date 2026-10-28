@@ -270,6 +270,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 </main>
 <div class="bottomNote">Ход боя и награды обрабатываются сервером.<br>Лес не прощает тех, кто торопится.</div>
 </div>
+<script src="../../shared/forestart.js?v=1"></script>
 <script>
 "use strict";
 
@@ -287,15 +288,17 @@ let curEnemy="",handshakePromise=null,busy=false,ended=false,initialized=false,P
 
 const $=id=>document.getElementById(id);
 const skillInfo=LOTM_SKILLS.SK;
+try{ForestArt.attach(document.getElementById("enemyImg"))}catch(_){}
 /* Картинки монстров лежат в forest/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Гриб-спорник":"../img/mushroom.svg",
-"Паук-ткач":"../img/spider.svg",
-"Проклятое дерево":"../img/tree.svg",
-"Шипастый кабан":"../img/boar.svg",
-"Костяной волк":"../img/wolf.svg",
-"Лиса-оборотень":"../img/fox.svg"
+"Гриб-спорник":"../img/mushroom.jpg?v=1",
+"Паук-ткач":"../img/spider.jpg?v=1",
+"Проклятое дерево":"../img/tree.jpg?v=1",
+"Шипастый кабан":"../img/boar.jpg?v=1",
+"Костяной волк":"../img/wolf.jpg?v=1",
+"Лиса-оборотень":"../img/kitsune.jpg?v=1"
 };
+const SHOWN={"Лиса-оборотень":"Кицунэ"};
 const EMO={"Гриб-спорник":"🍄","Паук-ткач":"🕷️","Проклятое дерево":"🌳","Шипастый кабан":"🐗","Костяной волк":"🐺","Лиса-оборотень":"🦊"};
 const ROLE={"Гриб-спорник":"Споровик","Паук-ткач":"Ткач","Проклятое дерево":"Древний страж","Шипастый кабан":"Дикий зверь","Костяной волк":"Нежить","Лиса-оборотень":"Босс"};
 
@@ -539,7 +542,7 @@ $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.s
 function setImageForEnemy(enemy){
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌲";
-const src=(enemy==="Лиса-оборотень"&&$("arena").classList.contains("phase2"))?"../img/fox2.svg":pics[enemy];
+const src=(enemy==="Лиса-оборотень"&&$("arena").classList.contains("phase2"))?"../img/kitsune2.jpg?v=1":pics[enemy];
 if(src){
 img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
 img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
@@ -666,14 +669,14 @@ let state=null;
 try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
 catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
 const enemy=getEnemyName(state?.enemy);curEnemy=enemy;
-$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
+$("enemyLabel").textContent=SHOWN[enemy]||enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
 if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
 else setHealth("enemy",null,null);
 renderSkills(state?.cds||{});
 if(!initialized){
-addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
+addLog("Ты столкнулся с противником: "+(SHOWN[enemy]||enemy)+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 if(state?.boss){
-setMessage("Меж стволов мелькает рыжий хвост. Лиса не нападает сразу: она играет с добычей.","БОСС ЛЕСА","🦊");
+setMessage("Меж стволов мелькает рыжий хвост. Кицунэ не нападает сразу: она играет с добычей.","БОСС ЛЕСА","🦊");
 setTimeout(()=>{banner("БОСС: ЛИСА","#ff8a3c");shakeScreen()},500);
 }
 initialized=true;

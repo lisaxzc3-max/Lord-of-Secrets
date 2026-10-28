@@ -128,6 +128,7 @@ css.textContent=
 document.head.appendChild(css);
 
 function init(){
+ if(INFO["Лиса-оборотень"]&&!INFO["Кицунэ"])INFO["Кицунэ"]=INFO["Лиса-оборотень"];
  var frame=document.getElementById("enemyFrame");
  var label=document.getElementById("enemyLabel");
  if(!frame||!label)return;

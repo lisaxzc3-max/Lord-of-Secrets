@@ -8,79 +8,50 @@
 <title>Лес · Событие</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--panel:rgba(14,24,19,.95);--line:#34503f;--text:#dbe6d8;--muted:#9db89f;--gold:#d6b779;--moss:#7fc58e}
+:root{--line:#34503f;--text:#e4ecdf;--muted:#a9bca7;--gold:#d8c08a;--moss:#8fc99a}
 *{box-sizing:border-box}
-html{min-height:100%;background:#06100b}
-body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:14px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -10%,#2f7a4a40,transparent 55%),linear-gradient(#07130c,#050a07)}
+html{min-height:100%;background:#070b08}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:15px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:#070b08}
 button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}
-.wrap{position:relative;z-index:2;max-width:520px;margin:auto;padding:12px 12px calc(32px + env(safe-area-inset-bottom))}
-.head{display:flex;align-items:center;gap:10px;padding:6px 0 15px}
-.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#0c1a12e8;font-size:12px}
-.eyebrow{font-size:9px;letter-spacing:3px;color:var(--moss)}
-h1{font-size:20px;margin:4px 0 0}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;box-shadow:0 10px 30px #0005;overflow:hidden}
-/* сцена */
-.stage{position:relative;height:200px;margin:13px 13px 0;border:1px solid #2f4a3a;border-radius:13px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#1e4a30,#08130c 75%)}
-.stage .symbol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px;filter:drop-shadow(0 0 22px var(--glow,#7fc58e88));animation:bob 4s ease-in-out infinite}
-.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.body{padding:16px}
-.title{font-size:21px;font-weight:850;margin:0 0 10px}
-.text{font-size:14px;line-height:1.7;color:#cddccb;white-space:pre-wrap;overflow-wrap:anywhere}
-.divider{height:1px;background:linear-gradient(90deg,transparent,#3a5a46,transparent);margin:16px 0}
-.actions{display:grid;gap:8px}
-.action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 12px;border:1px solid #365543;border-radius:12px;color:var(--text);background:linear-gradient(145deg,#1d3427,#122019);cursor:pointer;transition:transform .12s,box-shadow .2s}
-.action:active:not(:disabled){transform:scale(.98);box-shadow:0 0 16px #7fc58e44}
+.vn{position:relative;max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#0a0f0b}
+.art{position:absolute;left:0;right:0;top:0;height:74vh;height:74dvh;max-height:920px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#1c3326,#080d09 75%)}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.art .symbol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:90px;opacity:.8}
+.art:before{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;z-index:3;background:linear-gradient(transparent,#0a0f0b);pointer-events:none}
+.art.fx:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;animation:flash 1.1s ease-out forwards}
+.art.fx-heal:after{background:radial-gradient(circle,#7be3a066,transparent 70%)}
+.art.fx-hurt:after{background:radial-gradient(circle,transparent 35%,#b2262f99)}
+.art.fx-mad:after{background:radial-gradient(circle,#9a5fff66,transparent 70%)}
+.art.fx-poison:after{background:radial-gradient(circle,#6dff7a55,transparent 70%)}
+.art.fx-rune:after{background:radial-gradient(circle,#d8c08a77,transparent 70%)}
+.art.fx-calm:after{background:radial-gradient(circle,#ffffff14,transparent 70%)}
+@keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.back{position:absolute;z-index:6;top:calc(10px + env(safe-area-inset-top));left:10px;color:var(--text);text-decoration:none;border:1px solid #ffffff22;border-radius:10px;padding:8px 11px;background:#0a0f0bb0;font-size:12px}
+.panel{position:relative;z-index:4;padding:90px 14px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#0a0f0bd9 34%,#0a0f0bf2)}
+.tag{display:inline-block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid #d8c08a55;background:#0d140fe0;border-radius:8px;padding:5px 10px;margin:0 0 -1px 4px;position:relative;z-index:2}
+.box{position:relative;border:1px solid #3a5545;border-radius:14px;background:#0c130ee8;padding:15px 15px 18px;min-height:108px;cursor:pointer;box-shadow:0 10px 28px #0007}
+.text{font-size:15px;line-height:1.72;color:#e2ebdd;white-space:pre-wrap;overflow-wrap:anywhere}
+.text .ghost{opacity:0}
+.tap{position:absolute;right:13px;bottom:8px;color:var(--gold);font-size:14px;animation:tap 1.2s ease-in-out infinite}
+@keyframes tap{50%{transform:translateY(3px);opacity:.5}}
+.actions{display:grid;gap:8px;margin-top:12px}
+.action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 13px;border:1px solid #46614f;border-left:3px solid var(--gold);border-radius:11px;color:var(--text);background:#101a13ee;cursor:pointer;transition:transform .12s,background .2s;animation:rise .45s backwards}
+.action:active:not(:disabled){transform:scale(.985);background:#17261c}
 .action:disabled{opacity:.5}
-.arrow{margin-left:auto;color:var(--gold);font-size:21px}
-.aName{font-size:13px;font-weight:800;line-height:1.4}
-.btn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 10px;background:#17261d;color:var(--text);font-weight:800;font-size:13px;cursor:pointer;margin-top:10px}
-.btn.primary{color:#0d1a11;background:linear-gradient(135deg,#a8e0b0,#5fa971);border-color:#8fd29a}
-.result{padding:16px;border-color:#4f7a5c;background:linear-gradient(155deg,#16301fF5,#0b130ef5)}
-.result.bad{border-color:#7a3b42;background:linear-gradient(155deg,#341920f5,#120d0ff5)}
-.badge{font-size:10px;letter-spacing:3px;color:var(--moss);margin-bottom:8px}
-.rgrid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}
-.rchip{font-weight:850;font-size:14px;padding:7px 11px;border-radius:10px;border:1px solid #4a4147;background:#1b1f1b;animation:pop .5s backwards}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.arrow{margin-left:auto;margin-right:30px;color:var(--gold);font-size:21px}
+.aName{font-size:13.5px;font-weight:700;line-height:1.4}
+.rgrid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.rchip{font-weight:850;font-size:14px;padding:7px 11px;border-radius:10px;border:1px solid #4a4147;background:#161b17e8;animation:pop .5s backwards}
 .rchip.up{color:#8ff0aa;border-color:#3f7a52}.rchip.down{color:#ff8a92;border-color:#7a3b42}.rchip.mad{color:#c9a8ff;border-color:#62487f}
 @keyframes pop{from{opacity:0;transform:scale(.4)}}
+.btn{display:block;width:100%;border:1px solid #46614f;border-radius:11px;padding:13px 10px;background:#121d16ee;color:var(--text);font-weight:800;font-size:13px;cursor:pointer;margin-top:9px;animation:rise .45s backwards}
+.btn.primary{color:#0d1a11;background:linear-gradient(135deg,#b4e3bb,#6bb07b);border-color:#8fd29a}
 .hidden{display:none!important}
-.err{padding:13px;border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.6}
-/* ---- эффекты событий ---- */
-.glitch{animation:glitch 1.6s steps(2,end) infinite}
-@keyframes glitch{0%,90%,100%{transform:none;text-shadow:none}92%{transform:translateX(-2px);text-shadow:2px 0 #f0f,-2px 0 #0ff}95%{transform:translateX(2px);text-shadow:-2px 0 #f0f,2px 0 #0ff}}
-.eye{position:absolute;width:20px;height:7px;opacity:0;animation:eye var(--t,6s) ease-in-out var(--d,0s) infinite}
-.eye:before,.eye:after{content:"";position:absolute;top:0;width:7px;height:7px;border-radius:50%;background:#ffd24a;box-shadow:0 0 8px 2px #ffb300aa}
-.eye:before{left:0}.eye:after{right:0}
-@keyframes eye{0%,35%,100%{opacity:0}42%,58%{opacity:1}50%{opacity:.1}}
-.spore{position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;background:radial-gradient(#e4ffb0,#6fff8a88);box-shadow:0 0 10px 3px #8fff9a66;animation:spore var(--t) linear var(--d) infinite}
-@keyframes spore{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),-220px);opacity:0}}
-.ring{position:absolute;left:50%;top:62%;width:150px;height:46px;margin:-23px 0 0 -75px;border-radius:50%;border:2px dashed #cfe8c8;box-shadow:0 0 22px #bfe8c088,inset 0 0 22px #bfe8c055;animation:ringP 2.4s ease-in-out infinite}
-@keyframes ringP{50%{transform:scale(1.12);opacity:.6}}
-.fire{position:absolute;left:50%;bottom:16px;font-size:34px;transform:translateX(-50%);animation:fire .5s ease-in-out infinite alternate}
-@keyframes fire{from{transform:translateX(-50%) scale(1);filter:drop-shadow(0 0 10px #ff9a3a)}to{transform:translateX(-50%) scale(1.15) rotate(3deg);filter:drop-shadow(0 0 22px #ff6a1a)}}
-.paw{position:absolute;font-size:22px;opacity:0;animation:pawIn .6s ease-out forwards}
-@keyframes pawIn{from{opacity:0;transform:scale(.3)}to{opacity:.75;transform:scale(1) rotate(var(--r))}}
-.rune{position:absolute;font-size:22px;color:#ffd27a;text-shadow:0 0 10px #ff9a3a;opacity:0;animation:rune 3s ease-in-out var(--d) infinite}
-@keyframes rune{0%,100%{opacity:0}50%{opacity:1}}
-.loopbar{animation:loop 1.4s linear infinite}
-@keyframes loop{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.crow{position:absolute;top:var(--y);font-size:20px;animation:crow 7s linear var(--d) infinite}
-@keyframes crow{from{transform:translateX(-30px)}to{transform:translateX(420px)}}
-.page{position:absolute;right:16px;bottom:12px;font-size:30px;animation:page 1.8s ease-in-out infinite;transform-origin:left center}
-@keyframes page{0%,100%{transform:rotateY(0)}50%{transform:rotateY(-70deg)}}
-/* реакция на выбор */
-.fx-heal:after,.fx-hurt:after,.fx-mad:after,.fx-poison:after,.fx-rune:after,.fx-calm:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;animation:flash 1.1s ease-out forwards}
-.fx-heal:after{background:radial-gradient(circle,#7be3a0aa,transparent 70%)}
-.fx-hurt:after{background:radial-gradient(circle,transparent 30%,#c4252fcc)}
-.fx-mad:after{background:radial-gradient(circle,#9a5fffaa,transparent 70%)}
-.fx-poison:after{background:radial-gradient(circle,#6dff7a88,transparent 70%)}
-.fx-rune:after{background:radial-gradient(circle,#ffd27acc,transparent 70%)}
-.fx-calm:after{background:radial-gradient(circle,#ffffff22,transparent 70%)}
-@keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.err{margin:0 0 10px;padding:13px;border:1px solid #783b42;border-radius:12px;background:#2a1215ee;color:#f0b3b3;font-size:12.5px;line-height:1.6}
 .shake{animation:shk .5s}
 @keyframes shk{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.art.fx:after{display:none}*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 <script src="../../shared/fast.js"></script>
 <script src="../../shared/auth.js"></script>
@@ -88,35 +59,26 @@ h1{font-size:20px;margin:4px 0 0}
 <script>sndMusic("forest")</script>
 </head>
 <body>
-<div class="wrap">
-<header class="head">
+<div class="vn" id="vn">
+ <div class="art" id="art"><div class="symbol" id="symbol">🌲</div><img id="evImg" class="hidden" alt=""></div>
  <a class="back" id="backForest" href="../index.html">← Лес</a>
- <div><div class="eyebrow">LORD OF THE MYSTERIES</div><h1 id="hTitle">Событие</h1></div>
-</header>
-<main>
- <section class="card" id="sceneCard">
-  <div class="stage" id="stage"><div class="symbol" id="symbol">🌲</div><img id="evImg" class="hidden" alt=""><div class="layer" id="layer"></div></div>
-  <div class="body">
-   <h2 class="title" id="evTitle">Лес</h2>
-   <div class="text" id="evText">Загрузка…</div>
-   <div class="divider"></div>
-   <div class="actions" id="actions"></div>
-  </div>
- </section>
- <section class="card result hidden" id="resultCard">
-  <div class="badge">◆ ПОСЛЕДСТВИЯ ◆</div>
-  <div class="text" id="resText"></div>
+ <div class="panel">
+  <div class="err hidden" id="errCard" role="alert"><div id="errText"></div><button class="btn" id="errBack" type="button">← В лес</button></div>
+  <div class="tag" id="evTitle">Лес</div>
+  <div class="box" id="box"><div class="text" id="evText">Загрузка…</div><span class="tap hidden" id="tap">▾</span></div>
   <div class="rgrid" id="rgrid"></div>
-  <button class="btn primary" id="again" type="button">🔍 Исследовать дальше</button>
-  <button class="btn" id="toForest" type="button">← В лес</button>
- </section>
- <section class="card err hidden" id="errCard" role="alert"><div id="errText"></div><button class="btn" id="errBack" type="button">← В лес</button></section>
-</main>
+  <div class="actions" id="actions"></div>
+  <div class="hidden" id="endBtns">
+   <button class="btn primary" id="again" type="button">🔍 Исследовать дальше</button>
+   <button class="btn" id="toForest" type="button">← В лес</button>
+  </div>
+ </div>
 </div>
+<script src="../../shared/forestart.js?v=1"></script>
 <script>
 "use strict";
 const tg=window.Telegram?.WebApp||null;
-try{tg?.ready();tg?.expand();tg?.setHeaderColor("#06100b")}catch(_){}
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0a0f0b")}catch(_){}
 const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
@@ -125,19 +87,18 @@ let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURI
 const $=id=>document.getElementById(id);
 let busy=false,done=false,ev=null,evKey="";
 const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
-const rnd=(a,b)=>a+Math.random()*(b-a);
 
-/* Картинки событий лежат в forest/img. Чтобы заменить на фото, поменяй путь. */
+/* Картинки событий лежат в forest/img. Чтобы заменить, поменяй путь. */
 const META={
-whisper:{t:"🌲 Шёпот между деревьями",s:"👁️",glow:"#b9a0ff88"},
-ring:{t:"🍄 Ведьмино кольцо",s:"🍄",glow:"#bfffa088"},
-hut:{t:"🛖 Хижина лесной ведьмы",s:"🛖",glow:"#ff9a3a88"},
-tracks:{t:"🦊 Рыжий след",s:"🐾",glow:"#ff8a3c88"},
-altar:{t:"🗿 Алтарь без имени",s:"🗿",glow:"#ffd27a99"},
-loop:{t:"🌀 Тропа без возврата",s:"🧭",glow:"#7aa8ff88"},
-hunter:{t:"💀 Мёртвый охотник",s:"💀",glow:"#c9c9c988"}
+whisper:{t:"Шёпот между деревьями",s:"👁️"},
+ring:{t:"Ведьмино кольцо",s:"🍄"},
+hut:{t:"Хижина лесной ведьмы",s:"🛖"},
+tracks:{t:"Рыжий след",s:"🐾"},
+altar:{t:"Алтарь без имени",s:"🗿"},
+loop:{t:"Тропа без возврата",s:"🧭"},
+hunter:{t:"Мёртвый охотник",s:"💀"}
 };
-const IMG={whisper:"../img/whisper.svg",ring:"../img/ring.svg",hut:"../img/hut.svg",tracks:"../img/tracks.svg",altar:"../img/altar.svg",loop:"../img/loop.svg",hunter:"../img/hunter.svg"};
+const IMG={};["whisper","ring","hut","tracks","altar","loop","hunter"].forEach(k=>IMG[k]="../img/"+k+".jpg?v=1");
 const ICON={f_whisper_listen:"👂",f_whisper_plug:"🙉",f_whisper_answer:"🗣",f_ring_enter:"🍄",f_ring_skip:"↩",f_hut_potion:"🧪",f_hut_fortune:"🔮",f_hut_leave:"↩",f_tracks_study:"🔍",f_tracks_erase:"🧹",f_altar_money:"💷",f_altar_blood:"🩸",f_altar_leave:"↩",f_loop_exit:"🧭",f_loop_straight:"➡",f_loop_mark:"🪓",f_hunter_diary:"📖",f_hunter_bag:"🎒",f_hunter_pray:"🙏"};
 
 function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
@@ -161,92 +122,86 @@ function forestUrl(){const p=new URLSearchParams(location.search);p.delete("even
 function goForest(){location.href=forestUrl()}
 $("backForest").href=forestUrl();
 function showErr(t){$("errText").textContent=t;$("errCard").classList.remove("hidden")}
-function mk(cls,css,txt){const d=document.createElement("i");d.className=cls;if(css)for(const k in css)d.style.setProperty(k,css[k]);if(txt)d.textContent=txt;$("layer").appendChild(d);return d}
 
-/* ---- сцены (у каждого события свои эффекты) ---- */
-function buildScene(k){
- const L=$("layer");L.replaceChildren();
- $("stage").style.setProperty("--glow",META[k]?.glow||"#7fc58e88");
- if(reduce)return;
- if(k==="whisper"){
-  for(let i=0;i<9;i++)mk("eye",{left:rnd(4,88)+"%",top:rnd(6,70)+"%","--t":rnd(4,8)+"s","--d":rnd(-6,0)+"s"});
-  $("symbol").classList.add("glitch");
- }else if(k==="ring"){
-  mk("ring");
-  for(let i=0;i<18;i++)mk("spore",{left:rnd(12,88)+"%","--x":rnd(-40,40)+"px","--t":rnd(3,6)+"s","--d":rnd(-5,0)+"s"});
- }else if(k==="hut"){
-  mk("fire",null,"🔥");
-  for(let i=0;i<8;i++)mk("spore",{left:rnd(35,65)+"%","--x":rnd(-30,30)+"px","--t":rnd(2.5,4.5)+"s","--d":rnd(-4,0)+"s",background:"radial-gradient(#ffd9a0,#ff8a3a88)"});
- }else if(k==="tracks"){
-  for(let i=0;i<6;i++){const p=mk("paw",{left:(10+i*14)+"%",top:(70-(i%2)*18)+"%","--r":(i%2?12:-12)+"deg","animation-delay":(i*.35)+"s"},"🐾")}
- }else if(k==="altar"){
-  ["ᚠ","ᚱ","ᛟ","ᛉ","ᚦ","ᛞ"].forEach((r,i)=>mk("rune",{left:rnd(8,86)+"%",top:rnd(8,70)+"%","--d":(i*.5)+"s"},r));
- }else if(k==="loop"){
-  $("symbol").classList.add("loopbar");
- }else if(k==="hunter"){
-  for(let i=0;i<4;i++)mk("crow",{"--y":rnd(4,40)+"%","--d":rnd(-7,0)+"s"},"🐦‍⬛");
-  mk("page",null,"📖");
- }
+
+/* ---- визуальная новелла: текст печатается поверх арта ---- */
+let typer=null,typeDone=null;
+function typeText(txt,after){
+ const el=$("evText");clearInterval(typer);typeDone=null;
+ $("tap").classList.add("hidden");
+ txt=String(txt||"");
+ const fin=()=>{clearInterval(typer);typer=null;el.textContent=txt;$("tap").classList.add("hidden");typeDone=null;if(after)after()};
+ if(reduce||!txt){fin();return}
+ /* невидимый хвост держит высоту блока, текст не прыгает */
+ const a=document.createElement("span"),b=document.createElement("span");b.className="ghost";
+ el.replaceChildren(a,b);let i=0;const step=Math.max(1,Math.ceil(txt.length/110));
+ a.textContent="";b.textContent=txt;
+ typer=setInterval(()=>{i=Math.min(txt.length,i+step);a.textContent=txt.slice(0,i);b.textContent=txt.slice(i);if(i>=txt.length)fin()},26);
+ typeDone=fin;$("tap").classList.remove("hidden");
 }
+$("box").addEventListener("click",()=>{if(typeDone)typeDone()});
+function showActions(on){const b=$("actions");b.classList.toggle("hidden",!on)}
 function setImage(k){
  const src=IMG[k];const img=$("evImg");
  if(!src){img.classList.add("hidden");return}
- img.onload=()=>{img.classList.remove("hidden");$("symbol").classList.add("hidden")};
+ img.onload=()=>{img.classList.remove("hidden");$("symbol").classList.add("hidden");try{ForestArt.attach(img)}catch(_){}};
  img.onerror=()=>img.classList.add("hidden");
  img.src=src;
 }
 function renderEvent(d){
  ev=d;evKey=String(d.event||d.image||"");
- const m=META[evKey]||{t:"🌲 Событие в лесу",s:"🌲"};
- $("evTitle").textContent=m.t;$("hTitle").textContent="Лес · Событие";
+ const m=META[evKey]||{t:"Событие в лесу",s:"🌲"};
+ $("evTitle").textContent=m.t;
  $("symbol").textContent=m.s;
- $("evText").textContent=d.text||"Ты замечаешь движение между деревьями.";
- buildScene(evKey);setImage(evKey);
+ setImage(evKey);
  const box=$("actions");box.replaceChildren();
  const acts=Array.isArray(d.actions)?d.actions:[];
- if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← В лес";b.onclick=goForest;box.appendChild(b);return}
- acts.forEach(a=>{
-  const b=document.createElement("button");b.type="button";b.className="action";
-  const ic=document.createElement("span");ic.style.fontSize="20px";ic.textContent=ICON[a.id]||"•";
-  const nm=document.createElement("span");nm.className="aName";nm.textContent=String(a.label||a.id).replace(/^\S+\s/,"")||a.label;
-  const ar=document.createElement("span");ar.className="arrow";ar.textContent="›";
-  b.append(ic,nm,ar);b.addEventListener("click",()=>choose(a.id));box.appendChild(b);
- });
+ const build=()=>{
+  if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← В лес";b.onclick=goForest;box.appendChild(b);return}
+  acts.forEach((a,i)=>{
+   const b=document.createElement("button");b.type="button";b.className="action";b.style.animationDelay=(i*.08)+"s";
+   const ic=document.createElement("span");ic.style.fontSize="20px";ic.textContent=ICON[a.id]||"•";
+   const nm=document.createElement("span");nm.className="aName";nm.textContent=String(a.label||a.id).replace(/^\S+\s/,"")||a.label;
+   const ar=document.createElement("span");ar.className="arrow";ar.textContent="›";
+   b.append(ic,nm,ar);b.addEventListener("click",()=>choose(a.id));box.appendChild(b);
+  });
+  setTimeout(()=>box.lastElementChild?.scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),60);
+ };
+ typeText(d.text||"Ты замечаешь движение между деревьями.",build);
 }
+function setBtns(dis){document.querySelectorAll("#actions button").forEach(b=>b.disabled=dis)}
 async function choose(id){
- if(busy||done)return;busy=true;
- document.querySelectorAll("#actions button").forEach(b=>b.disabled=true);
+ if(busy||done)return;busy=true;setBtns(true);
  try{
   const r=await api({action:"event_choice",move:id});
   if(r.ok===false||r.error){
    const t=String(r.error||r.text||"Сервер не принял выбор.");
-   showErr(t==="unknown_event_move"?"Это событие уже закончилось.":t);
-   document.querySelectorAll("#actions button").forEach(b=>b.disabled=false);
-   return;
+   showErr(t==="unknown_event_move"?"Это событие уже закончилось.":t);setBtns(false);return;
   }
   done=true;showResult(r);
- }catch(e){showErr(e.message||"Ошибка связи.");document.querySelectorAll("#actions button").forEach(b=>b.disabled=false)}
+ }catch(e){showErr(e.message||"Ошибка связи.");setBtns(false)}
  finally{busy=false}
 }
 function showResult(r){
  const fx=r.fx||"calm";
  snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
- const st=$("stage");st.classList.remove("fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx-"+fx);
- if(fx==="hurt"||fx==="poison"){$("sceneCard").classList.add("shake");setTimeout(()=>$("sceneCard").classList.remove("shake"),520)}
+ const st=$("art");st.classList.remove("fx","fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx","fx-"+fx);
+ if(fx==="hurt"||fx==="poison"){$("vn").classList.add("shake");setTimeout(()=>$("vn").classList.remove("shake"),520)}
  try{tg?.HapticFeedback?.notificationOccurred(fx==="hurt"||fx==="poison"?"error":"success")}catch(_){}
- $("evText").textContent=r.text||"Твой выбор изменил ход событий.";
- $("actions").replaceChildren();
- $("resText").textContent="";
+ $("actions").replaceChildren();$("errCard").classList.add("hidden");
+ $("evTitle").textContent="Последствия";
  const g=$("rgrid");g.replaceChildren();
  const chip=(txt,cls,i)=>{const c=document.createElement("span");c.className="rchip "+cls;c.textContent=txt;c.style.animationDelay=(i*.12)+"s";g.appendChild(c)};
- let i=0;
- if(r.d_hp)chip((r.d_hp>0?"+":"")+r.d_hp+" ❤️",r.d_hp>0?"up":"down",i++);
- if(r.d_pounds)chip((r.d_pounds>0?"+":"")+r.d_pounds+" £",r.d_pounds>0?"up":"down",i++);
- if(r.d_mad)chip((r.d_mad>0?"+":"")+r.d_mad+" 🌀",r.d_mad>0?"mad":"up",i++);
- if(typeof r.tracks==="number"&&r.tracks>0&&/f_tracks_study|f_hunter_diary/.test(r.event||""))chip("🐾 "+r.tracks+"/3",r.tracks>=3?"up":"mad",i++);
- $("resultCard").classList.toggle("bad",fx==="hurt"||fx==="poison");
- $("resultCard").classList.remove("hidden");
- setTimeout(()=>$("resultCard").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),150);
+ const finish=()=>{
+  let i=0;
+  if(r.d_hp)chip((r.d_hp>0?"+":"")+r.d_hp+" ❤️",r.d_hp>0?"up":"down",i++);
+  if(r.d_pounds)chip((r.d_pounds>0?"+":"")+r.d_pounds+" £",r.d_pounds>0?"up":"down",i++);
+  if(r.d_mad)chip((r.d_mad>0?"+":"")+r.d_mad+" 🌀",r.d_mad>0?"mad":"up",i++);
+  if(typeof r.tracks==="number"&&r.tracks>0&&/f_tracks_study|f_hunter_diary/.test(r.event||""))chip("🐾 "+r.tracks+"/3",r.tracks>=3?"up":"mad",i++);
+  $("endBtns").classList.remove("hidden");
+  setTimeout(()=>$("endBtns").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),80);
+ };
+ typeText(r.text||"Твой выбор изменил ход событий.",finish);
 }
 $("toForest").addEventListener("click",goForest);
 $("errBack").addEventListener("click",goForest);
@@ -264,11 +219,10 @@ $("again").addEventListener("click",async()=>{
 });
 (function init(){
  const raw=qs.get("event_data");
- if(!raw){$("evTitle").textContent="Событие не найдено";$("evText").textContent="Вернись в лес и нажми «Исследовать лес».";
-  const b=document.createElement("button");b.className="btn primary";b.textContent="← В лес";b.onclick=goForest;$("actions").appendChild(b);return}
+ const toForestBtn=()=>{const b=document.createElement("button");b.className="btn primary";b.textContent="← В лес";b.onclick=goForest;$("actions").appendChild(b)};
+ if(!raw){$("evTitle").textContent="Событие не найдено";$("evText").textContent="Вернись в лес и нажми «Исследовать лес».";toForestBtn();return}
  try{const d=unwrap(JSON.parse(raw));if(!d||typeof d!=="object")throw 0;renderEvent(d)}
- catch(_){$("evTitle").textContent="Не удалось прочитать событие";$("evText").textContent="Данные повреждены. Вернись в лес и начни заново.";
-  const b=document.createElement("button");b.className="btn primary";b.textContent="← В лес";b.onclick=goForest;$("actions").appendChild(b)}
+ catch(_){$("evTitle").textContent="Не удалось прочитать событие";$("evText").textContent="Данные повреждены. Вернись в лес и начни заново.";toForestBtn()}
 })();
 </script>
 <script src="../../shared/icons.js?v=i1"></script>
