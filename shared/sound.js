@@ -175,7 +175,7 @@ try{f(ctx.currentTime+(delay||0)+0.01)}catch(e){}
 var SC={
 city:{root:38,scale:[0,3,5,7,8,12],pad:[[0,7,12],[-4,3,8],[-2,5,10]],bpm:28,bell:0.22,heart:0.15,whisp:0.2,dis:0.15,wind:1,water:0,drum:0,vol:1},
 calm:{root:38,scale:[0,3,5,7,10,12],pad:[[0,7,12],[-5,2,7]],bpm:26,bell:0.2,heart:0,whisp:0.15,dis:0.1,wind:1,water:0,drum:0,vol:0.85},
-tingen:{root:38,scale:[0,2,3,7,8,12],pad:[[0,7,15],[-4,3,8],[-2,5,10],[-5,2,7]],bpm:34,bell:0.25,heart:0.12,whisp:0.25,dis:0.12,wind:1,water:0,drum:0,vol:1,choir:1,mel:[0,null,3,null,7,null,5,3,null,2,null,null,0,null,null,null,3,null,7,null,10,null,8,7,null,5,null,3,null,null,null,null]},
+tingen:{root:38,scale:[0,2,3,7,8,12],pad:[[0,7,15],[-4,3,8],[-2,5,10],[-5,2,7]],bpm:30,bell:0.12,heart:0,whisp:0,dis:0,wind:0,water:0,drum:0,vol:1,choir:1,mel:[0,null,3,null,7,null,5,3,null,2,null,null,0,null,null,null,3,null,7,null,10,null,8,7,null,5,null,3,null,null,null,null]},
 lake:{root:34,scale:[0,1,3,7,8,12],pad:[[0,7,10],[-2,5,8],[1,6,10]],bpm:24,bell:0.3,heart:0.25,whisp:0.3,dis:0.25,wind:0,water:1,drum:0,vol:1},
 forest:{root:36,scale:[0,1,3,6,7,10],pad:[[0,7,12],[-4,3,7],[1,6,13]],bpm:22,bell:0.18,heart:0.3,whisp:0.35,dis:0.3,wind:1,water:0,drum:0,vol:1},
 pets:{root:40,scale:[0,3,5,7,10,12],pad:[[0,7,12],[-4,3,8],[-2,5,9]],bpm:28,bell:0.25,heart:0,whisp:0.15,dis:0.1,wind:0,water:0,drum:0,vol:0.85},
@@ -235,22 +235,18 @@ if(Math.random()<(c.whisp||0)){var t=ctx.currentTime+0.2;noise(t,3.2,0.045*c.vol
 every(beat*3,function(){
 if(Math.random()<(c.heart||0)){var t=ctx.currentTime+0.05;osc("sine",72,t,0.2,0.2,{to:38,out:out});osc("sine",64,t+0.3,0.22,0.15,{to:34,out:out})}
 });
-/* хор «а-а-а» и музыкальная шкатулка (тема главной) */
+/* лёгкий хор «а-а-а» и музыкальная шкатулка (тема главной) */
 if(c.choir){
 var chI=0;
 every(beat*8,function(){
 var ch=c.pad[chI++%c.pad.length],t=ctx.currentTime+0.1,len=beat*8/1000*1.1;
-ch.forEach(function(iv,k){
-[0.992,1,1.008].forEach(function(dt){
-var o=ctx.createOscillator(),g=ctx.createGain(),f1=ctx.createBiquadFilter(),f2=ctx.createBiquadFilter(),vb=ctx.createOscillator(),vg=ctx.createGain();
-o.type="sawtooth";o.frequency.value=N(c.root+12+iv)*dt;
-vb.frequency.value=4.6+k*0.3;vg.gain.value=N(c.root+12+iv)*0.006;vb.connect(vg);vg.connect(o.frequency);
-f1.type="bandpass";f1.frequency.value=720;f1.Q.value=5;f2.type="bandpass";f2.frequency.value=1150;f2.Q.value=6;
-g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.05*c.vol,t+len*0.45);g.gain.linearRampToValueAtTime(0.0001,t+len);
-o.connect(f1);o.connect(f2);f1.connect(g);f2.connect(g);g.connect(out);
-if(rev){var w=ctx.createGain();w.gain.value=0.7;g.connect(w);w.connect(rev)}
-o.start(t);vb.start(t);o.stop(t+len+0.1);vb.stop(t+len+0.1);
-});
+ch.forEach(function(iv){
+var o=ctx.createOscillator(),g=ctx.createGain(),f1=ctx.createBiquadFilter();
+o.type="sawtooth";o.frequency.value=N(c.root+12+iv);
+f1.type="bandpass";f1.frequency.value=900;f1.Q.value=2;
+g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(0.07*c.vol,t+len*0.45);g.gain.linearRampToValueAtTime(0.0001,t+len);
+o.connect(f1);f1.connect(g);g.connect(out);
+o.start(t);o.stop(t+len+0.1);
 });
 });
 }
@@ -259,10 +255,9 @@ var mi=0;
 every(beat,function(){
 var d=c.mel[mi++%c.mel.length];
 if(d===null||d===undefined)return;
-var m=c.root+24+(typeof d==="number"?c.scale.indexOf(d)>=0?d:d:0),t=ctx.currentTime+0.02;
-osc("sine",N(m),t,2.8,0.055*c.vol,{out:out,wet:0.8,attack:0.01});
-osc("sine",N(m)*2,t,1.2,0.02*c.vol,{out:out,wet:0.8,attack:0.01});
-osc("triangle",N(m)*3.01,t,0.5,0.008*c.vol,{out:out,wet:0.8,attack:0.005});
+var m=c.root+24+d,t=ctx.currentTime+0.02;
+osc("sine",N(m),t,2.2,0.06*c.vol,{out:out,wet:0.6,attack:0.01});
+osc("sine",N(m)*2,t,0.8,0.02*c.vol,{out:out,wet:0.6,attack:0.01});
 });
 }
 /* ритм боя */
