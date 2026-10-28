@@ -572,22 +572,6 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
   <section class="hero" id="hero">
   </section>
 
-  <section class="orbs">
-    <div class="orbCol">
-      <div class="hg hpOrb" id="orbHp"><svg viewBox="0 0 64 96" aria-hidden="true"><defs><linearGradient id="sghpOrb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient><clipPath id="cphpOrb"><path d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/></clipPath></defs><path class="glassP" d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/><g clip-path="url(#cphpOrb)"><rect class="sandT" x="12" y="12" width="40" height="36" fill="url(#sghpOrb)"/><rect class="sandB" x="12" y="48" width="40" height="36" fill="url(#sghpOrb)"/><line class="stream" x1="32" y1="46" x2="32" y2="82"/><circle class="grain" cx="32" cy="50" r=".9"/><circle class="grain" cx="32" cy="50" r=".8"/><circle class="grain" cx="32" cy="50" r=".9"/></g><path class="shine" d="M19 18C19 28 25 34 28 40"/><path class="shine" d="M45 70C45 76 44 79 43 81" stroke-opacity=".6"/><rect class="cap" x="9" y="6" width="46" height="6" rx="2"/><rect class="cap" x="9" y="84" width="46" height="6" rx="2"/><circle class="mote" cx="22" cy="36" r="1"/><circle class="mote" cx="42" cy="40" r="1"/><circle class="mote" cx="32" cy="30" r=".9"/></svg></div>
-      <b class="hgTxt" id="orbHpTxt">—</b>
-      <label>Здоровье</label>
-    </div>
-    <div class="orbCol mid">
-      <div class="lvBadge"><i></i><i></i><b id="orbLv">—</b></div>
-      <label id="orbPath">Путь</label>
-    </div>
-    <div class="orbCol">
-      <div class="hg madOrb" id="orbMad"><svg viewBox="0 0 64 96" aria-hidden="true"><defs><linearGradient id="sgmadOrb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--s1)"/><stop offset="1" stop-color="var(--s2)"/></linearGradient><clipPath id="cpmadOrb"><path d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/></clipPath></defs><path class="glassP" d="M14 12H50C50 31 36 40 34 48C36 56 50 65 50 84H14C14 65 28 56 30 48C28 40 14 31 14 12Z"/><g clip-path="url(#cpmadOrb)"><rect class="sandT" x="12" y="12" width="40" height="36" fill="url(#sgmadOrb)"/><rect class="sandB" x="12" y="48" width="40" height="36" fill="url(#sgmadOrb)"/><line class="stream" x1="32" y1="46" x2="32" y2="82"/><circle class="grain" cx="32" cy="50" r=".9"/><circle class="grain" cx="32" cy="50" r=".8"/><circle class="grain" cx="32" cy="50" r=".9"/></g><path class="shine" d="M19 18C19 28 25 34 28 40"/><path class="shine" d="M45 70C45 76 44 79 43 81" stroke-opacity=".6"/><rect class="cap" x="9" y="6" width="46" height="6" rx="2"/><rect class="cap" x="9" y="84" width="46" height="6" rx="2"/><circle class="mote" cx="22" cy="36" r="1"/><circle class="mote" cx="42" cy="40" r="1"/><circle class="mote" cx="32" cy="30" r=".9"/></svg></div>
-      <b class="hgTxt" id="orbMadTxt">—</b>
-      <label>Безумие</label>
-    </div>
-  </section>
 
   <button type="button" class="cta" id="ctaGo" onclick="goLast()"><span class="ctaIc">⚔</span><span class="ctaTx" id="ctaTx">Отправиться в поход</span><span class="ctaSh"></span></button>
 
@@ -735,16 +719,7 @@ document.getElementById("topCard").classList.toggle("low",b>0&&a/b<=.25);
 var $=function(id){return document.getElementById(id)};
 function num(t){var n=parseFloat(String(t).replace(",","."));return isFinite(n)?n:null}
 
-/* шары здоровья и безумия, значок уровня */
-function syncHud(){
-var m=$("hp").textContent.split("/"),a=num(m[0]),b=num(m[1]);
-if(a!=null&&b){var f=Math.max(0,Math.min(100,a/b*100));$("orbHp").style.setProperty("--fn",(f/100).toFixed(3));$("orbHp").classList.toggle("run",f>1&&f<99);$("orbHpTxt").textContent=a+"/"+b;$("orbHp").classList.toggle("low",f<=25)}
-var md=num($("madTxt").textContent);
-if(md!=null){var mf=Math.max(0,Math.min(100,md/(window.MADMAX||100)*100));$("orbMad").style.setProperty("--fn",(mf/100).toFixed(3));$("orbMad").classList.toggle("run",mf>1&&mf<99);$("orbMadTxt").textContent=Math.round(md)+"%"}
-$("orbLv").textContent=$("lvl").textContent;
-var pt=$("path").textContent;$("orbPath").textContent=pt&&pt!=="—"?pt:"Путь";
-}
-["hp","madTxt","lvl","path"].forEach(function(id){watch(id,syncHud)});syncHud();
+
 
 /* всплывающие +N и новый уровень */
 function gain(id,txt,color){
