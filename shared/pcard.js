@@ -14,18 +14,18 @@ var css=document.createElement("style");
 css.textContent=
 "#pcBack{position:fixed;inset:0;z-index:9800;display:flex;align-items:flex-end;justify-content:center;background:#05030acc;backdrop-filter:blur(3px);opacity:0;transition:opacity .25s}"+
 "#pcBack.on{opacity:1}"+
-"#pcBox{position:relative;width:100%;max-width:420px;margin:0 8px calc(10px + env(safe-area-inset-bottom));padding:22px 18px 16px;border-radius:20px;border:1px solid #6a58a0;background:linear-gradient(180deg,#221836,#0e0918);color:#e8dcc4;font-family:Georgia,serif;text-align:center;overflow:hidden;transform:translateY(24px);transition:transform .3s cubic-bezier(.2,.9,.3,1)}"+
+"#pcBox{position:relative;width:100%;max-width:420px;margin:0 8px calc(10px + env(safe-area-inset-bottom));padding:22px 18px 16px;border-radius:20px;border:1px solid #6a58a0;background:linear-gradient(180deg,#221836,#0e0918);color:#e8dcc4;font-family:Philosopher,Georgia,serif;text-align:center;overflow:hidden;transform:translateY(24px);transition:transform .3s cubic-bezier(.2,.9,.3,1)}"+
 "#pcBack.on #pcBox{transform:none}"+
 "#pcBox::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,#8a5cff30,transparent 62%);pointer-events:none}"+
 "#pcBox>*{position:relative}"+
 ".pcAv{width:92px;height:92px;margin:0 auto 10px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3d2f63,#150e26);border:2px solid #6a58a0;display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden;box-shadow:0 0 22px #8a5cff40}"+
 ".pcAv img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}"+
-".pcNm{font:700 20px Georgia,serif;color:#f1e3bd;letter-spacing:.02em;word-break:break-word}"+
+".pcNm{font:700 20px Philosopher,Georgia,serif;color:#f1e3bd;letter-spacing:.02em;word-break:break-word}"+
 ".pcLv{margin-top:3px;font:700 12px system-ui,sans-serif;letter-spacing:.14em;color:#b99cff}"+
 ".pcRows{margin:14px 0 4px;display:grid;gap:7px;text-align:left}"+
 ".pcR{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:12px;background:#0b0714aa;border:1px solid #2f2745}"+
 ".pcR i{font-style:normal;font-size:17px;flex:0 0 22px;text-align:center}"+
-".pcR span{flex:1;min-width:0}.pcR b{display:block;font:700 13px Georgia,serif;color:#eadfc6}.pcR small{display:block;font:600 10px system-ui,sans-serif;letter-spacing:.08em;color:#8f84a6;text-transform:uppercase;margin-bottom:1px}"+
+".pcR span{flex:1;min-width:0}.pcR b{display:block;font:700 13px Philosopher,Georgia,serif;color:#eadfc6}.pcR small{display:block;font:600 10px system-ui,sans-serif;letter-spacing:.08em;color:#8f84a6;text-transform:uppercase;margin-bottom:1px}"+
 ".pcBtns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}"+
 ".pcBtn{flex:1 1 40%;border:1px solid #3a3057;background:#120c1e;color:#d6b779;border-radius:12px;padding:11px 8px;font:700 13px system-ui,sans-serif;cursor:pointer}"+
 ".pcBtn.main{border-color:#8a6cd0;background:linear-gradient(180deg,#3a2a66,#21163d);color:#f1e3bd}"+

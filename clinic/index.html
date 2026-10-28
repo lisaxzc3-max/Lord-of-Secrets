@@ -20,24 +20,24 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .head{display:flex;align-items:center;gap:10px;padding:6px 0 4px}
 .back{flex:none;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#0a1a1aaa;font-size:12px}
 .eyebrow{font-size:9px;letter-spacing:3px;color:var(--mint);text-transform:uppercase}
-.head h1{margin:2px 0 0;font:700 22px Georgia,serif;background:linear-gradient(90deg,#e6fff6,#7fe8c8,#a8e0ff,#7fe8c8,#e6fff6);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+.head h1{margin:2px 0 0;font:700 22px Philosopher,Georgia,serif;background:linear-gradient(90deg,#e6fff6,#7fe8c8,#a8e0ff,#7fe8c8,#e6fff6);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
 @keyframes shine{to{background-position:-250% 0}}
-.pn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #5a5a2a;border-radius:99px;padding:6px 12px;background:#1a180acc;font:700 13px Georgia,serif;color:#ffe9a8}
+.pn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #5a5a2a;border-radius:99px;padding:6px 12px;background:#1a180acc;font:700 13px Philosopher,Georgia,serif;color:#ffe9a8}
 
 .lamp{position:absolute;top:-4px;left:50%;width:2px;height:34px;margin-left:-1px;background:#3a5a56;transform-origin:50% 0;animation:swing 6s ease-in-out infinite;z-index:2;pointer-events:none}
 .lamp:after{content:"";position:absolute;left:50%;bottom:-12px;width:26px;height:14px;margin-left:-13px;border-radius:14px 14px 3px 3px;background:linear-gradient(180deg,#9fe8d8,#3a8a80);box-shadow:0 8px 40px 10px #7fe8c855}
 @keyframes swing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 .panel{position:relative;border:1px solid var(--line);border-radius:22px;padding:14px;margin-top:12px;background:linear-gradient(160deg,#0f2824e8,#081514e8);overflow:hidden}
-.panel h3{margin:0 0 10px;font:700 12px Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);display:flex;justify-content:space-between;align-items:center}
+.panel h3{margin:0 0 10px;font:700 12px Philosopher,Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);display:flex;justify-content:space-between;align-items:center}
 .panel h3 em{font-style:normal;font:11px Inter,system-ui;color:var(--muted);letter-spacing:0;text-transform:none}
 
 .mon{position:relative;border-radius:16px;background:#031010;border:1px solid #1c3a36;height:84px;overflow:hidden}
 .mon canvas{position:absolute;inset:0;width:100%;height:100%}
-.mon .bpm{position:absolute;right:10px;top:6px;font:700 12px Georgia,serif;color:var(--mint);display:flex;align-items:center;gap:5px}
+.mon .bpm{position:absolute;right:10px;top:6px;font:700 12px Philosopher,Georgia,serif;color:var(--mint);display:flex;align-items:center;gap:5px}
 .mon .bpm i{font-style:normal;display:inline-block;animation:beat var(--bt,1s) ease-in-out infinite;color:var(--red)}
 @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.28)}30%{transform:scale(1)}}
 .lbl{display:flex;justify-content:space-between;align-items:baseline;margin:12px 2px 5px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.lbl b{font:700 15px Georgia,serif;color:#fff;letter-spacing:0;text-transform:none}
+.lbl b{font:700 15px Philosopher,Georgia,serif;color:#fff;letter-spacing:0;text-transform:none}
 .tube{position:relative;height:30px;border-radius:99px;background:#06100f;border:1.5px solid #3a5a56;overflow:hidden;box-shadow:inset 0 3px 8px #000a}
 .tube:after{content:"";position:absolute;left:8px;right:8px;top:4px;height:6px;border-radius:99px;background:linear-gradient(90deg,#ffffff44,#ffffff08);pointer-events:none}
 .liq{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;transition:width 1.4s cubic-bezier(.2,.8,.2,1);overflow:hidden}
@@ -51,7 +51,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 
 .doc{display:flex;gap:12px;align-items:flex-end}
 .doc svg{flex:none;width:96px;height:116px;overflow:visible}
-.bub{position:relative;flex:1;padding:11px 13px;border-radius:16px 16px 16px 4px;background:#102a26;border:1px solid #2c5a52;font:italic 13.5px/1.5 Georgia,serif;color:#cfeee6;min-height:66px;transition:opacity .35s}
+.bub{position:relative;flex:1;padding:11px 13px;border-radius:16px 16px 16px 4px;background:#102a26;border:1px solid #2c5a52;font:italic 13.5px/1.5 Philosopher,Georgia,serif;color:#cfeee6;min-height:66px;transition:opacity .35s}
 .eye{animation:glow 4s ease-in-out infinite}
 @keyframes glow{50%{opacity:.55}}
 .acts{display:grid;gap:9px;margin-top:12px}
@@ -59,9 +59,9 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .act:active{transform:scale(.985)}
 .act .ic{flex:none;width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#0a1b19;border:1px solid #2c5a52}
 .act div{flex:1;min-width:0}
-.act b{display:block;font:700 14.5px Georgia,serif;color:#fff}
+.act b{display:block;font:700 14.5px Philosopher,Georgia,serif;color:#fff}
 .act small{display:block;font-size:11.5px;color:var(--muted);line-height:1.3;margin-top:1px}
-.act .pr{flex:none;padding:7px 11px;border-radius:99px;font:700 12.5px Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#ffbf6a);white-space:nowrap}
+.act .pr{flex:none;padding:7px 11px;border-radius:99px;font:700 12.5px Philosopher,Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#ffbf6a);white-space:nowrap}
 .act .pr.fr{color:#052018;background:linear-gradient(135deg,#9dffd8,#4ae0a8)}
 .act[disabled]{opacity:.45;pointer-events:none}
 .act.heal{border-color:#3a8a70;box-shadow:0 0 18px #4ae0a822}
@@ -72,36 +72,36 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .morgue{position:relative;text-align:center;padding:22px 14px 14px}
 .morgue .sk{font-size:58px;display:block;animation:flt 5s ease-in-out infinite}
 @keyframes flt{50%{transform:translateY(-6px)}}
-.morgue h2{margin:6px 0 4px;font:700 21px Georgia,serif;color:#ffd0d6}
+.morgue h2{margin:6px 0 4px;font:700 21px Philosopher,Georgia,serif;color:#ffd0d6}
 .morgue p{margin:0;color:#c9a8ae;font-size:13px}
-.morgue .tm{display:block;margin:10px 0 4px;font:700 34px Georgia,serif;color:#fff;letter-spacing:.06em}
-.rev{position:relative;overflow:hidden;width:100%;margin-top:14px;padding:16px;border-radius:16px;font:700 16px Georgia,serif;letter-spacing:.05em;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78);box-shadow:0 8px 28px #4ae0a844,inset 0 1px 0 #fff9}
+.morgue .tm{display:block;margin:10px 0 4px;font:700 34px Philosopher,Georgia,serif;color:#fff;letter-spacing:.06em}
+.rev{position:relative;overflow:hidden;width:100%;margin-top:14px;padding:16px;border-radius:16px;font:700 16px Philosopher,Georgia,serif;letter-spacing:.05em;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78);box-shadow:0 8px 28px #4ae0a844,inset 0 1px 0 #fff9}
 .rev:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#fff9 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.8s ease-in-out infinite}
 @keyframes sweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 .rev[disabled]{filter:grayscale(.8) brightness(.7)}
 
 .hov{position:fixed;inset:0;z-index:99994;background:radial-gradient(ellipse at 50% 45%,#0a2a30,#030808 75%);opacity:0;pointer-events:none;transition:opacity .5s;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
 .hov.on{opacity:1;pointer-events:auto}
-.hov h2{margin:0 0 4px;font:700 20px Georgia,serif;color:#d8fff0}
+.hov h2{margin:0 0 4px;font:700 20px Philosopher,Georgia,serif;color:#d8fff0}
 .hov .hint{margin:0 0 6px;color:#9fc4bc;font-size:12.5px;min-height:36px;max-width:300px}
 .bw{position:relative;width:min(80vw,300px);aspect-ratio:1}
 .bw canvas{position:absolute;inset:0;width:100%;height:100%}
-.bw .ph{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);font:italic 22px Georgia,serif;color:#e6fff6;text-shadow:0 0 18px #7fe8c8;pointer-events:none}
+.bw .ph{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);font:italic 22px Philosopher,Georgia,serif;color:#e6fff6;text-shadow:0 0 18px #7fe8c8;pointer-events:none}
 .pins{display:flex;gap:10px;margin:10px 0 2px;justify-content:center}
 .pin{width:14px;height:14px;border-radius:50%;background:#0a2a26;border:1px solid #3a6a62;transition:.3s}
 .pin.ok{background:#9dffd8;border-color:#9dffd8;box-shadow:0 0 12px #9dffd8}
 .pin.bad{background:#ff6a7a;border-color:#ff6a7a;box-shadow:0 0 12px #ff6a7a}
-.tap{width:min(84vw,320px);margin-top:12px;padding:18px;border-radius:17px;font:700 17px Georgia,serif;letter-spacing:.08em;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78);box-shadow:0 8px 28px #4ae0a844;touch-action:none}
+.tap{width:min(84vw,320px);margin-top:12px;padding:18px;border-radius:17px;font:700 17px Philosopher,Georgia,serif;letter-spacing:.08em;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78);box-shadow:0 8px 28px #4ae0a844;touch-action:none}
 .tap:active{transform:scale(.97);filter:brightness(1.12)}
 .hres{position:fixed;inset:0;z-index:99996;display:flex;align-items:center;justify-content:center;padding:20px;background:#030808e8;opacity:0;pointer-events:none;transition:opacity .4s}
 .hres.on{opacity:1;pointer-events:auto}
 .hres .box{width:100%;max-width:340px;border-radius:24px;padding:24px 18px 18px;text-align:center;background:linear-gradient(180deg,#12302b,#081514);border:1px solid var(--bc,#3a8a70);box-shadow:0 0 50px var(--bg,#4ae0a844);transform:translateY(20px) scale(.95);transition:transform .5s cubic-bezier(.2,.9,.3,1)}
 .hres.on .box{transform:none}
 .box .ic{font-size:54px}
-.box h2{margin:6px 0 4px;font:700 22px Georgia,serif;color:#fff}
+.box h2{margin:6px 0 4px;font:700 22px Philosopher,Georgia,serif;color:#fff}
 .box p{margin:0 0 6px;color:#b9d4ce;font-size:13.5px;line-height:1.5}
-.box .big{font:700 28px Georgia,serif;margin:8px 0}
-.box .ok{width:100%;margin-top:12px;padding:14px;border-radius:14px;font:700 15px Georgia,serif;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78)}
+.box .big{font:700 28px Philosopher,Georgia,serif;margin:8px 0}
+.box .ok{width:100%;margin-top:12px;padding:14px;border-radius:14px;font:700 15px Philosopher,Georgia,serif;color:#052018;background:linear-gradient(135deg,#d8fff0,#4ae0a8 55%,#1a9a78)}
 .fx{position:fixed;pointer-events:none;z-index:99997;font-style:normal;animation:fly 1.7s ease-out forwards}
 @keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);max-width:88%;z-index:99999;background:#0f2a26f2;border:1px solid #3a8a70;color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;font-size:13px;text-align:center}

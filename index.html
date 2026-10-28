@@ -14,7 +14,6 @@ window.matchMedia=function(q){if(/prefers-reduced-motion\s*:\s*reduce/.test(Stri
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./shared/skills.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#d6b779;--gold2:#b28c4d;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.82)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -288,7 +287,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes bgBreath{50%{opacity:.5;transform:scale(1.1)}}
 .bgHead{display:flex;justify-content:space-between;align-items:center}
 .bgHead h3{margin:0}
-.bgCnt{font:700 12px Georgia,serif;color:#e2c27a;background:#0005;border:1px solid #e2c27a55;border-radius:99px;padding:2px 9px}
+.bgCnt{font:700 12px Philosopher,Georgia,serif;color:#e2c27a;background:#0005;border:1px solid #e2c27a55;border-radius:99px;padding:2px 9px}
 .bgBar{height:6px;border-radius:99px;background:#0006;border:1px solid #2f2745;margin:8px 0 12px;overflow:hidden}
 .bgBar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#6a58a0,#e2c27a);background-size:200% 100%;transition:width .8s cubic-bezier(.2,.8,.2,1);animation:bgFlow 3s linear infinite}
 .bgBar.full i{background:linear-gradient(90deg,#a33,#e2c27a)}
@@ -342,7 +341,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .invCard.out{transform:scale(.7) translateY(-30px);opacity:0}
 .invCard.new{animation:bgNew .8s cubic-bezier(.2,.8,.2,1) backwards}
 @keyframes bgNew{0%{transform:scale(.6);box-shadow:0 0 30px var(--rc)}}
-.alH{margin:16px 2px 8px;font:700 12px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:#cdbf9f;display:flex;justify-content:space-between;align-items:center}
+.alH{margin:16px 2px 8px;font:700 12px Philosopher,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:#cdbf9f;display:flex;justify-content:space-between;align-items:center}
 .alH a{font:600 11px inherit;font-family:inherit;letter-spacing:0;text-transform:none;color:#8a7a58;border:1px solid #3a3040;border-radius:99px;padding:4px 10px;text-decoration:none;cursor:pointer}
 .alGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .alCard{position:relative;display:flex;gap:9px;align-items:center;border:1px solid var(--rc,#3a3040);border-radius:13px;padding:9px;background:linear-gradient(145deg,#17121a,#0d0a10);animation:bgIn .4s ease-out backwards}
@@ -413,7 +412,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 .arBan{display:flex;align-items:center;gap:12px;margin:10px 0;padding:11px 14px;border-radius:14px;border:1px solid #d4343f;background:linear-gradient(135deg,#4a0e18,#14060a);color:#eadfc4;text-decoration:none;cursor:pointer;box-shadow:0 0 22px #d4343f66;animation:arP 1.8s ease-in-out infinite}
 @keyframes arP{50%{box-shadow:0 0 38px #ff4a5aaa;border-color:#ff6a78}}
 .arBan .arI{font-size:24px;filter:drop-shadow(0 0 6px #d4343f)}
-.arBan b{display:block;font:400 14px Georgia,serif;letter-spacing:.05em}.arBan small{display:block;font-size:10px;color:#c0a0a8}.arBan i{margin-left:auto;font-style:normal;color:#d08a90}
+.arBan b{display:block;font:400 14px Philosopher,Georgia,serif;letter-spacing:.05em}.arBan small{display:block;font-size:10px;color:#c0a0a8}.arBan i{margin-left:auto;font-style:normal;color:#d08a90}
 /* без миганий на главной */
 .top.low{animation:cardIn .7s ease backwards}
 .timerBox.dead,.timerBox.regen{animation:none}
@@ -441,11 +440,11 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 #sideMenu .smSig{position:absolute;right:-70px;top:90px;width:300px;height:300px;opacity:.12;color:#cdb27a;animation:smSpin 90s linear infinite;pointer-events:none}
 @keyframes smSpin{to{transform:rotate(360deg)}}
 #sideMenu .smHead{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:6px}
-#sideMenu .smTtl{font:700 12px Georgia,serif;letter-spacing:5px;color:#cdb27a;text-transform:uppercase}
+#sideMenu .smTtl{font:700 12px Philosopher,Georgia,serif;letter-spacing:5px;color:#cdb27a;text-transform:uppercase}
 #sideMenu .smX{width:38px;height:38px;border-radius:12px;border:1px solid #6a5a8a;background:#1b1330;color:#e8e0cf;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 #sideMenu .smLine{height:1px;margin:10px 0 18px;background:linear-gradient(90deg,#cdb27a00,#cdb27acc,#cdb27a00);position:relative;z-index:2}
 #sideMenu .smList{position:relative;z-index:2;display:grid;gap:11px}
-#sideMenu .smIt{display:flex;align-items:center;gap:15px;padding:16px 15px;border-radius:16px;border:1px solid #4a3d64;background:linear-gradient(160deg,#241a38ee,#130d20ee);color:#efe5cc;font:17px Georgia,serif;text-align:left;cursor:pointer;opacity:0;transform:translateX(26px);position:relative;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+#sideMenu .smIt{display:flex;align-items:center;gap:15px;padding:16px 15px;border-radius:16px;border:1px solid #4a3d64;background:linear-gradient(160deg,#241a38ee,#130d20ee);color:#efe5cc;font:17px Philosopher,Georgia,serif;text-align:left;cursor:pointer;opacity:0;transform:translateX(26px);position:relative;overflow:hidden;transition:border-color .25s,box-shadow .25s}
 #sideMenu.show .smIt{animation:smIn .55s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(.18s + var(--i)*.08s)}
 @keyframes smIn{to{opacity:1;transform:none}}
 #sideMenu .smIt:active{transform:scale(.98)}
@@ -459,7 +458,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 #sideMenu .smIt.vip:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffe9a826 50%,transparent 65%);transform:translateX(-120%);animation:smSweep 4.5s ease-in-out infinite}
 @keyframes smSweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 #sideMenu .smIt small{display:block;margin-top:1px;font:11px Inter,system-ui,sans-serif;color:#9d92b2}
-#sideMenu .smFoot{margin-top:auto;position:relative;z-index:2;text-align:center;font:italic 12px Georgia,serif;color:#7f7494;padding-top:14px}
+#sideMenu .smFoot{margin-top:auto;position:relative;z-index:2;text-align:center;font:italic 12px Philosopher,Georgia,serif;color:#7f7494;padding-top:14px}
 @media(prefers-reduced-motion:reduce){#sideMenu *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 /* ===== Без анимаций ===== */
 *,*:before,*:after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
@@ -474,7 +473,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 .top .lv{position:absolute;left:0;right:0;bottom:-9px;margin:0 auto;width:max-content;z-index:4;padding:2px 11px;border-radius:12px;background:#d6b779;color:#1a1020;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px #000a}
 .top .info{display:flex;flex-direction:column;justify-content:space-between;gap:7px;padding:2px 0}
 .top .nameRow{display:block}
-.top #nick{display:block;font-family:"Cormorant Garamond","Palatino Linotype",Georgia,serif;font-weight:700;font-size:26px;line-height:1.05;color:#f6ecd8;overflow-wrap:anywhere}
+.top #nick{display:block;font-family:Philosopher,Georgia,serif;font-weight:700;font-size:26px;line-height:1.05;color:#f6ecd8;overflow-wrap:anywhere}
 .top #nick .vN em{font-family:Inter,Arial,sans-serif;font-size:10px;letter-spacing:.14em}
 .top .pathTag{align-self:flex-start;border:0;background:none;padding:0;border-radius:0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d6b779}
 .top .bar.hp{height:7px;margin:0}

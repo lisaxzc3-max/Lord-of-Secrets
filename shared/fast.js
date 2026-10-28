@@ -6,6 +6,11 @@ var F=window.LOTM_FAST={};
 var qs=new URLSearchParams(location.search),UID=qs.get("u")||"0";
 /* --- preconnect к серверу --- */
 try{var pc=document.createElement("link");pc.rel="preconnect";pc.href="https://api.telebotcreator.com";pc.crossOrigin="anonymous";document.head.appendChild(pc)}catch(e){}
+/* --- шрифт заголовков: Philosopher (кириллица), запасной Georgia --- */
+try{if(!document.getElementById("lt-font")){
+var fc=document.createElement("link");fc.rel="preconnect";fc.href="https://fonts.gstatic.com";fc.crossOrigin="anonymous";document.head.appendChild(fc);
+var fl=document.createElement("link");fl.id="lt-font";fl.rel="stylesheet";fl.href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap";document.head.appendChild(fl);
+var fs=document.createElement("style");fs.textContent="h1,h2,h3{font-family:Philosopher,Georgia,serif}";document.head.appendChild(fs)}}catch(e){}
 /* --- стили --- */
 var css=
 ".lt-pend{pointer-events:none!important;position:relative}"+

@@ -126,7 +126,7 @@ var INFO={
 };
 var css=document.createElement("style");
 css.textContent=
-".eiBadge{position:absolute;right:5px;top:5px;z-index:6;width:20px;height:20px;border-radius:50%;background:#000a;border:1px solid #e2c27a99;color:#e2c27a;font:700 12px/18px Georgia,serif;text-align:center;pointer-events:none;animation:eiPulse 2.4s ease-in-out infinite}"+
+".eiBadge{position:absolute;right:5px;top:5px;z-index:6;width:20px;height:20px;border-radius:50%;background:#000a;border:1px solid #e2c27a99;color:#e2c27a;font:700 12px/18px Philosopher,Georgia,serif;text-align:center;pointer-events:none;animation:eiPulse 2.4s ease-in-out infinite}"+
 "@keyframes eiPulse{50%{box-shadow:0 0 10px #e2c27acc;transform:scale(1.12)}}"+
 ".eiOn .eiBadge{background:#e2c27a;color:#1a1020;animation:none}"+
 "#enemyInfo{position:relative;overflow:hidden;max-height:0;opacity:0;margin:0 0 0;border:1px solid transparent;border-radius:14px;background:linear-gradient(160deg,#241a38f2,#120c1ef2);transition:max-height .45s cubic-bezier(.2,.8,.2,1),opacity .3s,margin .3s,border-color .3s}"+

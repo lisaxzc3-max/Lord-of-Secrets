@@ -28,7 +28,7 @@ button{cursor:pointer;border:0;background:none}
 .head{display:flex;align-items:center;gap:10px;padding:7px 0 8px}
 .back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#17122399;font-size:12px}
 .eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-.head h1{font:700 22px Georgia,serif;margin:3px 0 0;background:linear-gradient(90deg,#fff3cf,#e2c27a,#f7b6e0,#e2c27a,#fff3cf);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+.head h1{font:700 22px Philosopher,Georgia,serif;margin:3px 0 0;background:linear-gradient(90deg,#fff3cf,#e2c27a,#f7b6e0,#e2c27a,#fff3cf);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
 @keyframes shine{to{background-position:-250% 0}}
 
 .circle{position:relative;width:min(86vw,340px);aspect-ratio:1;margin:8px auto 4px}
@@ -40,7 +40,7 @@ button{cursor:pointer;border:0;background:none}
 .g2{transform-origin:100px 100px;animation:spin 38s linear infinite reverse}
 .g3{transform-origin:100px 100px;animation:spin 24s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.rn{fill:#e2c27a;font:11px Georgia,serif;opacity:.85}
+.rn{fill:#e2c27a;font:11px Philosopher,Georgia,serif;opacity:.85}
 .eye{transform-origin:100px 100px}
 .circle.up .g1{animation-duration:6s}.circle.up .g2{animation-duration:4s}.circle.up .g3{animation-duration:3s}
 .circle.up .glow{animation:none;opacity:1;transform:scale(1.3);transition:transform 1.4s,opacity 1s}
@@ -50,13 +50,13 @@ button{cursor:pointer;border:0;background:none}
 @keyframes fl{0%,100%{transform:scale(1,1) skewX(0)}30%{transform:scale(.92,1.08) skewX(2deg)}60%{transform:scale(1.05,.95) skewX(-2deg)}}
 
 .card{position:relative;border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0;background:linear-gradient(160deg,#241a38e8,#120c20e8);overflow:hidden}
-.card h3{margin:0 0 8px;font:700 13px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.card h3{margin:0 0 8px;font:700 13px Philosopher,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 .card p{margin:0 0 8px;color:#cfc4e0;font-size:13.2px;line-height:1.5}
 .card p:last-child{margin-bottom:0}
 .warn{display:flex;gap:10px;align-items:flex-start;border:1px solid #6a2a3a;border-radius:14px;padding:10px 12px;background:#2a101899;color:#e8c3cb;font-size:12.5px;line-height:1.45;margin-top:10px}
 .warn svg{flex:none;width:20px;height:20px;color:#ff8aa0;margin-top:1px}
 
-.pray{position:relative;overflow:hidden;width:100%;padding:17px 12px;border-radius:17px;font:700 17px Georgia,serif;letter-spacing:.08em;display:flex;align-items:center;justify-content:center;gap:10px;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#f3a8dc 50%,#8fb8ff);box-shadow:0 8px 30px #f3a8dc44,inset 0 1px 0 #fff8;transition:transform .15s,filter .2s}
+.pray{position:relative;overflow:hidden;width:100%;padding:17px 12px;border-radius:17px;font:700 17px Philosopher,Georgia,serif;letter-spacing:.08em;display:flex;align-items:center;justify-content:center;gap:10px;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#f3a8dc 50%,#8fb8ff);box-shadow:0 8px 30px #f3a8dc44,inset 0 1px 0 #fff8;transition:transform .15s,filter .2s}
 .pray:active{transform:scale(.97)}
 .pray:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffff77 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.8s ease-in-out infinite}
 @keyframes sweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
@@ -65,7 +65,7 @@ button{cursor:pointer;border:0;background:none}
 .pray.lock:after,.pray.cd:after{display:none}
 .sub{text-align:center;color:var(--muted);font-size:12px;margin-top:8px}
 .sub a{color:#f3dc9c;text-decoration:none;border-bottom:1px dotted #f3dc9c88}
-.adm{position:relative;width:100%;margin-top:12px;padding:13px;border-radius:15px;border:1px solid #6a58a0;background:#1c1430cc;font:700 14px Georgia,serif;color:#eadfc4;display:flex;align-items:center;justify-content:center;gap:9px}
+.adm{position:relative;width:100%;margin-top:12px;padding:13px;border-radius:15px;border:1px solid #6a58a0;background:#1c1430cc;font:700 14px Philosopher,Georgia,serif;color:#eadfc4;display:flex;align-items:center;justify-content:center;gap:9px}
 .adm b{min-width:20px;padding:1px 7px;border-radius:99px;background:#d9443c;color:#fff;font:700 11px system-ui;text-align:center;box-shadow:0 0 10px #d9443caa}
 .adm b:empty,.adm b.z{display:none}
 
@@ -73,14 +73,14 @@ button{cursor:pointer;border:0;background:none}
 .dim.on{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:99991;max-width:480px;margin:auto;border:1px solid #8a6a3a;border-bottom:0;border-radius:24px 24px 0 0;background:radial-gradient(ellipse at 50% -10%,#5a3a1a55,transparent 60%),linear-gradient(180deg,#2a2030,#0e0918);padding:20px 18px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .5s cubic-bezier(.2,.9,.3,1)}
 .sheet.on{transform:none}
-.sheet h3{margin:0 0 4px;font:700 19px Georgia,serif;color:#fff3cf;text-align:center}
+.sheet h3{margin:0 0 4px;font:700 19px Philosopher,Georgia,serif;color:#fff3cf;text-align:center}
 .sheet .hint{margin:0 0 12px;color:var(--muted);font-size:12.5px;text-align:center}
-.sheet textarea{width:100%;min-height:130px;resize:none;border-radius:16px;border:1px solid #8a6a3a66;background:linear-gradient(180deg,#1a1410,#120d0a);padding:13px 14px;font:italic 15px/1.55 Georgia,serif;color:#f1e3bc;outline:none;transition:border-color .25s,box-shadow .25s}
+.sheet textarea{width:100%;min-height:130px;resize:none;border-radius:16px;border:1px solid #8a6a3a66;background:linear-gradient(180deg,#1a1410,#120d0a);padding:13px 14px;font:italic 15px/1.55 Philosopher,Georgia,serif;color:#f1e3bc;outline:none;transition:border-color .25s,box-shadow .25s}
 .sheet textarea::placeholder{color:#7a6a58}
 .sheet textarea:focus{border-color:#e2c27a;box-shadow:0 0 22px #e2c27a33}
 .cnt{text-align:right;color:#7d7290;font-size:11px;margin:4px 4px 10px}
 .row{display:flex;gap:10px}
-.row button{flex:1;padding:14px;border-radius:14px;font:700 14.5px Georgia,serif;border:1px solid #4a3d6a;background:#17122399}
+.row button{flex:1;padding:14px;border-radius:14px;font:700 14.5px Philosopher,Georgia,serif;border:1px solid #4a3d6a;background:#17122399}
 .row .go{border:0;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#f3a8dc 55%,#8fb8ff);box-shadow:0 6px 22px #f3a8dc44}
 .row .go[disabled]{opacity:.45}
 .err{min-height:18px;text-align:center;color:#ff9aa8;font-size:12.5px;margin-bottom:6px}
@@ -93,8 +93,8 @@ button{cursor:pointer;border:0;background:none}
 .rit .rc .b{transform-origin:100px 100px;animation:spin 2s linear infinite reverse}
 .rit .rc .core{fill:#fff3cf;filter:drop-shadow(0 0 14px #ffe9a8);transform-origin:100px 100px;animation:core 2.4s ease-in forwards}
 @keyframes core{from{transform:scale(1);opacity:.6}to{transform:scale(7);opacity:0}}
-.rit .tx{margin-top:22px;font:italic 16px/1.5 Georgia,serif;color:#e8dcc0;max-width:300px;min-height:48px;transition:opacity .5s}
-.rit .ok{margin-top:18px;padding:14px 34px;border-radius:15px;font:700 15px Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#f3a8dc 50%,#8fb8ff);box-shadow:0 6px 26px #f3a8dc55;opacity:0;pointer-events:none;transition:opacity .5s}
+.rit .tx{margin-top:22px;font:italic 16px/1.5 Philosopher,Georgia,serif;color:#e8dcc0;max-width:300px;min-height:48px;transition:opacity .5s}
+.rit .ok{margin-top:18px;padding:14px 34px;border-radius:15px;font:700 15px Philosopher,Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#ffe9a8,#f3a8dc 50%,#8fb8ff);box-shadow:0 6px 26px #f3a8dc55;opacity:0;pointer-events:none;transition:opacity .5s}
 .rit .ok.on{opacity:1;pointer-events:auto}
 .fx{position:fixed;pointer-events:none;z-index:99996;font-style:normal;animation:fly 1.7s ease-out forwards}
 @keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
@@ -105,15 +105,15 @@ button{cursor:pointer;border:0;background:none}
 .list.on{transform:none}
 .list .in{max-width:480px;margin:auto}
 .lh{display:flex;align-items:center;justify-content:space-between;padding:6px 0 12px}
-.lh h2{margin:0;font:700 19px Georgia,serif;color:#fff3cf}
+.lh h2{margin:0;font:700 19px Philosopher,Georgia,serif;color:#fff3cf}
 .lh button{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:#17122399;font-size:12px}
 .wc{position:relative;border:1px solid #3a3057;border-radius:18px;padding:13px 14px;margin-bottom:11px;background:linear-gradient(165deg,#221838,#110a1e);animation:up .5s cubic-bezier(.2,.9,.3,1) both}
 @keyframes up{from{opacity:0;transform:translateY(12px)}}
 .wc.new{border-color:#e2c27a99;box-shadow:0 0 22px #e2c27a2a}
 .wc.done{opacity:.6}
 .wc .who{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:12px;color:var(--muted)}
-.wc .who b{font:700 14px Georgia,serif;color:#fff3cf}
-.wc .tx{margin:8px 0 10px;font:italic 14.5px/1.55 Georgia,serif;color:#f1e3bc;white-space:pre-wrap;word-break:break-word}
+.wc .who b{font:700 14px Philosopher,Georgia,serif;color:#fff3cf}
+.wc .tx{margin:8px 0 10px;font:italic 14.5px/1.55 Philosopher,Georgia,serif;color:#f1e3bc;white-space:pre-wrap;word-break:break-word}
 .wc .mk{border:1px solid #4a3d6a;border-radius:10px;padding:7px 12px;font-size:12px;background:#17122399}
 .wc.done .mk{border-color:#3f8a6a;color:#9dfad0}
 .emp{text-align:center;color:var(--muted);padding:40px 10px}

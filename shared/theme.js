@@ -18,14 +18,14 @@ var grain="url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
 var light=(m==="light");
 var grainL=grain.replace(".55 0'",".05 0'");
 if(light){
- s.textContent="h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em}"; /* лёгкая атмосфера: без затемнения и виньетки, только шрифт заголовков */
+ s.textContent="h1,h2,h3{font-family:Philosopher,Georgia,'Times New Roman',serif;letter-spacing:.04em}"; /* лёгкая атмосфера: без затемнения и виньетки, только шрифт заголовков */
 }else
 s.textContent=
 "#lotmTone,#lotmGrain{position:fixed;inset:0;pointer-events:none}"+
 (ok?"#lotmTone{z-index:2147483000;-webkit-backdrop-filter:saturate(.5) sepia(.16) contrast(1.05) brightness(.9);backdrop-filter:saturate(.5) sepia(.16) contrast(1.05) brightness(.9);background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 45%,rgba(4,2,8,.55) 100%)}":
  "#lotmTone{z-index:2147483000;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 45%,rgba(4,2,8,.6) 100%),rgba(20,14,10,.14)}")+
 "#lotmGrain{z-index:2147483001;opacity:.07;background-image:"+grain+";mix-blend-mode:overlay}"+
-"h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em}";
+"h1,h2,h3{font-family:Philosopher,Georgia,'Times New Roman',serif;letter-spacing:.04em}";
 document.head.appendChild(s);
 function add(){
  if(!document.body)return;

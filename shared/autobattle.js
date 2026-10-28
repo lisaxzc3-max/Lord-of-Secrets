@@ -32,12 +32,12 @@ css.textContent=
 ".abC{width:100%;max-width:380px;text-align:center;border:1px solid #6a58a0;border-radius:22px;padding:22px 18px 18px;background:radial-gradient(ellipse at 50% -10%,#5a2a4a55,transparent 60%),linear-gradient(170deg,#241a38,#0e0918);box-shadow:0 0 40px #8a5cff33;transform:translateY(14px) scale(.97);transition:transform .45s cubic-bezier(.2,.9,.3,1)}"+
 ".abOv.on .abC{transform:none}"+
 ".abE{font-size:9px;letter-spacing:3px;color:#e2c27a;text-transform:uppercase}"+
-".abT{font:700 20px Georgia,serif;color:#fff3cf;margin:4px 0 12px}"+
+".abT{font:700 20px Philosopher,Georgia,serif;color:#fff3cf;margin:4px 0 12px}"+
 ".abRing{position:relative;width:118px;height:118px;margin:0 auto 12px}"+
 ".abRing svg{width:100%;height:100%;transform:rotate(-90deg)}"+
 ".abRing .bg{fill:none;stroke:#2a2040;stroke-width:6}"+
 ".abRing .fg{fill:none;stroke:url(#abG);stroke-width:6;stroke-linecap:round;stroke-dasharray:326.7;stroke-dashoffset:326.7;transition:stroke-dashoffset .12s linear}"+
-".abRing b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 30px Georgia,serif;color:#fff3cf}"+
+".abRing b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 30px Philosopher,Georgia,serif;color:#fff3cf}"+
 ".abRing b small{font:600 10px Inter,system-ui;letter-spacing:1px;color:#a99dba}"+
 ".abKl{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:0 0 12px;min-height:22px}"+
 ".abKl span{font-size:11px;border:1px solid #3a3057;background:#120c1e;border-radius:99px;padding:3px 9px;color:#cfc4e0;animation:abIn .4s both}"+
@@ -46,13 +46,13 @@ css.textContent=
 ".abR{display:flex;align-items:center;justify-content:space-between;border:1px solid #3a3057;border-radius:12px;padding:10px 13px;background:#140e22;opacity:0;transform:translateY(8px);transition:.45s}"+
 ".abR.on{opacity:1;transform:none}"+
 ".abR i{font-style:normal;font-size:12px;color:#a99dba}"+
-".abR b{font:700 18px Georgia,serif;color:#fff3cf}"+
+".abR b{font:700 18px Philosopher,Georgia,serif;color:#fff3cf}"+
 ".abR b em{font:600 11px Inter,system-ui;font-style:normal;color:#9dfad0;margin-left:6px}"+
 ".abR.lv{border-color:#e2c27a99;box-shadow:0 0 18px #e2c27a44}"+
-".abOk{width:100%;padding:13px;border-radius:14px;font:700 15px Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#f3dc9c,#c79a4a 55%,#8a6428);border:0;cursor:pointer;opacity:0;transition:opacity .4s}"+
+".abOk{width:100%;padding:13px;border-radius:14px;font:700 15px Philosopher,Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#f3dc9c,#c79a4a 55%,#8a6428);border:0;cursor:pointer;opacity:0;transition:opacity .4s}"+
 ".abOk.on{opacity:1}"+
 ".abTx{font-size:13px;color:#cfc4e0;margin:2px 0 14px;line-height:1.45}"+
-".abRow{display:flex;gap:10px}.abRow button{flex:1;padding:12px;border-radius:13px;font:700 14px Georgia,serif;border:1px solid #4a3d6a;background:#17122399;color:#eee6d6;cursor:pointer}"+
+".abRow{display:flex;gap:10px}.abRow button{flex:1;padding:12px;border-radius:13px;font:700 14px Philosopher,Georgia,serif;border:1px solid #4a3d6a;background:#17122399;color:#eee6d6;cursor:pointer}"+
 ".abRow .go{border:0;color:#2a1a08;background:linear-gradient(135deg,#f3dc9c,#c79a4a)}"+
 ".abFx{position:fixed;pointer-events:none;z-index:9900;font-style:normal;animation:abFly 1.4s ease-out forwards}"+
 "@keyframes abFly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}";

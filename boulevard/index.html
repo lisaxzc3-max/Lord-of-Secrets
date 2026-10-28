@@ -18,20 +18,20 @@ button{border:0;background:none;cursor:pointer}
 .head{display:flex;align-items:center;gap:10px;padding:6px 0 8px}
 .back{flex:none;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#1a1226aa;font-size:12px}
 .eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-.head h1{margin:2px 0 0;font:700 22px Georgia,serif;background:linear-gradient(90deg,#fff0c8,#ffcf7a,#ff8ab4,#ffcf7a,#fff0c8);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+.head h1{margin:2px 0 0;font:700 22px Philosopher,Georgia,serif;background:linear-gradient(90deg,#fff0c8,#ffcf7a,#ff8ab4,#ffcf7a,#fff0c8);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
 @keyframes shine{to{background-position:-250% 0}}
-.pn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #6a5a2a;border-radius:99px;padding:6px 12px;background:#1a160acc;font:700 13px Georgia,serif;color:#ffe9a8}
+.pn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #6a5a2a;border-radius:99px;padding:6px 12px;background:#1a160acc;font:700 13px Philosopher,Georgia,serif;color:#ffe9a8}
 .scene{position:relative;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 10px 36px #0008}
 #cv{display:block;width:100%;height:170px}
 .tabs{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0 0;padding:6px;border-radius:18px;background:#120a1ccc;border:1px solid var(--line);backdrop-filter:blur(8px)}
-.tab{padding:10px 4px;border-radius:13px;font:700 13px Georgia,serif;color:var(--muted);transition:.25s;text-align:center}
+.tab{padding:10px 4px;border-radius:13px;font:700 13px Philosopher,Georgia,serif;color:var(--muted);transition:.25s;text-align:center}
 .tab span{display:block;font-size:18px}
 .tab.on{color:#2a1a08;background:linear-gradient(135deg,#fff0c8,#ffcf7a 55%,#ff9ab4);box-shadow:0 4px 18px #ffcf7a44}
 .pane{display:none;animation:in .5s cubic-bezier(.2,.9,.3,1)}
 .pane.on{display:block}
 @keyframes in{from{opacity:0;transform:translateY(12px)}}
 .card{position:relative;border:1px solid var(--line);border-radius:20px;padding:14px;margin-top:12px;background:linear-gradient(160deg,#241636e8,#120a1ee8);overflow:hidden}
-.card h3{margin:0 0 10px;font:700 12px Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:flex;justify-content:space-between;align-items:center}
+.card h3{margin:0 0 10px;font:700 12px Philosopher,Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:flex;justify-content:space-between;align-items:center}
 .card h3 em{font-style:normal;font:11px Inter,system-ui;color:var(--muted);letter-spacing:0;text-transform:none}
 
 /* ярмарка */
@@ -41,35 +41,35 @@ button{border:0;background:none;cursor:pointer}
 .mer{display:flex;gap:12px;align-items:center;text-align:left}
 .mer .av{flex:none;width:66px;height:66px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;background:radial-gradient(circle,#4a2a5a,#1a0e24);border:1px solid #8a5a9a;box-shadow:0 0 24px #ff8ab433;animation:flt 5s ease-in-out infinite}
 @keyframes flt{50%{transform:translateY(-4px)}}
-.mer b{display:block;font:700 17px Georgia,serif;color:#fff}
-.mer small{display:block;font:italic 13px/1.4 Georgia,serif;color:#e8d0f0;margin-top:3px}
+.mer b{display:block;font:700 17px Philosopher,Georgia,serif;color:#fff}
+.mer small{display:block;font:italic 13px/1.4 Philosopher,Georgia,serif;color:#e8d0f0;margin-top:3px}
 .tm{margin:10px 0 0;font-size:11.5px;color:var(--muted);text-align:center}
 .tm b{color:var(--gold)}
 .offers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .of{position:relative;padding:12px 10px;border-radius:16px;border:1px solid #4a3a5e;background:linear-gradient(160deg,#2a1a3e,#150c22);text-align:center;transition:border-color .25s,transform .15s;overflow:hidden}
 .of:active{transform:scale(.97)}
 .of .ic{font-size:30px;display:block;margin-bottom:3px}
-.of b{display:block;font:700 13px Georgia,serif;color:#fff;line-height:1.25}
+.of b{display:block;font:700 13px Philosopher,Georgia,serif;color:#fff;line-height:1.25}
 .of small{display:block;font-size:11px;color:var(--muted);line-height:1.3;margin:3px 0 8px;min-height:42px}
-.of .buy{width:100%;padding:9px;border-radius:11px;font:700 13px Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#fff0c8,#ffcf7a 60%,#ff9ab4)}
+.of .buy{width:100%;padding:9px;border-radius:11px;font:700 13px Philosopher,Georgia,serif;color:#2a1a08;background:linear-gradient(135deg,#fff0c8,#ffcf7a 60%,#ff9ab4)}
 .of .buy[disabled]{background:#2a2038;color:#8a7a9a}
 .of .st{position:absolute;top:7px;right:8px;font-size:10px;color:var(--muted)}
 .closed{text-align:center;padding:14px 6px}
 .closed .big{font-size:56px;display:block;animation:flt 5s ease-in-out infinite}
-.closed h2{margin:6px 0 4px;font:700 20px Georgia,serif}
+.closed h2{margin:6px 0 4px;font:700 20px Philosopher,Georgia,serif}
 .closed p{margin:0;color:var(--muted);font-size:13px}
-.closed .cd{display:block;margin:10px 0 2px;font:700 30px Georgia,serif;color:var(--gold);letter-spacing:.05em}
+.closed .cd{display:block;margin:10px 0 2px;font:700 30px Philosopher,Georgia,serif;color:var(--gold);letter-spacing:.05em}
 
 /* игры */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.seg button{padding:12px;border-radius:14px;border:1px solid #4a3a5e;background:#180f26;font:700 14px Georgia,serif;transition:.25s}
+.seg button{padding:12px;border-radius:14px;border:1px solid #4a3a5e;background:#180f26;font:700 14px Philosopher,Georgia,serif;transition:.25s}
 .seg button.on{border-color:var(--gold);box-shadow:0 0 18px #ffcf7a33;background:linear-gradient(160deg,#3a2a14,#1c1408)}
 .bet{display:flex;align-items:center;gap:8px;margin:10px 0}
-.bet .step{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid #4a3a5e;background:#180f26;font:700 20px Georgia,serif}
-.bet .v{flex:1;text-align:center;font:700 26px Georgia,serif;color:#fff}
+.bet .step{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid #4a3a5e;background:#180f26;font:700 20px Philosopher,Georgia,serif}
+.bet .v{flex:1;text-align:center;font:700 26px Philosopher,Georgia,serif;color:#fff}
 .bet .v small{display:block;font:11px Inter,system-ui;color:var(--muted)}
 .qk{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
-.qk button{padding:8px 0;border-radius:11px;border:1px solid #4a3a5e;background:#180f26;font:700 12.5px Georgia,serif}
+.qk button{padding:8px 0;border-radius:11px;border:1px solid #4a3a5e;background:#180f26;font:700 12.5px Philosopher,Georgia,serif}
 .table{position:relative;border-radius:18px;padding:14px 10px;background:radial-gradient(ellipse at 50% 40%,#1a5a3a,#0c3a24 70%);border:1px solid #2a7a52;box-shadow:inset 0 0 40px #0008}
 .row2{display:flex;align-items:center;justify-content:center;gap:16px;min-height:74px}
 .lab{text-align:center;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#a8e0c4;margin:4px 0}
@@ -78,13 +78,13 @@ button{border:0;background:none;cursor:pointer}
 .die i.p{background:#1a1012;box-shadow:inset 0 1px 2px #000}
 .die.roll{animation:roll .6s linear infinite}
 @keyframes roll{0%{transform:rotate(0) translateY(0)}25%{transform:rotate(90deg) translateY(-8px)}50%{transform:rotate(180deg) translateY(0)}75%{transform:rotate(270deg) translateY(-8px)}100%{transform:rotate(360deg) translateY(0)}}
-.sum2{font:700 22px Georgia,serif;color:#fff;margin-left:4px;min-width:30px}
-.go{position:relative;overflow:hidden;width:100%;margin-top:12px;padding:16px;border-radius:16px;font:700 16px Georgia,serif;letter-spacing:.06em;color:#2a1a08;background:linear-gradient(135deg,#fff0c8,#ffcf7a 55%,#ff9ab4);box-shadow:0 8px 28px #ffcf7a44,inset 0 1px 0 #fff9}
+.sum2{font:700 22px Philosopher,Georgia,serif;color:#fff;margin-left:4px;min-width:30px}
+.go{position:relative;overflow:hidden;width:100%;margin-top:12px;padding:16px;border-radius:16px;font:700 16px Philosopher,Georgia,serif;letter-spacing:.06em;color:#2a1a08;background:linear-gradient(135deg,#fff0c8,#ffcf7a 55%,#ff9ab4);box-shadow:0 8px 28px #ffcf7a44,inset 0 1px 0 #fff9}
 .go:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#fff9 50%,transparent 65%);transform:translateX(-120%);animation:sweep 3.8s ease-in-out infinite}
 @keyframes sweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 .go[disabled]{background:linear-gradient(135deg,#3a2f4a,#251b32);color:#8a7a9a;box-shadow:none}
 .go[disabled]:after{display:none}
-.res{min-height:44px;margin-top:10px;text-align:center;font:700 20px Georgia,serif;transition:opacity .4s}
+.res{min-height:44px;margin-top:10px;text-align:center;font:700 20px Philosopher,Georgia,serif;transition:opacity .4s}
 .res.win{color:#9dfad0}.res.lose{color:#ff8a9a}.res.push{color:#cfc4e0}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;perspective:900px}
 .tc{position:relative;aspect-ratio:3/4.6;cursor:pointer;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
@@ -93,8 +93,8 @@ button{border:0;background:none;cursor:pointer}
 .tc .b{background:radial-gradient(circle at 50% 40%,#4a2a6a,#1a0e2a 75%)}
 .tc .b svg{width:100%;height:100%}
 .tc .f{transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:6px;background:linear-gradient(160deg,#2a1a3e,#120a1e)}
-.tc .f .ms{font:700 24px Georgia,serif}
-.tc .f small{font:700 11px Georgia,serif;color:#e8d8f4;line-height:1.2}
+.tc .f .ms{font:700 24px Philosopher,Georgia,serif}
+.tc .f small{font:700 11px Philosopher,Georgia,serif;color:#e8d8f4;line-height:1.2}
 .tc.dim .f{opacity:.55}
 .tc:not(.flip):active{transform:scale(.97)}
 .tc.pk .b{box-shadow:0 0 24px #ffcf7a99}
@@ -106,21 +106,21 @@ button{border:0;background:none;cursor:pointer}
 .scroll:before,.scroll:after{content:"";position:absolute;left:-4px;right:-4px;height:12px;border-radius:99px;background:linear-gradient(180deg,#8a5a2a,#4a2a10);box-shadow:0 3px 6px #0006}
 .scroll:before{top:-6px}.scroll:after{bottom:-6px}
 .scroll .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#7a5a2a}
-.scroll p{margin:8px 0 0;font:italic 17px/1.55 Georgia,serif;min-height:80px}
+.scroll p{margin:8px 0 0;font:italic 17px/1.55 Philosopher,Georgia,serif;min-height:80px}
 .ans{display:flex;gap:8px;margin-top:12px}
-.ans input{flex:1;min-width:0;padding:14px;border-radius:14px;border:1px solid #8a6a2a;background:#fff8e4;color:#2a1a0a;font:16px Georgia,serif;outline:none;user-select:text;-webkit-user-select:text}
+.ans input{flex:1;min-width:0;padding:14px;border-radius:14px;border:1px solid #8a6a2a;background:#fff8e4;color:#2a1a0a;font:16px Philosopher,Georgia,serif;outline:none;user-select:text;-webkit-user-select:text}
 .ans input:focus{box-shadow:0 0 0 3px #ffcf7a88}
-.ans button{flex:none;padding:0 18px;border-radius:14px;font:700 14px Georgia,serif;color:#fff;background:linear-gradient(135deg,#5a2a7a,#2a1a4a)}
+.ans button{flex:none;padding:0 18px;border-radius:14px;font:700 14px Philosopher,Georgia,serif;color:#fff;background:linear-gradient(135deg,#5a2a7a,#2a1a4a)}
 .ans button[disabled]{opacity:.5}
 .att{display:flex;gap:6px;justify-content:center;margin:12px 0 2px}
 .att i{width:12px;height:12px;border-radius:50%;background:#e0c890;border:1px solid #8a6a2a;transition:.3s}
 .att i.u{background:#8a2a3a;border-color:#8a2a3a}
-.hint{margin-top:8px;text-align:center;font:700 13px Georgia,serif;color:#5a3a8a}
-.solved{margin-top:12px;padding:12px;border-radius:14px;background:#14301f;border:1px solid #2a7a52;color:#9dfad0;text-align:center;font:700 15px Georgia,serif}
+.hint{margin-top:8px;text-align:center;font:700 13px Philosopher,Georgia,serif;color:#5a3a8a}
+.solved{margin-top:12px;padding:12px;border-radius:14px;background:#14301f;border:1px solid #2a7a52;color:#9dfad0;text-align:center;font:700 15px Philosopher,Georgia,serif}
 .solved small{display:block;font:12.5px Inter,system-ui;color:#b8e8d0;margin-top:2px}
 .bd{display:grid;gap:6px}
 .bd .r{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:12px;background:#180f26;font-size:13px}
-.bd .r i{font:700 13px Georgia,serif;font-style:normal;color:var(--gold);width:20px}
+.bd .r i{font:700 13px Philosopher,Georgia,serif;font-style:normal;color:var(--gold);width:20px}
 .bd .r span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bd .r em{font-style:normal;color:var(--muted);font-size:11px}
 .bd .r.me{border:1px solid var(--gold);box-shadow:0 0 14px #ffcf7a33}
