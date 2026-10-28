@@ -294,13 +294,14 @@ const skillInfo=LOTM_SKILLS.SK;
 try{LakeArt.attach(document.getElementById("enemyImg"))}catch(_){}
 /* Картинки монстров лежат в lake/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
+"Утопленница":"../img/drowned.jpg?v=1",
 "Утопленник":"../img/drowned.jpg?v=1",
 "Жаба":"../img/toad.jpg?v=1",
 "Лягушка":"../img/toad.jpg?v=1",
 "Змей":"../img/serpent.jpg?v=1"
 };
-const EMO={"Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
-const ROLE={"Утопленник":"Утопленник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
+const EMO={"Утопленница":"🧟","Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
+const ROLE={"Утопленница":"Утонувшая путница","Утопленник":"Утонувший путник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
 let curEnemy="";
 
 /* ===== ЭФФЕКТЫ ===== */
@@ -559,7 +560,7 @@ if(!data||typeof data!=="object")throw new Error("Профиль игрока н
 return data;
 }
 function getEnemyName(serverEnemy){
-let enemy=serverEnemy||qs.get("enemy")||"Утопленник";
+let enemy=serverEnemy||qs.get("enemy")||"Утопленница";
 if(enemy==="Лягушка")enemy="Жаба";
 return enemy;
 }
