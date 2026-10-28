@@ -87,7 +87,8 @@ function start(){
  for(var y=2;y<oc.height-2;y+=2)for(var x=2;x<oc.width-2;x+=2){var i=(y*oc.width+x)*4,L=(px[i]*.3+px[i+1]*.59+px[i+2]*.11)/255;if(y/oc.height>.5&&L>.5&&px[i]>px[i+2]*1.25)S.push([x/oc.width,y/oc.height,L])}
  var seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
  var stars=[],i2;for(i2=0;i2<50&&S.length;i2++){var s=S[Math.floor(rnd()*S.length)];stars.push({x:s[0],y:s[1],ph:rnd()*6.28,sp:.5+rnd()*1.3,sz:.5+rnd()*1.1+s[2]*.6})}
- var embers=[],bats=[];
+ var embers=[],bats=[],sand=[];
+ for(i2=0;i2<64;i2++)sand.push({x:rnd(),y:rnd()*.9,v:.012+rnd()*.03,ph:rnd()*6.28,r:.5+rnd()*1.1,l:.01+rnd()*.03});
  for(i2=0;i2<36;i2++)embers.push({life:rnd()*5,max:4,x:rnd(),y:.7,dx:0,v:.04,r:1,ph:rnd()*6});
  for(i2=0;i2<4;i2++)bats.push({x:rnd(),y:.12+rnd()*.35,v:.03+rnd()*.05,ph:rnd()*6,r:.8+rnd()*.7});
  hero.insertBefore(fx,hero.firstChild);hero.insertBefore(gl,hero.firstChild);
@@ -123,6 +124,11 @@ function start(){
    var x=X(st.x),y=Y(st.y),r=st.sz*k*sc*.55;if(x<0||x>W)continue;
    c2.fillStyle="rgba(255,170,110,"+(.9*k).toFixed(2)+")";
    c2.beginPath();c2.moveTo(x,y-r*3);c2.lineTo(x+r*.35,y-r*.35);c2.lineTo(x+r*3,y);c2.lineTo(x+r*.35,y+r*.35);c2.lineTo(x,y+r*3);c2.lineTo(x-r*.35,y+r*.35);c2.lineTo(x-r*3,y);c2.lineTo(x-r*.35,y-r*.35);c2.closePath();c2.fill()}
+  for(j=0;j<sand.length;j++){var sd=sand[j];sd.y+=sd.v*dt;if(sd.y>.95){sd.y=-.02;sd.x=rnd()}
+   var sx=X(sd.x+Math.sin(tt*.4+sd.ph)*.004),sy=Y(sd.y),a=.35+.5*Math.abs(Math.sin(tt*.9+sd.ph*2)),fade=Math.min(1,sd.y*8)*Math.min(1,(.95-sd.y)*8);
+   var gr=c2.createLinearGradient(sx,sy-sd.l*H,sx,sy);gr.addColorStop(0,"rgba(255,215,130,0)");gr.addColorStop(1,"rgba(255,215,130,"+(a*fade*.55).toFixed(2)+")");
+   c2.strokeStyle=gr;c2.lineWidth=Math.max(1,sd.r*sc*.35);c2.beginPath();c2.moveTo(sx,sy-sd.l*H);c2.lineTo(sx,sy);c2.stroke();
+   c2.fillStyle="rgba(255,225,150,"+(a*fade).toFixed(2)+")";c2.beginPath();c2.arc(sx,sy,sd.r*sc*.4,0,6.283);c2.fill()}
   for(j=0;j<embers.length;j++){e=embers[j];e.life+=dt;
    if(e.life>e.max){e.life=0;e.max=3+rnd()*4;if(rnd()<.3){e.x=.68+(rnd()-.5)*.05;e.y=.27+(rnd()-.5)*.04}else{e.x=rnd();e.y=.6+rnd()*.4}e.dx=(rnd()-.5)*.03;e.v=.02+rnd()*.04;e.r=.6+rnd()*1.4}
    k=e.life/e.max;var ex=X(e.x+e.dx*k*3+Math.sin(tt*1.5+e.ph)*.006*k),ey=Y(e.y-e.v*e.life);
