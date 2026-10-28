@@ -65,6 +65,17 @@ function pend(b){
   fill:function(n,p,fb,g,st){if(!n)return;var k=MAP[p];if(!k){n.textContent=fb||"👤";return}n.textContent="";var i=new Image();i.className="avMini";i.alt="";i.decoding="async";i.src=src(k,g,st);i.onerror=function(){i.remove();n.textContent=fb||"👤"};n.appendChild(i)}
  };
 })();
+/* --- ссылка «назад» из места города/похода ведёт на нужную вкладку главной (а не всегда в Зал) --- */
+(function(){
+ var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}if(!BASE)return;
+ var CITY="top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins";
+ function tabFor(){var seg=location.href.slice(BASE.length).split("/")[0];return(" "+CITY+" ").indexOf(" "+seg+" ")>=0?"city":((" "+TRAVEL+" ").indexOf(" "+seg+" ")>=0?"travel":"")}
+ document.addEventListener("click",function(e){
+  var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
+  try{var x=new URL(a.href,location.href),bp=new URL(BASE).pathname;
+   if(x.origin===location.origin&&(x.pathname===bp||x.pathname===bp+"index.html")){var t=tabFor();if(t)x.searchParams.set("tab",t);else x.searchParams.delete("tab");a.href=x.toString()}}catch(err){}
+ },true);
+})();
 /* --- обёртка fetch: только запросы к серверу игры --- */
 var of=window.fetch;
 if(of){

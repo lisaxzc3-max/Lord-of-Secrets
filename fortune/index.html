@@ -137,7 +137,7 @@ try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0d0a14")}catch(_){}
 const $=id=>document.getElementById(id);
 const TELLER="Мадам Нира";
 $("tname").textContent=TELLER;
-const home="../index.html"+location.search;
+const home="../index.html"+(location.search?location.search+"&":"?")+"tab=city";
 $("back").href=home;$("cityBtn").href=home;
 
 const POS=["Прошлое","Настоящее","Будущее"];
