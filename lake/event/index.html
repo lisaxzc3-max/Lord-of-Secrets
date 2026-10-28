@@ -88,6 +88,7 @@ h1{font-size:20px;margin:4px 0 0;line-height:1.2}
 <script src="../../shared/fast.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
+<script src="../../shared/lakeart.js?v=1"></script>
 <script>sndMusic("lake")</script>
 </head>
 <body>
@@ -200,13 +201,13 @@ const eventMeta={
     title:"🐸 Царевна-жаба",
     type:"Странная встреча",
     symbol:"🐸",
-    images:["../img/frog.svg"]
+    images:["../img/frog.jpg?v=1"]
   },
   chest:{
     title:"📦 Сундук в омуте",
     type:"Таинственная находка",
     symbol:"📦",
-    images:["../img/chest.svg"]
+    images:["../img/chest.jpg?v=1"]
   },
   unknown:{
     title:"🌫️ Событие у озера",
@@ -309,6 +310,7 @@ function parseActions(data){
   return [];
 }
 
+try{LakeArt.attach(document.getElementById("eventImage"))}catch(_){}
 function tryImageList(images,index=0){
   const img=$("eventImage");
   const fallback=$("fallback");

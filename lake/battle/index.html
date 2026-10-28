@@ -200,6 +200,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <script src="../../shared/skills.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
+<script src="../../shared/lakeart.js?v=1"></script>
 <script>sndMusic("battle")</script>
 <style id="perfCss">button,.skill{touch-action:manipulation;-webkit-tap-highlight-color:transparent}#battleSkills{contain:layout style}.skill{contain:layout style;transition:transform .08s,opacity .15s}.skill:active:not(:disabled){transform:scale(.97)}.spark,.float{will-change:transform,opacity}@media(max-width:600px){.spark:nth-child(3n){display:none}}</style>
 </head>
@@ -290,12 +291,13 @@ let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="
 
 const $=id=>document.getElementById(id);
 const skillInfo=LOTM_SKILLS.SK;
+try{LakeArt.attach(document.getElementById("enemyImg"))}catch(_){}
 /* Картинки монстров лежат в lake/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Утопленник":"../img/drowned.svg",
-"Жаба":"../img/toad.svg",
-"Лягушка":"../img/toad.svg",
-"Змей":"../img/serpent.svg"
+"Утопленник":"../img/drowned.jpg?v=1",
+"Жаба":"../img/toad.jpg?v=1",
+"Лягушка":"../img/toad.jpg?v=1",
+"Змей":"../img/serpent.jpg?v=1"
 };
 const EMO={"Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
 const ROLE={"Утопленник":"Утопленник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
@@ -507,11 +509,11 @@ $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.s
 function setImageForEnemy(enemy){
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌊";
-const src=(enemy==="Змей"&&$("arena").classList.contains("phase2"))?"../img/serpent2.svg":pics[enemy];
+const src=(enemy==="Змей"&&$("arena").classList.contains("phase2"))?"../img/serpent2.jpg?v=1":pics[enemy];
 if(src){
 img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
 img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
-if(!img.src.endsWith(src.replace("..","")))img.src=src;else{img.classList.remove("hidden");emo.classList.add("hidden")}
+if(img.getAttribute("src")!==src)img.src=src;else{img.classList.remove("hidden");emo.classList.add("hidden")}
 }else{img.classList.add("hidden");emo.classList.remove("hidden")}
 }
 function lakeUrl(){
