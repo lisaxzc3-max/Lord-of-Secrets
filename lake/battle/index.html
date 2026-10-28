@@ -200,7 +200,7 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <script src="../../shared/skills.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
-<script src="../../shared/lakeart.js?v=1"></script>
+<script src="../../shared/forestart.js?v=2"></script>
 <script>sndMusic("battle")</script>
 <style id="perfCss">button,.skill{touch-action:manipulation;-webkit-tap-highlight-color:transparent}#battleSkills{contain:layout style}.skill{contain:layout style;transition:transform .08s,opacity .15s}.skill:active:not(:disabled){transform:scale(.97)}.spark,.float{will-change:transform,opacity}@media(max-width:600px){.spark:nth-child(3n){display:none}}</style>
 </head>
@@ -291,17 +291,22 @@ let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="
 
 const $=id=>document.getElementById(id);
 const skillInfo=LOTM_SKILLS.SK;
-try{LakeArt.attach(document.getElementById("enemyImg"))}catch(_){}
+try{ForestArt.attach(document.getElementById("enemyImg"))}catch(_){}
 /* Картинки монстров лежат в lake/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Утопленница":"../img/drowned.jpg?v=1",
-"Утопленник":"../img/drowned.jpg?v=1",
-"Жаба":"../img/toad.jpg?v=1",
-"Лягушка":"../img/toad.jpg?v=1",
-"Змей":"../img/serpent.jpg?v=1"
+"Утопленница":"../img/drowned.jpg?v=2",
+"Утопленник":"../img/drowned.jpg?v=2",
+"Жаба":"../img/toad.jpg?v=2",
+"Лягушка":"../img/toad.jpg?v=2",
+"Змей":"../img/serpent.jpg?v=2",
+"Пиявка-великанша":"../img/leech.jpg?v=2",
+"Зубастая щука":"../img/pike.jpg?v=2",
+"Кикимора":"../img/kikimora.jpg?v=2",
+"Водяной":"../img/vodyanoy.jpg?v=2"
 };
-const EMO={"Утопленница":"🧟","Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍"};
-const ROLE={"Утопленница":"Утонувшая путница","Утопленник":"Утонувший путник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь"};
+const PIC2={"Змей":"../img/serpent2.jpg?v=2","Водяной":"../img/vodyanoy2.jpg?v=2"};
+const EMO={"Утопленница":"🧟","Утопленник":"🧟","Жаба":"🐸","Лягушка":"🐸","Змей":"🐍","Пиявка-великанша":"🪱","Зубастая щука":"🐟","Кикимора":"🌿","Водяной":"🌊"};
+const ROLE={"Утопленница":"Утонувшая путница","Утопленник":"Утонувший путник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь","Пиявка-великанша":"Болотная тварь","Зубастая щука":"Речной хищник","Кикимора":"Болотная нечисть"};
 let curEnemy="";
 
 /* ===== ЭФФЕКТЫ ===== */
@@ -483,7 +488,7 @@ $("arena").classList.toggle("boss",!!boss);sndMusic(boss?"boss":"battle");
 const p2=!!boss&&Number(phase)>=2;
 const was2=$("arena").classList.contains("phase2");
 $("arena").classList.toggle("phase2",p2);
-if(curEnemy==="Змей"&&p2!==was2)setImageForEnemy(curEnemy);
+if(PIC2[curEnemy]&&p2!==was2)setImageForEnemy(curEnemy);
 }
 function cleanBattleText(value){
 const text=String(value??"").trim();
@@ -510,7 +515,7 @@ $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.s
 function setImageForEnemy(enemy){
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌊";
-const src=(enemy==="Змей"&&$("arena").classList.contains("phase2"))?"../img/serpent2.jpg?v=1":pics[enemy];
+const src=(PIC2[enemy]&&$("arena").classList.contains("phase2"))?PIC2[enemy]:pics[enemy];
 if(src){
 img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
 img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
@@ -645,8 +650,10 @@ renderSkills(state?.cds||{});
 if(!initialized){
 addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 if(state?.boss){
-setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
-setTimeout(()=>{banner("БОСС: ЗМЕЙ","#c45a6a");shakeScreen()},500);
+if(enemy==="Водяной"){setMessage("Озеро замирает. Из воды медленно поднимается Водяной. Когда он поднимает волну, жди сильного удара, а после неё бей: он выдохнется.","БОСС ОЗЁР","🌊");
+setTimeout(()=>{banner("БОСС: ВОДЯНОЙ","#c45a6a");shakeScreen()},500)}
+else{setMessage("Из глубины топи поднимается Змей. Следи за кольцами: после них идёт тяжёлый удар.","БОСС ОЗЁР","🐍");
+setTimeout(()=>{banner("БОСС: ЗМЕЙ","#c45a6a");shakeScreen()},500)}
 }
 initialized=true;
 }

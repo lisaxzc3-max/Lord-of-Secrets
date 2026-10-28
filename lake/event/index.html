@@ -4,516 +4,228 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#03101a">
-<title>Событие · Повелитель Тайн</title>
+<meta name="theme-color" content="#0a0f0b">
+<title>Озеро · Событие</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--bg:#03101a;--panel:rgba(8,22,30,.96);--line:#2d4d5c;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779}
+:root{--line:#34503f;--text:#e4ecdf;--muted:#a9bca7;--gold:#d8c08a;--moss:#8fc99a}
 *{box-sizing:border-box}
-html{min-height:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:14px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -10%,#1f7a8a40,transparent 55%),linear-gradient(#051722,#030a10)}
-button,a{-webkit-tap-highlight-color:transparent}
-button{font:inherit}
-.wrap{position:relative;z-index:2;max-width:520px;margin:auto;padding:12px 12px calc(32px + env(safe-area-inset-bottom))}
-.head{display:flex;align-items:center;gap:10px;padding:6px 0 15px}
-.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#19181de8;font-size:12px}
-.heading{min-width:0;flex:1}
-.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-h1{font-size:20px;margin:4px 0 0;line-height:1.2}
-.pill{flex-shrink:0;border:1px solid #62503a;border-radius:999px;padding:7px 9px;color:var(--gold);font-size:10px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;box-shadow:0 10px 30px #0003}
-.eventCard{overflow:hidden}
-.sceneTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px 16px 0}
-.label{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.type{font-size:10px;color:var(--gold);text-align:right}
-.artWrap{position:relative;min-height:190px;margin:13px 13px 0;overflow:hidden;border:1px solid #2d5a6a;border-radius:13px;background:#04121a}
-.art{display:block;width:100%;max-width:min(270px,34vh);aspect-ratio:1;height:auto;margin:0 auto;object-fit:cover}
-.fallback{height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;background:radial-gradient(ellipse at 50% 40%,#b79be82e,transparent 65%)}
-.symbol{font-size:65px;filter:drop-shadow(0 0 18px #d6b77940)}
-.caption{font-size:10px;letter-spacing:3px;color:var(--muted);text-align:center}
-.body{padding:16px}
-.sceneTitle{font-size:22px;line-height:1.25;font-weight:850;margin:0 0 10px}
-.sceneText{font-size:14px;line-height:1.7;color:#d1c8d6;white-space:pre-wrap;overflow-wrap:anywhere}
-.divider{height:1px;background:linear-gradient(90deg,transparent,#4b414f,transparent);margin:16px 0}
-.prompt{font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:10px;text-transform:uppercase}
-.actions{display:grid;grid-template-columns:1fr;gap:8px}
-.action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 12px;border:1px solid #514456;border-radius:12px;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer}
-.action:active:not(:disabled){transform:scale(.99)}
-.action:disabled{opacity:.5;cursor:default}
-.actionIcon{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#d6b77919;font-size:19px}
-.actionCopy{min-width:0;flex:1}
-.actionName{font-size:13px;font-weight:800;line-height:1.4}
-.actionDesc{font-size:11px;line-height:1.45;color:var(--muted);margin-top:3px}
-.arrow{color:var(--gold);font-size:21px}
-.btn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 10px;background:#29252f;color:var(--text);font-size:12px;font-weight:800;cursor:pointer}
-.btn.primary{color:#20190f;background:linear-gradient(135deg,#e4ca91,#b28c4d);border-color:#d4b779}
-.btn:disabled{opacity:.5;cursor:wait}
-.result{padding:16px;border-color:#665238;background:linear-gradient(155deg,#30271af5,#18161cf5)}
-.resultBadge{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:8px}
-.resultTitle{font-size:20px;font-weight:900;margin-bottom:9px}
-.resultText{font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
-.result .btn{margin-top:14px}
-.error{padding:13px;border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
-.error .btn{margin-top:10px}
-.note{text-align:center;color:#827b89;font-size:11px;line-height:1.7;padding:0 10px 12px}
+html{min-height:100%;background:#070b08}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:15px Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:#070b08}
+button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}
+.vn{position:relative;max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#0a0f0b}
+.art{position:absolute;left:0;right:0;top:0;height:74vh;height:74dvh;max-height:920px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#1c3326,#080d09 75%)}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.art .symbol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:90px;opacity:.8}
+.art:before{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;z-index:3;background:linear-gradient(transparent,#0a0f0b);pointer-events:none}
+.art.fx:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;animation:flash 1.1s ease-out forwards}
+.art.fx-heal:after{background:radial-gradient(circle,#7be3a066,transparent 70%)}
+.art.fx-hurt:after{background:radial-gradient(circle,transparent 35%,#b2262f99)}
+.art.fx-mad:after{background:radial-gradient(circle,#9a5fff66,transparent 70%)}
+.art.fx-poison:after{background:radial-gradient(circle,#6dff7a55,transparent 70%)}
+.art.fx-rune:after{background:radial-gradient(circle,#d8c08a77,transparent 70%)}
+.art.fx-calm:after{background:radial-gradient(circle,#ffffff14,transparent 70%)}
+@keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.back{position:absolute;z-index:6;top:calc(10px + env(safe-area-inset-top));left:10px;color:var(--text);text-decoration:none;border:1px solid #ffffff22;border-radius:10px;padding:8px 11px;background:#0a0f0bb0;font-size:12px}
+.panel{position:relative;z-index:4;padding:90px 14px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#0a0f0bd9 34%,#0a0f0bf2)}
+.tag{display:inline-block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid #d8c08a55;background:#0d140fe0;border-radius:8px;padding:5px 10px;margin:0 0 -1px 4px;position:relative;z-index:2}
+.box{position:relative;border:1px solid #3a5545;border-radius:14px;background:#0c130ee8;padding:15px 15px 18px;min-height:108px;cursor:pointer;box-shadow:0 10px 28px #0007}
+.text{font-size:15px;line-height:1.72;color:#e2ebdd;white-space:pre-wrap;overflow-wrap:anywhere}
+.text .ghost{opacity:0}
+.tap{position:absolute;right:13px;bottom:8px;color:var(--gold);font-size:14px;animation:tap 1.2s ease-in-out infinite}
+@keyframes tap{50%{transform:translateY(3px);opacity:.5}}
+.actions{display:grid;gap:8px;margin-top:12px}
+.action{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 13px;border:1px solid #46614f;border-left:3px solid var(--gold);border-radius:11px;color:var(--text);background:#101a13ee;cursor:pointer;transition:transform .12s,background .2s;animation:rise .45s backwards}
+.action:active:not(:disabled){transform:scale(.985);background:#17261c}
+.action:disabled{opacity:.5}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.arrow{margin-left:auto;margin-right:30px;color:var(--gold);font-size:21px}
+.aName{font-size:13.5px;font-weight:700;line-height:1.4}
+.rgrid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.rchip{font-weight:850;font-size:14px;padding:7px 11px;border-radius:10px;border:1px solid #4a4147;background:#161b17e8;animation:pop .5s backwards}
+.rchip.up{color:#8ff0aa;border-color:#3f7a52}.rchip.down{color:#ff8a92;border-color:#7a3b42}.rchip.mad{color:#c9a8ff;border-color:#62487f}
+@keyframes pop{from{opacity:0;transform:scale(.4)}}
+.btn{display:block;width:100%;border:1px solid #46614f;border-radius:11px;padding:13px 10px;background:#121d16ee;color:var(--text);font-weight:800;font-size:13px;cursor:pointer;margin-top:9px;animation:rise .45s backwards}
+.btn.primary{color:#0d1a11;background:linear-gradient(135deg,#b4e3bb,#6bb07b);border-color:#8fd29a}
 .hidden{display:none!important}
-@media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.sceneTitle{font-size:20px}.art{height:195px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
-/* ---- атмосфера озера ---- */
-.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.moon{position:absolute;top:6%;right:14%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#f3f6df,#c9d8c0 60%,#9fbab0);box-shadow:0 0 70px 22px #bfe3f033}
-.glint{position:absolute;top:22%;right:calc(14% + 36px);width:12px;height:46%;background:linear-gradient(#e8f6ff55,#0000);filter:blur(5px);animation:glint 4s ease-in-out infinite}
-.horizon{position:absolute;left:0;right:0;top:40%;height:60%;background:linear-gradient(#0b3a4a66,#031018 70%)}
-.mist{position:absolute;left:-50%;width:200%;height:34%;background:radial-gradient(ellipse at center,#9fd0d82b,transparent 65%);filter:blur(10px)}
-.mist.a{bottom:24%;animation:mist 30s linear infinite}.mist.b{bottom:8%;animation:mist 44s linear -18s infinite reverse;opacity:.7}
-.wave{position:absolute;left:-10%;width:120%;height:2px;background:linear-gradient(90deg,transparent,#8fe8f044,transparent);animation:wave var(--t) ease-in-out var(--d) infinite}
-.bub{position:absolute;bottom:-12px;width:8px;height:8px;border-radius:50%;border:1.5px solid #bff6ff88;animation:bub var(--t) linear var(--d) infinite}
-.fly{position:absolute;width:4px;height:4px;border-radius:50%;background:#d8ffe8;box-shadow:0 0 9px 3px #9fffd066;animation:fly var(--t) ease-in-out var(--d) infinite;opacity:0}
-@keyframes glint{50%{opacity:.4;transform:scaleX(1.6)}}
-@keyframes mist{from{transform:translateX(0)}to{transform:translateX(25%)}}
-@keyframes wave{0%,100%{transform:translateY(0);opacity:.2}50%{transform:translateY(5px);opacity:.8}}
-@keyframes bub{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(var(--x),-100vh);opacity:0}}
-@keyframes fly{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}60%{transform:translate(var(--x),var(--y));opacity:.5}100%{opacity:0;transform:translate(calc(var(--x)*-.5),calc(var(--y)*1.4))}}
-@media(prefers-reduced-motion:reduce){.scene *{animation:none!important}}
-
-.artWrap.fx-poison:after,.artWrap.fx-gold:after,.artWrap.fx-hurt:after,.artWrap.fx-calm:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;animation:efl 1.1s ease-out forwards}
-.fx-poison:after{background:radial-gradient(circle,#6dff7aaa,transparent 70%)}
-.fx-gold:after{background:radial-gradient(circle,#ffd84acc,transparent 70%)}
-.fx-hurt:after{background:radial-gradient(circle,transparent 30%,#c4252fcc)}
-.fx-calm:after{background:radial-gradient(circle,#ffffff22,transparent 70%)}
-@keyframes efl{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
-.shk{animation:shk .5s}
+.err{margin:0 0 10px;padding:13px;border:1px solid #783b42;border-radius:12px;background:#2a1215ee;color:#f0b3b3;font-size:12.5px;line-height:1.6}
+.shake{animation:shk .5s}
 @keyframes shk{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}}
+@media(prefers-reduced-motion:reduce){.art.fx:after{display:none}*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 <script src="../../shared/fast.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
-<script src="../../shared/lakeart.js?v=1"></script>
 <script>sndMusic("lake")</script>
 </head>
 <body>
-<div class="scene" id="scene" aria-hidden="true"><div class="moon"></div><div class="glint"></div><div class="horizon"></div><div class="mist a"></div><div class="mist b"></div></div>
-<div class="wrap">
-<header class="head">
-  <a class="back" id="backLake" href="../index.html">← Озёра</a>
-  <div class="heading">
-    <div class="eyebrow">Lord of the Mysteries</div>
-    <h1>Событие</h1>
+<div class="vn" id="vn">
+ <div class="art" id="art"><div class="symbol" id="symbol">🌲</div><img id="evImg" class="hidden" alt=""></div>
+ <a class="back" id="backForest" href="../index.html">← Озёра</a>
+ <div class="panel">
+  <div class="err hidden" id="errCard" role="alert"><div id="errText"></div><button class="btn" id="errBack" type="button">← К озёрам</button></div>
+  <div class="tag" id="evTitle">Озеро</div>
+  <div class="box" id="box"><div class="text" id="evText">Загрузка…</div><span class="tap hidden" id="tap">▾</span></div>
+  <div class="rgrid" id="rgrid"></div>
+  <div class="actions" id="actions"></div>
+  <div class="hidden" id="endBtns">
+   <button class="btn primary" id="again" type="button">🔍 Исследовать дальше</button>
+   <button class="btn" id="toForest" type="button">← К озёрам</button>
   </div>
-  <div class="pill" id="pill">Неизвестность</div>
-</header>
-
-<main>
-  <section class="card eventCard">
-    <div class="sceneTop">
-      <span class="label">Неожиданная встреча</span>
-      <span class="type" id="eventType">Событие у озера</span>
-    </div>
-
-    <div class="artWrap">
-      <div class="fallback" id="fallback">
-        <div class="symbol" id="symbol">🌫️</div>
-        <div class="caption">Туман скрывает детали</div>
-      </div>
-      <img class="art hidden" id="eventImage" alt="Иллюстрация события">
-    </div>
-
-    <div class="body">
-      <h2 class="sceneTitle" id="eventTitle">Загадка в тумане</h2>
-      <div class="sceneText" id="eventText" aria-live="polite">Загрузка события…</div>
-      <div class="divider"></div>
-      <div class="prompt" id="prompt">Твой следующий шаг</div>
-      <div class="actions" id="actions"></div>
-    </div>
-  </section>
-
-  <section class="card result hidden" id="resultCard">
-    <div class="resultBadge">◆ ПОСЛЕДСТВИЯ ◆</div>
-    <div class="resultTitle" id="resultTitle">Выбор сделан</div>
-    <div class="resultText" id="resultText"></div>
-    <button class="btn primary" id="returnResult" type="button">Вернуться к озеру</button>
-  </section>
-
-  <section class="card error hidden" id="errorCard" role="alert">
-    <div id="errorText"></div>
-    <button class="btn" id="retry" type="button">Повторить действие</button>
-    <button class="btn" id="returnError" type="button">Вернуться к озеру</button>
-  </section>
-</main>
-
-<div class="note">
-  Встреча может принести награду, опасность или нечто куда менее понятное.
-  <br>В тумане бесплатных решений почти не бывает.
+ </div>
 </div>
-</div>
-
+<script src="../../shared/forestart.js?v=2"></script>
 <script>
 "use strict";
-
 const tg=window.Telegram?.WebApp||null;
-try{tg?.ready();tg?.expand();tg?.setHeaderColor("#101014")}catch(_){}
-
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0a0f0b")}catch(_){}
 const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
-const pEnc=qs.get("p_enc")||qs.get("p")||"";
 const aEnc=qs.get("a_enc")||qs.get("a")||"";
 /* вход только по личным ссылкам бота */
-
-let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
-let handshakePromise=null;
-let busy=false;
-let completed=false;
-let lastAction=null;
-let eventData=null;
-
 const $=id=>document.getElementById(id);
+let busy=false,done=false,ev=null,evKey="";
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 
-function unwrap(value){
-  let v=value;
-  for(let i=0;i<3;i++){
-    if(v&&v.result&&typeof v.result==="object")v=v.result;
-    else break;
-  }
-  return v;
-}
-
-function textOf(obj,keys,fallback=""){
-  for(const key of keys){
-    const v=obj?.[key];
-    if(typeof v==="string"&&v.trim())return v;
-    if(typeof v==="number")return String(v);
-  }
-  return fallback;
-}
-
-function normalizeKind(data){
-  const raw=data?.event_type??data?.event_kind??data?.kind??data?.event_id??data?.event??data?.type??"";
-  const value=typeof raw==="object"?(raw.id??raw.name??raw.type??""):raw;
-  const s=String(value).toLowerCase();
-  if(/frog|жаб/.test(s))return "frog";
-  if(/chest|сундук|treasure|сокров/.test(s))return "chest";
-  return "unknown";
-}
-
-const eventMeta={
-  frog:{
-    title:"🐸 Царевна-жаба",
-    type:"Странная встреча",
-    symbol:"🐸",
-    images:["../img/frog.jpg?v=1"]
-  },
-  chest:{
-    title:"📦 Сундук в омуте",
-    type:"Таинственная находка",
-    symbol:"📦",
-    images:["../img/chest.jpg?v=1"]
-  },
-  unknown:{
-    title:"🌫️ Событие у озера",
-    type:"Неизвестная встреча",
-    symbol:"🌫️",
-    images:[]
-  }
+/* Картинки событий лежат в lake/img. Чтобы заменить, поменяй путь. */
+const META={
+frog:{t:"Царевна-жаба",s:"🐸"},
+chest:{t:"Сундук в омуте",s:"📦"},
+fisherman:{t:"Старик на мостках",s:"🎣"},
+boat:{t:"Лодка без вёсел",s:"🛶"},
+lights:{t:"Огоньки над болотом",s:"🕯"},
+bell:{t:"Колокол под водой",s:"🔔"},
+mermaid:{t:"Песня русалки",s:"🧜"},
+fishhut:{t:"Рыбацкая хижина",s:"🛖"},
+reflection:{t:"Отражение",s:"🪞"}
 };
+const IMG={};Object.keys(META).forEach(k=>IMG[k]="../img/"+(k==="fishhut"?"fishhut":k)+".jpg?v=2");
+const ICON={frog_kiss:"💋",frog_leave:"↩",chest_dive:"📦",chest_leave:"↩",l_fisherman_buy:"🐟",l_fisherman_memory:"🧠",l_fisherman_leave:"↩",l_boat_ride:"🛶",l_boat_letter:"✉",l_boat_push:"↩",l_lights_follow:"🕯",l_lights_coin:"🪙",l_lights_ignore:"🙈",l_bell_listen:"👂",l_bell_plug:"🙉",l_bell_ring:"🔔",l_mermaid_sing:"🎵",l_mermaid_plug:"🙉",l_mermaid_wreath:"🌼",l_fishhut_rest:"🛏",l_fishhut_search:"🔍",l_fishhut_diary:"📖",l_reflection_smile:"🙂",l_reflection_break:"🌊",l_reflection_talk:"💬"};
 
-function cleanLakeUrl(){
-  const params=new URLSearchParams(location.search);
-  params.delete("event_data");
-  params.delete("enemy");
-  const query=params.toString();
-  return "../index.html"+(query?"?"+query:"");
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+async function ensure(){
+ if(ACTION_URL)return;
+ const r=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+ if(!r.ok)throw new Error("Не удалось подключиться к игре (HTTP "+r.status+").");
+ const d=unwrap(await r.json());const a=d?.action_url||d?.ACTION_URL;
+ if(typeof a!=="string"||!a)throw new Error("Сервер не вернул адрес действий.");
+ ACTION_URL=new URL(a).href;
 }
-function goLake(){location.href=cleanLakeUrl()}
-$("backLake").href=cleanLakeUrl();
-
-function showError(message){
-  $("errorText").textContent=message||"Не удалось выполнить действие.";
-  $("errorCard").classList.remove("hidden");
-}
-function hideError(){$("errorCard").classList.add("hidden")}
-
-function setBusy(value){
-  busy=value;
-  document.querySelectorAll("#actions button,#retry").forEach(b=>b.disabled=value||completed);
-}
-function makeButton(label,cls,handler){
-  const b=document.createElement("button");
-  b.type="button";
-  b.className=cls;
-  b.textContent=label;
-  b.addEventListener("click",handler);
-  return b;
-}
-
-async function ensureUrls(){
-  if(PROFILE_URL&&ACTION_URL)return true;
-  if(handshakePromise)return handshakePromise;
-
-  handshakePromise=(async()=>{
-    const response=await needStart({
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({user_id:uid}),
-      cache:"no-store"
-    });
-    if(!response.ok)throw new Error("Ошибка подключения к игровому серверу: HTTP "+response.status);
-
-    const data=unwrap(await response.json());
-    const profile=data?.profile_url||data?.PROFILE_URL;
-    const action=data?.action_url||data?.ACTION_URL;
-    if(typeof profile!=="string"||!profile||typeof action!=="string"||!action){
-      throw new Error("Сервер не вернул адреса игрового профиля и действий.");
-    }
-    const p=new URL(profile),a=new URL(action);
-    if(p.protocol!=="https:"||a.protocol!=="https:")throw new Error("Сервер вернул некорректный адрес API.");
-    PROFILE_URL=p.href;
-    ACTION_URL=a.href;
-    return true;
-  })();
-
-  try{return await handshakePromise}
-  finally{handshakePromise=null}
-}
-
 async function api(payload){
-  await ensureUrls();
-  const response=await fetch(ACTION_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload),
-    cache:"no-store"
+ await ensure();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const d=unwrap(await r.json());
+ if(!d||typeof d!=="object")throw new Error("Сервер вернул некорректный ответ.");
+ return d;
+}
+function forestUrl(){const p=new URLSearchParams(location.search);p.delete("event_data");p.delete("enemy");const q=p.toString();return "../index.html"+(q?"?"+q:"")}
+function goForest(){location.href=forestUrl()}
+$("backForest").href=forestUrl();
+function showErr(t){$("errText").textContent=t;$("errCard").classList.remove("hidden")}
+
+
+/* ---- визуальная новелла: текст печатается поверх арта ---- */
+let typer=null,typeDone=null;
+function typeText(txt,after){
+ const el=$("evText");clearInterval(typer);typeDone=null;
+ $("tap").classList.add("hidden");
+ txt=String(txt||"");
+ const fin=()=>{clearInterval(typer);typer=null;el.textContent=txt;$("tap").classList.add("hidden");typeDone=null;if(after)after()};
+ if(reduce||!txt){fin();return}
+ /* невидимый хвост держит высоту блока, текст не прыгает */
+ const a=document.createElement("span"),b=document.createElement("span");b.className="ghost";
+ el.replaceChildren(a,b);let i=0;const step=Math.max(1,Math.ceil(txt.length/110));
+ a.textContent="";b.textContent=txt;
+ typer=setInterval(()=>{i=Math.min(txt.length,i+step);a.textContent=txt.slice(0,i);b.textContent=txt.slice(i);if(i>=txt.length)fin()},26);
+ typeDone=fin;$("tap").classList.remove("hidden");
+}
+$("box").addEventListener("click",()=>{if(typeDone)typeDone()});
+function showActions(on){const b=$("actions");b.classList.toggle("hidden",!on)}
+function setImage(k){
+ const src=IMG[k];const img=$("evImg");
+ if(!src){img.classList.add("hidden");return}
+ img.onload=()=>{img.classList.remove("hidden");$("symbol").classList.add("hidden");try{ForestArt.attach(img)}catch(_){}};
+ img.onerror=()=>img.classList.add("hidden");
+ img.src=src;
+}
+function renderEvent(d){
+ ev=d;evKey=String(d.event||d.image||"");
+ const m=META[evKey]||{t:"Событие у озера",s:"🌲"};
+ $("evTitle").textContent=m.t;
+ $("symbol").textContent=m.s;
+ setImage(evKey);
+ const box=$("actions");box.replaceChildren();
+ const acts=Array.isArray(d.actions)?d.actions:[];
+ const build=()=>{
+  if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← К озёрам";b.onclick=goForest;box.appendChild(b);return}
+  acts.forEach((a,i)=>{
+   const b=document.createElement("button");b.type="button";b.className="action";b.style.animationDelay=(i*.08)+"s";
+   const ic=document.createElement("span");ic.style.fontSize="20px";ic.textContent=ICON[a.id]||"•";
+   const nm=document.createElement("span");nm.className="aName";nm.textContent=String(a.label||a.id).replace(/^\S+\s/,"")||a.label;
+   const ar=document.createElement("span");ar.className="arrow";ar.textContent="›";
+   b.append(ic,nm,ar);b.addEventListener("click",()=>choose(a.id));box.appendChild(b);
   });
-  if(!response.ok)throw new Error("Ошибка игрового сервера: HTTP "+response.status);
-  const data=unwrap(await response.json());
-  if(!data||typeof data!=="object")throw new Error("Игровой сервер вернул некорректный ответ.");
-  return data;
+  setTimeout(()=>box.lastElementChild?.scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),60);
+ };
+ typeText(d.text||"Ты замечаешь движение между деревьями.",build);
 }
-
-function parseActions(data){
-  const candidates=[
-    data?.actions,data?.choices,data?.options,data?.moves,
-    data?.event?.actions,data?.event?.choices,data?.event?.options,
-    data?.result?.actions
-  ];
-  for(const arr of candidates){
-    if(!Array.isArray(arr))continue;
-    return arr.map((item,index)=>{
-      if(typeof item==="string")return {id:item,label:item,description:""};
-      if(!item||typeof item!=="object")return null;
-      const id=item.id??item.move??item.action??item.value??item.key??item.callback_data;
-      const label=item.label??item.title??item.name??item.text??item.description??("Вариант "+(index+1));
-      if(id===undefined||id===null)return null;
-      return {raw:item,id:String(id),label:String(label),description:textOf(item,["hint","desc","description"],"")};
-    }).filter(Boolean);
+function setBtns(dis){document.querySelectorAll("#actions button").forEach(b=>b.disabled=dis)}
+async function choose(id){
+ if(busy||done)return;busy=true;setBtns(true);
+ try{
+  const r=await api({action:"event_choice",move:id});
+  if(r.ok===false||r.error){
+   const t=String(r.error||r.text||"Сервер не принял выбор.");
+   showErr(t==="unknown_event_move"?"Это событие уже закончилось.":t);setBtns(false);return;
   }
-  return [];
+  done=true;showResult(r);
+ }catch(e){showErr(e.message||"Ошибка связи.");setBtns(false)}
+ finally{busy=false}
 }
-
-try{LakeArt.attach(document.getElementById("eventImage"))}catch(_){}
-function tryImageList(images,index=0){
-  const img=$("eventImage");
-  const fallback=$("fallback");
-  if(index>=images.length){
-    img.classList.add("hidden");
-    img.removeAttribute("src");
-    fallback.classList.remove("hidden");
-    return;
-  }
-  img.onload=()=>{
-    img.classList.remove("hidden");
-    fallback.classList.add("hidden");
-  };
-  img.onerror=()=>tryImageList(images,index+1);
-  img.src=images[index];
+function showResult(r){
+ const ev0=String(r.event||"");const fx=r.fx||(ev0==="frog_kiss"?"poison":ev0==="chest_dive"?"rune":ev0==="chest_dive_fail"?"hurt":"calm");
+ if(ev0==="frog_kiss"){snd("kiss")}else if(ev0==="chest_dive"){snd("dive")}
+ snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
+ const st=$("art");st.classList.remove("fx","fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx","fx-"+fx);
+ if(fx==="hurt"||fx==="poison"){$("vn").classList.add("shake");setTimeout(()=>$("vn").classList.remove("shake"),520)}
+ try{tg?.HapticFeedback?.notificationOccurred(fx==="hurt"||fx==="poison"?"error":"success")}catch(_){}
+ $("actions").replaceChildren();$("errCard").classList.add("hidden");
+ $("evTitle").textContent="Последствия";
+ const g=$("rgrid");g.replaceChildren();
+ const chip=(txt,cls,i)=>{const c=document.createElement("span");c.className="rchip "+cls;c.textContent=txt;c.style.animationDelay=(i*.12)+"s";g.appendChild(c)};
+ const finish=()=>{
+  let i=0;
+  if(r.d_hp)chip((r.d_hp>0?"+":"")+r.d_hp+" ❤️",r.d_hp>0?"up":"down",i++);
+  if(r.d_pounds)chip((r.d_pounds>0?"+":"")+r.d_pounds+" £",r.d_pounds>0?"up":"down",i++);
+  if(r.d_mad)chip((r.d_mad>0?"+":"")+r.d_mad+" 🌀",r.d_mad>0?"mad":"up",i++);
+  $("endBtns").classList.remove("hidden");
+  setTimeout(()=>$("endBtns").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),80);
+ };
+ typeText(r.text||"Твой выбор изменил ход событий.",finish);
 }
-
-function setEventImage(kind,data){
-  const meta=eventMeta[kind]||eventMeta.unknown;
-  $("symbol").textContent=meta.symbol;
-  $("fallback").classList.remove("hidden");
-  $("eventImage").classList.add("hidden");
-
-  const supplied=[
-    data?.image_url,data?.image,data?.photo_url,data?.photo,
-    data?.event?.image_url,data?.event?.image
-  ].filter(v=>typeof v==="string"&&v.trim());
-
-  const validSupplied=supplied.filter(v=>/^https?:\/\//i.test(v)||v.startsWith("../")||v.startsWith("./"));
-  tryImageList([...validSupplied,...meta.images]);
-}
-
-function renderEvent(data){
-  eventData=data;
-  const kind=normalizeKind(data);
-  const meta=eventMeta[kind];
-
-  const nested=(data.event&&typeof data.event==="object")?data.event:{};
-  const title=textOf(data,["title","event_title","name","heading"],"")||
-    textOf(nested,["title","name"],"")||meta.title;
-  const description=textOf(data,["text","description","desc","message","story","event_text","narrative"],"")||
-    textOf(nested,["text","description","desc","message"],"");
-
-  $("eventTitle").textContent=title;
-  $("eventType").textContent=meta.type;
-  $("pill").textContent=kind==="frog"?"Встреча":kind==="chest"?"Находка":"Событие";
-  $("eventText").textContent=description||"Ты замечаешь движение в тумане.";
-  setEventImage(kind,data);
-
-  const container=$("actions");
-  container.replaceChildren();
-  const actions=parseActions(data);
-
-  if(!actions.length){
-    $("prompt").textContent="Событие не получило варианты";
-    $("eventText").textContent+="\n\nСервер не передал список решений. Чтобы не отправлять случайный выбор, вернись к озеру и попробуй исследовать берег снова.";
-    container.appendChild(makeButton("Вернуться к озеру","btn primary",goLake));
-    return;
-  }
-
-  $("prompt").textContent="Твой следующий шаг";
-
-  actions.forEach((action,index)=>{
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="action";
-
-    const icon=document.createElement("div");
-    icon.className="actionIcon";
-    icon.textContent=actionIcon(action,index);
-
-    const copy=document.createElement("div");
-    copy.className="actionCopy";
-
-    const name=document.createElement("div");
-    name.className="actionName";
-    name.textContent=action.label;
-
-    copy.appendChild(name);
-
-    if(action.description){
-      const desc=document.createElement("div");
-      desc.className="actionDesc";
-      desc.textContent=action.description;
-      copy.appendChild(desc);
-    }
-
-    const arrow=document.createElement("span");
-    arrow.className="arrow";
-    arrow.textContent="›";
-
-    b.append(icon,copy,arrow);
-    b.addEventListener("click",()=>chooseAction(action));
-    container.appendChild(b);
-  });
-}
-
-function actionIcon(action,index){
-  const value=(action.id+" "+action.label).toLowerCase();
-  if(/frog|жаб/.test(value))return "🐸";
-  if(/chest|сундук|open|treasure|открыть/.test(value))return "📦";
-  if(/leave|run|уйти|бежать|отказ/.test(value))return "🚶";
-  if(/attack|fight|атак|сраж/.test(value))return "⚔️";
-  if(/talk|speak|говор|диалог/.test(value))return "💬";
-  return ["🔍","🕯️","🖐️","🌀"][index%4];
-}
-
-function lakeResultFx(result){
-  const ev=String(result.event||"");
-  const cls=ev==="frog_kiss"?"fx-poison":ev==="chest_dive"?"fx-gold":ev==="chest_dive_fail"?"fx-hurt":"fx-calm";
-  if(ev==="frog_kiss"){snd("kiss");snd("bad",0.35)}else if(ev==="chest_dive"){snd("dive");snd("coin",0.9)}else if(cls==="fx-hurt")snd("bad");else snd("good");
-  const box=document.querySelector(".artWrap");
-  box.classList.remove("fx-poison","fx-gold","fx-hurt","fx-calm");void box.offsetWidth;box.classList.add(cls);
-  if(cls==="fx-hurt"||cls==="fx-poison"){const c=document.querySelector(".eventCard")||document.body;c.classList.add("shk");setTimeout(()=>c.classList.remove("shk"),520)}
-  try{tg?.HapticFeedback?.notificationOccurred(cls==="fx-hurt"||cls==="fx-poison"?"error":"success")}catch(_){}
-}
-async function chooseAction(action){
-  if(busy||completed)return;
-  lastAction=action;
-  hideError();
-  setBusy(true);
-
-  try{
-    const result=await api({action:"event_choice",move:action.id});
-
-    if(result.error){
-      showError(textOf(result,["text","message","error"],"Сервер не принял этот выбор."));
-      return;
-    }
-
-    completed=true;
-    const message=textOf(result,["text","message","description","result","result_text"],"Твой выбор изменил ход событий.");
-    $("eventText").textContent=message;
-    $("prompt").textContent="Последствия выбора";
-    $("actions").replaceChildren();
-    $("pill").textContent="Завершено";
-    $("eventType").textContent="Последствия";
-    $("resultTitle").textContent=textOf(result,["title","result_title"],"Выбор сделан");
-    $("resultText").textContent=message;
-    $("resultCard").classList.remove("hidden");
-
-    const reward=result.reward??result.rewards;
-    if(reward!==undefined){
-      const rewardText=typeof reward==="string"?reward:JSON.stringify(reward);
-      $("resultText").textContent+="\n\nНаграда: "+rewardText;
-    }
-
-    lakeResultFx(result);
-  }catch(error){
-    console.error("Event choice error:",error);
-    showError(error.message||"Не удалось выполнить выбор.");
-  }finally{
-    setBusy(false);
-  }
-}
-
-function loadEventFromUrl(){
-  const raw=qs.get("event_data");
-  if(!raw){
-    $("eventTitle").textContent="Событие не найдено";
-    $("eventText").textContent="Страница открыта без данных встречи. Вернись к озеру и нажми «Исследовать берег».";
-    $("pill").textContent="Нет данных";
-    $("actions").replaceChildren();
-    $("actions").appendChild(makeButton("Вернуться к озеру","btn primary",goLake));
-    setEventImage("unknown",{});
-    return;
-  }
-
-  try{
-    const parsed=JSON.parse(raw);
-    const data=unwrap(parsed);
-    if(!data||typeof data!=="object")throw new Error("Некорректный формат события.");
-    renderEvent(data);
-  }catch(error){
-    console.error("Event data parsing error:",error);
-    $("eventTitle").textContent="Не удалось прочитать событие";
-    $("eventText").textContent="Данные встречи повреждены или имеют неизвестный формат. Вернись к озеру и начни исследование заново.";
-    $("pill").textContent="Ошибка данных";
-    $("actions").replaceChildren();
-    $("actions").appendChild(makeButton("Вернуться к озеру","btn primary",goLake));
-    setEventImage("unknown",{});
-  }
-}
-
-$("returnResult").addEventListener("click",goLake);
-$("returnError").addEventListener("click",goLake);
-$("retry").addEventListener("click",()=>{
-  if(lastAction)chooseAction(lastAction);
-  else{
-    hideError();
-    showError("Невозможно повторить действие: выбор события не был определён. Вернись к озеру и начни новое исследование.");
-  }
+$("toForest").addEventListener("click",goForest);
+$("errBack").addEventListener("click",goForest);
+$("again").addEventListener("click",async()=>{
+ if(busy)return;busy=true;
+ try{
+  const d=await api({action:"explore_lake"});
+  if(d.error==="cooldown"){showErr("Подожди ещё "+(d.left||5)+" сек.");return}
+  if(d.ok===false||d.error){showErr(String(d.text||d.error));return}
+  const p=new URLSearchParams(location.search);
+  if(d.type==="event"){p.set("event_data",JSON.stringify(d));location.href="./index.html?"+p.toString();return}
+  p.delete("event_data");if(d.enemy)p.set("enemy",d.enemy);
+  location.href="../battle/index.html?"+p.toString();
+ }catch(e){showErr(e.message||"Ошибка связи.")}finally{busy=false}
 });
-
-(function(){
-if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-var sc=document.getElementById("scene");if(!sc)return;var r=function(a,b){return a+Math.random()*(b-a)};
-for(var i=0;i<7;i++){var w=document.createElement("i");w.className="wave";w.style.top=r(48,96)+"%";w.style.setProperty("--t",r(3,6)+"s");w.style.setProperty("--d",r(-6,0)+"s");sc.appendChild(w)}
-for(var j=0;j<12;j++){var b=document.createElement("i");b.className="bub";b.style.left=r(2,98)+"%";b.style.setProperty("--x",r(-24,24)+"px");b.style.setProperty("--t",r(9,16)+"s");b.style.setProperty("--d",r(-14,0)+"s");sc.appendChild(b)}
-for(var k=0;k<9;k++){var f=document.createElement("i");f.className="fly";f.style.left=r(4,96)+"%";f.style.top=r(40,88)+"%";f.style.setProperty("--x",r(-50,50)+"px");f.style.setProperty("--y",r(-60,20)+"px");f.style.setProperty("--t",r(5,10)+"s");f.style.setProperty("--d",r(-8,0)+"s");sc.appendChild(f)}
+(function init(){
+ const raw=qs.get("event_data");
+ const toForestBtn=()=>{const b=document.createElement("button");b.className="btn primary";b.textContent="← К озёрам";b.onclick=goForest;$("actions").appendChild(b)};
+ if(!raw){$("evTitle").textContent="Событие не найдено";$("evText").textContent="Вернись к озёрам и нажми «Всмотреться в туман».";toForestBtn();return}
+ try{const d=unwrap(JSON.parse(raw));if(!d||typeof d!=="object")throw 0;renderEvent(d)}
+ catch(_){$("evTitle").textContent="Не удалось прочитать событие";$("evText").textContent="Данные повреждены. Вернись к озёрам и начни заново.";toForestBtn()}
 })();
-
-loadEventFromUrl();
 </script>
 <script src="../../shared/icons.js?v=i1"></script>
 </body>
