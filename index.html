@@ -18,9 +18,11 @@ window.matchMedia=function(q){if(/prefers-reduced-motion\s*:\s*reduce/.test(Stri
 :root{--gold:#d6b779;--gold2:#b28c4d;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.82)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 html{background:#0b0912;color-scheme:dark}
-html:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,#2a1f4a 0%,transparent 60%),radial-gradient(ellipse at 50% 100%,#1c1230 0%,transparent 60%),linear-gradient(#0d0a18,#07050d)}
+html:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(#0b091273 0%,#0b09122b 32%,#0b091250 64%,#07050dd9 100%),url(shared/art/sefira.jpg?v=1) 50% 28%/cover no-repeat,#0b0912}
 body{min-height:100vh;min-height:100dvh;color:var(--text);background:transparent;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 30% at 20% 30%,#5b3fa044,transparent 70%),radial-gradient(35% 28% at 80% 70%,#a03a5a33,transparent 70%);animation:fog 22s ease-in-out infinite alternate}
+html body{background-image:none!important;background-color:transparent!important}
+@media(min-width:600px){html:before{background:linear-gradient(90deg,#0b0912 0%,#0b091200 30%,#0b091200 70%,#0b0912 100%),linear-gradient(#0b091273 0%,#0b09122b 32%,#0b091250 64%,#07050dd9 100%),url(shared/art/sefira.jpg?v=1) 50% 0/auto 100% no-repeat,#0b0912}}
+body:before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 30% at 20% 30%,#5b3fa022,transparent 70%),radial-gradient(35% 28% at 80% 70%,#a03a5a1a,transparent 70%);animation:fog 22s ease-in-out infinite alternate}
 body:after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,#05030acc 100%)}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .wrap{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:12px 10px calc(84px + env(safe-area-inset-bottom))}
