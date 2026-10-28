@@ -162,6 +162,20 @@ DK.sizzle=function(t){noise(t,0.7,0.22,"highpass",4000,9000,0.7,{attack:0.05,wet
 DK.rune=function(t){osc("sine",N(67),t,1.4,0.1,{wet:0.95,attack:0.05,vib:5});osc("sine",N(67)*1.5,t+0.05,1.2,0.05,{wet:0.95});noise(t,0.3,0.06,"bandpass",3500,2500,5,{wet:0.8})};
 DK.brewdone=function(t){osc("sine",N(36),t,2.8,0.35,{to:N(32),wet:0.8});[55,58,62,67].forEach(function(m,i){osc("sine",N(m),t+0.5+i*0.18,2.2,0.13,{wet:0.95,attack:0.1,vib:4})});noise(t,1.2,0.2,"bandpass",600,1800,2,{attack:0.3,wet:0.9})};
 for(var _k2 in DK)SFX[_k2]=DK[_k2];
+/* ===== звуки квестов (этапы I и II) ===== */
+var QS={
+qtick:function(t){osc("sine",520+Math.random()*120,t,0.035,0.03)},
+qlamp:function(t){noise(t,0.35,0.16,"highpass",2500,6000,0.5,{attack:0.01});osc("sine",N(36),t,0.5,0.14,{to:N(33),wet:0.6})},
+qglass:function(t){[88,91,95,100].forEach(function(m,i){osc("sine",N(m),t+i*0.07,1.2,0.05,{wet:0.95,vib:6})});noise(t,0.5,0.05,"bandpass",5000,2500,6,{wet:0.9})},
+qdoor:function(t){osc("sawtooth",70,t,1.6,0.2,{to:50,vib:5,vibd:8,wet:0.5,attack:0.2});noise(t,1.4,0.18,"bandpass",300,900,1.6,{attack:0.5,wet:0.6});osc("sine",N(31),t+1.1,1.6,0.3,{wet:0.8})},
+qpage:function(t){noise(t,0.22,0.2,"bandpass",2600,1200,1.4,{attack:0.04,wet:0.3});noise(t+0.12,0.18,0.12,"highpass",3500,7000,0.5)},
+qbeat:function(t){osc("sine",62,t,0.22,0.5,{to:34});osc("sine",56,t+0.3,0.26,0.4,{to:32})},
+qclock:function(t){for(var i=0;i<3;i++){osc("sine",N(43),t+i*0.9,2.4,0.22,{wet:0.9});osc("sine",N(43)*2.41,t+i*0.9,1.6,0.07,{wet:0.9});noise(t+i*0.9,0.04,0.18,"lowpass",900,300)}},
+qcrackle:function(t){for(var i=0;i<9;i++)noise(t+Math.random()*0.8,0.04+Math.random()*0.05,0.16,"highpass",2500+Math.random()*3000,7000,0.6)},
+qwhoosh:function(t){noise(t,0.8,0.28,"bandpass",300,2400,1.1,{attack:0.3,wet:0.5})},
+qchime:function(t){[79,83,86,91].forEach(function(m,i){osc("sine",N(m),t+i*0.11,1.8,0.08,{wet:0.9,attack:0.02})})}
+};
+for(var _k3 in QS)SFX[_k3]=QS[_k3];
 
 function sfx(name,delay){
 if(!st.on||!AC)return;
