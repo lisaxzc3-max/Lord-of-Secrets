@@ -101,7 +101,7 @@ function start(){
  var seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
  var stars=[],i2;for(i2=0;i2<50&&S.length;i2++){var s=S[Math.floor(rnd()*S.length)];stars.push({x:s[0],y:s[1],ph:rnd()*6.28,sp:.5+rnd()*1.3,sz:.5+rnd()*1.1+s[2]*.6})}
  var embers=[],bats=[],sand=[];
- for(i2=0;i2<26;i2++)sand.push({x:rnd(),y:rnd()*.9,v:.012+rnd()*.03,ph:rnd()*6.28,r:.5+rnd()*1.1,l:.01+rnd()*.03});
+ for(i2=0;i2<0;i2++)sand.push({x:rnd(),y:rnd()*.9,v:.012+rnd()*.03,ph:rnd()*6.28,r:.5+rnd()*1.1,l:.01+rnd()*.03});
  for(i2=0;i2<36;i2++)embers.push({life:rnd()*5,max:4,x:rnd(),y:.7,dx:0,v:.04,r:1,ph:rnd()*6});
  for(i2=0;i2<4;i2++)bats.push({x:rnd(),y:.12+rnd()*.35,v:.03+rnd()*.05,ph:rnd()*6,r:.8+rnd()*.7});
  hero.insertBefore(fx,hero.firstChild);hero.insertBefore(gl,hero.firstChild);
