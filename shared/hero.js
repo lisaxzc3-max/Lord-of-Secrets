@@ -6,7 +6,7 @@ var reduce=false;try{reduce=(window.__mm||matchMedia)("(prefers-reduced-motion:r
 var cs=document.currentScript,base=cs&&cs.src?cs.src.replace(/[^\/]*(\?.*)?$/,"")+"art/":"shared/art/";
 var img=new Image(),img2=new Image(),n=0;
 function ld(){if(++n===2)setTimeout(start,300)}
-img.onload=ld;img2.onload=ld;img.src=base+"tingen.jpg?v=1";img2.src=base+"goddess.jpg?v=1";
+img.onload=ld;img2.onload=ld;img.src=base+"tingen.jpg?v=2";img2.src=base+"goddess.jpg?v=1";
 function start(){
  var gl=document.createElement("canvas"),fx=document.createElement("canvas");
  gl.className="heroGL";fx.className="heroFx";
