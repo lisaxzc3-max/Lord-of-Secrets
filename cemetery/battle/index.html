@@ -195,6 +195,42 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 .flashR .emo{animation:flashR .45s}.flashW .emo{animation:flashW .4s}.healGlow .emo{animation:healG .8s}
 .stat{position:absolute;inset:0}
 .arena:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 100%,#7fc58e14,transparent 55%),radial-gradient(ellipse at 80% 0%,#bfe3b50d,transparent 55%)}
+
+/* ===== АРТЫ МОНСТРОВ: анимация и эффекты ===== */
+.arena{isolation:isolate}
+.arena:before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:var(--ebg,none) 50% 22%/cover no-repeat;opacity:.3;animation:bgz 16s ease-in-out infinite alternate}
+@keyframes bgz{from{transform:scale(1)}to{transform:scale(1.08)}}
+#enemyFrame{--mc:#8fb4ff;overflow:hidden;max-width:170px;box-shadow:0 0 18px var(--mc)}
+#enemyFrame img{object-position:50% 18%;transform-origin:50% 30%;will-change:transform}
+.mfx{position:absolute;inset:4px;border-radius:10px;pointer-events:none;overflow:hidden;z-index:3}
+.mfx:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--gx,50%) var(--gy,30%),var(--mc),transparent 55%);mix-blend-mode:screen;opacity:.0;animation:gl var(--gt,2.6s) ease-in-out infinite}
+.mfx:after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(transparent,var(--mc));opacity:.1;mix-blend-mode:screen;animation:gl2 4s ease-in-out infinite}
+@keyframes gl{0%,100%{opacity:.03}50%{opacity:.4}}
+@keyframes gl2{0%,100%{opacity:.05}50%{opacity:.16}}
+.mfx i{position:absolute;bottom:-8px;width:5px;height:5px;border-radius:50%;background:radial-gradient(#fff,var(--mc));box-shadow:0 0 8px 2px var(--mc);opacity:0;animation:mp var(--t,3s) linear var(--d,0s) infinite}
+@keyframes mp{0%{opacity:0;transform:translate(0,0)}15%{opacity:.95}100%{opacity:0;transform:translate(var(--x,0),-150px)}}
+.mfx b{position:absolute;left:50%;top:var(--ry,30%);width:20px;height:20px;margin:-10px;border-radius:50%;border:2px solid var(--mc);opacity:0;animation:wv 2.4s ease-out var(--d,0s) infinite}
+@keyframes wv{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(6)}}
+[data-mob=ghost]{--mc:#9fd0ff}
+[data-mob=ghost] img{animation:fl1 4.2s ease-in-out infinite}
+@keyframes fl1{0%,100%{transform:translateY(0) scale(1.04);opacity:1;filter:brightness(1)}50%{transform:translateY(-6px) scale(1.09);opacity:.82;filter:brightness(1.25)}}
+[data-mob=ghoul]{--mc:#ffc23a;--gx:56%;--gy:34%;--gt:1.9s}
+[data-mob=ghoul] img{animation:br1 2.6s ease-in-out infinite}
+@keyframes br1{0%,100%{transform:scale(1.03) rotate(-.6deg)}30%{transform:scale(1.07,1.04) rotate(.8deg)}60%{transform:scale(1.04,1.08) rotate(-.4deg)}}
+[data-mob=skeleton]{--mc:#52ff8a;--gx:50%;--gy:22%;--gt:2.2s}
+[data-mob=skeleton] img{animation:sw1 5s ease-in-out infinite}
+@keyframes sw1{0%,100%{transform:scale(1.04) rotate(-1deg)}50%{transform:scale(1.06) rotate(1deg) translateY(-2px)}}
+[data-mob=worm]{--mc:#a6ff3a;--gx:62%;--gy:30%;--gt:2.4s}
+[data-mob=worm] img{animation:hv1 3.4s ease-in-out infinite}
+@keyframes hv1{0%,100%{transform:scale(1.04) translateY(2px)}50%{transform:scale(1.12) translateY(-6px) rotate(1.4deg)}}
+[data-mob=banshee]{--mc:#bfe0ff;--gx:55%;--gy:22%;--gt:1.6s;--ry:24%}
+[data-mob=banshee] img{animation:bs1 1.3s ease-in-out infinite}
+@keyframes bs1{0%,100%{transform:scale(1.05) translate(0,0)}25%{transform:scale(1.07) translate(-2px,-1px)}75%{transform:scale(1.07) translate(2px,1px)}}
+[data-mob=necro]{--mc:#3dffb0;--gx:50%;--gy:30%}
+[data-mob=necro] img{animation:br1 4s ease-in-out infinite}
+[data-mob=necro2]{--mc:#ff3d6a;--gx:50%;--gy:22%;--gt:1.2s}
+[data-mob=necro2] img{animation:lv1 3.2s ease-in-out infinite}
+@keyframes lv1{0%,100%{transform:scale(1.06) translateY(0);filter:saturate(1.1)}50%{transform:scale(1.11) translateY(-7px);filter:saturate(1.5) brightness(1.15)}}
 </style>
 <script src="../../shared/fast.js"></script>
 <script src="../../shared/skills.js"></script>
@@ -291,12 +327,12 @@ const $=id=>document.getElementById(id);
 const skillInfo=LOTM_SKILLS.SK;
 /* Картинки монстров лежат в cemetery/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
 const pics={
-"Призрак":"../img/ghost.svg",
-"Гуль":"../img/ghoul.svg",
-"Скелет-страж":"../img/skeleton.svg",
-"Могильный червь":"../img/worm.svg",
-"Плакальщица":"../img/banshee.svg",
-"Некромант-самоучка":"../img/necro.svg"
+"Призрак":"../img/ghost.webp",
+"Гуль":"../img/ghoul.webp",
+"Скелет-страж":"../img/skeleton.webp",
+"Могильный червь":"../img/worm.webp",
+"Плакальщица":"../img/banshee.webp",
+"Некромант-самоучка":"../img/necro.webp"
 };
 const EMO={"Призрак":"👻","Гуль":"🧟","Скелет-страж":"💀","Могильный червь":"🪱","Плакальщица":"😱","Некромант-самоучка":"🧙"};
 const ROLE={"Призрак":"Неупокоенный","Гуль":"Падальщик","Скелет-страж":"Страж склепа","Могильный червь":"Хищник земли","Плакальщица":"Дух скорби","Некромант-самоучка":"Босс"};
@@ -537,12 +573,25 @@ const count=logEntries.length;
 $("logCount").textContent=count+" "+(count===1?"запись":count>=2&&count<=4?"записи":"записей");
 $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":""):"Хроника пуста";
 }
+function setMob(enemy,src){
+const fr=$("enemyFrame"),key=(enemy==="Некромант-самоучка")?(/necro2/.test(src||"")?"necro2":"necro"):({"Призрак":"ghost","Гуль":"ghoul","Скелет-страж":"skeleton","Могильный червь":"worm","Плакальщица":"banshee"})[enemy];
+if(!key||fr.dataset.mob===key)return;
+fr.dataset.mob=key;
+$("arena").style.setProperty("--ebg","url("+src+")");
+let m=fr.querySelector(".mfx");if(m)m.remove();
+m=document.createElement("div");m.className="mfx";
+const n=key==="banshee"?0:7;
+for(let i=0;i<n;i++){const e=document.createElement("i");e.style.left=(8+Math.random()*84)+"%";e.style.setProperty("--x",(Math.random()*40-20)+"px");e.style.setProperty("--t",(2.2+Math.random()*2.6)+"s");e.style.setProperty("--d",(-Math.random()*4)+"s");m.appendChild(e)}
+if(key==="banshee")for(let i=0;i<3;i++){const e=document.createElement("b");e.style.setProperty("--d",(i*.8)+"s");m.appendChild(e)}
+fr.appendChild(m);
+}
 function setImageForEnemy(enemy){
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"💀";
-const src=(enemy==="Некромант-самоучка"&&$("arena").classList.contains("phase2"))?"../img/necro2.svg":pics[enemy];
+const src=(enemy==="Некромант-самоучка"&&$("arena").classList.contains("phase2"))?"../img/necro2.webp":pics[enemy];
 if(src){
 img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
+setMob(enemy,src);
 img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
 img.src=src;
 }else{img.classList.add("hidden");emo.classList.remove("hidden")}
