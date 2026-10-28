@@ -76,23 +76,46 @@ function pend(b){
    if(x.origin===location.origin&&(x.pathname===bp||x.pathname===bp+"index.html")){var t=tabFor();if(t)x.searchParams.set("tab",t);else x.searchParams.delete("tab");a.href=x.toString()}}catch(err){}
  },true);
 })();
-/* --- обёртка fetch: только запросы к серверу игры --- */
+/* --- обёртка fetch: только запросы к серверу игры ---
+   Таймаут 30 с (после простоя сервер может просыпаться ~18 с). Запросы чтения («состояние», «список» и т.п.)
+   при обрыве или ответе 5xx повторяются один раз. Действия (покупки, бои, награды) не повторяются сами:
+   иначе можно списать или выдать дважды. */
 var of=window.fetch;
 if(of){
+ var TMO=30000,READ=/(^|_)(state|view|list|poll|get)$|^profile|^ping$/;
+ var mkErr=function(read,e){
+  var to=e&&e.name==="AbortError";
+  var m=new Error(to?(read?"Сервер долго отвечает. Проверь связь и попробуй ещё раз.":"Сервер долго отвечает. Действие могло выполниться: обнови страницу и проверь."):"Нет связи с сервером. Проверь интернет и попробуй ещё раз.");
+  m.name=to?"TimeoutError":"NetworkError";m.cause=e;return m;
+ };
+ var send=function(self,u,o){
+  if(!window.AbortController||(o&&o.signal))return of.call(self,u,o);
+  var ctl=new AbortController(),tm=setTimeout(function(){try{ctl.abort()}catch(e){}},TMO),o2={};
+  for(var k in (o||{}))o2[k]=o[k];o2.signal=ctl.signal;
+  return of.call(self,u,o2).then(function(r){clearTimeout(tm);return r},function(e){clearTimeout(tm);throw e});
+ };
+ var go=function(self,args,read){
+  var u=args[0],o=args[1],run=function(){return send(self,u,o)};
+  if(!read)return run().catch(function(e){throw mkErr(false,e)});
+  return run().then(function(r){if(r&&r.status>=500)throw {name:"HttpError"};return r})
+   .catch(function(){return new Promise(function(res){setTimeout(res,900)}).then(run)})
+   .catch(function(e){throw mkErr(true,e)});
+ };
  window.fetch=function(u,o){
   var url=typeof u==="string"?u:(u&&u.url)||"";
   if(url.indexOf("new-webhook")<0)return of.apply(this,arguments);
-  var action="";try{action=String(JSON.parse((o&&o.body)||"{}").action||"")}catch(e){}
-  var quiet=!action||/chat_|_state$|^profile|poll|_view$|^arena_fight$/.test(action);
+  var self=this,action="";try{action=String(JSON.parse((o&&o.body)||"{}").action||"")}catch(e){}
+  var read=READ.test(action);
+  var quiet=!action||/chat_|_state$|^profile|poll|_view$|^arena_fight$|^ping$/.test(action);
   var release=function(){};
   if(last&&Date.now()-lastT<1200&&!quiet){release=pend(last);last=null}
-  if(quiet)return of.apply(this,arguments);
+  if(quiet)return go(self,arguments,read);
   inflight++;var t0=Date.now();
   var timer=setTimeout(barOn,250);
   var fdone=false;
   var fin=function(){if(fdone)return;fdone=true;inflight=Math.max(0,inflight-1);clearTimeout(timer);clearTimeout(safe);release();if(inflight===0)barOff()};
-  var safe=setTimeout(fin,25000);
-  var p=of.apply(this,arguments);
+  var safe=setTimeout(fin,read?65000:TMO+3000);
+  var p=go(self,arguments,read);
   p.then(fin,fin);
   return p;
  };
