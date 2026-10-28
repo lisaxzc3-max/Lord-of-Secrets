@@ -139,9 +139,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @keyframes fly{to{transform:translateX(480px) translateY(var(--dy))}}
 @keyframes flap{to{transform:scaleY(.35)}}
 @keyframes shoot{from{opacity:1;transform:translate(0,0) rotate(25deg)}to{opacity:0;transform:translate(120px,56px) rotate(25deg)}}
-.heroText{position:absolute;left:0;right:0;top:14px;padding:0 16px;pointer-events:none}
-.heroText .place{font-size:20px;font-weight:900;letter-spacing:6px;color:var(--gold);text-shadow:0 0 18px #d6b77988,0 2px 6px #000}
-.heroText .sub{font-size:10px;letter-spacing:1.5px;color:#cbbfe0;margin-top:4px;text-shadow:0 1px 4px #000}
 /* песочные часы */
 .orbs{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;margin:12px 4px 6px}
 .orbCol{display:flex;flex-direction:column;align-items:center;gap:5px}
@@ -573,7 +570,6 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 <div id="hall" class="card">
   <div id="hallProfileHint" class="hidden">
   <section class="hero" id="hero">
-    <div class="heroText"><div class="place">ТИНГЕН</div><div class="sub" id="heroSub">Ночь · луна</div></div>
   </section>
 
   <section class="orbs">
@@ -777,18 +773,6 @@ document.body.appendChild(o);setTimeout(function(){o.remove()},2700);
 try{window.Telegram.WebApp.HapticFeedback.notificationOccurred("success")}catch(_){}
 }
 watch("lvl",function(){var v=num($("lvl").textContent);if(v==null)return;var old=lastV.lvl;lastV.lvl=v;if(old!=null&&v>old)levelUp(v)});
-
-/* сцена Тингена: подпись с фазой луны (картинка рисуется shared/hero.js) */
-(function(){
-var hero=$("hero");if(!hero)return;
-var days=(Date.now()-Date.UTC(2000,0,6,18,14))/86400000,ph=((days%29.530588)+29.530588)%29.530588/29.530588;
-var lit=(1-Math.cos(2*Math.PI*ph))/2;
-var name=lit<.06?"новолуние":lit>.94?"полнолуние":ph<.5?"растущая луна":"убывающая луна";
-function clock(){var d=new Date(),h=d.getHours(),m=String(d.getMinutes()).padStart(2,"0");
-var part=h<5?"Глубокая ночь":h<11?"Утренний туман":h<17?"Серый день":h<22?"Вечер, зажигаются лампы":"Ночь";
-$("heroSub").textContent=part+" · "+h+":"+m+" · "+name}
-clock();setInterval(clock,30000);
-})();
 
 /* подсказки Далии и кнопка «в поход» */
 (function(){
