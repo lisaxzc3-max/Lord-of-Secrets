@@ -14,6 +14,7 @@ window.matchMedia=function(q){if(/prefers-reduced-motion\s*:\s*reduce/.test(Stri
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./shared/skills.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#d6b779;--gold2:#b28c4d;--violet:#8b6bff;--crim:#c45a6a;--text:#cfc9bd;--muted:#8d869a;--line:#3d3550;--panel:rgba(20,16,30,.82)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -31,8 +32,6 @@ body:after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;backg
 .top{display:flex;gap:11px;align-items:center;background:linear-gradient(145deg,rgba(34,26,52,.9),rgba(16,12,24,.9));border:1px solid #54456f;border-radius:18px;padding:11px;box-shadow:0 8px 30px #0007,inset 0 1px 0 #ffffff12;animation:cardIn .7s ease backwards}
 .top.low{border-color:#8c333d;animation:cardIn .7s ease backwards,lowPulse 1.6s ease-in-out infinite}
 .avatar{position:relative;flex-shrink:0;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--gold);cursor:pointer;background:radial-gradient(circle at 35% 30%,#4a3a6a,#1a1226)}
-.avatar:before{content:"";position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),transparent 30%,var(--violet),transparent 70%,var(--gold));animation:spin 6s linear infinite;z-index:-1}
-.avatar:after{content:"";position:absolute;inset:0;border-radius:50%;background:#150f20;z-index:-1;margin:2px}
 .avatar span{text-shadow:0 0 12px var(--gold)}
 .info{flex:1;min-width:0;cursor:pointer}
 .nameRow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;color:#efe8d8}
@@ -466,6 +465,25 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 *,*:before,*:after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
 .dist,.plc,#sideMenu .smIt{opacity:1!important;transform:none!important}
 #fx,.raven,.shoot,.ripple,.floatGain,.bgSpark,.seqWh,.lvlUp,.hg .stream,.hg .mote{display:none!important}
+
+/* ===== карточка профиля: арка ===== */
+.top{gap:14px;align-items:stretch;padding:12px;border-radius:20px;border-color:#d6b779aa;background:linear-gradient(135deg,rgba(29,16,48,.95),rgba(14,9,24,.96));box-shadow:0 0 0 3px #0b0912,0 0 0 4px #d6b77955,0 8px 28px #000a}
+.avWrap{position:relative;flex:0 0 84px;width:84px;min-height:108px;margin-bottom:6px;cursor:pointer}
+.top .avatar{width:100%;height:100%;min-height:108px;border-radius:42px 42px 8px 8px;border:2px solid #d6b779;overflow:hidden;font-size:34px}
+#hudAv img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
+.top .lv{position:absolute;left:0;right:0;bottom:-9px;margin:0 auto;width:max-content;z-index:4;padding:2px 11px;border-radius:12px;background:#d6b779;color:#1a1020;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px #000a}
+.top .info{display:flex;flex-direction:column;justify-content:space-between;gap:7px;padding:2px 0}
+.top .nameRow{display:block}
+.top #nick{display:block;font-family:"Cormorant Garamond","Palatino Linotype",Georgia,serif;font-weight:700;font-size:26px;line-height:1.05;color:#f6ecd8;overflow-wrap:anywhere}
+.top #nick .vN em{font-family:Inter,Arial,sans-serif;font-size:10px;letter-spacing:.14em}
+.top .pathTag{align-self:flex-start;border:0;background:none;padding:0;border-radius:0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d6b779}
+.top .bar.hp{height:7px;margin:0}
+.top .chips{gap:6px}
+.top .chips>span{padding:3px 8px;font-size:12px}
+.top .chips svg{width:13px;height:13px;flex-shrink:0}
+.top .side{justify-content:space-between;align-self:stretch}
+.top .gear{width:44px;height:44px;border-radius:12px;border-color:#d6b77966;background:#1d1428}
+@media(max-width:380px){.avWrap{flex-basis:72px;width:72px}.top{gap:10px;padding:10px}.top #nick{font-size:22px}.top .chips{gap:4px}.top .chips>span{padding:2px 6px;font-size:11px}.top .gear{width:40px;height:40px}}
 </style>
 <script src="./shared/vip.js"></script>
 <script src="./shared/fast.js"></script>
@@ -518,19 +536,19 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
   </aside>
 </div>
 <div class="top" id="topCard">
-  <div class="avatar" id="hudAv" onclick="openProfile()"><span>𓂀</span></div>
+  <div class="avWrap">
+    <div class="avatar" id="hudAv" onclick="openProfile()"><span>𓂀</span></div>
+    <span class="lv" onclick="openProfile()">Ур.<span id="lvl">—</span></span>
+  </div>
   <div class="info" onclick="openProfile()">
-    <div class="nameRow">
-      <b id="nick">Загрузка…</b>
-      <span class="lv">Ур.<span id="lvl">—</span></span>
-      <span id="path" class="pathTag">—</span>
-    </div>
+    <div class="nameRow"><b id="nick">Загрузка…</b></div>
+    <span id="path" class="pathTag">—</span>
     <div class="bar hp"><i id="hpbar" style="width:0%"></i></div>
     <div class="chips">
-      <span class="c-hp">❤️ <span id="hp">—</span></span>
+      <span class="c-hp"><svg viewBox="0 0 24 24" fill="none" stroke="#d4343f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.4A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></svg><span id="hp">—</span></span>
       <span class="c-gold"><i class="coin"></i><span id="pounds">—</span></span>
-      <span class="c-exp">⭐ <span id="exp">—</span></span>
-      <span class="c-pot">🧪 <span id="potion">—</span></span>
+      <span class="c-exp"><svg viewBox="0 0 24 24" fill="none" stroke="#b9a8e0" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.600 5.800 6.400.6-4.800 4.300 1.400 6.300L12 16.800 6.400 20l1.400-6.300L3 9.400l6.400-.6z"/></svg><span id="exp">—</span></span>
+      <span class="c-pot"><svg viewBox="0 0 24 24" fill="none" stroke="#6fae92" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/></svg><span id="potion">—</span></span>
     </div>
   </div>
   <div class="side">
