@@ -305,6 +305,17 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
  #evwin{top:max(8px,env(safe-area-inset-top,0px),var(--sat));right:max(8px,env(safe-area-inset-right,0px),var(--sar))}
  .scr{padding-right:max(16px,var(--sar));padding-left:max(16px,var(--sal));padding-top:max(0px,var(--sat))}
 }
+
+/* подсказка: поверни телефон */
+#rot{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px;background:rgba(8,6,16,.9);backdrop-filter:blur(3px)}
+#rot.show{display:flex;animation:winIn .3s both}
+#rot .ph{width:90px;height:150px;border:5px solid #e0a24a;border-radius:18px;position:relative;box-shadow:0 0 30px rgba(224,162,74,.5),inset 0 0 18px rgba(224,162,74,.2);animation:rotph 2.4s ease-in-out infinite}
+#rot .ph::before{content:"";position:absolute;left:50%;top:8px;width:26px;height:4px;border-radius:2px;background:#e0a24a;transform:translateX(-50%)}
+#rot .ph::after{content:"";position:absolute;inset:22px 10px 14px;border-radius:6px;background:linear-gradient(160deg,#5a4120,#1a1226)}
+@keyframes rotph{0%,20%{transform:rotate(0)}60%,80%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+#rot b{font:700 32px/1.1 var(--disp);color:#ffe3a8;letter-spacing:.04em;text-shadow:0 0 18px rgba(224,162,74,.5)}
+#rot p{margin:0;font-size:19px;color:#f1e6c8;max-width:22ch;line-height:1.35}
+#rot button{padding:12px 26px;border-radius:12px;border:1.5px solid var(--gold);background:rgba(40,28,64,.8);font-size:16px;color:#cfc4e6}
 </style>
 </head>
 <body>
@@ -348,6 +359,7 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
   </div></div>
   <div class="scr" id="soc"><div class="box win"><div id="soctabs"><button data-t="p"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>Профиль</button><button data-t="c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v12H9l-5 4z"/></svg>Чат</button><button data-t="t"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v4a5 5 0 01-4 4.9V15h3v3H8v-3h3v-3.1A5 5 0 017 7zM4 4h3v3a2 2 0 01-3-1zM17 4h3v2a2 2 0 01-3 1z"/></svg>Топ</button></div><div id="socbody"></div><button class="mbtn pri" id="socX">Закрыть</button></div></div>
   <div id="toast"></div>
+  <div id="rot"><div class="ph"></div><b>Поверни телефон</b><p>Игра лучше выглядит в горизонтальном режиме</p><button id="rotX">Играть так</button></div>
   <div id="boot"><div class="bg"></div><div class="shade"></div><div class="fog"></div><div class="fog b"></div><canvas id="bootfx"></canvas>
     <div class="mid">
       <svg class="sig" viewBox="0 0 100 100" fill="none" stroke="#e0a24a" stroke-width="2"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="40" stroke-width="1" stroke-dasharray="2 4"/><path d="M12 50 Q50 14 88 50 Q50 86 12 50Z" fill="rgba(224,162,74,.08)"/><circle cx="50" cy="50" r="13" fill="rgba(224,162,74,.25)"/><circle cx="50" cy="50" r="5" fill="#ffe3a8" stroke="none"/><path d="M50 4v10M50 86v10M4 50h10M86 50h10" stroke-width="2"/></svg>
@@ -1052,6 +1064,14 @@ function interact(){
 
 /* ============ отрисовка ============ */
 let scale=2,vw=0,vh=0,camX=0,camY=0;
+let rotOff=false;
+function rotHint(){
+  const e=document.getElementById("rot");if(!e)return;
+  const port=innerHeight>innerWidth*1.05,inGame=S.st!=="title"&&S.st!=="create"&&!!P.path;
+  e.classList.toggle("show",port&&!rotOff&&inGame);
+  if(!port)rotOff=false;
+}
+setInterval(rotHint,700);
 function applyInsets(){
   const tg=window.Telegram&&Telegram.WebApp,r=document.documentElement.style;let t=0,l=0,rt=0;
   try{if(tg){const a=tg.safeAreaInset||{},c=tg.contentSafeAreaInset||{};t=(a.top||0)+(c.top||0);l=Math.max(a.left||0,c.left||0);rt=Math.max(a.right||0,c.right||0)}}catch(e){}
@@ -1974,7 +1994,6 @@ function closeMenu(){$("#menu").classList.remove("show");S.st="map";setUI()}
 
 /* ============ старт ============ */
 function begin(newg){
-  if(innerHeight>innerWidth)setTimeout(()=>toast("Поверни телефон горизонтально"),1200);
   try{if(TGW()&&TGW().isVersionAtLeast&&TGW().isVersionAtLeast("8.0")&&!TGW().isFullscreen)enterFs()}catch(e){}
   ac();ambient();
   if(newg){try{localStorage.removeItem("sumerki_save")}catch(e){}newGame()}else load();
@@ -1985,6 +2004,7 @@ function begin(newg){
 }
 document.querySelectorAll("#soctabs button").forEach(b=>b.onclick=()=>{ac();openSoc(b.dataset.t)});
 $("#socX").onclick=closeSoc;
+$("#rotX").onclick=()=>{rotOff=true;$("#rot").classList.remove("show")};
 $("#tNew").onclick=()=>{ac();openCreate(()=>begin(true))};
 $("#tCont").onclick=()=>{ac();let has=false;try{const j=JSON.parse(localStorage.getItem("sumerki_save")||"null");has=!!(j&&j.P&&j.P.path)}catch(e){}if(has)begin(false);else openCreate(()=>begin(false))};
 $("#eBack").onclick=()=>{$("#end").classList.remove("show");S.st="map";setUI()};
