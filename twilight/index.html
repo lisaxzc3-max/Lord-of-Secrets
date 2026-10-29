@@ -287,6 +287,24 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
  #evwin{left:50%;top:max(8px,env(safe-area-inset-top,0px));max-height:none;bottom:max(8px,env(safe-area-inset-bottom,0px))}
  #cr .crwrap{max-width:640px}
 }
+
+/* ===== безопасные зоны (кнопки Telegram и телефона) ===== */
+:root{--sat:0px;--sar:0px;--sal:0px}
+#loc{left:max(12px,env(safe-area-inset-left,0px),var(--sal));top:max(12px,env(safe-area-inset-top,0px),var(--sat))}
+#hud{left:max(12px,env(safe-area-inset-left,0px),var(--sal));top:calc(max(12px,env(safe-area-inset-top,0px),var(--sat)) + 42px)}
+#btnM{right:max(12px,env(safe-area-inset-right,0px),var(--sar));top:max(12px,env(safe-area-inset-top,0px),var(--sat))}
+#btnA{right:max(18px,env(safe-area-inset-right,0px),var(--sar))}
+#pad{left:max(14px,env(safe-area-inset-left,0px),var(--sal))}
+#toast{top:calc(max(12px,env(safe-area-inset-top,0px),var(--sat)) + 56px)}
+#bt{padding-left:max(10px,env(safe-area-inset-left,0px),var(--sal));padding-right:max(10px,env(safe-area-inset-right,0px),var(--sar))}
+@media (orientation:landscape) and (max-height:520px){
+ #hud{top:calc(max(10px,env(safe-area-inset-top,0px),var(--sat)) + 34px)}
+ #bt{padding-left:max(14px,env(safe-area-inset-left,0px),var(--sal));padding-right:max(14px,env(safe-area-inset-right,0px),var(--sar))}
+ #bt .lg{top:calc(max(10px,var(--sat)) + 56px)}
+ #dlg{left:max(90px,env(safe-area-inset-left,0px),var(--sal));right:max(90px,env(safe-area-inset-right,0px),var(--sar))}
+ #evwin{top:max(8px,env(safe-area-inset-top,0px),var(--sat));right:max(8px,env(safe-area-inset-right,0px),var(--sar))}
+ .scr{padding-right:max(16px,var(--sar));padding-left:max(16px,var(--sal));padding-top:max(0px,var(--sat))}
+}
 </style>
 </head>
 <body>
@@ -1034,7 +1052,17 @@ function interact(){
 
 /* ============ отрисовка ============ */
 let scale=2,vw=0,vh=0,camX=0,camY=0;
+function applyInsets(){
+  const tg=window.Telegram&&Telegram.WebApp,r=document.documentElement.style;let t=0,l=0,rt=0;
+  try{if(tg){const a=tg.safeAreaInset||{},c=tg.contentSafeAreaInset||{};t=(a.top||0)+(c.top||0);l=Math.max(a.left||0,c.left||0);rt=Math.max(a.right||0,c.right||0)}}catch(e){}
+  let fs=false;try{fs=!!(document.fullscreenElement||(tg&&tg.isFullscreen))}catch(e){}
+  document.body.classList.toggle("fs",fs);
+  if(fs&&t<46)t=46;
+  if(fs&&innerWidth>innerHeight)rt=Math.max(rt,64);
+  r.setProperty("--sat",t+"px");r.setProperty("--sar",rt+"px");r.setProperty("--sal",l+"px");
+}
 function resize(){
+  applyInsets();
   const W=innerWidth,H=innerHeight;cv.width=W;cv.height=H;
   scale=Math.max(2,Math.min(5,Math.floor(Math.min(W,H)/(W>H?120:130))));
   vw=W;vh=H;ctx.imageSmoothingEnabled=false;
@@ -1254,10 +1282,10 @@ function drawBattle(now){
     if(a.k==="hurt"&&a.t<.45){const q=a.t/.45,vg=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.25,W/2,H/2,Math.max(W,H)*.7);vg.addColorStop(0,"rgba(178,58,72,0)");vg.addColorStop(1,"rgba(178,58,72,"+(.5*(1-q)).toFixed(2)+")");ctx.fillStyle=vg;ctx.fillRect(0,0,W,H)}
   }
   // шапка: игрок слева, враг справа
-  const pw=Math.min(W*.46,190),m=10,ty=Math.max(10,parseInt(getComputedStyle(document.documentElement).getPropertyValue("--sat"))||10);
+  const cs=getComputedStyle(document.documentElement),gv=n=>parseInt(cs.getPropertyValue(n))||0,pw=Math.min(W*.46,190),m=Math.max(10,gv("--sal")),mr=Math.max(10,gv("--sar")),ty=Math.max(10,gv("--sat"));
   ctx.globalAlpha=en;
   plate(m,ty,pw,(P.nick||"Потусторонний")+(PATHS[P.path]?" "+PATHS[P.path].e:""),"ур. "+P.lv+" · "+P.hp+"/"+maxHp(),P.hp,maxHp(),"#4caf6a",false,"p");
-  plate(W-m-pw,ty,pw,B.e.n,(B.boss?"БОСС · ":"")+B.hp+"/"+B.max,B.hp,B.max,"#b23a48",true,"e");
+  plate(W-mr-pw,ty,pw,B.e.n,(B.boss?"БОСС · ":"")+B.hp+"/"+B.max,B.hp,B.max,"#b23a48",true,"e");
   ctx.globalAlpha=1;
   for(const f of fx){const a=1-f.age;ctx.globalAlpha=Math.max(0,a);ctx.fillStyle=f.c;ctx.strokeStyle="rgba(0,0,0,.7)";ctx.lineWidth=4;ctx.font="700 30px 'Alegreya Sans',sans-serif";ctx.textAlign="center";
     const pt=f.y===0?{x:ecx0+edx,y:ey+es*.3}:{x:hcx+hdx,y:hy+hs*.3};ctx.strokeText(f.t,pt.x,pt.y-f.age*40);ctx.fillText(f.t,pt.x,pt.y-f.age*40);ctx.globalAlpha=1}
@@ -1940,7 +1968,7 @@ function enterFs(land){
 }
 function exitFs(){const tg=TGW();try{if(tg&&tg.isFullscreen&&tg.exitFullscreen)tg.exitFullscreen();else if(document.fullscreenElement)document.exitFullscreen()}catch(e){}try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}}
 function toggleFs(){isFs()?exitFs():enterFs(true)}
-try{const tg=TGW();if(tg&&tg.onEvent){tg.onEvent("fullscreenChanged",()=>setTimeout(resize,150));tg.onEvent("viewportChanged",()=>resize())}}catch(e){}
+try{const tg=TGW();if(tg&&tg.onEvent){tg.onEvent("fullscreenChanged",()=>setTimeout(resize,150));["safeAreaChanged","contentSafeAreaChanged"].forEach(e=>tg.onEvent(e,()=>resize()));tg.onEvent("viewportChanged",()=>resize())}}catch(e){}
 addEventListener("orientationchange",()=>setTimeout(resize,200));
 function closeMenu(){$("#menu").classList.remove("show");S.st="map";setUI()}
 
