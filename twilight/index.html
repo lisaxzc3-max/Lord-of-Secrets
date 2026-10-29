@@ -258,6 +258,35 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 .chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
 .chips div{padding:7px 4px;border-radius:10px;background:rgba(40,28,64,.65);border:1px solid #4a3a68;text-align:center;line-height:1.1}
 .chips b{display:block;font:700 17px var(--disp);color:#ffe3a8}.chips small{font-size:10px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+
+/* ===== горизонтальный экран ===== */
+@media (orientation:landscape) and (max-height:520px){
+ .scr{overflow:auto}
+ #menu .box,#soc .box{max-width:560px}
+ #loc{font-size:15px;padding:4px 10px}
+ #hud{top:calc(max(10px,env(safe-area-inset-top,0px)) + 34px)}
+ #pad{width:132px;height:132px;bottom:max(10px,env(safe-area-inset-bottom,0px))}
+ #pad button{width:44px;height:44px}#pad .u{left:44px}#pad .d{left:44px;top:88px}#pad .l{top:44px}#pad .r{left:88px;top:44px}
+ #btnA{width:68px;height:68px;bottom:max(16px,env(safe-area-inset-bottom,0px))}
+ #dlg{left:max(90px,env(safe-area-inset-left,0px));right:max(90px,env(safe-area-inset-right,0px));min-height:92px;padding:10px 14px}
+ #dlg .tx{font-size:16px;min-height:2.4em}
+ #dlg .face{width:78px;height:92px}#dlg.pt{padding-left:104px;min-height:96px}#dlg.pt .nm{left:104px}
+ /* бой */
+ #bt{display:none;padding:0 max(14px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,rgba(8,6,14,.8) 20%)}
+ #bt .lg{position:absolute;left:50%;transform:translateX(-50%);margin:0;max-width:min(520px,60vw);font-size:14px;padding:5px 12px;z-index:2;position:fixed;top:62px;bottom:auto}
+ #bt .cmd{padding:6px;max-width:760px;margin:0 auto}
+ #bt .sks{grid-template-columns:repeat(4,1fr)}
+ #bt .cmd button{min-height:44px;padding:5px 7px}
+ #bt .cmd button .ic{font-size:18px;width:22px}
+ #bt .cmd button div b{font-size:13px}
+ #bt .cmd small{font-size:10.5px}
+ #bt .qk button{min-height:34px}
+ /* события */
+ #evbg{right:50%;height:100%;top:0;bottom:0}
+ #ev .fade{left:30%;right:50%;top:0;height:100%;width:20%;background:linear-gradient(90deg,transparent,#0b0912)}
+ #evwin{left:50%;top:max(8px,env(safe-area-inset-top,0px));max-height:none;bottom:max(8px,env(safe-area-inset-bottom,0px))}
+ #cr .crwrap{max-width:640px}
+}
 </style>
 </head>
 <body>
@@ -1007,7 +1036,7 @@ function interact(){
 let scale=2,vw=0,vh=0,camX=0,camY=0;
 function resize(){
   const W=innerWidth,H=innerHeight;cv.width=W;cv.height=H;
-  scale=Math.max(2,Math.min(5,Math.floor(Math.min(W,H)/130)));
+  scale=Math.max(2,Math.min(5,Math.floor(Math.min(W,H)/(W>H?120:130))));
   vw=W;vh=H;ctx.imageSmoothingEnabled=false;
 }
 addEventListener("resize",resize);
@@ -1881,18 +1910,32 @@ addEventListener("keyup",e=>{if(e.key in KD)release(KD[e.key])});
 function openMenu(){
   S.st="menu";setUI();held=0;
   const q=F.done?"Выполнено: артефакт запечатан.":F.amulet?"Отнеси артефакт капитану Ночных Ястребов.":F.elder?"Забрать запечатанный артефакт из склепа на севере Туманной рощи.":"Поговорить с капитаном Ночных Ястребов (дом справа от главной дороги).";
-  $("#mbox").innerHTML="<h2>"+esc(myName())+"</h2><dl><dt>Уровень</dt><dd>"+P.lv+"</dd><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd><dt>Фунты</dt><dd>"+P.pn+" £</dd><dt>Безумие</dt><dd>"+P.md+" 🌀</dd></dl><div class='q'><b>Задание.</b> "+q+"</div><div class='rw'><button class='mbtn' id='mUse'"+(P.pot<1||P.hp>=maxHp()?" disabled":"")+">Выпить зелье</button><button class='mbtn' id='mSnd'>Звук: "+(sound?"вкл":"выкл")+"</button></div><div class='rw'><button class='mbtn' id='mProf'>Профиль</button><button class='mbtn' id='mChat'>Чат</button><button class='mbtn' id='mTop'>Топ</button></div><div class='rw'><button class='mbtn' id='mSave'>Сохранить</button><button class='mbtn pri' id='mBack'>Закрыть</button></div>";
+  $("#mbox").innerHTML="<h2>"+esc(myName())+"</h2><dl><dt>Уровень</dt><dd>"+P.lv+"</dd><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd><dt>Фунты</dt><dd>"+P.pn+" £</dd><dt>Безумие</dt><dd>"+P.md+" 🌀</dd></dl><div class='q'><b>Задание.</b> "+q+"</div><div class='rw'><button class='mbtn' id='mUse'"+(P.pot<1||P.hp>=maxHp()?" disabled":"")+">Выпить зелье</button><button class='mbtn' id='mSnd'>Звук: "+(sound?"вкл":"выкл")+"</button></div><div class='rw'><button class='mbtn' id='mFs'>"+(isFs()?"Выйти из полного экрана":"Полный экран · горизонт")+"</button></div><div class='rw'><button class='mbtn' id='mProf'>Профиль</button><button class='mbtn' id='mChat'>Чат</button><button class='mbtn' id='mTop'>Топ</button></div><div class='rw'><button class='mbtn' id='mSave'>Сохранить</button><button class='mbtn pri' id='mBack'>Закрыть</button></div>";
   $("#menu").classList.add("show");
   $("#mBack").onclick=closeMenu;
   $("#mProf").onclick=()=>{$("#menu").classList.remove("show");openSoc("p")};$("#mChat").onclick=()=>{$("#menu").classList.remove("show");openSoc("c")};$("#mTop").onclick=()=>{$("#menu").classList.remove("show");openSoc("t")};
   $("#mSave").onclick=()=>{save();toast("Сохранено");closeMenu()};
   $("#mSnd").onclick=()=>{setSound(!sound);openMenu()};
+  $("#mFs").onclick=()=>{toggleFs();setTimeout(()=>{if(S.st==="menu")openMenu()},400)};
   $("#mUse").onclick=()=>{if(P.pot>0&&P.hp<maxHp()){P.pot--;P.hp=Math.min(maxHp(),P.hp+25);snd("heal");openMenu()}};
 }
+const TGW=()=>window.Telegram&&Telegram.WebApp;
+function isFs(){const tg=TGW();return !!(document.fullscreenElement||(tg&&tg.isFullscreen))}
+function enterFs(land){
+  const tg=TGW();
+  try{if(tg&&tg.requestFullscreen&&tg.isVersionAtLeast&&tg.isVersionAtLeast("8.0")){tg.requestFullscreen()}else if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen({navigationUI:"hide"}).catch(()=>{})}}catch(e){}
+  try{if(tg&&tg.isVersionAtLeast&&tg.isVersionAtLeast("8.0")&&tg.unlockOrientation)tg.unlockOrientation()}catch(e){}
+  if(land)setTimeout(()=>{try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock("landscape").catch(()=>{})}catch(e){}},300);
+}
+function exitFs(){const tg=TGW();try{if(tg&&tg.isFullscreen&&tg.exitFullscreen)tg.exitFullscreen();else if(document.fullscreenElement)document.exitFullscreen()}catch(e){}try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}}
+function toggleFs(){isFs()?exitFs():enterFs(true)}
+try{const tg=TGW();if(tg&&tg.onEvent){tg.onEvent("fullscreenChanged",()=>setTimeout(resize,150));tg.onEvent("viewportChanged",()=>resize())}}catch(e){}
+addEventListener("orientationchange",()=>setTimeout(resize,200));
 function closeMenu(){$("#menu").classList.remove("show");S.st="map";setUI()}
 
 /* ============ старт ============ */
 function begin(newg){
+  try{if(TGW()&&TGW().isVersionAtLeast&&TGW().isVersionAtLeast("8.0")&&!TGW().isFullscreen)enterFs()}catch(e){}
   ac();ambient();
   if(newg){try{localStorage.removeItem("sumerki_save")}catch(e){}newGame()}else load();
   if(CR){Object.assign(P,CR);CR=null;if(newg)P.hp=maxHp()}
