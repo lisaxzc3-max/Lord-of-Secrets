@@ -38,7 +38,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 <canvas id="c"></canvas>
 <div id="loc">ПЛОЩАДЬ ТИНГЕНА</div>
 <div id="menuBtn">☰</div>
-<div id="menu"><button id="mFs">⛶ На весь экран</button><button id="mRst">↺ Начать заново</button></div>
+<div id="menu"><button id="mFs">⛶ На весь экран</button><button id="mRst">↺ Начать заново</button><div style="font-size:11px;opacity:.5;padding:2px 6px">версия 25</div></div>
 <div id="stick"><div id="knob"></div></div>
 <div id="act">Осмотреть</div>
 <div id="dlg"><img id="face" src="img/face.png" alt=""><div style="flex:1"><div class="n" id="dn">Герой</div><div class="t" id="dt"></div><div class="h">нажми, чтобы продолжить</div></div></div>
@@ -54,12 +54,14 @@ var qs=new URLSearchParams(location.search),DEBUG=qs.get("debug")==="1";
 
 /* ---------- ходимая зона (координаты ног героя на арте) ---------- */
 var WALK=[
- [410,440,1280,700],      // площадь
- [845,352,985,472],       // ступени собора
+ [410,410,1280,700],      // площадь
+ [650,695,1110,728],      // южный край площади
+ [505,392,545,440],       // у арки слева
+ [845,340,985,472],       // ступени и площадка собора
  [330,205,420,500],       // северная лестница
  [412,300,512,490],       // у дерева слева
- [450,495,590,700],       // левая лестница
- [400,695,540,1075],      // путь и лестница вниз
+ [400,495,590,700],       // левая лестница и проход
+ [395,695,545,1075],      // путь и лестница вниз
  [1250,640,1440,700]      // правый край площади
 ];
 var BLOCK=[
