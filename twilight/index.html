@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0b0912">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<title>Сумеречный Брод</title>
+<title>Туман над Тингеном</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700&family=Alegreya+Sans:wght@400;500;700&display=swap">
 <style>
@@ -104,7 +104,7 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
   <div id="bt">
     <div class="lg" id="blog"></div>
     <div class="row">
-      <div class="st"><b id="bname">Странник</b> <span id="blv" style="color:var(--dim)"></span>
+      <div class="st"><b id="bname">Потусторонний</b> <span id="blv" style="color:var(--dim)"></span>
         <div class="bar hp"><i id="bhp"></i></div><div id="bhpt" style="font-size:14px;color:var(--dim)"></div>
         <div class="bar mp"><i id="bmp"></i></div><div id="bmpt" style="font-size:14px;color:var(--dim)"></div></div>
       <div class="cmd" id="bcmd"></div>
@@ -112,8 +112,8 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
   </div>
   <div id="toast"></div>
   <div class="scr show" id="title">
-    <h1>Сумеречный Брод</h1>
-    <p>Тёмное фэнтези в духе старых JRPG. Прототип: деревня, лес, склеп и один хозяин.</p>
+    <h1>Туман над Тингеном</h1>
+    <p>Викторианский город, туман и Потусторонние. Прототип: улицы, трактир, роща, склеп и один безумец.</p>
     <div class="btns">
       <button class="mbtn pri" id="tCont">Продолжить</button>
       <button class="mbtn" id="tNew">Новая игра</button>
@@ -121,9 +121,9 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
   </div>
   <div class="scr" id="menu"><div class="box" id="mbox"></div></div>
   <div class="scr" id="end">
-    <h1>Печать вернулась</h1>
+    <h1>Артефакт запечатан</h1>
     <p id="endTx"></p>
-    <div class="btns"><button class="mbtn pri" id="eBack">Вернуться в Брод</button></div>
+    <div class="btns"><button class="mbtn pri" id="eBack">Вернуться в Тинген</button></div>
   </div>
 </div>
 
@@ -217,7 +217,7 @@ function house(M,x,y,doorSpr){
   M.o[y+2][x+2]="D";
 }
 function makeVillage(){
-  const W=26,H=20,M={name:"Сумеречный Брод",w:W,h:H,g:grid(W,H,"."),o:grid(W,H,null),light:.58,npcs:[],warps:[],lamps:[],kind:"out"};
+  const W=26,H=20,M={name:"Тинген, окраина",w:W,h:H,g:grid(W,H,"."),o:grid(W,H,null),light:.58,npcs:[],warps:[],lamps:[],kind:"out"};
   const r=rng(77);
   for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(r()<.08)M.g[y][x]=",";
   for(let y=1;y<H-1;y++){M.g[y][12]="=";M.g[y][13]="="}
@@ -245,10 +245,10 @@ function makeVillage(){
     {x:12,y:0,to:"forest",tx:11,ty:30,dir:3,gate:1},{x:13,y:0,to:"forest",tx:12,ty:30,dir:3,gate:1}
   ];
   M.npcs=[
-    {id:"guard",x:11,y:1,dir:0,sp:"guard",name:"Стражник"},
-    {id:"vil",x:8,y:11,dir:2,sp:"vil",name:"Дровосек"},
-    {id:"girl",x:21,y:12,dir:1,sp:"girl",name:"Лиса"},
-    {id:"crone",x:5,y:14,dir:0,sp:"crone",name:"Старуха Вэй"}
+    {id:"guard",x:11,y:1,dir:0,sp:"guard",name:"Страж Церкви"},
+    {id:"vil",x:8,y:11,dir:2,sp:"vil",name:"Угольщик"},
+    {id:"girl",x:21,y:12,dir:1,sp:"girl",name:"Газетчица"},
+    {id:"crone",x:5,y:14,dir:0,sp:"crone",name:"Гадалка"}
   ];
   return M;
 }
@@ -265,7 +265,7 @@ function makeInterior(name,id,npc){
   M.npcs=[npc];return M;
 }
 function makeForest(){
-  const W=24,H=32,M={name:"Чёрный лес",w:W,h:H,g:grid(W,H,"g"),o:grid(W,H,null),light:.52,npcs:[],warps:[],lamps:[],kind:"forest",enc:1};
+  const W=24,H=32,M={name:"Туманная роща",w:W,h:H,g:grid(W,H,"g"),o:grid(W,H,null),light:.52,npcs:[],warps:[],lamps:[],kind:"forest",enc:1};
   const pts=[[11,30],[11,26],[7,26],[7,20],[15,20],[15,14],[9,14],[9,8],[11,8],[11,3]];
   const path=new Set();
   const dot=(x,y)=>{for(let a=0;a<2;a++)for(let b=0;b<2;b++){M.g[y+b][x+a]="=";path.add((y+b)+","+(x+a))}};
@@ -290,7 +290,7 @@ function makeForest(){
   return M;
 }
 function makeCrypt(){
-  const W=11,H=8,M={name:"Склеп Пепла",w:W,h:H,g:grid(W,H,"c"),o:grid(W,H,null),light:.62,npcs:[],warps:[],lamps:[],kind:"in"};
+  const W=11,H=8,M={name:"Запечатанный склеп",w:W,h:H,g:grid(W,H,"c"),o:grid(W,H,null),light:.62,npcs:[],warps:[],lamps:[],kind:"in"};
   for(let x=0;x<W;x++){M.o[0][x]="#";M.o[H-1][x]="#"}
   for(let y=0;y<H;y++){M.o[y][0]="#";M.o[y][W-1]="#"}
   M.o[H-1][5]="D";M.o[2][5]="A";
@@ -300,8 +300,8 @@ function makeCrypt(){
   return M;
 }
 const MAPS={village:makeVillage(),
-  inn:makeInterior("Трактир «Кривой фонарь»","inn",{id:"inn",x:5,y:3,dir:0,sp:"inn",name:"Трактирщик"}),
-  elder:makeInterior("Дом старейшины","elder",{id:"elder",x:5,y:3,dir:0,sp:"elder",name:"Старейшина Мара"}),
+  inn:makeInterior("Трактир «Ржавый якорь»","inn",{id:"inn",x:5,y:3,dir:0,sp:"inn",name:"Трактирщик"}),
+  elder:makeInterior("Участок Ночных Ястребов","elder",{id:"elder",x:5,y:3,dir:0,sp:"elder",name:"Капитан Ночных Ястребов"}),
   forest:makeForest(),crypt:makeCrypt()};
 // внутри интерьеров на месте нпс стола нет
 MAPS.inn.o[3][5]=null;MAPS.elder.o[3][5]=null;
@@ -381,51 +381,51 @@ $("#dlg").addEventListener("pointerdown",e=>{if(e.target.tagName!=="BUTTON")dlgN
 function talk(n){
   const nm=n.name;
   if(n.id==="guard"){
-    if(!F.elder)return say([{n:nm,t:"Стой. Лес за воротами нынче не для прогулок. Без слова старейшины Мары я тебя не пущу."}]);
-    if(F.amulet&&!F.done)return say([{n:nm,t:"Амулет Пепла у тебя? Тогда поспеши к старейшине. Она ждёт."}]);
-    return say([{n:nm,t:"Старейшина дала добро. Держись тропы и не слушай шёпот деревьев."}]);
+    if(!F.elder)return say([{n:nm,t:"Стой. Роща за заставой закрыта по приказу Церкви Вечной Ночи. Без слова капитана Ночных Ястребов я тебя не пущу."}]);
+    if(F.amulet&&!F.done)return say([{n:nm,t:"Запечатанный артефакт у тебя? Тогда скорее к капитану. Он ждёт."}]);
+    return say([{n:nm,t:"Капитан дал добро. Держись тропы и не слушай шёпот в тумане."}]);
   }
   if(n.id==="vil")return say([{n:nm,t:"Волки стали ходить стаями. А ночами из склепа тянет таким холодом, что топор в руке дрожит."}]);
   if(n.id==="girl"){
     if(!F.gift){F.gift=1;P.pot++;snd("ok");return say([{n:nm,t:"Ты идёшь в лес? Возьми, это мамино зелье. Оно горькое, зато работает."},{t:"Получено: зелье лечения."}])}
-    return say([{n:nm,t:"Говорят, у гулей слабость к первому удару. Бей, пока он копит силу."}]);
+    return say([{n:nm,t:"Говорят, Потерявший контроль копит силу перед сильным ударом. Бей, пока он не ударил."}]);
   }
   if(n.id==="crone")return say([{n:nm,t:"Слышишь? Они шепчут твоё имя. Это не страшно. Страшно, когда замолкают."}]);
   if(n.id==="inn"){
-    return say([{n:nm,t:"Устал, странник? Комната и горячий суп бесплатно. Печать держит наш Брод, пока в склепе спокойно."}],null,[["Отдохнуть",()=>{P.hp=maxHp();P.mp=maxMp();F.inn=1;snd("heal");save();toast("Здоровье и мана восстановлены")}],["Не сейчас",()=>{}]]);
+    return say([{n:nm,t:"Устал, Потусторонний? Комната и горячий суп бесплатно. Пока в склепе тихо, в Тингене можно спать спокойно."}],null,[["Отдохнуть",()=>{P.hp=maxHp();P.mp=maxMp();F.inn=1;snd("heal");save();toast("Здоровье и мана восстановлены")}],["Не сейчас",()=>{}]]);
   }
   if(n.id==="elder"){
-    if(F.done)return say([{n:nm,t:"Брод спит спокойно. Ты вернул нам ночь без страха."}]);
-    if(F.amulet){return say([{n:nm,t:"Амулет Пепла. Тёплый… значит, Печать ещё жива."},{n:nm,t:"Ты спас нас, странник."}],()=>finish())}
-    if(!F.elder){F.elder=1;save();return say([{n:nm,t:"Странник. Печать Брода трескается. Гули поднимаются из склепа к северу от деревни."},{n:nm,t:"На алтаре лежит Амулет Пепла. Принеси его, и Печать удержится."},{n:nm,t:"Дорога через Чёрный лес опасна. Береги силы, отдыхай в трактире."}],()=>toast("Задание: принести Амулет Пепла"))}
-    return say([{n:nm,t:"Амулет лежит на алтаре в склепе, на севере леса. Его стережёт Хозяин гулей. Иди осторожно."}]);
+    if(F.done)return say([{n:nm,t:"Тинген спит спокойно. Ты вернул нам ночь без страха."}]);
+    if(F.amulet){return say([{n:nm,t:"Запечатанный артефакт. Тёплый… значит, печать Богини ещё держит."},{n:nm,t:"Ты спас нас, Потусторонний."}],()=>finish())}
+    if(!F.elder){F.elder=1;save();return say([{n:nm,t:"Потусторонний. Печать на артефакте трескается. Потусторонний из склепа к северу от города теряет контроль."},{n:nm,t:"Запечатанный артефакт лежит на алтаре. Забери его, и печать удержится."},{n:nm,t:"Дорога через Туманную рощу опасна. Береги силы, отдыхай в «Ржавом якоре»."}],()=>toast("Задание: забрать запечатанный артефакт"))}
+    return say([{n:nm,t:"Артефакт лежит на алтаре в склепе, на севере рощи. Его стережёт Потерявший контроль. Иди осторожно."}]);
   }
 }
 function finish(){
   F.done=1;save();S.st="end";setUI();
-  $("#endTx").textContent="Амулет вернулся на своё место. Брод спит.\nУровень героя: "+P.lv+". Это был прототип, дальше будут новые земли.";
+  $("#endTx").textContent="Артефакт вернулся на место, печать держит. Тинген спит.\nУровень героя: "+P.lv+". Это был прототип, дальше будут новые земли.";
   $("#end").classList.add("show");snd("win");
 }
 
 /* ============ бой ============ */
 const ENEMIES={
-  wolf:{n:"Чёрный волк",hp:22,atk:6,xp:9,spr:"wolf"},
-  skel:{n:"Костяной страж",hp:28,atk:7,xp:12,spr:"skel"},
-  bat:{n:"Гнилая летучая мышь",hp:16,atk:5,xp:6,spr:"bat"},
-  ghoul:{n:"Хозяин гулей",hp:90,atk:11,xp:60,spr:"ghoul",boss:1}
+  wolf:{n:"Заражённая гончая",hp:22,atk:6,xp:9,spr:"wolf"},
+  skel:{n:"Мертвец-страж",hp:28,atk:7,xp:12,spr:"skel"},
+  bat:{n:"Тварь тумана",hp:16,atk:5,xp:6,spr:"bat"},
+  ghoul:{n:"Потерявший контроль",hp:90,atk:11,xp:60,spr:"ghoul",boss:1}
 };
 let B=null,fx=[];
 function startBattle(k){
   const e=ENEMIES[k];
   B={k,e:{...e},hp:e.hp,max:e.hp,turn:1,busy:true,charge:0,flash:0,shake:0,menu:"main",boss:!!e.boss};
   S.st="battle";setUI();snd("enc");fx=[];
-  blog(e.boss?"Хозяин гулей поднимается с каменного трона.":"На тропе появляется "+e.n.toLowerCase()+".");
+  blog(e.boss?"Потерявший контроль поднимается у алтаря.":"На тропе появляется "+e.n.toLowerCase()+".");
   renderBattle();setTimeout(()=>{B.busy=false;renderBattle()},700);
 }
 function blog(t){$("#blog").textContent=t}
 function renderBattle(){
   if(!B)return;
-  $("#bname").textContent="Странник";$("#blv").textContent="ур. "+P.lv;
+  $("#bname").textContent="Потусторонний";$("#blv").textContent="ур. "+P.lv;
   $("#bhp").style.width=Math.max(0,P.hp/maxHp()*100)+"%";$("#bhpt").textContent="HP "+P.hp+" / "+maxHp();
   $("#bmp").style.width=Math.max(0,P.mp/maxMp()*100)+"%";$("#bmpt").textContent="MP "+P.mp+" / "+maxMp();
   const c=$("#bcmd");c.innerHTML="";
@@ -434,7 +434,7 @@ function renderBattle(){
     add("Удар",()=>act("atk"));add("Навыки",()=>{B.menu="skill";renderBattle()});
     add("Зелье",()=>act("pot"),P.pot<1,"осталось "+P.pot);add("Бежать",()=>act("run"),B.boss);
   }else{
-    add("Тёмный удар",()=>act("dark"),P.mp<4,"4 MP · урон ×1.8");add("Исцеление",()=>act("heal"),P.mp<5,"5 MP · +"+healAmt());
+    add("Пуля духа",()=>act("dark"),P.mp<4,"4 MP · урон ×1.8");add("Молитва Ночи",()=>act("heal"),P.mp<5,"5 MP · +"+healAmt());
     add("Назад",()=>{B.menu="main";renderBattle()});
   }
 }
@@ -450,8 +450,8 @@ function act(kind){
     if(crit)d=Math.round(d*1.5);
     B.hp=Math.max(0,B.hp-d);B.flash=.35;snd(crit?"crit":"hit");
     floatTxt((crit?"Крит ":"")+"-"+d,0,0,crit?"#ffd37a":"#fff");
-    blog((kind==="dark"?"Тёмный удар":"Ты бьёшь")+": "+d+" урона"+(crit?" (крит!)":"")+".");
-  }else if(kind==="heal"){P.mp-=5;const h=Math.min(healAmt(),maxHp()-P.hp);P.hp+=h;snd("heal");blog("Исцеление: +"+h+" HP.");floatTxt("+"+h,0,1,"#7fe0a0")}
+    blog((kind==="dark"?"Пуля духа":"Ты бьёшь")+": "+d+" урона"+(crit?" (крит!)":"")+".");
+  }else if(kind==="heal"){P.mp-=5;const h=Math.min(healAmt(),maxHp()-P.hp);P.hp+=h;snd("heal");blog("Молитва Ночи: +"+h+" HP.");floatTxt("+"+h,0,1,"#7fe0a0")}
   else if(kind==="pot"){P.pot--;const h=Math.min(25,maxHp()-P.hp);P.hp+=h;snd("heal");blog("Зелье лечения: +"+h+" HP.");floatTxt("+"+h,0,1,"#7fe0a0")}
   else if(kind==="run"){
     if(Math.random()<.65){blog("Ты скрываешься в темноте.");setTimeout(()=>endBattle("run"),700);return}
@@ -463,9 +463,9 @@ function act(kind){
 function enemyTurn(){
   const e=B.e;let d=e.atk+((Math.random()*3)|0)-1,msg;
   if(B.boss){
-    if(B.charge){d=Math.round(e.atk*2.2);B.charge=0;msg="Хозяин гулей обрушивает копившуюся силу: "+d+" урона!"}
-    else if(B.turn%3===2){B.charge=1;d=0;msg="Хозяин гулей поднимает когти и копит силу. Следующий удар будет тяжёлым!"}
-    else msg="Хозяин гулей бьёт когтями: "+d+" урона."
+    if(B.charge){d=Math.round(e.atk*2.2);B.charge=0;msg="Потерявший контроль обрушивает копившуюся силу: "+d+" урона!"}
+    else if(B.turn%3===2){B.charge=1;d=0;msg="Потерявший контроль дрожит и копит силу. Следующий удар будет тяжёлым!"}
+    else msg="Потерявший контроль бьёт искажённой силой: "+d+" урона."
   }else msg=e.n+" нападает: "+d+" урона.";
   if(d>0){P.hp=Math.max(0,P.hp-d);B.shake=.3;snd("hurt");floatTxt("-"+d,0,2,"#ff7a7a")}
   blog(msg);B.turn++;renderBattle();
@@ -477,7 +477,7 @@ function endBattle(res){
     snd("win");let t=b.e.n+" повержен. +"+b.e.xp+" опыта.";P.xp+=b.e.xp;
     while(P.xp>=need()){P.xp-=need();P.lv++;P.hp=maxHp();P.mp=maxMp();t+="\nНовый уровень: "+P.lv+"! HP и MP восстановлены.";snd("lvl")}
     if(!b.boss&&Math.random()<.25){P.pot++;t+="\nНайдено зелье лечения."}
-    if(b.boss){F.boss=1;F.amulet=1;t+="\nНа алтаре лежит Амулет Пепла. Ты забираешь его."}
+    if(b.boss){F.boss=1;F.amulet=1;t+="\nНа алтаре лежит запечатанный артефакт. Ты забираешь его."}
     S.st="map";setUI();save();say([t],null);
   }else if(res==="lose"){
     snd("lose");S.st="map";setUI();
@@ -508,7 +508,7 @@ function stepDone(){
 }
 function tryBlock(){
   S.dir=0;
-  say([{n:"Стражник",t:"Стой! Лес закрыт. Сначала поговори со старейшиной."}]);
+  say([{n:"Стражник",t:"Стой! Роща закрыта. Сначала поговори с капитаном Ночных Ястребов."}]);
 }
 function warp(w){
   snd("door");S.map=w.to;S.x=w.tx;S.y=w.ty;S.dir=w.dir;S.safe=S.steps+4;
@@ -526,8 +526,8 @@ function interact(){
   }
   if(m.o[ny]&&m.o[ny][nx]==="A"){
     if(S.map==="crypt"){
-      if(!F.boss){say([{t:"На алтаре лежит Амулет Пепла, но воздух дрожит. Из тени встаёт тяжёлая фигура."}],()=>startBattle("ghoul"))}
-      else say([{t:"Алтарь пуст. Амулет Пепла у тебя."}]);
+      if(!F.boss){say([{t:"На алтаре лежит запечатанный артефакт, но воздух дрожит. Из тени поднимается искажённая фигура."}],()=>startBattle("ghoul"))}
+      else say([{t:"Алтарь пуст. Артефакт у тебя."}]);
     }return;
   }
   if(m.o[ny]&&m.o[ny][nx]==="+")say([{t:"Надгробие истёрто временем. Имя не прочесть."}]);
@@ -660,8 +660,8 @@ addEventListener("keyup",e=>{if(e.key in KD)release(KD[e.key])});
 /* ============ меню ============ */
 function openMenu(){
   S.st="menu";setUI();held=0;
-  const q=F.done?"Выполнено: Печать Брода спасена.":F.amulet?"Отнесите Амулет Пепла старейшине Маре.":F.elder?"Добыть Амулет Пепла из склепа на севере Чёрного леса.":"Поговорить со старейшиной Марой (дом справа от главной дороги).";
-  $("#mbox").innerHTML="<h2>Странник</h2><dl><dt>Уровень</dt><dd>"+P.lv+"</dd><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Мана</dt><dd>"+P.mp+" / "+maxMp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd></dl><div class='q'><b>Задание.</b> "+q+"</div><div class='rw'><button class='mbtn' id='mUse'"+(P.pot<1||P.hp>=maxHp()?" disabled":"")+">Выпить зелье</button><button class='mbtn' id='mSnd'>Звук: "+(sound?"вкл":"выкл")+"</button></div><div class='rw'><button class='mbtn' id='mSave'>Сохранить</button><button class='mbtn pri' id='mBack'>Закрыть</button></div>";
+  const q=F.done?"Выполнено: артефакт запечатан.":F.amulet?"Отнеси артефакт капитану Ночных Ястребов.":F.elder?"Забрать запечатанный артефакт из склепа на севере Туманной рощи.":"Поговорить с капитаном Ночных Ястребов (дом справа от главной дороги).";
+  $("#mbox").innerHTML="<h2>Потусторонний</h2><dl><dt>Уровень</dt><dd>"+P.lv+"</dd><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Мана</dt><dd>"+P.mp+" / "+maxMp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd></dl><div class='q'><b>Задание.</b> "+q+"</div><div class='rw'><button class='mbtn' id='mUse'"+(P.pot<1||P.hp>=maxHp()?" disabled":"")+">Выпить зелье</button><button class='mbtn' id='mSnd'>Звук: "+(sound?"вкл":"выкл")+"</button></div><div class='rw'><button class='mbtn' id='mSave'>Сохранить</button><button class='mbtn pri' id='mBack'>Закрыть</button></div>";
   $("#menu").classList.add("show");
   $("#mBack").onclick=closeMenu;
   $("#mSave").onclick=()=>{save();toast("Сохранено");closeMenu()};
@@ -676,7 +676,7 @@ function begin(newg){
   if(newg){try{localStorage.removeItem("sumerki_save")}catch(e){}newGame()}else load();
   $("#title").classList.remove("show");$("#end").classList.remove("show");
   S.st="map";setUI();toastLoc();
-  if(newg)setTimeout(()=>say([{t:"Ночь над Бродом. Тебя привела сюда весть о трескающейся Печати. Поговори со старейшиной Марой, её дом справа от главной дороги."},{t:"Управление: крестовина или стрелки для ходьбы, кнопка A или пробел для разговора."}]),300);
+  if(newg)setTimeout(()=>say([{t:"Туман над Тингеном. Тебя привела сюда весть о запечатанном артефакте, который теряет силу. Поговори с капитаном Ночных Ястребов, его участок справа от главной дороги."},{t:"Управление: крестовина или стрелки для ходьбы, кнопка A или пробел для разговора."}]),300);
 }
 $("#tNew").onclick=()=>begin(true);
 $("#tCont").onclick=()=>begin(false);
