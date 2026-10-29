@@ -44,8 +44,16 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 #loc{position:absolute;left:max(12px,env(safe-area-inset-left,0px));top:max(12px,env(safe-area-inset-top,0px));padding:6px 12px;border-radius:8px;background:rgba(23,18,31,.72);border:1px solid var(--line);font-family:var(--disp);font-size:17px;letter-spacing:.04em;display:none}
 
 /* диалог */
-#dlg{position:absolute;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));min-height:112px;padding:14px 16px 12px;border-radius:10px;border:2px solid var(--line);background:rgba(18,13,26,.95);display:none;z-index:5}
-#dlg .nm{position:absolute;top:-15px;left:14px;padding:2px 12px;border-radius:6px;background:var(--panel2);border:1px solid var(--ember);color:var(--ember);font-family:var(--disp);font-size:16px;letter-spacing:.05em}
+.win{position:relative;border:2px solid #c9a24f;border-radius:12px;background:linear-gradient(180deg,rgba(38,28,58,.96),rgba(16,11,28,.97));box-shadow:inset 0 0 0 2px #1a1226,inset 0 0 0 3px #6b5430,inset 0 0 18px rgba(120,80,200,.25),0 4px 14px rgba(0,0,0,.6)}
+.win::before,.win::after{content:"◆";position:absolute;color:#e0a24a;font-size:11px;line-height:1;text-shadow:0 0 6px rgba(224,162,74,.7);pointer-events:none}
+.win::before{left:-5px;top:-6px}.win::after{right:-5px;bottom:-6px}
+#dlg{position:absolute;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));min-height:118px;padding:14px 16px 12px 16px;display:none;z-index:5}
+#dlg.pt{padding-left:104px;min-height:122px}
+#dlg .face{position:absolute;left:10px;bottom:10px;width:84px;height:104px;border:2px solid #c9a24f;border-radius:8px;background:radial-gradient(circle at 50% 35%,#4a3a68,#1a1226);box-shadow:inset 0 0 0 2px #1a1226,0 0 10px rgba(0,0,0,.6);overflow:hidden;display:none}
+#dlg.pt .face{display:block}
+#dlg .face canvas{position:absolute;left:50%;bottom:0;width:128px;height:128px;transform:translateX(-50%);image-rendering:pixelated}
+#dlg .nm{position:absolute;top:-17px;left:14px;padding:3px 16px;border-radius:4px 14px 4px 14px;background:linear-gradient(180deg,#5a4120,#2a1c0e);border:2px solid #e0a24a;color:#ffe3a8;font-family:var(--disp);font-size:16px;letter-spacing:.06em;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+#dlg.pt .nm{left:104px}
 #dlg .tx{line-height:1.38;font-size:18px;min-height:3em;white-space:pre-wrap}
 #dlg .nx{position:absolute;right:14px;bottom:8px;color:var(--ember);animation:bl 1s steps(2) infinite}
 #dlg .opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -53,20 +61,32 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 @keyframes bl{50%{opacity:0}}
 
 /* бой */
-#bt{position:absolute;left:0;right:0;bottom:0;display:none;padding:10px max(10px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,rgba(11,9,18,.92) 24%);z-index:5}
-#bt .lg{min-height:46px;margin:0 0 8px;padding:8px 12px;border-radius:8px;background:rgba(18,13,26,.92);border:1px solid var(--line);line-height:1.3}
-#bt .row{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
-#bt .st{flex:1 1 160px;min-width:0;padding:8px 12px;border-radius:8px;background:rgba(18,13,26,.92);border:1px solid var(--line)}
-#bt .st b{font-family:var(--disp);font-size:18px;letter-spacing:.04em}
+#bt{position:absolute;left:0;right:0;bottom:0;display:none;padding:0 max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,rgba(8,6,14,.9) 30%);z-index:5}
+#bt .lg{min-height:44px;margin:0 0 8px;padding:9px 12px;line-height:1.3;font-size:16px}
+#bt .row{display:flex;flex-direction:column-reverse;gap:8px}
+#bt .st{min-width:0;padding:8px 10px 8px 8px;display:flex;gap:8px;align-items:center}
+#bt .st .hf{flex:0 0 52px;height:60px;border:2px solid #c9a24f;border-radius:6px;background:radial-gradient(circle at 50% 35%,#4a3a68,#1a1226);overflow:hidden;position:relative}
+#bt .st .hf canvas{position:absolute;left:50%;bottom:0;width:78px;height:78px;transform:translateX(-50%);image-rendering:pixelated}
+#bt .st .in{flex:1;min-width:0}
+#bt .st b{font-family:var(--disp);font-size:17px;letter-spacing:.04em;color:#ffe3a8}
+.stl{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--dim)}
+.stl em{font-style:normal;color:#e0a24a;font-weight:700;width:18px;flex:none}
+.stl .bar{flex:1;margin:3px 0}
+.stl span{flex:none;min-width:48px;text-align:right;color:var(--fg)}
+#bt .cmd{padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:4px}
+#bt .cmd button{display:flex;align-items:center;gap:8px;text-align:left;padding:7px 8px;border-radius:6px;border:1px solid transparent;background:transparent;font-size:17px;min-height:40px}
+#bt .cmd button .ic{flex:none;width:22px;text-align:center;font-size:17px}
+#bt .cmd button .mp{margin-left:auto;color:#7fa8ff;font-size:14px}
+#bt .cmd button:not(:disabled):active,#bt .cmd button:not(:disabled):hover{background:rgba(224,162,74,.18);border-color:#c9a24f}
+#bt .cmd button:not(:disabled):active::before{content:"▶";color:#e0a24a;margin-right:-4px}
+#bt .cmd button:disabled{opacity:.4}
+#bt .cmd small{display:block;color:var(--dim);font-size:12px}
+#bt .cmd button div{line-height:1.1}
+#bt.sk .cmd{grid-template-columns:1fr}
 .bar{height:10px;border-radius:5px;background:#0a0710;border:1px solid var(--line);margin:5px 0;overflow:hidden}
 .bar i{display:block;height:100%;transition:width .3s}
 .bar.hp i{background:linear-gradient(90deg,#8f2a39,#d4505f)}
 .bar.mp i{background:linear-gradient(90deg,#2d4f9a,#5b8be0)}
-#bt .cmd{flex:1 1 190px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#bt .cmd button{padding:10px 6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);font-size:17px;min-height:48px}
-#bt .cmd button:not(:disabled):active{border-color:var(--ember)}
-#bt .cmd button:disabled{opacity:.4}
-#bt .cmd small{display:block;color:var(--dim);font-size:13px}
 
 /* экраны */
 .scr{position:absolute;inset:0;display:none;z-index:8;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:24px max(16px,env(safe-area-inset-left,0px));background:radial-gradient(ellipse at 50% 38%,rgba(11,9,18,.55),rgba(11,9,18,.9))}
@@ -100,14 +120,14 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
     <button class="d" data-d="0" aria-label="Вниз">▼</button>
   </div>
   <button id="btnA" aria-label="Действие">A</button>
-  <div id="dlg"><div class="nm"></div><div class="tx"></div><div class="opts"></div><div class="nx">▼</div></div>
+  <div id="dlg" class="win"><div class="face"><canvas id="dface" width="16" height="16"></canvas></div><div class="nm"></div><div class="tx"></div><div class="opts"></div><div class="nx">▼</div></div>
   <div id="bt">
-    <div class="lg" id="blog"></div>
+    <div class="lg win" id="blog"></div>
     <div class="row">
-      <div class="st"><b id="bname">Потусторонний</b> <span id="blv" style="color:var(--dim)"></span>
-        <div class="bar hp"><i id="bhp"></i></div><div id="bhpt" style="font-size:14px;color:var(--dim)"></div>
-        <div class="bar mp"><i id="bmp"></i></div><div id="bmpt" style="font-size:14px;color:var(--dim)"></div></div>
-      <div class="cmd" id="bcmd"></div>
+      <div class="cmd win" id="bcmd"></div>
+      <div class="st win"><div class="hf"><canvas id="bface" width="16" height="16"></canvas></div><div class="in"><b id="bname">Потусторонний</b> <span id="blv" style="color:var(--dim);font-size:13px"></span>
+        <div class="stl"><em>HP</em><div class="bar hp"><i id="bhp"></i></div><span id="bhpt"></span></div>
+        <div class="stl"><em>MP</em><div class="bar mp"><i id="bmp"></i></div><span id="bmpt"></span></div></div></div>
     </div>
   </div>
   <div id="toast"></div>
@@ -504,7 +524,9 @@ function say(lines,cb,opts){
   D={lines:lines.map(l=>typeof l==="string"?{n:"",t:l}:l),i:0,pos:0,cb:cb||null,opts:opts||null,prev:S.st};
   S.st="dialog";setUI();$("#dlg").style.display="block";showLine();
 }
-function showLine(){const l=D.lines[D.i];D.pos=0;D.full=l.t;$("#dlg .nm").textContent=l.n||"";$("#dlg .nm").style.display=l.n?"block":"none";$("#dlg .tx").textContent="";$("#dlg .opts").innerHTML="";$("#dlg .nx").style.display="none"}
+const FACE={"Страж Церкви":"guard","Стражник":"guard","Угольщик":"vil","Газетчица":"girl","Гадалка":"crone","Трактирщик":"inn","Хозяин трактира":"inn","Капитан Ночных Ястребов":"elder","Потусторонний":"hero"};
+function drawFace(cv,key){const x=cv.getContext("2d");x.clearRect(0,0,16,16);if(key&&SP[key])x.drawImage(SP[key][0][0],0,3,16,13,0,3,16,13)}
+function showLine(){const l=D.lines[D.i];{const fk=FACE[l.n];$("#dlg").classList.toggle("pt",!!fk);if(fk)drawFace($("#dface"),fk)}D.pos=0;D.full=l.t;$("#dlg .nm").textContent=l.n||"";$("#dlg .nm").style.display=l.n?"block":"none";$("#dlg .tx").textContent="";$("#dlg .opts").innerHTML="";$("#dlg .nx").style.display="none"}
 function dlgTick(dt){
   if(S.st!=="dialog"||!D)return;
   if(D.pos<D.full.length){D.pos=Math.min(D.full.length,D.pos+dt*.045);const n=Math.floor(D.pos);$("#dlg .tx").textContent=D.full.slice(0,n);if(n%3===0&&n!==D.last){D.last=n;snd("blip")}
@@ -522,7 +544,7 @@ function dlgNext(){
   snd("blip");
   if(D.i<D.lines.length-1){D.i++;showLine()}else{const cb=D.cb;endDlg();cb&&cb()}
 }
-function endDlg(){D=null;$("#dlg").style.display="none";if(S.st==="dialog")S.st="map";setUI()}
+function endDlg(){D=null;$("#dlg").classList.remove("pt");$("#dlg").style.display="none";if(S.st==="dialog")S.st="map";setUI()}
 $("#dlg").addEventListener("pointerdown",e=>{if(e.target.tagName!=="BUTTON")dlgNext()});
 
 /* ============ диалоги сюжета ============ */
@@ -573,18 +595,18 @@ function startBattle(k){
 }
 function blog(t){$("#blog").textContent=t}
 function renderBattle(){
-  if(!B)return;
+  if(!B)return;drawFace($("#bface"),"hero");$("#bt").classList.toggle("sk",B.menu==="skill");
   $("#bname").textContent="Потусторонний";$("#blv").textContent="ур. "+P.lv;
-  $("#bhp").style.width=Math.max(0,P.hp/maxHp()*100)+"%";$("#bhpt").textContent="HP "+P.hp+" / "+maxHp();
-  $("#bmp").style.width=Math.max(0,P.mp/maxMp()*100)+"%";$("#bmpt").textContent="MP "+P.mp+" / "+maxMp();
+  $("#bhp").style.width=Math.max(0,P.hp/maxHp()*100)+"%";$("#bhpt").textContent=""+P.hp+" / "+maxHp();
+  $("#bmp").style.width=Math.max(0,P.mp/maxMp()*100)+"%";$("#bmpt").textContent=""+P.mp+" / "+maxMp();
   const c=$("#bcmd");c.innerHTML="";
-  const add=(t,fn,dis,sub)=>{const b=document.createElement("button");b.innerHTML=t+(sub?"<small>"+sub+"</small>":"");b.disabled=!!dis||B.busy;b.onclick=()=>{ac();fn()};c.appendChild(b)};
+  const add=(ic,t,fn,dis,sub,mp)=>{const b=document.createElement("button");b.innerHTML='<span class="ic">'+ic+'</span><div>'+t+(sub?"<small>"+sub+"</small>":"")+'</div>'+(mp?'<span class="mp">'+mp+'</span>':"");b.disabled=!!dis||B.busy;b.onclick=()=>{ac();fn()};c.appendChild(b)};
   if(B.menu==="main"){
-    add("Удар",()=>act("atk"));add("Навыки",()=>{B.menu="skill";renderBattle()});
-    add("Зелье",()=>act("pot"),P.pot<1,"осталось "+P.pot);add("Бежать",()=>act("run"),B.boss);
+    add("⚔","Битва",()=>act("atk"));add("✦","Навыки",()=>{B.menu="skill";renderBattle()});
+    add("⚗","Предмет",()=>act("pot"),P.pot<1,"зелья: "+P.pot);add("➤","Бежать",()=>act("run"),B.boss);
   }else{
-    add("Пуля духа",()=>act("dark"),P.mp<4,"4 MP · урон ×1.8");add("Молитва Ночи",()=>act("heal"),P.mp<5,"5 MP · +"+healAmt());
-    add("Назад",()=>{B.menu="main";renderBattle()});
+    add("◈","Пуля духа",()=>act("dark"),P.mp<4,"урон ×1.8","4 MP");add("✚","Молитва Ночи",()=>act("heal"),P.mp<5,"лечит +"+healAmt(),"5 MP");
+    add("↩","Назад",()=>{B.menu="main";renderBattle()});
   }
 }
 const healAmt=()=>16+P.lv*4;
@@ -753,35 +775,27 @@ function draw(now){
   // лёгкая виньетка
   const vg=ctx.createRadialGradient(vw/2,vh/2,Math.min(vw,vh)*.35,vw/2,vh/2,Math.max(vw,vh)*.75);vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,.55)");ctx.fillStyle=vg;ctx.fillRect(0,0,vw,vh);
 }
+const ART={};for(const k of["wolf","skel","bat","ghoul"]){const i=new Image();i.src="img/"+k+".jpg";ART[k]=i}
 function drawBattle(now){
   const W=vw,H=vh,t=now/1000;
-  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0e0a18");g.addColorStop(.55,"#1a1426");g.addColorStop(1,"#0b0912");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // луна и силуэты деревьев
-  const mg=ctx.createRadialGradient(W*.8,H*.12,4,W*.8,H*.12,H*.18);mg.addColorStop(0,"rgba(220,225,255,.9)");mg.addColorStop(.12,"rgba(200,205,240,.35)");mg.addColorStop(1,"rgba(200,205,240,0)");ctx.fillStyle=mg;ctx.fillRect(0,0,W,H*.4);
-  const r=rng(5);ctx.fillStyle="#0a0810";
-  for(let i=0;i<14;i++){const x=i/13*W,h=H*(.18+r()*.2),w=22+r()*26;ctx.beginPath();ctx.moveTo(x-w,H*.62);ctx.lineTo(x,H*.62-h);ctx.lineTo(x+w,H*.62);ctx.fill()}
-  ctx.fillStyle="#17121f";ctx.fillRect(0,H*.62,W,H*.38);
-  ctx.fillStyle="#241b30";ctx.fillRect(0,H*.62,W,3);
-  // стелющийся туман
-  for(let i=0;i<4;i++){const fx0=((t*14*(1+i*.4)+i*300)%(W+500))-250;const fg=ctx.createRadialGradient(fx0,H*(.6+i*.04),4,fx0,H*(.6+i*.04),200);fg.addColorStop(0,"rgba(150,140,190,.14)");fg.addColorStop(1,"rgba(150,140,190,0)");ctx.fillStyle=fg;ctx.fillRect(fx0-220,H*.5,440,H*.3)}
-  const frames=SPE[B.e.spr],spd=B.e.spr==="bat"?150:420,spr=frames[Math.floor(now/spd)%2],s=Math.max(3,Math.floor(Math.min(W*.8,H*.42)/spr.width));
-  let oy=Math.sin(now/400)*(B.e.spr==="bat"?7:3),ox=B.shake>0?(Math.random()-.5)*8:0,al=1,sc=1;
-  const en=Math.min(1,(now-B.t0)/500);al*=en;oy-=(1-en)*30;
+  ctx.fillStyle="#0b0912";ctx.fillRect(0,0,W,H);
+  const img=ART[B.e.spr],ok=img&&img.complete&&img.naturalWidth;
+  let sc=1,al=1,ox=B.shake>0?(Math.random()-.5)*10:0,oy=0;
+  const en=Math.min(1,(now-B.t0)/500);al*=en;
   for(const a of B.anim){
-    if(a.k==="lunge"&&a.t<.35)oy+=Math.sin(a.t/.35*Math.PI)*s*7;
-    if(a.k==="die"){al*=Math.max(0,1-a.t/.9);oy+=a.t*50;sc=1-Math.min(.4,a.t*.25)}
+    if(a.k==="lunge"&&a.t<.35)sc+=Math.sin(a.t/.35*Math.PI)*.07;
+    if(a.k==="die"){al*=Math.max(0,1-a.t/.9);oy+=a.t*30}
   }
-  const w=spr.width*s*sc,h=spr.height*s*sc,ex=W/2-w/2+ox,ey=H*.6-h+oy;
-  // тень и аура
-  ctx.fillStyle="rgba(0,0,0,.4)";ctx.beginPath();ctx.ellipse(W/2,H*.62,w*.4,10,0,0,7);ctx.fill();
-  if(B.boss||B.charge){
-    const ccx=W/2,ccy=ey+h*.5,rr=Math.max(w,h)*.8,col=B.charge?"255,70,70":"104,255,154",pul=.22+.12*Math.sin(now/220)+(B.charge?.15:0);
-    const ag=ctx.createRadialGradient(ccx,ccy,rr*.15,ccx,ccy,rr);ag.addColorStop(0,"rgba("+col+","+pul+")");ag.addColorStop(1,"rgba("+col+",0)");ctx.fillStyle=ag;ctx.fillRect(ccx-rr,ccy-rr,rr*2,rr*2);
-    if(B.boss)for(let i=0;i<12;i++){const k=((t*.35+i*.137)%1),px=W/2+Math.sin(i*2.3+t)*w*.45,py=H*.62-k*h*1.1;ctx.fillStyle="rgba("+col+","+(.8*(1-k)).toFixed(2)+")";ctx.fillRect(px,py,3,3)}
-  }
-  ctx.save();ctx.imageSmoothingEnabled=false;ctx.globalAlpha=Math.max(0,al);
-  if(B.flash>0)ctx.filter="brightness(3)";
-  ctx.drawImage(spr,ex,ey,w,h);ctx.restore();
+  // арт во всю ширину сверху, снизу уходит в окна
+  const side=Math.max(W,H*.66),bs=side*(1.04+Math.sin(now/1800)*.012)*sc;
+  const dx=W/2-bs/2+ox,dy=H*.36-bs*.45+oy;
+  if(ok){ctx.save();ctx.globalAlpha=Math.max(0,al);if(B.flash>0)ctx.filter="brightness(2.6)";ctx.drawImage(img,dx,dy,bs,bs);ctx.restore()}
+  const vg=ctx.createLinearGradient(0,H*.45,0,H*.78);vg.addColorStop(0,"rgba(8,6,14,0)");vg.addColorStop(1,"rgba(8,6,14,1)");ctx.fillStyle=vg;ctx.fillRect(0,H*.4,W,H*.6);
+  const tg=ctx.createLinearGradient(0,0,0,H*.18);tg.addColorStop(0,"rgba(8,6,14,.85)");tg.addColorStop(1,"rgba(8,6,14,0)");ctx.fillStyle=tg;ctx.fillRect(0,0,W,H*.18);
+  if(B.boss||B.charge){const col=B.charge?"255,70,70":"104,255,154",pul=.18+.1*Math.sin(now/220)+(B.charge?.14:0);const ag=ctx.createRadialGradient(W/2,H*.3,10,W/2,H*.3,Math.max(W,H)*.55);ag.addColorStop(0,"rgba("+col+",0)");ag.addColorStop(1,"rgba("+col+","+pul+")");ctx.fillStyle=ag;ctx.fillRect(0,0,W,H)}
+  // дым тумана
+  for(let i=0;i<3;i++){const fx0=((t*16*(1+i*.4)+i*300)%(W+500))-250;const fg=ctx.createRadialGradient(fx0,H*(.42+i*.05),4,fx0,H*(.42+i*.05),180);fg.addColorStop(0,"rgba(150,140,190,.12)");fg.addColorStop(1,"rgba(150,140,190,0)");ctx.fillStyle=fg;ctx.fillRect(fx0-200,H*.3,400,H*.3)}
+  const w=bs*.5,h=bs*.5,ey=H*.36-h/2+oy;
   // эффекты ударов
   for(const a of B.anim){
     const ecx=W/2,ecy=ey+h*.5;
@@ -799,12 +813,13 @@ function drawBattle(now){
     if(a.k==="heal"&&a.t<1){for(let i=0;i<12;i++){const px=W*(.15+.7*((i*.37)%1)),py=H*.66-a.t*H*.22-(i%3)*18;ctx.fillStyle="rgba(127,224,160,"+(1-a.t).toFixed(2)+")";ctx.fillRect(px,py,4,4);ctx.fillRect(px+1,py-3,2,10)}}
     if(a.k==="hurt"&&a.t<.45){const q=a.t/.45,vg=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.25,W/2,H/2,Math.max(W,H)*.7);vg.addColorStop(0,"rgba(178,58,72,0)");vg.addColorStop(1,"rgba(178,58,72,"+(.55*(1-q)).toFixed(2)+")");ctx.fillStyle=vg;ctx.fillRect(0,0,W,H)}
   }
-  // полоска HP врага
-  const bw=Math.min(240,W*.6),bx=W/2-bw/2,by=Math.max(22,H*.6-spr.height*s-34);
+  // табличка врага
+  const bw=Math.min(280,W*.7),bx=W/2-bw/2,by=44;
   ctx.globalAlpha=Math.max(0,Math.min(1,al*1.2));
-  ctx.fillStyle="#e9e0d2";ctx.font="700 19px 'Alegreya SC',serif";ctx.textAlign="center";ctx.fillText(B.e.n,W/2,by-8);
+  ctx.fillStyle="rgba(18,12,30,.85)";ctx.fillRect(bx-10,by-34,bw+20,52);ctx.strokeStyle="#c9a24f";ctx.lineWidth=2;ctx.strokeRect(bx-9,by-33,bw+18,50);
+  ctx.fillStyle="#ffe3a8";ctx.font="700 19px 'Alegreya SC',serif";ctx.textAlign="center";ctx.fillText(B.e.n,W/2,by-10);
   ctx.fillStyle="#0a0710";ctx.fillRect(bx,by,bw,10);ctx.fillStyle="#b23a48";ctx.fillRect(bx+1,by+1,(bw-2)*B.hp/B.max,8);
-  ctx.strokeStyle="#4a3a5c";ctx.strokeRect(bx+.5,by+.5,bw,10);ctx.globalAlpha=1;
+  ctx.strokeStyle="#6b5430";ctx.lineWidth=1;ctx.strokeRect(bx+.5,by+.5,bw,10);ctx.globalAlpha=1;
   for(const f of fx){const a=1-f.age;ctx.globalAlpha=Math.max(0,a);ctx.fillStyle=f.c;ctx.font="700 30px 'Alegreya Sans',sans-serif";const yy=f.y===2?H*.5:ey+h*.35;ctx.fillText(f.t,W/2+(f.y===2?-40:0),(f.y===1?H*.5:yy)-f.age*40);ctx.globalAlpha=1}
 }
 
