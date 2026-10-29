@@ -153,53 +153,119 @@ const WAT=[0,1].map(f=>mk(16,16,x=>{R(x,"#1c3552",0,0,16,16);const r=rng(11+f);f
 G["~"]=WAT[0];
 
 function tr(ch,fn){O[ch]=mk(16,16,fn)}
+
+/* дорога с краями: смотрим на соседей и рисуем кромку или траву */
+const ROAD={};
+function roadTile(ch,mask,base){
+  const k=ch+mask+base;if(ROAD[k])return ROAD[k];
+  return ROAD[k]=mk(16,16,x=>{
+    x.drawImage(G[ch],0,0);
+    const gr=base==="g"?["#223a25","#2d4a30","#18281b"]:["#2d4528","#386034","#223a20"];
+    const r=rng(mask*7+ch.charCodeAt(0)+base.charCodeAt(0));
+    const sides=[[1,(i,d)=>[i,d]],[2,(i,d)=>[d,i]],[4,(i,d)=>[15-d,i]],[8,(i,d)=>[i,15-d]]];
+    for(const [bit,f] of sides){
+      if(mask&bit)continue;
+      for(let i=0;i<16;i++){
+        if(ch==="c"){let p=f(i,0);R(x,"#2a2b33",p[0],p[1],1,1);p=f(i,1);R(x,"#6a6b78",p[0],p[1],1,1)}
+        else{const dp=1+((r()*2)|0);for(let d=0;d<dp;d++){const p=f(i,d);R(x,gr[(r()*gr.length)|0],p[0],p[1],1,1)}const p=f(i,dp);R(x,"#3e2f1f",p[0],p[1],1,1)}
+      }
+    }
+  });
+}
+function isRoad(m,x,y){if(x<0||y<0||x>=m.w||y>=m.h)return true;const g=m.g[y][x];return g==="="||g==="c"}
 tr("T",x=>{R(x,"#3a281b",7,9,2,7);const cx=8,cy=6;for(let y=0;y<14;y++)for(let a=0;a<16;a++){const d=Math.hypot(a-cx,(y-cy)*1.1);if(d<6.4)R(x,d<3.6&&a<9&&y<7?"#2c5532":d>5.2?"#10241a":"#1e3d24",a,y,1,1)}});
 tr("b",x=>{for(let y=6;y<15;y++)for(let a=1;a<15;a++){const d=Math.hypot(a-8,(y-11)*1.5);if(d<6)R(x,d<3?"#2b4f2f":"#1a3320",a,y,1,1)}});
 tr("#",x=>{R(x,"#2e2a36",0,0,16,16);for(let y=0;y<16;y+=4){R(x,"#1f1c26",0,y+3,16,1);for(let a=(y/4%2)*4;a<16;a+=8)R(x,"#1f1c26",a,y,1,4)}speck(x,rng(21),["#3a3544"],10)});
-tr("W",x=>{R(x,"#5b4631",0,0,16,16);for(let a=0;a<16;a+=4)R(x,"#47351f",a,0,1,16);R(x,"#3b2a1a",0,15,16,1);speck(x,rng(31),["#6a523a"],10)});
-tr("w",x=>{O.W&&x.drawImage(O.W,0,0);R(x,"#2a1c10",3,3,10,9);R(x,"#e8b55a",4,4,8,7);R(x,"#c98d34",4,7,8,1);R(x,"#2a1c10",7,4,2,7)});
-tr("R",x=>{R(x,"#4a2634",0,0,16,16);for(let y=0;y<16;y+=4){R(x,"#2f1520",0,y+3,16,1);for(let a=(y/4%2)*4;a<16;a+=8)R(x,"#5e3344",a,y,4,3)}});
-tr("D",x=>{x.drawImage(O.W,0,0);R(x,"#1d130b",3,1,10,15);R(x,"#3d2614",4,2,8,14);R(x,"#4a301a",5,3,6,13);R(x,"#e0a24a",10,9,1,2)});
+tr("W",x=>{R(x,"#8a7a62",0,0,16,16);R(x,"#6f604c",0,0,16,3);R(x,"#3b2a1c",0,0,1,16);R(x,"#3b2a1c",15,0,1,16);speck(x,rng(31),["#968670","#7c6c55"],12);R(x,"#5d5a63",0,11,16,5);R(x,"#44414b",0,11,16,1);R(x,"#44414b",5,12,1,4);R(x,"#44414b",11,12,1,4);R(x,"#44414b",0,15,16,1)});
+tr("w",x=>{x.drawImage(O.W,0,0);R(x,"#2a1c10",3,2,10,9);R(x,"#f0c068",4,3,8,7);R(x,"#e0a24a",4,6,8,4);R(x,"#2a1c10",7,3,2,7);R(x,"#2a1c10",4,6,8,1);R(x,"#7a2230",4,3,2,4);R(x,"#7a2230",10,3,2,4);R(x,"#4a3826",2,10,12,2);R(x,"#6fa06a",3,9,3,1);R(x,"#b23a48",4,8,1,1);R(x,"#6fa06a",9,9,4,1);R(x,"#e0a24a",11,8,1,1)});
+tr("r",x=>{R(x,"#4d2535",0,0,16,16);for(let y=0;y<16;y+=4){for(let a=(y/4%2)*4;a<16;a+=8)R(x,"#5e3044",a,y,4,3);R(x,"#35172a",0,y+3,16,1)}R(x,"#8a4a62",0,0,16,2);R(x,"#2a1420",0,2,16,1)});
+tr("R",x=>{R(x,"#4d2535",0,0,16,16);for(let y=0;y<12;y+=4){for(let a=(y/4%2)*4;a<16;a+=8)R(x,"#5e3044",a,y,4,3);R(x,"#35172a",0,y+3,16,1)}R(x,"#3b1c2b",0,12,16,2);R(x,"#1e0e17",0,14,16,2)});
+tr("K",x=>{x.drawImage(O.r,0,0);R(x,"#6a4a3a",9,0,5,9);R(x,"#4a3228",9,3,5,1);R(x,"#4a3228",9,6,5,1);R(x,"#2a1c16",8,0,7,2)});
+tr("D",x=>{x.drawImage(O.W,0,0);R(x,"#241710",3,0,10,16);R(x,"#4a301a",4,1,8,15);for(const a of[5,7,9])R(x,"#3a2412",a,2,1,14);R(x,"#e0a24a",10,9,1,2);R(x,"#6a6672",2,15,12,1)});
 tr("+",x=>{R(x,"#0d0d12",3,14,10,2);R(x,"#7d8089",4,4,8,11);R(x,"#7d8089",5,2,6,2);R(x,"#989ba4",5,4,2,10);R(x,"#4b4d55",7,5,1,6);R(x,"#4b4d55",5,7,5,1)});
 tr("f",x=>{R(x,"#4a3826",1,6,14,2);R(x,"#4a3826",1,11,14,2);for(const a of[2,7,12])R(x,"#5a452d",a,3,2,12)});
 tr("L",x=>{R(x,"#1a1620",7,6,2,10);R(x,"#1a1620",5,14,6,2);R(x,"#2a2430",5,2,6,6);R(x,"#ffd37a",6,3,4,4);R(x,"#fff2c0",7,4,2,2)});
 tr("B",x=>{R(x,"#3b281a",1,2,14,13);R(x,"#d9cfc0",2,3,12,4);R(x,"#7a2230",2,7,12,7);R(x,"#5a1824",2,10,12,1)});
 tr("o",x=>{R(x,"#2e1e12",1,5,14,10);R(x,"#7b5833",1,3,14,4);R(x,"#93693f",1,3,14,1);R(x,"#e8b55a",11,1,2,3)});
-tr("u",x=>{R(x,"#33200f",3,3,10,12);R(x,"#5e3d1d",4,3,8,12);R(x,"#222",3,6,10,1);R(x,"#222",3,11,10,1);R(x,"#7b5833",5,4,2,10)});
+tr("u",x=>{R(x,"#2a1a0c",3,3,10,12);R(x,"#6a4522",4,2,8,13);R(x,"#7b5530",5,3,3,12);R(x,"#2a2a30",3,5,10,1);R(x,"#2a2a30",3,11,10,1);R(x,"#8a6a40",4,2,8,1);R(x,"#2a1a0c",5,14,6,1)});
 tr("A",x=>{R(x,"#1c1a24",1,6,14,10);R(x,"#4a4656",2,4,12,5);R(x,"#6a6578",2,4,12,1);R(x,"#9b5de0",7,0,2,4);R(x,"#c9a0ff",7,1,2,2)});
 tr("s",x=>{R(x,"#14131a",0,0,16,16);R(x,"#2e2a36",0,0,16,2)});
 
 /* ============ спрайты ============ */
 function person(dir,fr,p){
-  return mk(16,16,x=>{
-    if(dir===2){x.translate(16,0);x.scale(-1,1);dir=1}
-    const bob=fr===1?1:0;
-    const leg=(a,up)=>{R(x,p.boot,a,13-(up?1:0),2,3+(up?0:0))};
-    if(dir===0||dir===3){
-      leg(5,fr===1);leg(9,fr===2);
-      R(x,p.cloak,4,7,8,6);R(x,p.cloak2,4,12,8,1);R(x,p.cloak2,7,7,2,6);
-      R(x,p.cloak,3,8,1,4);R(x,p.cloak,12,8,1,4);
-      R(x,p.hood,5,1,6,6);
-      if(dir===0){R(x,p.skin,6,3,4,3);R(x,"#1a1218",6,4,1,1);R(x,"#1a1218",9,4,1,1)}
-      else{R(x,p.hood2,6,2,4,4)}
-      R(x,p.belt,4,10,8,1);
+  return mk(16,24,x=>{
+    let d=dir;if(d===2){x.translate(16,0);x.scale(-1,1);d=1}
+    const sw=fr===1?1:fr===2?-1:0;
+    const hair=p.hair||"#2a1d18",sk=p.skin,skS=p.skinS||"#b88660",pants=p.pants||p.cloak2;
+    const legs=()=>{
+      if(p.robe){R(x,p.cloak,4,17,8,5);R(x,p.cloak2,4,21,8,1);R(x,p.cloak2,4,17,2,5);R(x,p.boot,fr===1?5:6,22,2,1);R(x,p.boot,fr===2?9:8,22,2,1);return}
+      const l=fr===1?1:0,r=fr===2?1:0;
+      R(x,pants,5,17,3,5-l);R(x,pants,8,17,3,5-r);R(x,p.boot,5,21-l,3,2);R(x,p.boot,8,21-r,3,2);
+    };
+    const front=(d===0),back=(d===3);
+    if(d===0||d===3){
+      legs();
+      // туловище
+      R(x,p.cloak,4,10,8,7);R(x,p.cloak2,10,10,2,7);R(x,p.cloak2,4,16,8,1);
+      if(p.apron&&front)R(x,p.apron,5,12,6,5);
+      R(x,p.trim,4,10,8,1);R(x,p.trim,4,14,8,1);if(front)R(x,"#f2d58a",7,14,2,1);
+      if(back&&p.sword){R(x,"#b9bfc9",9,8,1,8);R(x,"#e0a24a",8,12,3,1)}
+      if(back)R(x,p.cloak2,7,11,2,5);
+      // руки
+      const al=sw>0?1:0,ar=sw<0?1:0;
+      R(x,p.cloak,2,11+al,2,5);R(x,sk,2,16+al,2,2);
+      R(x,p.cloak,12,11+ar,2,5);R(x,sk,12,16+ar,2,2);
+      // голова
+      if(p.hood){
+        R(x,p.hood,3,1,10,3);R(x,p.hood,3,4,2,6);R(x,p.hood,11,4,2,6);R(x,p.hood2,4,1,8,1);
+        if(front){R(x,sk,5,4,6,6);R(x,p.hood2,5,4,6,1);R(x,skS,5,9,6,1);R(x,"#1a1218",6,7,1,2);R(x,"#1a1218",9,7,1,2)}
+        else{R(x,p.hood,3,4,10,6);R(x,p.hood2,7,3,2,7)}
+      }else if(p.helm){
+        R(x,p.helm,4,1,8,5);R(x,p.helm,3,3,1,6);R(x,p.helm,12,3,1,6);R(x,p.helm2,4,5,8,1);
+        if(front){R(x,sk,5,6,6,4);R(x,p.helm2,7,5,2,4);R(x,"#1a1218",6,7,1,1);R(x,"#1a1218",9,7,1,1);R(x,p.plume||"#b23a48",7,0,2,2)}
+        else{R(x,p.helm,4,5,8,5);R(x,p.helm2,7,1,2,8)}
+      }else{
+        R(x,hair,4,2,8,3);R(x,hair,3,4,1,5);R(x,hair,12,4,1,5);R(x,hair,4,4,2,1);R(x,hair,10,4,2,1);
+        if(front){R(x,sk,5,5,6,5);R(x,skS,5,9,6,1);R(x,"#1a1218",6,7,1,2);R(x,"#1a1218",9,7,1,2)}
+        else{R(x,hair,4,4,8,6)}
+        if(p.braid)R(x,hair,3,9,1,5)&&R(x,hair,12,9,1,5);
+      }
+      if(p.cap){R(x,p.cap,3,1,10,3);R(x,p.cap,4,0,8,1);R(x,p.cap2,3,4,10,1);if(p.badge)R(x,p.badge,7,2,2,1)}
+      if(p.beard&&front){R(x,p.beard,5,9,6,3);R(x,p.beard,6,12,4,1);R(x,sk,7,9,2,1)}
+      if(p.stache&&front)R(x,p.stache,6,8,4,1);
     }else{
-      leg(6,fr===1);leg(8,fr===2);
-      R(x,p.cloak,5,7,7,6);R(x,p.cloak2,5,12,7,1);R(x,p.belt,5,10,7,1);
-      R(x,p.cloak,4,8,2,4);
-      R(x,p.hood,5,1,7,6);R(x,p.skin,5,3,3,3);R(x,"#1a1218",5,4,1,1);R(x,p.hood2,9,2,3,4);
+      // вид сбоку (лицо влево)
+      legs();
+      R(x,p.cloak,5,10,6,7);R(x,p.cloak2,9,10,2,7);R(x,p.cloak2,5,16,6,1);
+      if(p.apron)R(x,p.apron,5,12,4,5);
+      R(x,p.trim,5,10,6,1);R(x,p.trim,5,14,6,1);
+      if(p.sword){R(x,"#b9bfc9",10,8,1,7);R(x,"#e0a24a",9,12,3,1)}
+      R(x,p.cloak,6,11+(sw>0?1:0),3,5);R(x,sk,6,16+(sw>0?1:0),2,2);
+      if(p.hood){R(x,p.hood,4,1,8,3);R(x,p.hood,7,3,5,7);R(x,p.hood,4,3,2,3);R(x,sk,4,5,3,5);R(x,p.hood2,4,4,4,1);R(x,"#1a1218",5,7,1,2);R(x,skS,4,9,3,1)}
+      else if(p.helm){R(x,p.helm,4,1,8,5);R(x,p.helm,7,3,5,7);R(x,p.helm2,4,5,5,1);R(x,sk,4,6,3,4);R(x,"#1a1218",5,7,1,1);R(x,p.plume||"#b23a48",7,0,2,2)}
+      else{R(x,hair,4,2,8,3);R(x,hair,7,4,5,6);R(x,sk,4,5,4,5);R(x,skS,4,9,4,1);R(x,"#1a1218",5,7,1,2);if(p.braid)R(x,hair,10,8,1,6)}
+      if(p.cap){R(x,p.cap,4,1,8,3);R(x,p.cap,4,0,7,1);R(x,p.cap2,3,4,6,1)}
+      if(p.beard){R(x,p.beard,4,9,4,3);R(x,p.beard,5,12,2,1)}
+      if(p.stache)R(x,p.stache,4,8,2,1);
     }
-    if(p.sword&&dir===0){R(x,"#b9bfc9",13,8,1,5);R(x,"#e0a24a",12,12,3,1)}
+    // контур
+    const im=x.getImageData(0,0,16,24),dt=im.data,out=new Uint8ClampedArray(dt);
+    const al=(a,b)=>a<0||b<0||a>=16||b>=24?0:dt[(b*16+a)*4+3];
+    for(let b=0;b<24;b++)for(let a=0;a<16;a++){
+      if(al(a,b))continue;
+      if(al(a-1,b)||al(a+1,b)||al(a,b-1)||al(a,b+1)){const i=(b*16+a)*4;out[i]=21;out[i+1]=15;out[i+2]=26;out[i+3]=255}
+    }
+    im.data.set(out);x.putImageData(im,0,0);
   });
 }
 const PAL={
-  hero:{cloak:"#7a2230",cloak2:"#4d1520",hood:"#5a1a26",hood2:"#3a0f18",skin:"#d9a77c",boot:"#2b1d16",belt:"#e0a24a",sword:1},
-  inn:{cloak:"#8a6a3a",cloak2:"#5a4424",hood:"#3a2a18",hood2:"#2a1d10",skin:"#d9a77c",boot:"#2b1d16",belt:"#cfcfcf"},
-  elder:{cloak:"#4b4f7a",cloak2:"#33365a",hood:"#d8d4e0",hood2:"#b8b4c4",skin:"#d9b894",boot:"#2b1d16",belt:"#e0a24a"},
-  guard:{cloak:"#4a5568",cloak2:"#2f3846",hood:"#6a7384",hood2:"#4a5260",skin:"#d9a77c",boot:"#1f1f24",belt:"#b9bfc9"},
-  vil:{cloak:"#5a7a4b",cloak2:"#3f5a34",hood:"#7a4b2a",hood2:"#5a3a1f",skin:"#d9a77c",boot:"#2b1d16",belt:"#8a6a3a"},
-  girl:{cloak:"#9a5a7a",cloak2:"#6a3a55",hood:"#2a1d18",hood2:"#1a110e",skin:"#e0b090",boot:"#2b1d16",belt:"#e0a24a"},
-  crone:{cloak:"#3a3a48",cloak2:"#26262f",hood:"#8a8a99",hood2:"#66667a",skin:"#c9b6a0",boot:"#1a1a20",belt:"#6a6a7a"}
+  hero:{skin:"#d9a77c",hair:"#2a1d18",hood:"#6a1c2a",hood2:"#3a0f18",cloak:"#7a2230",cloak2:"#4d1520",trim:"#e0a24a",boot:"#2b1d16",sword:1},
+  inn:{skin:"#d9a77c",hair:"#4a3320",cloak:"#8a6a3a",cloak2:"#5a4424",trim:"#cfcfcf",boot:"#2b1d16",apron:"#e8e0d0",stache:"#4a3320"},
+  elder:{skin:"#d9b894",hair:"#9aa3b5",cloak:"#2c3340",cloak2:"#1c212b",trim:"#9aa3b5",boot:"#15171c",cap:"#15171c",cap2:"#0b0c10",badge:"#c0c8d8",stache:"#7a7a8a"},
+  guard:{skin:"#d9a77c",helm:"#8a93a6",helm2:"#5a6272",cloak:"#c8ccd6",cloak2:"#8c91a0",trim:"#e0a24a",boot:"#2f2f38",pants:"#3a3f4f",plume:"#e8e8ee"},
+  vil:{skin:"#c9976c",hair:"#3a2a1c",cloak:"#5a7a4b",cloak2:"#3f5a34",trim:"#8a6a3a",boot:"#2b1d16",cap:"#5a3a1f",cap2:"#3a2512",pants:"#4a3a2a"},
+  girl:{skin:"#e0b090",hair:"#7a4b2a",cloak:"#9a5a7a",cloak2:"#6a3a55",trim:"#e8d8b0",boot:"#2b1d16",braid:1,cap:"#5a4a6a",cap2:"#3a2f48",pants:"#6a3a55"},
+  crone:{skin:"#c9b6a0",skinS:"#9a8a78",hood:"#5a3a6a",hood2:"#2e1d3a",cloak:"#4a2f5a",cloak2:"#2e1d3a",trim:"#e0a24a",boot:"#1a1a20",robe:1}
 };
 const SP={};
 for(const k in PAL){SP[k]=[0,1,2,3].map(d=>[0,1,2].map(f=>person(d,f,PAL[k])))}
@@ -213,13 +279,13 @@ const SPE={wolf:sprWolf(),skel:sprSkel(),bat:sprBat(),ghoul:sprGhoul()};
 /* ============ карты ============ */
 function grid(w,h,ch){return Array.from({length:h},()=>Array(w).fill(ch))}
 function house(M,x,y,doorSpr){
-  for(let i=0;i<5;i++){M.o[y][x+i]="R";M.o[y+1][x+i]="R";M.o[y+2][x+i]=(i===1||i===3)?"w":"W"}
-  M.o[y+2][x+2]="D";
+  for(let i=0;i<5;i++){M.o[y][x+i]=i===3?"K":"r";M.o[y+1][x+i]="R";M.o[y+2][x+i]=(i===1||i===3)?"w":"W"}
+  M.o[y+2][x+2]="D";M.g[y+2][x+2]="=";
 }
 function makeVillage(){
-  const W=26,H=20,M={name:"Тинген, окраина",w:W,h:H,g:grid(W,H,"."),o:grid(W,H,null),light:.58,npcs:[],warps:[],lamps:[],kind:"out"};
+  const W=26,H=20,M={name:"Тинген, окраина",w:W,h:H,g:grid(W,H,"."),o:grid(W,H,null),light:.58,npcs:[],warps:[],lamps:[],kind:"out",base:"."};
   const r=rng(77);
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(r()<.08)M.g[y][x]=",";
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(r()<.035)M.g[y][x]=",";
   for(let y=1;y<H-1;y++){M.g[y][12]="=";M.g[y][13]="="}
   for(let x=3;x<23;x++){M.g[10][x]="=";M.g[11][x]="="}
   for(let y=9;y<=12;y++)for(let x=11;x<=14;x++)M.g[y][x]="c";
@@ -236,9 +302,9 @@ function makeVillage(){
   for(const [x,y] of [[4,15],[6,15],[4,17],[7,17],[7,15]])M.o[y][x]="+";
   // пруд
   for(let y=14;y<=17;y++)for(let x=18;x<=22;x++){if(!((x===18||x===22)&&(y===14||y===17)))M.g[y][x]="~"}
-  for(const [x,y] of [[16,15],[23,13],[16,12],[8,9],[22,9],[3,11]])M.o[y][x]="b";
-  for(const [x,y] of [[11,9],[14,9],[11,12],[14,12],[5,8],[19,8]]){M.o[y][x]="L";M.lamps.push([x,y])}
-  for(const [x,y] of [[3,2],[7,1],[9,3],[16,2],[22,2],[24,5],[1,6],[1,12],[24,16],[10,16],[11,18]])M.o[y][x]=M.o[y][x]||"T";
+  for(const [x,y] of [[3,7],[7,7],[17,7],[21,7],[17,14],[23,15],[16,17]])M.o[y][x]="b";
+  for(const [x,y] of [[10,8],[15,8],[10,13],[15,13],[6,8],[18,8]]){M.o[y][x]="L";M.lamps.push([x,y])}
+  for(const [x,y] of [[2,2],[4,1],[8,1],[10,3],[15,3],[17,1],[21,1],[23,2],[1,6],[24,7],[1,10],[24,11],[22,18],[11,17],[15,18],[1,18]])M.o[y][x]=M.o[y][x]||"T";
   M.warps=[
     {x:5,y:6,to:"inn",tx:5,ty:6,dir:3},
     {x:19,y:6,to:"elder",tx:5,ty:6,dir:3},
@@ -265,7 +331,7 @@ function makeInterior(name,id,npc){
   M.npcs=[npc];return M;
 }
 function makeForest(){
-  const W=24,H=32,M={name:"Туманная роща",w:W,h:H,g:grid(W,H,"g"),o:grid(W,H,null),light:.52,npcs:[],warps:[],lamps:[],kind:"forest",enc:1};
+  const W=24,H=32,M={name:"Туманная роща",w:W,h:H,g:grid(W,H,"g"),o:grid(W,H,null),light:.52,base:"g",npcs:[],warps:[],lamps:[],kind:"forest",enc:1};
   const pts=[[11,30],[11,26],[7,26],[7,20],[15,20],[15,14],[9,14],[9,8],[11,8],[11,3]];
   const path=new Set();
   const dot=(x,y)=>{for(let a=0;a<2;a++)for(let b=0;b<2;b++){M.g[y+b][x+a]="=";path.add((y+b)+","+(x+a))}};
@@ -547,6 +613,7 @@ function resize(){
 addEventListener("resize",resize);
 const dark=mk(2,2,()=>{});
 let dk=document.createElement("canvas"),dkx=dk.getContext("2d");
+function shadowAt(px,py){ctx.fillStyle="rgba(0,0,0,.32)";ctx.beginPath();ctx.ellipse(px+8,py+14.5,5.5,2.2,0,0,7);ctx.fill()}
 function pos(){
   let x=S.x*TS,y=S.y*TS;
   if(mv){const t=mv.t;x=(mv.fx+(mv.tx-mv.fx)*t)*TS;y=(mv.fy+(mv.ty-mv.fy)*t)*TS}
@@ -566,7 +633,11 @@ function draw(now){
   const x0=Math.max(0,Math.floor(cx/TS)),x1=Math.min(m.w-1,Math.ceil((cx+viewW)/TS)),y0=Math.max(0,Math.floor(cy/TS)),y1=Math.min(m.h-1,Math.ceil((cy+viewH)/TS));
   const wf=Math.floor(now/600)%2;
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
-    const g=m.g[y][x];ctx.drawImage(g==="~"?WAT[wf]:G[g],x*TS,y*TS);
+    const g=m.g[y][x];let t;
+    if(g==="~")t=WAT[wf];
+    else if(g==="="||g==="c"){const mk2=(isRoad(m,x,y-1)?1:0)|(isRoad(m,x-1,y)?2:0)|(isRoad(m,x+1,y)?4:0)|(isRoad(m,x,y+1)?8:0);t=mk2===15?G[g]:roadTile(g,mk2,m.base||".")}
+    else t=G[g];
+    ctx.drawImage(t,x*TS,y*TS);
   }
   // объекты и спрайты, отсортированные по y
   const items=[];
@@ -579,8 +650,8 @@ function draw(now){
     if(it.k==="o"){
       const isTall=(it.o==="T");
       ctx.drawImage(O[it.o]||O.W,it.x,it.yy-(isTall?4:0));
-    }else if(it.k==="n"){ctx.drawImage(SP[it.n.sp][it.n.dir][0],it.n.x*TS,it.n.y*TS)}
-    else ctx.drawImage(SP.hero[S.dir][mv?(fr%2?1:2):0],Math.round(it.px),Math.round(it.py));
+    }else if(it.k==="n"){shadowAt(it.n.x*TS,it.n.y*TS);ctx.drawImage(SP[it.n.sp][it.n.dir][0],it.n.x*TS,it.n.y*TS-8)}
+    else{shadowAt(Math.round(it.px),Math.round(it.py));ctx.drawImage(SP.hero[S.dir][mv?(fr%2?1:2):0],Math.round(it.px),Math.round(it.py)-8)}
   }
   if(mark&&S.st==="map"){const t=(now%900)/900,a=1-t,r=3+t*5;ctx.strokeStyle="rgba(224,162,74,"+a.toFixed(2)+")";ctx.lineWidth=1;ctx.strokeRect(mark.x*TS+8-r,mark.y*TS+8-r,r*2,r*2);ctx.fillStyle="rgba(224,162,74,.8)";ctx.fillRect(mark.x*TS+7,mark.y*TS+7,2,2)}
   ctx.restore();
