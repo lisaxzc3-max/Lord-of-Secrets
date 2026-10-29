@@ -95,6 +95,69 @@ h1{font-size:20px;margin:4px 0 0}
 @keyframes shk{30%{transform:translate(-2px,1px)}60%{transform:translate(2px,-1px)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
+<style id="vn">
+/* ===== ВИЗУАЛЬНАЯ НОВЕЛЛА: события в руинах ===== */
+:root{--sat:max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)));--sab:env(safe-area-inset-bottom,0px);--sal:max(env(safe-area-inset-left,0px),var(--tg-safe-area-inset-left,0px));--sar:max(env(safe-area-inset-right,0px),var(--tg-safe-area-inset-right,0px))}
+html,body{height:100%;overflow:hidden;background:#050304}
+.wrap{position:fixed;inset:0;max-width:none;margin:0;padding:0}
+main{position:absolute;inset:0}
+#vnbg{position:absolute;inset:-6%;background:#0a0605 center 35%/cover no-repeat;filter:brightness(1.25) saturate(1.12) contrast(1.05);animation:kb 26s ease-in-out infinite alternate,bgIn 1.2s ease-out backwards}
+@keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.1) translate(-1.5%,-1%)}}
+@keyframes bgIn{from{opacity:0;filter:brightness(0)}}
+#vnbg.sway{animation:kb 26s ease-in-out infinite alternate,bgIn 1.2s ease-out backwards,sway 5s ease-in-out infinite}
+@keyframes sway{50%{transform:scale(1.06) rotate(.6deg)}}
+.tint{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 34%,rgba(6,3,3,.55) 100%),linear-gradient(180deg,rgba(8,4,3,.5),transparent 18%,transparent 52%,rgba(6,3,3,.82) 95%)}
+#emb{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.head{position:absolute;top:0;left:0;right:0;z-index:14;display:flex;align-items:center;gap:10px;padding:calc(var(--sat) + 8px) calc(var(--sar) + 10px) 0 calc(var(--sal) + 10px);pointer-events:none}
+.head>*{pointer-events:auto}
+.back{background:rgba(18,10,7,.72);backdrop-filter:blur(3px);border:1.5px solid #8a5a2c;box-shadow:inset 0 0 0 1px #1a0e0a;padding:9px 11px;border-radius:10px}
+.eyebrow{display:none}
+#hTitle{margin:0;font:700 16px Philosopher,Georgia,serif;color:#ffe3b0;text-shadow:0 2px 10px #000;letter-spacing:.03em;animation:plIn .6s ease-out .3s backwards}
+@keyframes plIn{from{opacity:0;transform:translateY(-10px)}}
+#stage{position:absolute;inset:0;margin:0;border:0;border-radius:0;background:none;z-index:2;pointer-events:none;height:auto}
+#stage .symbol,#stage img{display:none!important}
+.sceneFx{position:absolute;inset:0;z-index:2}
+#sceneCard{position:absolute;left:0;right:0;bottom:0;margin:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible;z-index:8}
+#sceneCard .body{position:relative;margin:0 calc(var(--sar) + 10px) calc(var(--sab) + 12px) calc(var(--sal) + 10px);max-width:560px;margin-left:auto;margin-right:auto;width:calc(100% - 20px);padding:20px 16px 14px;overflow:visible;border:1.5px solid #8a5a2c;border-radius:14px;background:linear-gradient(180deg,rgba(40,22,15,.92),rgba(14,8,6,.95));box-shadow:inset 0 0 0 1px #1a0e0a,inset 0 0 18px rgba(255,120,40,.12),0 6px 24px rgba(0,0,0,.7);animation:dockIn .55s cubic-bezier(.2,.9,.3,1) .35s backwards}
+@keyframes dockIn{from{opacity:0;transform:translateY(40px)}}
+.title{position:absolute;top:-14px;left:14px;margin:0;padding:3px 14px;font:700 15px Philosopher,Georgia,serif;color:#ffe3b0;background:linear-gradient(180deg,#5a3a1c,#2a160c);border:1.5px solid #c8904a;border-radius:4px 14px 4px 14px;letter-spacing:.03em;box-shadow:0 2px 8px #0008}
+.text{font-size:15px;line-height:1.55;color:#f0e2d2;min-height:3.2em;max-height:30vh;overflow:auto}
+.text .cur{display:inline-block;width:7px;height:1em;vertical-align:-2px;background:#ff9a5a;animation:blk .7s steps(2) infinite}
+@keyframes blk{50%{opacity:0}}
+.divider{display:none}
+.actions{margin-top:12px;gap:8px;animation:actIn .4s ease-out backwards}
+@keyframes actIn{from{opacity:0;transform:translateY(10px)}}
+.action{min-height:48px;border:1px solid #6a4428;border-radius:11px;background:linear-gradient(160deg,#3a2216,#1a0e0a);box-shadow:inset 0 1px 0 rgba(255,220,180,.06);animation:actIn .4s ease-out backwards}
+.action:nth-child(2){animation-delay:.08s}.action:nth-child(3){animation-delay:.16s}.action:nth-child(4){animation-delay:.24s}
+.action:not(:disabled):active{border-color:#ff9a4a;box-shadow:0 0 16px rgba(255,138,58,.45);transform:scale(.98)}
+#resultCard{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--sab) + 14px);margin:0;width:calc(100% - 24px);max-width:480px;z-index:20;box-shadow:0 0 0 100vmax rgba(0,0,0,.5),0 10px 36px #000;border:1.5px solid #c8904a;border-radius:14px;animation:resIn .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes resIn{from{opacity:0;transform:translateX(-50%) translateY(30px) scale(.96)}}
+.errCard,#errCard{position:fixed;left:12px;right:12px;top:calc(var(--sat) + 60px);z-index:22;margin:0 auto;max-width:460px}
+/* свет и эффекты */
+.flick{position:absolute;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(255,150,60,.5),transparent 68%);mix-blend-mode:screen;animation:flick var(--t,1.3s) ease-in-out var(--d,0s) infinite alternate}
+@keyframes flick{from{opacity:.35;transform:scale(.92)}to{opacity:.9;transform:scale(1.08)}}
+.glint{position:absolute;width:10px;height:10px;pointer-events:none;background:radial-gradient(circle,#fff6d0,rgba(255,200,90,0) 70%);animation:glint var(--t,2.6s) ease-in-out var(--d,0s) infinite;opacity:0}
+.glint:before,.glint:after{content:"";position:absolute;left:50%;top:50%;background:#fff3c0;transform:translate(-50%,-50%)}
+.glint:before{width:2px;height:22px}.glint:after{width:22px;height:2px}
+@keyframes glint{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+.smoke{position:absolute;bottom:20%;width:90px;height:90px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(210,190,170,.28),transparent 70%);animation:smoke var(--t,7s) ease-out var(--d,0s) infinite;opacity:0;filter:blur(6px)}
+@keyframes smoke{0%{opacity:0;transform:translate(0,0) scale(.6)}25%{opacity:.7}100%{opacity:0;transform:translate(var(--x,20px),-260px) scale(1.8)}}
+.ripple{position:absolute;left:50%;top:38%;width:40px;height:40px;margin:-20px 0 0 -20px;border:2px solid rgba(255,200,120,.55);border-radius:50%;pointer-events:none;animation:rip 2.6s ease-out forwards}
+@keyframes rip{to{transform:scale(6);opacity:0}}
+#chFab,button[data-nosnd]{bottom:auto!important;right:calc(var(--sar) + 10px)!important;width:34px!important;height:34px!important;font-size:15px!important;z-index:13!important}
+#chFab{top:calc(var(--sat) + 54px)!important}
+button[data-nosnd]{top:calc(var(--sat) + 96px)!important}
+.fx-heal:after,.fx-hurt:after,.fx-mad:after,.fx-poison:after,.fx-rune:after,.fx-calm:after{z-index:9}
+.shake{animation:shk .7s ease-in-out}
+@keyframes shk{20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,2px)}}
+@media (orientation:landscape) and (max-height:520px){
+ #sceneCard .body{max-width:none;margin-left:calc(var(--sal) + 14px);margin-right:calc(var(--sar) + 14px);width:auto;padding:16px 14px 10px}
+ .text{font-size:14px}
+ .actions{grid-template-columns:1fr 1fr}
+ .action{min-height:42px;padding:8px 10px}
+ #resultCard{max-width:420px}
+}
+</style>
 <script src="../../shared/fast.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
@@ -102,14 +165,15 @@ h1{font-size:20px;margin:4px 0 0}
 </head>
 <body>
 <div class="wrap">
+<div id="vnbg"></div><div class="tint"></div><canvas id="emb"></canvas>
 <header class="head">
  <a class="back" id="backCem" href="../index.html">← Руины</a>
- <div><div class="eyebrow">LORD OF THE MYSTERIES</div><h1 id="hTitle">Событие</h1></div>
+ <h1 id="hTitle">Событие</h1>
 </header>
 <main>
+ <div class="stage" id="stage"><div class="symbol" id="symbol">🏛</div><img id="evImg" class="hidden" alt=""><div class="layer sceneFx" id="layer"></div></div>
  <section class="card" id="sceneCard">
-  <div class="stage" id="stage"><div class="symbol" id="symbol">🏛</div><img id="evImg" class="hidden" alt=""><div class="layer" id="layer"></div></div>
-  <div class="body">
+  <div class="body" id="dlgBody">
    <h2 class="title" id="evTitle">Руины</h2>
    <div class="text" id="evText">Загрузка…</div>
    <div class="divider"></div>
@@ -149,7 +213,7 @@ hermit:{t:"🧙 Отшельник Фаркарда",s:"🧙",glow:"#ffb04a77"},
 well:{t:"⛲ Колодец пепла",s:"⛲",glow:"#ffd27a77"},
 bell:{t:"🔔 Колокол без языка",s:"🔔",glow:"#d9b26a88"}
 };
-const IMG={};["altar","cache","mural","hermit","well","bell"].forEach(k=>IMG[k]="../img/"+k+".svg");
+const IMG={};["altar","cache","mural","hermit","well","bell"].forEach(k=>IMG[k]="../img/"+k+".webp");
 const ICON={r_altar_blood:"🩸",r_altar_gold:"💷",r_altar_defile:"💥",r_altar_leave:"↩",r_cache_pick:"🔧",r_cache_smash:"🔨",r_cache_check:"🔍",r_cache_leave:"↩",r_mural_read:"📖",r_mural_copy:"✍",r_mural_deface:"🧽",r_mural_leave:"↩",r_hermit_buy:"🧪",r_hermit_talk:"💬",r_hermit_leave:"↩",r_well_drink:"🥤",r_well_toss:"🪙",r_well_look:"👁",r_well_leave:"↩",r_bell_ring:"🔔",r_bell_listen:"👂",r_bell_leave:"↩"};
 
 function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
@@ -176,42 +240,70 @@ function showErr(t){$("errText").textContent=t;$("errCard").classList.remove("hi
 function mk(cls,css,txt){const d=document.createElement("i");d.className=cls;if(css)for(const k in css)d.style.setProperty(k,css[k]);if(txt)d.textContent=txt;$("layer").appendChild(d);return d}
 
 /* ---- сцены (у каждого события свои эффекты) ---- */
+let ringT=null;
 function buildScene(k){
- const L=$("layer");L.replaceChildren();
- $("stage").style.setProperty("--glow",META[k]?.glow||"#ff8a3a88");
+ const L=$("layer");L.replaceChildren();clearInterval(ringT);$("vnbg").classList.toggle("sway",k==="bell");
  if(reduce)return;
- for(let i=0;i<4;i++)mk("fog",{top:rnd(40,90)+"%","--t":rnd(9,16)+"s","--d":rnd(-12,0)+"s"});
- const ember=(n,c)=>{for(let i=0;i<n;i++)mk("spore",{left:rnd(8,92)+"%","--x":rnd(-30,30)+"px","--t":rnd(2.5,5)+"s","--d":rnd(-5,0)+"s",background:c||"radial-gradient(#ffd9a8,#ff7a2288)"})};
- if(k==="altar"){ember(14);for(let i=0;i<4;i++)mk("candle",{left:(14+i*22)+"%","--d":rnd(-2,0)+"s"},"🔥");["ᚠ","ᚱ","ᛟ","ᛉ","ᚦ"].forEach((r,i)=>mk("rune",{left:rnd(8,86)+"%",top:rnd(8,60)+"%","--d":(i*.5)+"s"},r))}
- else if(k==="cache"){ember(8,"radial-gradient(#ffe9b0,#d9a24a88)")}
- else if(k==="mural"){ember(8);["ᚠ","ᚱ","ᛟ"].forEach((r,i)=>mk("rune",{left:rnd(12,80)+"%",top:rnd(8,50)+"%","--d":(i*.7)+"s"},r))}
- else if(k==="hermit"){for(let i=0;i<3;i++)mk("candle",{left:(18+i*30)+"%",top:"64%","--d":rnd(-2,0)+"s"},"🕯️");ember(6)}
- else if(k==="well"){for(let i=0;i<8;i++)mk("soul",{left:rnd(30,70)+"%","--t":rnd(3,6)+"s","--d":rnd(-6,0)+"s"},"✨");ember(10,"radial-gradient(#d8c8b0,#8a7a6a88)")}
- else if(k==="bell"){ember(6);$("symbol").classList.add("toll")}
+ for(let i=0;i<3;i++)mk("fog",{top:rnd(40,90)+"%","--t":rnd(10,18)+"s","--d":rnd(-14,0)+"s"});
+ const ember=(n,c)=>{for(let i=0;i<n;i++)mk("spore",{left:rnd(8,92)+"%","--x":rnd(-30,30)+"px","--t":rnd(3,6)+"s","--d":rnd(-6,0)+"s",background:c||"radial-gradient(#ffd9a8,#ff7a2288)"})};
+ const flick=(x,y,sz,c)=>mk("flick",{left:x+"%",top:y+"%",width:sz+"px",height:sz+"px","--t":rnd(.9,1.6)+"s","--d":rnd(-1,0)+"s",marginLeft:-sz/2+"px",marginTop:-sz/2+"px"});
+ const glint=(n)=>{for(let i=0;i<n;i++)mk("glint",{left:rnd(25,75)+"%",top:rnd(40,75)+"%","--t":rnd(2,4)+"s","--d":rnd(-4,0)+"s"})};
+ const smoke=(n)=>{for(let i=0;i<n;i++)mk("smoke",{left:rnd(25,65)+"%","--x":rnd(-40,40)+"px","--t":rnd(5,9)+"s","--d":rnd(-9,0)+"s"})};
+ if(k==="altar"){ember(16);flick(18,70,180);flick(82,68,170);flick(50,78,150);["ᚠ","ᚱ","ᛟ","ᛉ"].forEach((r,i)=>mk("rune",{left:rnd(30,70)+"%",top:rnd(34,60)+"%","--d":(i*.8)+"s"},r))}
+ else if(k==="cache"){ember(8,"radial-gradient(#ffe9b0,#d9a24a88)");glint(5);flick(30,22,160)}
+ else if(k==="mural"){ember(10);flick(8,40,200);["ᚠ","ᚱ","ᛟ","ᛉ"].forEach((r,i)=>mk("rune",{left:rnd(30,70)+"%",top:rnd(14,50)+"%","--d":(i*.9)+"s"},r))}
+ else if(k==="hermit"){flick(14,80,220);ember(12);smoke(2)}
+ else if(k==="well"){smoke(5);flick(50,52,200);ember(10,"radial-gradient(#d8c8b0,#8a7a6a88)")}
+ else if(k==="bell"){ember(8);const ring=()=>{if(done)return;const r=document.createElement("i");r.className="ripple";$("layer").appendChild(r);setTimeout(()=>r.remove(),2700);try{snd("cmtoll",.5)}catch(_){}};setTimeout(ring,900);ringT=setInterval(ring,7000)}
 }
 function setImage(k){
- const src=IMG[k];const img=$("evImg");
- if(!src){img.classList.add("hidden");return}
- img.onload=()=>{img.classList.remove("hidden");$("symbol").classList.add("hidden")};
- img.onerror=()=>img.classList.add("hidden");
- img.src=src;
+ const src=IMG[k];if(!src)return;
+ const im=new Image();im.onload=()=>{$("vnbg").style.backgroundImage="url("+src+")"};im.src=src;
 }
+/* печатная машинка */
+let typeT=null,typeFull="",typeEl=null,typeDone=null;
+function typeText(el,txt,onDone){
+ clearInterval(typeT);typeFull=txt;typeEl=el;typeDone=onDone;
+ if(reduce){el.textContent=txt;onDone&&onDone();return}
+ let i=0;el.textContent="";const cur=document.createElement("span");cur.className="cur";
+ typeT=setInterval(()=>{
+  i=Math.min(txt.length,i+2);el.textContent=txt.slice(0,i);el.appendChild(cur);
+  if(i%6<2)try{snd("vntick",.5)}catch(_){}
+  if(i>=txt.length){clearInterval(typeT);typeT=null;cur.remove();onDone&&onDone()}
+ },28);
+}
+function skipType(){if(!typeT)return;clearInterval(typeT);typeT=null;typeEl.textContent=typeFull;const d=typeDone;typeDone=null;d&&d()}
+$("dlgBody").addEventListener("click",e=>{if(typeT&&!e.target.closest("button"))skipType()});
+/* искры */
+(function(){
+ const c=$("emb"),x=c.getContext("2d");let W=0,H=0,P=[],run=true;
+ const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener("resize",rs);
+ for(let i=0;i<40;i++)P.push({x:Math.random(),y:Math.random(),r:Math.random()*1.7+.5,s:Math.random()*.05+.02,t:Math.random()*6.3,a:Math.random()<.35});
+ document.addEventListener("visibilitychange",()=>{run=!document.hidden;if(run)requestAnimationFrame(f)});
+ function f(){if(!run)return;x.clearRect(0,0,W,H);
+  for(const p of P){p.t+=.02;p.y-=p.s*.004*(p.a?2:1);if(p.y<-.02){p.y=1.02;p.x=Math.random()}
+   const al=.25+.6*Math.abs(Math.sin(p.t));x.fillStyle=p.a?"rgba(255,170,80,"+al+")":"rgba(220,200,180,"+al*.45+")";
+   x.beginPath();x.arc(p.x*W+Math.sin(p.t*.7)*12,p.y*H,p.r,0,6.3);x.fill()}
+  requestAnimationFrame(f)}
+ f();
+})();
 function renderEvent(d){
  ev=d;evKey=String(d.event||d.image||"");
  const m=META[evKey]||{t:"🏛 Событие в руинах",s:"🏛"};
  $("evTitle").textContent=m.t;$("hTitle").textContent="Руины · Событие";
  $("symbol").textContent=m.s;
- $("evText").textContent=d.text||"Пепел шевелится между колоннами.";
- buildScene(evKey);setImage(evKey);try{snd(evKey==="altar"?"rune":evKey==="bell"?"bell":evKey==="mural"?"whisper":evKey==="cache"?"chest":"event")}catch(_){}
- const box=$("actions");box.replaceChildren();
+ buildScene(evKey);setImage(evKey);
+ try{setTimeout(()=>snd({altar:"cmritual",bell:"cmtoll",mural:"whisper",cache:"chest",hermit:"cmcreak",well:"cmwail"}[evKey]||"event",.8),500)}catch(_){}
+ const box=$("actions");box.replaceChildren();box.style.visibility="hidden";
  const acts=Array.isArray(d.actions)?d.actions:[];
+ setTimeout(()=>typeText($("evText"),d.text||"Пепел шевелится между колоннами.",()=>{box.style.visibility="visible";box.style.animation="none";void box.offsetWidth;box.style.animation=""}),700);
  if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← В руины";b.onclick=goCem;box.appendChild(b);return}
  acts.forEach(a=>{
   const b=document.createElement("button");b.type="button";b.className="action";
   const ic=document.createElement("span");ic.style.fontSize="20px";ic.textContent=ICON[a.id]||"•";
   const nm=document.createElement("span");nm.className="aName";nm.textContent=String(a.label||a.id).replace(/^\S+\s/,"")||a.label;
   const ar=document.createElement("span");ar.className="arrow";ar.textContent="›";
-  b.append(ic,nm,ar);b.addEventListener("click",()=>choose(a.id));box.appendChild(b);
+  b.append(ic,nm,ar);b.addEventListener("click",()=>{try{snd("tap")}catch(_){}choose(a.id)});box.appendChild(b);
  });
 }
 async function choose(id){
@@ -233,11 +325,12 @@ function showResult(r){
  const fx=r.fx||"calm";
  snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
  const st=$("stage");st.classList.remove("fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx-"+fx);
- if(fx==="hurt"||fx==="poison"){$("sceneCard").classList.add("shake");setTimeout(()=>$("sceneCard").classList.remove("shake"),520)}
+ if(fx==="hurt"||fx==="poison"){document.querySelector(".wrap").classList.add("shake");setTimeout(()=>document.querySelector(".wrap").classList.remove("shake"),720)}
+ for(let q=0;q<3;q++)setTimeout(()=>{if(fx==="heal"||fx==="calm"||fx==="rune"){const r=document.createElement("i");r.className="ripple";r.style.borderColor=fx==="heal"?"rgba(140,240,170,.6)":"rgba(255,210,120,.6)";$("layer").appendChild(r);setTimeout(()=>r.remove(),2700)}},q*260)
  try{tg?.HapticFeedback?.notificationOccurred(fx==="hurt"||fx==="poison"?"error":"success")}catch(_){}
- $("evText").textContent=r.text||"Твой выбор изменил ход событий.";
+ $("sceneCard").classList.add("hidden");
  $("actions").replaceChildren();
- $("resText").textContent="";
+ $("resText").textContent="";typeText($("resText"),r.text||"Твой выбор изменил ход событий.");
  const g=$("rgrid");g.replaceChildren();
  const chip=(txt,cls,i)=>{const c=document.createElement("span");c.className="rchip "+cls;c.textContent=txt;c.style.animationDelay=(i*.12)+"s";g.appendChild(c)};
  let i=0;
@@ -247,7 +340,7 @@ function showResult(r){
  if(typeof r.tracks==="number"&&r.tracks>0&&/r_(mural_read|hermit_talk|well_look|altar_defile)/.test(r.event||""))chip("🔥 "+r.tracks+"/3",r.tracks>=3?"up":"mad",i++);
  $("resultCard").classList.toggle("bad",fx==="hurt"||fx==="poison");
  $("resultCard").classList.remove("hidden");
- setTimeout(()=>$("resultCard").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),150);
+ 
 }
 $("toCem").addEventListener("click",goCem);
 $("errBack").addEventListener("click",goCem);
