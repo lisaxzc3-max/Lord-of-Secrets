@@ -97,6 +97,7 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 .scr .mbtn{font-size:19px}
 .scr .mbtn.pri{background:var(--ember);color:#1a1208;font-weight:700}
 #menu{align-items:stretch;text-align:left;justify-content:center}
+#menu .box,#soc .box{box-sizing:border-box}
 #menu .box{max-width:420px;width:100%;margin:0 auto;padding:18px;border-radius:12px;background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
 #menu h2{font-family:var(--disp);margin:0;font-size:24px;color:var(--ember)}
 #menu dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}
@@ -104,7 +105,43 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 #menu .q{padding:10px 12px;border-radius:8px;background:var(--panel2);line-height:1.35}
 #menu .rw{display:flex;gap:8px;flex-wrap:wrap}
 #toast{position:absolute;left:50%;top:max(64px,calc(env(safe-area-inset-top,0px) + 56px));transform:translateX(-50%);padding:8px 16px;border-radius:8px;background:rgba(18,13,26,.95);border:1px solid var(--ember);display:none;z-index:9;white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis}
-@media (prefers-reduced-motion:reduce){#dlg .nx{animation:none}}
+
+/* события */
+#ev{position:absolute;inset:0;display:none;z-index:7;background:#0b0912}
+#evbg{position:absolute;left:0;right:0;top:0;height:62%;background-size:cover;background-position:center top;animation:evz 14s ease-in-out infinite alternate}
+@keyframes evz{from{transform:scale(1)}to{transform:scale(1.06)}}
+#ev .fade{position:absolute;left:0;right:0;top:38%;height:30%;background:linear-gradient(transparent,#0b0912)}
+#evwin{position:absolute;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:max(8px,env(safe-area-inset-bottom,0px));max-height:62%;overflow:auto;padding:16px 14px 12px;touch-action:pan-y}
+#evloc{color:#e0a24a;font-family:var(--disp);font-size:15px;letter-spacing:.06em;margin-bottom:6px;text-transform:uppercase}
+#evtx{line-height:1.4;font-size:17px;white-space:pre-wrap;margin-bottom:10px}
+#evbtn{display:flex;flex-direction:column;gap:6px}
+#evbtn button{padding:10px 12px;border-radius:8px;border:1px solid #6b5430;background:rgba(224,162,74,.08);font-size:17px;min-height:46px;text-align:left}
+#evbtn button:active{background:rgba(224,162,74,.25);border-color:#e0a24a}
+#hud{position:absolute;left:max(12px,env(safe-area-inset-left,0px));top:calc(max(12px,env(safe-area-inset-top,0px)) + 42px);padding:3px 10px;border-radius:8px;background:rgba(23,18,31,.72);border:1px solid var(--line);font-size:15px;display:none;z-index:3}
+/* профиль / чат */
+#soc{align-items:stretch;justify-content:flex-start;gap:8px;text-align:left;padding-top:max(12px,env(safe-area-inset-top,0px));padding-bottom:max(12px,env(safe-area-inset-bottom,0px))}
+#soc .box{max-width:460px;width:100%;margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:12px}
+#soctabs{display:flex;gap:6px}
+#soctabs button{flex:1;padding:9px 4px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);font-size:16px}
+#soctabs button.on{border-color:var(--ember);color:#ffe3a8}
+#socbody{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;touch-action:pan-y;-webkit-user-select:text;user-select:text}
+#soc .dim{color:var(--dim);font-size:14px}
+#soc dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}#soc dt{color:var(--dim)}#soc dd{margin:0}
+#soc .prof{display:flex;gap:12px;align-items:center}
+#soc .prof b{font-family:var(--disp);font-size:22px;color:#ffe3a8}
+#soc .hf{width:64px;height:72px;border:2px solid #c9a24f;border-radius:8px;background:radial-gradient(circle at 50% 35%,#4a3a68,#1a1226);overflow:hidden;position:relative;flex:none}
+#soc .hf canvas{position:absolute;left:50%;bottom:0;width:96px;height:96px;transform:translateX(-50%);image-rendering:pixelated}
+#chlist{flex:1;min-height:120px;overflow:auto;display:flex;flex-direction:column;gap:6px;touch-action:pan-y}
+.cm{padding:6px 10px;border-radius:8px;background:var(--panel2);line-height:1.3;word-break:break-word}
+.cm.me{background:rgba(224,162,74,.14)}
+.cm b{color:#ffe3a8;font-family:var(--disp)}
+#chform{display:flex;gap:6px}
+#chin{flex:1;min-width:0;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#0e0a18;color:var(--fg);font-size:16px;-webkit-user-select:text;user-select:text;touch-action:auto}
+#chform .mbtn{padding:0 16px}
+.top{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.top li{display:flex;gap:8px;align-items:baseline;padding:6px 10px;border-radius:8px;background:var(--panel2)}
+.top li.me{background:rgba(224,162,74,.14)}.top li b{flex:1;font-family:var(--disp);color:#ffe3a8}
+@media (prefers-reduced-motion:reduce){#dlg .nx{animation:none}#evbg{animation:none}}
 </style>
 </head>
 <body>
@@ -130,6 +167,9 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
         <div class="stl"><em>MP</em><div class="bar mp"><i id="bmp"></i></div><span id="bmpt"></span></div></div></div>
     </div>
   </div>
+  <div id="hud"></div>
+  <div id="ev"><div id="evbg"></div><div class="fade"></div><div id="evwin" class="win"><div id="evloc"></div><div id="evtx"></div><div id="evbtn"></div></div></div>
+  <div class="scr" id="soc"><div class="box win"><div id="soctabs"><button data-t="p">Профиль</button><button data-t="c">Чат</button><button data-t="t">Топ</button></div><div id="socbody"></div><button class="mbtn pri" id="socX">Закрыть</button></div></div>
   <div id="toast"></div>
   <div class="scr show" id="title">
     <h1>Туман над Тингеном</h1>
@@ -468,22 +508,31 @@ function makeCrypt(){
 const MAPS={village:makeVillage(),
   inn:makeInterior("Трактир «Ржавый якорь»","inn",{id:"inn",x:5,y:3,dir:0,sp:"inn",name:"Трактирщик"}),
   elder:makeInterior("Участок Ночных Ястребов","elder",{id:"elder",x:5,y:3,dir:0,sp:"elder",name:"Капитан Ночных Ястребов"}),
-  forest:makeForest(),crypt:makeCrypt()};
+  forest:makeForest(),crypt:makeCrypt(),cem:makeCemetery(),lake:makeLake()};
 // внутри интерьеров на месте нпс стола нет
 MAPS.inn.o[3][5]=null;MAPS.elder.o[3][5]=null;
 MAPS.village.o[11][8]=null;
+MAPS.forest.pool=["mush","spider","tree","boar","wolf"];
+{const V=MAPS.village;
+ for(const k of[12,13]){V.o[19][k]=null;V.g[19][k]="=";}
+ V.warps.push({x:12,y:19,to:"cem",tx:12,ty:1,dir:0},{x:13,y:19,to:"cem",tx:13,ty:1,dir:0});
+ for(const y of[10,11]){for(const x of[23,24,25]){V.o[y][x]=null;V.g[y][x]="="}V.warps.push({x:25,y,to:"lake",tx:1,ty:y,dir:2})}
+ const Fm=MAPS.forest;
+ hs(Fm,13,28,"f_whisper","E");hs(Fm,9,23,"f_ring","m");hs(Fm,6,22,"f_hut","h");hs(Fm,12,19,"f_tracks","k");
+ hs(Fm,17,17,"f_altar","a");hs(Fm,14,16,"f_loop","x");hs(Fm,11,13,"f_hunter","d");
+}
 
 /* ============ состояние игры ============ */
-const P={lv:1,xp:0,hp:40,mp:12,pot:2};
-const F={elder:0,boss:0,amulet:0,done:0,gift:0,inn:0};
+const P={lv:1,xp:0,hp:40,mp:12,pot:2,pn:0,md:0,kills:0,evn:0};
+const F={elder:0,boss:0,amulet:0,done:0,gift:0,inn:0,mk:{},used:{},def:{}};
 const S={map:"village",x:12,y:15,dir:3,st:"title",steps:0,safe:6};
 let mv=null,fr=0,frT=0,held=0,keys={},sound=true;
 let path=[],pend=null,mark=null;
 const maxHp=()=>40+(P.lv-1)*8, maxMp=()=>12+(P.lv-1)*3, atk=()=>8+(P.lv-1)*2, need=()=>P.lv*20;
 function cur(){return MAPS[S.map]}
-function save(){try{localStorage.setItem("sumerki_save",JSON.stringify({P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir}}))}catch(e){}}
-function load(){try{const j=JSON.parse(localStorage.getItem("sumerki_save")||"null");if(!j)return false;Object.assign(P,j.P);Object.assign(F,j.F);Object.assign(S,j.S);return true}catch(e){return false}}
-function newGame(){Object.assign(P,{lv:1,xp:0,hp:40,mp:12,pot:2});Object.assign(F,{elder:0,boss:0,amulet:0,done:0,gift:0,inn:0});Object.assign(S,{map:"village",x:12,y:15,dir:3,steps:0,safe:6});mv=null}
+function save(){try{localStorage.setItem("sumerki_save",JSON.stringify({P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir}}))}catch(e){}try{pushSave()}catch(e){}}
+function load(){try{const j=JSON.parse(localStorage.getItem("sumerki_save")||"null");if(!j)return false;Object.assign(P,j.P);Object.assign(F,j.F);Object.assign(S,j.S);P.pn=P.pn||0;P.md=P.md||0;P.kills=P.kills||0;P.evn=P.evn||0;F.mk=F.mk||{};F.used=F.used||{};F.def=F.def||{};if(!MAPS[S.map])S.map="village";return true}catch(e){return false}}
+function newGame(){Object.assign(P,{lv:1,xp:0,hp:40,mp:12,pot:2,pn:0,md:0,kills:0,evn:0});Object.assign(F,{elder:0,boss:0,amulet:0,done:0,gift:0,inn:0,mk:{},used:{},def:{}});Object.assign(S,{map:"village",x:12,y:15,dir:3,steps:0,safe:6});mv=null}
 
 /* ============ звук ============ */
 let AC=null,master=null,drone=null;
@@ -507,7 +556,7 @@ let toastT=0;
 function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toastT);toastT=setTimeout(()=>e.style.display="none",2200)}
 const DX=[0,-1,1,0],DY=[1,0,0,-1];
 function solid(m,x,y){if(x<0||y<0||x>=m.w||y>=m.h)return true;const o=m.o[y][x];if(o&&o!=="D")return true;if(m.g[y][x]==="~")return true;return false}
-function npcAt(m,x,y){return m.npcs.find(n=>n.x===x&&n.y===y)}
+function npcAt(m,x,y){return m.npcs.find(n=>n.x===x&&n.y===y&&!(n.ev&&F.used[n.ev]))}
 function setUI(){
   const map=S.st==="map",bat=S.st==="battle",dl=S.st==="dialog";
   $("#pad").style.display="none";
@@ -515,6 +564,7 @@ function setUI(){
   $("#btnM").style.display=map?"block":"none";
   $("#loc").style.display=(map||dl)?"block":"none";
   $("#bt").style.display=bat?"block":"none";
+  $("#ev").style.display=S.st==="event"?"block":"none";hud();
 }
 
 /* ============ диалоги ============ */
@@ -524,7 +574,7 @@ function say(lines,cb,opts){
   D={lines:lines.map(l=>typeof l==="string"?{n:"",t:l}:l),i:0,pos:0,cb:cb||null,opts:opts||null,prev:S.st};
   S.st="dialog";setUI();$("#dlg").style.display="block";showLine();
 }
-const FACE={"Страж Церкви":"guard","Стражник":"guard","Угольщик":"vil","Газетчица":"girl","Гадалка":"crone","Трактирщик":"inn","Хозяин трактира":"inn","Капитан Ночных Ястребов":"elder","Потусторонний":"hero"};
+const FACE={"Страж Церкви":"guard","Стражник":"guard","Угольщик":"vil","Газетчица":"girl","Гадалка":"crone","Трактирщик":"inn","Хозяин трактира":"inn","Капитан Ночных Ястребов":"elder","Потусторонний":"hero","Могильщик":"vil","Ночной Ястреб":"guard","Скорбящий":"crone","Старый рыбак":"vil","Русалка":"girl"};
 function drawFace(cv,key){const x=cv.getContext("2d");x.clearRect(0,0,16,16);if(key&&SP[key])x.drawImage(SP[key][0][0],0,3,16,13,0,3,16,13)}
 function showLine(){const l=D.lines[D.i];{const fk=FACE[l.n];$("#dlg").classList.toggle("pt",!!fk);if(fk)drawFace($("#dface"),fk)}D.pos=0;D.full=l.t;$("#dlg .nm").textContent=l.n||"";$("#dlg .nm").style.display=l.n?"block":"none";$("#dlg .tx").textContent="";$("#dlg .opts").innerHTML="";$("#dlg .nx").style.display="none"}
 function dlgTick(dt){
@@ -549,6 +599,7 @@ $("#dlg").addEventListener("pointerdown",e=>{if(e.target.tagName!=="BUTTON")dlgN
 
 /* ============ диалоги сюжета ============ */
 function talk(n){
+  if(n.ev)return openEvent(n.ev);
   const nm=n.name;
   if(n.id==="guard"){
     if(!F.elder)return say([{n:nm,t:"Стой. Роща за заставой закрыта по приказу Церкви Вечной Ночи. Без слова капитана Ночных Ястребов я тебя не пущу."}]);
@@ -562,7 +613,7 @@ function talk(n){
   }
   if(n.id==="crone")return say([{n:nm,t:"Слышишь? Они шепчут твоё имя. Это не страшно. Страшно, когда замолкают."}]);
   if(n.id==="inn"){
-    return say([{n:nm,t:"Устал, Потусторонний? Комната и горячий суп бесплатно. Пока в склепе тихо, в Тингене можно спать спокойно."}],null,[["Отдохнуть",()=>{P.hp=maxHp();P.mp=maxMp();F.inn=1;snd("heal");save();toast("Здоровье и мана восстановлены")}],["Не сейчас",()=>{}]]);
+    return say([{n:nm,t:"Устал, Потусторонний? Комната и горячий суп бесплатно. Пока в склепе тихо, в Тингене можно спать спокойно."}],null,[["Отдохнуть",()=>{P.hp=maxHp();P.mp=maxMp();P.md=Math.max(0,P.md-15);F.inn=1;F.used={};snd("heal");save();toast("Отдохнул. Безумие стихает, места ожили")}],["Зелье · 8 £",()=>{if(P.pn>=8){P.pn-=8;P.pot++;snd("ok");save();toast("Куплено зелье лечения")}else toast("Нужно 8 £")}],["Не сейчас",()=>{}]]);
   }
   if(n.id==="elder"){
     if(F.done)return say([{n:nm,t:"Тинген спит спокойно. Ты вернул нам ночь без страха."}]);
@@ -579,18 +630,34 @@ function finish(){
 
 /* ============ бой ============ */
 const ENEMIES={
-  wolf:{n:"Заражённая гончая",hp:22,atk:6,xp:9,spr:"wolf"},
-  skel:{n:"Мертвец-страж",hp:28,atk:7,xp:12,spr:"skel"},
-  bat:{n:"Тварь тумана",hp:16,atk:5,xp:6,spr:"bat"},
-  ghoul:{n:"Потерявший контроль",hp:90,atk:11,xp:60,spr:"ghoul",boss:1}
+  wolf:{n:"Заражённая гончая",hp:26,atk:6,xp:9,spr:"wolf"},
+  skel:{n:"Скелет-страж",hp:46,atk:9,xp:15,spr:"skel"},
+  bat:{n:"Призрак",hp:38,atk:8,xp:14,spr:"bat",ev:.3},
+  ghoulm:{n:"Гуль",hp:50,atk:10,xp:16,spr:"ghoul",rg:4},
+  worm:{n:"Могильный червь",hp:56,atk:10,xp:17,spr:"m_worm",ev:.25},
+  banshee:{n:"Плакальщица",hp:38,atk:8,xp:15,spr:"m_banshee",x2:3,xm:1.7},
+  mush:{n:"Гриб-спорник",hp:24,atk:6,xp:9,spr:"m_mush"},
+  spider:{n:"Паук-ткач",hp:22,atk:7,xp:9,spr:"m_spider"},
+  tree:{n:"Проклятое дерево",hp:36,atk:8,xp:12,spr:"m_tree",x2:3},
+  boar:{n:"Шипастый кабан",hp:30,atk:7,xp:10,spr:"m_boar"},
+  frog:{n:"Жаба",hp:18,atk:5,xp:6,spr:"m_frog",rg:2},
+  drowned:{n:"Утопленница",hp:28,atk:7,xp:9,spr:"m_drowned",ls:3},
+  leech:{n:"Пиявка",hp:22,atk:6,xp:8,spr:"m_leech",ev:.25},
+  pike:{n:"Щука",hp:26,atk:7,xp:9,spr:"m_pike",x2:3},
+  kik:{n:"Кикимора",hp:34,atk:8,xp:12,spr:"m_kik"},
+  ghoul:{n:"Потерявший контроль",hp:90,atk:11,xp:60,spr:"ghoul",boss:1,intro:"Потерявший контроль поднимается у алтаря."},
+  fox:{n:"Кицунэ",hp:120,atk:10,xp:70,spr:"m_fox",boss:1,bp:"fox",intro:"Из тумана выходит рыжая тень. Кицунэ улыбается."},
+  necro:{n:"Некромант-самоучка",hp:150,atk:12,xp:90,spr:"m_necro",boss:1,bp:"necro",intro:"Из-под склепа поднимается некромант с книгой."},
+  serp:{n:"Змей",hp:100,atk:10,xp:60,spr:"m_serp",boss:1,intro:"Вода вспучивается. Из озера поднимается Змей."},
+  vod:{n:"Водяной",hp:130,atk:12,xp:80,spr:"m_vod",boss:1,intro:"Озеро встаёт стеной. Водяной просыпается."}
 };
 let B=null,fx=[];
 function startBattle(k){
   path=[];pend=null;mark=null;
   const e=ENEMIES[k];
-  B={k,e:{...e},hp:e.hp,max:e.hp,turn:1,busy:true,charge:0,flash:0,shake:0,menu:"main",boss:!!e.boss,anim:[],t0:performance.now()};
+  B={k,e:{...e},hp:e.hp,max:e.hp,turn:1,busy:true,charge:0,flash:0,shake:0,menu:"main",boss:!!e.boss,anim:[],shield:0,illu:0,t0:performance.now()};
   S.st="battle";setUI();snd("enc");fx=[];
-  blog(e.boss?"Потерявший контроль поднимается у алтаря.":"На тропе появляется "+e.n.toLowerCase()+".");
+  blog(e.intro||"На пути появляется "+e.n.toLowerCase()+".");
   renderBattle();setTimeout(()=>{B.busy=false;renderBattle()},700);
 }
 function blog(t){$("#blog").textContent=t}
@@ -619,9 +686,16 @@ function act(kind){
     let d=atk()+((Math.random()*4)|0);const crit=Math.random()<.12;
     if(kind==="dark")d=Math.round(atk()*1.8)+((Math.random()*4)|0);
     if(crit)d=Math.round(d*1.5);
-    B.hp=Math.max(0,B.hp-d);B.flash=.35;snd(crit?"crit":"hit");B.anim.push({k:kind==="dark"?"orb":"slash",t:0,crit});
-    floatTxt((crit?"Крит ":"")+"-"+d,0,0,crit?"#ffd37a":"#fff");
-    blog((kind==="dark"?"Пуля духа":"Ты бьёшь")+": "+d+" урона"+(crit?" (крит!)":"")+".");
+    let miss=false;
+    if(e.ev&&Math.random()<e.ev)miss=true;
+    if(B.illu){B.illu=0;if(Math.random()<.5)miss=true}
+    if(miss){B.anim.push({k:kind==="dark"?"orb":"slash",t:0,crit:0});snd("step");floatTxt("Мимо",0,0,"#b8b8d0");blog((kind==="dark"?"Пуля духа":"Удар")+" не попадает: "+e.n+" ускользает.")}
+    else{
+      let ab="";if(B.shield>0){const q=Math.min(B.shield,d);B.shield-=q;d-=q;ab=" Щит поглотил "+q+"."}
+      B.hp=Math.max(0,B.hp-d);B.flash=.35;snd(crit?"crit":"hit");B.anim.push({k:kind==="dark"?"orb":"slash",t:0,crit});
+      floatTxt((crit?"Крит ":"")+"-"+d,0,0,crit?"#ffd37a":"#fff");
+      blog((kind==="dark"?"Пуля духа":"Ты бьёшь")+": "+d+" урона"+(crit?" (крит!)":"")+"."+ab);
+    }
   }else if(kind==="heal"){P.mp-=5;const h=Math.min(healAmt(),maxHp()-P.hp);P.hp+=h;snd("heal");B.anim.push({k:"heal",t:0});blog("Молитва Ночи: +"+h+" HP.");floatTxt("+"+h,0,1,"#7fe0a0")}
   else if(kind==="pot"){P.pot--;const h=Math.min(25,maxHp()-P.hp);P.hp+=h;snd("heal");B.anim.push({k:"heal",t:0});blog("Зелье лечения: +"+h+" HP.");floatTxt("+"+h,0,1,"#7fe0a0")}
   else if(kind==="run"){
@@ -629,27 +703,36 @@ function act(kind){
     blog("Убежать не удалось.");
   }
   renderBattle();
-  setTimeout(()=>{if(B.hp<=0){B.anim.push({k:"die",t:0});return setTimeout(()=>endBattle("win"),1000)}enemyTurn()},750);
+  setTimeout(()=>{if(!B)return;if(B.hp<=0){B.anim.push({k:"die",t:0});return setTimeout(()=>endBattle("win"),1000)}enemyTurn()},750);
 }
 function enemyTurn(){
-  const e=B.e;let d=e.atk+((Math.random()*3)|0)-1,msg;
-  if(B.boss){
-    if(B.charge){d=Math.round(e.atk*2.2);B.charge=0;msg="Потерявший контроль обрушивает копившуюся силу: "+d+" урона!"}
-    else if(B.turn%3===2){B.charge=1;d=0;msg="Потерявший контроль дрожит и копит силу. Следующий удар будет тяжёлым!"}
-    else msg="Потерявший контроль бьёт искажённой силой: "+d+" урона."
-  }else msg=e.n+" нападает: "+d+" урона.";
+  if(!B)return;const e=B.e;let d=e.atk+((Math.random()*3)|0)-1,msg="";
+  if(P.md>=50)d=Math.round(d*1.15);
+  if(e.rg&&B.hp<B.max){const h=Math.min(e.rg,B.max-B.hp);B.hp+=h;floatTxt("+"+h,0,1,"#7fe0a0")}
+  if(B.boss&&e.bp==="fox"&&B.turn%3===2){B.illu=1;d=0;msg=e.n+" расплывается иллюзией. Следующий удар может пройти мимо!"}
+  else if(B.boss&&e.bp==="necro"&&B.turn%3===2){B.shield=24;d=0;msg=e.n+" вызывает костяной щит (24)."}
+  else if(B.boss&&!e.bp){
+    if(B.charge){d=Math.round(e.atk*2.2);B.charge=0;msg=e.n+" обрушивает копившуюся силу: "+d+" урона!"}
+    else if(B.turn%3===2){B.charge=1;d=0;msg=e.n+" копит силу. Следующий удар будет тяжёлым!"}
+    else msg=e.n+" бьёт: "+d+" урона."
+  }else if(e.x2&&B.turn%e.x2===0){d=Math.round(d*(e.xm||2));msg=e.n+" бьёт со всей силы: "+d+" урона!"}
+  else msg=e.n+" нападает: "+d+" урона.";
   B.anim.push({k:"lunge",t:0});
-  if(d>0){P.hp=Math.max(0,P.hp-d);B.shake=.3;snd("hurt");floatTxt("-"+d,0,2,"#ff7a7a");B.anim.push({k:"hurt",t:0})}
+  if(d>0){P.hp=Math.max(0,P.hp-d);B.shake=.3;snd("hurt");floatTxt("-"+d,0,2,"#ff7a7a");B.anim.push({k:"hurt",t:0});
+    if(e.ls&&B.hp<B.max){B.hp=Math.min(B.max,B.hp+e.ls);msg+=" Лечится на "+e.ls+"."}}
   blog(msg);B.turn++;renderBattle();
-  setTimeout(()=>{if(P.hp<=0)return endBattle("lose");B.busy=false;renderBattle()},700);
+  setTimeout(()=>{if(!B)return;if(P.hp<=0)return endBattle("lose");B.busy=false;renderBattle()},700);
 }
 function endBattle(res){
   const b=B;B=null;
   if(res==="win"){
     snd("win");let t=b.e.n+" повержен. +"+b.e.xp+" опыта.";P.xp+=b.e.xp;
     while(P.xp>=need()){P.xp-=need();P.lv++;P.hp=maxHp();P.mp=maxMp();t+="\nНовый уровень: "+P.lv+"! HP и MP восстановлены.";snd("lvl")}
+    P.kills=(P.kills||0)+1;
+    if(!b.boss){const g=1+((Math.random()*3)|0);P.pn+=g;t+=" +"+g+" £."}
     if(!b.boss&&Math.random()<.25){P.pot++;t+="\nНайдено зелье лечения."}
-    if(b.boss){F.boss=1;F.amulet=1;t+="\nНа алтаре лежит запечатанный артефакт. Ты забираешь его."}
+    if(b.k==="ghoul"){F.boss=1;F.amulet=1;t+="\nНа алтаре лежит запечатанный артефакт. Ты забираешь его."}
+    else if(b.boss){P.pn+=25;P.md=Math.max(0,P.md-10);F.def[b.k]=1;t+="\nДобыча: 25 £. Безумие отступает."}
     S.st="map";setUI();save();say([t],null);
   }else if(res==="lose"){
     snd("lose");S.st="map";setUI();
@@ -673,8 +756,10 @@ function stepDone(){
     if(w.gate&&!F.elder){S.y=1;tryBlock();return}
     warp(w);return;
   }
-  if(m.enc&&S.steps>S.safe&&(m.g[S.y][S.x]==="g"||m.g[S.y][S.x]==="=")&&Math.random()<.085){
-    S.safe=S.steps+5;const pool=["wolf","wolf","skel","bat"];startBattle(pool[(Math.random()*pool.length)|0]);return;
+  if(m.enc&&S.steps>S.safe&&"g=.".includes(m.g[S.y][S.x])&&Math.random()<.085){
+    S.safe=S.steps+5;const pool=m.pool||["wolf","wolf"];let k=pool[(Math.random()*pool.length)|0];
+    for(const [rk,p] of (m.rare||[]))if(Math.random()<p){k=rk;break}
+    startBattle(k);return;
   }
   if(m.kind!=="in"&&S.steps%2===0)snd("step");
 }
@@ -745,7 +830,7 @@ function draw(now){
   // объекты и спрайты, отсортированные по y
   const items=[];
   for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const o=m.o[y][x];if(o)items.push({y:y*TS,k:"o",o,x:x*TS,yy:y*TS})}
-  for(const n of m.npcs)items.push({y:n.y*TS,k:"n",n});
+  for(const n of m.npcs){if(n.ev&&F.used[n.ev])continue;items.push({y:n.y*TS,k:"n",n})}
   if(S.st!=="title")items.push({y:py,k:"p",px,py});
   items.sort((a,b)=>a.y-b.y||(a.k==="o"?-1:1));
   const tops=[];
@@ -753,7 +838,12 @@ function draw(now){
     if(it.k==="o"){
       const isTall=(it.o==="T");
       ctx.drawImage(O[it.o]||O.W,it.x,it.yy-(isTall?4:0));
-    }else if(it.k==="n"){shadowAt(it.n.x*TS,it.n.y*TS);ctx.drawImage(SP[it.n.sp][it.n.dir][0],it.n.x*TS,it.n.y*TS-12-(Math.floor(now/550+it.n.x*3+it.n.y)%2?1:0))}
+    }else if(it.k==="n"){
+      const n=it.n;
+      if(n.prop){ctx.drawImage(O[n.prop],n.x*TS,n.y*TS-(n.prop==="E"||n.prop==="x"?4:0))}
+      else{shadowAt(n.x*TS,n.y*TS);ctx.drawImage(SP[n.sp][n.dir][0],n.x*TS,n.y*TS-12-(Math.floor(now/550+n.x*3+n.y)%2?1:0))}
+      if(n.ev){const sy=n.y*TS-(n.prop?3:15)+Math.sin(now/260+n.x)*1.5,sx=n.x*TS+8;ctx.fillStyle="rgba(255,214,120,.95)";ctx.beginPath();ctx.moveTo(sx,sy-3);ctx.lineTo(sx+2,sy);ctx.lineTo(sx,sy+3);ctx.lineTo(sx-2,sy);ctx.fill()}
+    }
     else{shadowAt(Math.round(it.px),Math.round(it.py));ctx.drawImage(SP.hero[S.dir][mv?(fr%2?1:2):0],Math.round(it.px),Math.round(it.py)-12)}
   }
   if(mark&&S.st==="map"){const t=(now%900)/900,a=1-t,r=3+t*5;ctx.strokeStyle="rgba(224,162,74,"+a.toFixed(2)+")";ctx.lineWidth=1;ctx.strokeRect(mark.x*TS+8-r,mark.y*TS+8-r,r*2,r*2);ctx.fillStyle="rgba(224,162,74,.8)";ctx.fillRect(mark.x*TS+7,mark.y*TS+7,2,2)}
@@ -775,11 +865,11 @@ function draw(now){
   // лёгкая виньетка
   const vg=ctx.createRadialGradient(vw/2,vh/2,Math.min(vw,vh)*.35,vw/2,vh/2,Math.max(vw,vh)*.75);vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,.55)");ctx.fillStyle=vg;ctx.fillRect(0,0,vw,vh);
 }
-const ART={};for(const k of["wolf","skel","bat","ghoul"]){const i=new Image();i.src="img/"+k+".jpg";ART[k]=i}
+const ART={};function art(k){if(!ART[k]){const i=new Image();i.src="img/"+k+".jpg";ART[k]=i}return ART[k]}
 function drawBattle(now){
   const W=vw,H=vh,t=now/1000;
   ctx.fillStyle="#0b0912";ctx.fillRect(0,0,W,H);
-  const img=ART[B.e.spr],ok=img&&img.complete&&img.naturalWidth;
+  const img=art(B.e.spr),ok=img&&img.complete&&img.naturalWidth;
   let sc=1,al=1,ox=B.shake>0?(Math.random()-.5)*10:0,oy=0;
   const en=Math.min(1,(now-B.t0)/500);al*=en;
   for(const a of B.anim){
@@ -822,6 +912,281 @@ function drawBattle(now){
   ctx.strokeStyle="#6b5430";ctx.lineWidth=1;ctx.strokeRect(bx+.5,by+.5,bw,10);ctx.globalAlpha=1;
   for(const f of fx){const a=1-f.age;ctx.globalAlpha=Math.max(0,a);ctx.fillStyle=f.c;ctx.font="700 30px 'Alegreya Sans',sans-serif";const yy=f.y===2?H*.5:ey+h*.35;ctx.fillText(f.t,W/2+(f.y===2?-40:0),(f.y===1?H*.5:yy)-f.age*40);ctx.globalAlpha=1}
 }
+
+/* ============ мир: новые тайлы ============ */
+tr("Y",x=>{R(x,"#0d0d12",3,14,10,2);R(x,"#5c616d",1,4,5,8);R(x,"#5c616d",10,4,5,8);R(x,"#7d8089",4,9,8,6);R(x,"#9aa0ab",6,3,4,7);R(x,"#b4bac5",6,1,4,3);R(x,"#2a2d36",7,8,2,5);R(x,"#1a1a22",7,3,1,2);R(x,"#6a8ac0",7,5,1,3)});
+tr("z",x=>{R(x,"#0d0d12",3,14,10,2);R(x,"#7d8089",4,5,8,10);R(x,"#9aa0ab",5,4,6,2);R(x,"#4a4d58",6,7,4,1);R(x,"#4a4d58",6,9,3,1);x.fillStyle="rgba(150,190,255,.55)";x.fillRect(2,2,3,9);x.fillRect(11,0,3,10);x.fillStyle="rgba(210,230,255,.8)";x.fillRect(3,3,1,2);x.fillRect(12,2,1,2)});
+tr("i",x=>{x.fillStyle="rgba(230,225,210,.9)";x.beginPath();x.ellipse(8,11,7,3.5,0,0,7);x.strokeStyle="#e8e2d0";x.lineWidth=1;x.stroke();R(x,"#3a1a2a",6,10,4,2);for(const [a,b] of[[2,8],[12,8],[7,13]]){R(x,"#d9cfc0",a,b,2,4);R(x,"#ffb347",a,b-2,2,2);R(x,"#fff2a8",a,b-2,1,1)}});
+tr("C",x=>{R(x,"#4b4c58",1,2,14,14);R(x,"#35363f",1,2,14,2);R(x,"#1a1a22",4,5,8,11);R(x,"#6a6b78",3,4,10,1);R(x,"#b23a48",7,8,2,3);R(x,"#7a7d8a",2,4,1,12);R(x,"#7a7d8a",13,4,1,12)});
+tr("q",x=>{R(x,"#2a1a0c",1,9,14,3);R(x,"#6a4522",2,8,12,2);R(x,"#4a2f16",3,12,10,1);R(x,"#d9cfc0",6,6,4,2);R(x,"#b23a48",6,6,1,1)});
+tr("l",x=>{for(const [a,b,c] of[[3,4,"#bfe8ff"],[9,2,"#d8f2ff"],[11,9,"#9fd8ff"]]){x.fillStyle=c;x.beginPath();x.arc(a+1,b+1,2,0,7);x.fill();x.fillStyle="rgba(190,232,255,.3)";x.beginPath();x.arc(a+1,b+1,4.5,0,7);x.fill()}});
+tr("j",x=>{R(x,"#2c2d36",4,6,8,10);R(x,"#1c1d24",3,4,10,2);R(x,"#1c1d24",5,2,6,2);R(x,"#1c1d24",7,0,2,2);R(x,"#c9a24f",6,8,4,4);R(x,"#6a5430",7,12,2,1);R(x,"#4a8a8a",2,14,12,2)});
+tr("h",x=>{R(x,"#3a281b",2,12,2,4);R(x,"#3a281b",12,12,2,4);R(x,"#7a6347",2,6,12,7);R(x,"#4d2535",1,2,14,5);R(x,"#6a3a4d",2,2,12,2);R(x,"#241710",6,8,4,5);R(x,"#e0a24a",11,8,2,2)});
+tr("n",x=>{x.fillStyle="#a8c8e8";x.beginPath();x.ellipse(8,10,7,4.5,0,0,7);x.fill();x.fillStyle="#d8ecff";x.beginPath();x.ellipse(8,9,5,2.5,0,0,7);x.fill();R(x,"#2e2c3a",6,7,4,4);R(x,"#d9a77c",7,6,2,2)});
+tr("F",x=>{R(x,"#2e5a2a",3,8,10,6);R(x,"#4a8a3f",4,6,8,5);R(x,"#6fb35a",5,5,2,2);R(x,"#6fb35a",9,5,2,2);R(x,"#101010",6,6,1,1);R(x,"#101010",9,6,1,1);R(x,"#e0a24a",5,3,6,2);R(x,"#ffd37a",6,2,1,1);R(x,"#ffd37a",9,2,1,1)});
+tr("X",x=>{R(x,"#1c3552",0,10,16,6);R(x,"#2a1a0c",2,6,12,8);R(x,"#6a4522",2,5,12,3);R(x,"#8a8a96",2,9,12,1);R(x,"#ffd37a",7,8,2,2);R(x,"#ffd37a",4,4,2,1);R(x,"#ffd37a",9,3,2,1)});
+tr("E",x=>{R(x,"#3a281b",6,8,4,8);R(x,"#223a25",1,0,14,9);R(x,"#18281b",3,1,10,6);R(x,"#e8f0ff",5,8,2,2);R(x,"#e8f0ff",9,8,2,2);R(x,"#6a8ac0",5,9,1,1);R(x,"#6a8ac0",10,9,1,1);R(x,"#18281b",7,12,2,2)});
+tr("m",x=>{for(let i=0;i<8;i++){const a=8+Math.cos(i/8*6.283)*5.5,b=10+Math.sin(i/8*6.283)*3.5;R(x,"#d8d0c0",Math.round(a),Math.round(b)-2,2,2);R(x,"#a8c8ff",Math.round(a),Math.round(b)-3,2,1)}x.fillStyle="rgba(150,220,255,.35)";x.fillRect(5,5,6,5)});
+tr("k",x=>{R(x,"#3a281b",5,0,6,16);R(x,"#4a3826",5,0,2,16);for(const a of[3,6,9]){R(x,"#d8c8a8",4+a%3,3+a,1,5);R(x,"#d8c8a8",7+a%3,3+a,1,5)}R(x,"#d98a3a",8,12,3,2);R(x,"#7a1a1a",11,13,1,1)});
+tr("a",x=>{R(x,"#0d0d12",1,14,14,2);R(x,"#6a6a72",1,9,14,6);R(x,"#8a8a92",1,7,14,3);R(x,"#4a4a52",3,10,10,1);R(x,"#e0a24a",5,11,1,3);R(x,"#e0a24a",8,11,3,1);R(x,"#e0a24a",9,12,1,2);R(x,"#ffb347",7,5,2,2);R(x,"#c97a2a",7,4,1,1)});
+tr("x",x=>{R(x,"#3a281b",6,5,4,11);R(x,"#223a25",1,0,14,7);R(x,"#18281b",4,1,8,4);R(x,"#d9cfc0",5,9,6,1);R(x,"#d9cfc0",6,11,5,1);R(x,"#d9cfc0",5,13,6,1);R(x,"#7a1a1a",4,9,1,1)});
+tr("d",x=>{R(x,"#0d0d12",3,14,10,2);R(x,"#3b3a2b",4,6,8,9);R(x,"#4a4a34",5,5,6,3);R(x,"#d9a77c",6,6,3,2);R(x,"#6a5a3a",3,10,2,5);R(x,"#d9cfc0",8,10,4,3)});
+tr("e",x=>{R(x,"#3a281b",6,0,4,16);R(x,"#4a3826",3,10,10,6)});
+/* лунные надгробия и кресты для кладбища */
+tr("t",x=>{R(x,"#0d0d12",3,14,10,2);R(x,"#7d8089",7,2,2,13);R(x,"#7d8089",4,5,8,2);R(x,"#9aa0ab",7,2,1,13)});
+
+/* ============ новые карты ============ */
+function hs(M,x,y,ev,prop,sp,name){M.o[y][x]=null;M.npcs.push({id:"ev",ev,x,y,dir:0,prop,sp,name:name||""})}
+function makeCemetery(){
+  const W=26,H=22,M={name:"Кладбище Тингена (ур. 4+)",w:W,h:H,g:grid(W,H,"g"),o:grid(W,H,null),light:.6,base:"g",npcs:[],warps:[],lamps:[],kind:"forest",enc:1,pool:["bat","ghoulm","skel","worm","banshee"]};
+  const road=new Set(),put=(x,y)=>{M.g[y][x]="=";road.add(y+","+x)};
+  for(let y=0;y<H-2;y++){put(12,y);put(13,y)}
+  for(let x=4;x<=21;x++){put(x,10);put(x,11)}
+  for(let y=10;y<=15;y++){put(5,y);put(6,y)}
+  const r=rng(4242);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    const edge=x<1||y<1||x>=W-1||y>=H-1;if(road.has(y+","+x))continue;
+    let near=false;for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)if(road.has((y+b)+","+(x+a)))near=true;
+    if(edge)M.o[y][x]="T";else if(!near){const q=r();if(q<.17)M.o[y][x]="+";else if(q<.23)M.o[y][x]="t";else if(q<.28)M.o[y][x]="T"}
+  }
+  for(const k of[12,13])M.o[0][k]=null;
+  for(let x=9;x<=16;x++)for(let y=19;y<=21;y++)M.o[y][x]="#";
+  for(const [x,y] of [[11,17],[14,17],[11,4],[14,4]]){M.o[y][x]="L";M.lamps.push([x,y])}
+  hs(M,8,5,"c_gravedigger",null,"vil","Могильщик");
+  hs(M,19,7,"c_hawk",null,"guard","Ночной Ястреб");
+  hs(M,3,12,"c_whispers","z",null,"");
+  hs(M,21,13,"c_ritual","i",null,"");
+  hs(M,8,15,"c_angel","Y",null,"");
+  hs(M,17,16,"c_procession",null,"crone","Скорбящий");
+  hs(M,12,19,"c_crypt","C",null,"");
+  M.warps=[{x:12,y:0,to:"village",tx:12,ty:18,dir:3},{x:13,y:0,to:"village",tx:13,ty:18,dir:3}];
+  return M;
+}
+function makeLake(){
+  const W=26,H=22,M={name:"Озеро Утонувших (ур. 1+)",w:W,h:H,g:grid(W,H,"g"),o:grid(W,H,null),light:.5,base:"g",npcs:[],warps:[],lamps:[],kind:"forest",enc:1,pool:["frog","drowned","leech","pike","kik"],rare:[["serp",.05],["vod",.02]]};
+  for(let y=3;y<=17;y++)for(let x=9;x<=23;x++){const dx=(x-16)/7.5,dy=(y-10)/7.5;if(dx*dx+dy*dy<1)M.g[y][x]="~"}
+  const road=new Set(),put=(x,y,c)=>{M.g[y][x]=c;road.add(y+","+x)};
+  for(let x=0;x<=8;x++){put(x,10,"=");put(x,11,"=")}
+  for(let x=9;x<=15;x++){put(x,10,"_");put(x,11,"_")}
+  for(let y=12;y<=16;y++){put(12,y,"_");put(13,y,"_")}
+  put(12,17,"_");
+  const r=rng(909);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    const edge=x<1||y<1||x>=W-1||y>=H-1;
+    if(M.g[y][x]!=="g"||road.has(y+","+x))continue;
+    if(edge){M.o[y][x]="T";continue}
+    let near=false;for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)if(road.has((y+b)+","+(x+a)))near=true;
+    if(near)continue;
+    let shore=false;for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++){const yy=y+b,xx=x+a;if(yy>=0&&xx>=0&&yy<H&&xx<W&&M.g[yy][xx]==="~")shore=true}
+    const q=r();if(shore){if(q<.3)M.o[y][x]="b"}else{if(q<.2)M.o[y][x]="T";else if(q<.3)M.o[y][x]="b"}
+  }
+  M.o[10][0]=null;M.o[11][0]=null;
+  hs(M,14,10,"l_fisherman",null,"vil","Старый рыбак");
+  hs(M,16,11,"l_bell","j",null,"");
+  hs(M,14,12,"l_chest","X",null,"");
+  hs(M,11,9,"l_boat","q",null,"");
+  hs(M,12,18,"l_fishhut","h",null,"");
+  hs(M,8,7,"l_mermaid",null,"girl","Русалка");
+  hs(M,5,15,"l_lights","l",null,"");
+  hs(M,4,6,"l_reflection","n",null,"");
+  hs(M,4,19,"l_frog","F",null,"");
+  M.warps=[{x:0,y:10,to:"village",tx:24,ty:10,dir:1},{x:0,y:11,to:"village",tx:24,ty:11,dir:1}];
+  return M;
+}
+
+/* ============ события (по мотивам первой игры) ============ */
+const pick=a=>a[(Math.random()*a.length)|0], roll=()=>Math.random()*100;
+const dd=(t,o)=>Object.assign({t},o||{});
+const mk3=(key,label,n)=>{F.mk[key]=Math.min(3,(F.mk[key]||0)+1);const c=F.mk[key];return " "+label+": "+c+"/3."+(c>=3?" Он ждёт тебя!":"")};
+const bossIf=(key,boss)=>F.mk[key]>=3?{boss,reset:key}:{};
+const EVL={c:"Кладбище Тингена",f:"Туманная роща",l:"Озеро Утонувших"};
+const EV={
+ /* --- кладбище --- */
+ c_gravedigger:{art:"c_gravedigger",t:"⚰ У свежей могилы работает сутулый могильщик. Лопата ходит ровно, как маятник. Он не оборачивается, но говорит:\n\n«Хорошая ночь. Земля мягкая. Если что-то нужно — спрашивай, только недолго. Они не любят, когда стоят над душой.»",ch:[
+  ["🧪 Купить «тоник» (6 £)",()=>P.pn>=6?dd("🧪 Могильщик достаёт из-за пояса флягу. «Земляной тоник. Пахнет так себе, но мёртвых он ставит на ноги. Тебя, думаю, тоже.»",{pn:-6,hp:15}):dd("🧪 «Нет монет — нет тоника», — бурчит могильщик и снова берётся за лопату. Нужно 6 £.")],
+  ["💬 Расспросить",()=>dd("💬 Могильщик опирается на лопату. "+pick(["«Призраки не любят, когда в них бьют напрямую. Они уходят в туман — бей снова и снова.»","«Гуль жрёт падаль, чтобы лечиться. Не давай ему время на обед.»","«Червь зарывается, и тогда по нему не попасть. Бей, пока он наверху.»","«Плакальщица кричит втрое громче, чем бьёт. Береги здоровье перед третьим криком.»"]),{md:2})],
+  ["↩ Уйти",()=>dd("↩ Ты кивнул и пошёл дальше. За спиной снова зашуршала лопата — ровно, как маятник.")]]},
+ c_crypt:{art:"c_crypt",t:"🏛 В склоне холма — семейный склеп. Дверь запечатана свинцом и знаком Богини Вечной Ночи. Печать надтреснута. Изнутри тянет холодом и чем-то сладким.\n\nКто-то уже пытался войти… и, кажется, не вышел.",ch:[
+  ["🗝 Сломать печать",()=>roll()<50?dd("🗝 Ты срываешь печать. Дверь стонет. Внутри — пыльные саркофаги и нетронутая шкатулка с монетами. Тени по углам смотрят, но не двигаются.",{pn:12,md:3}):dd("🗝 Едва дверь открылась, холод ударил в грудь. Из темноты вылетело что-то бледное и прошло сквозь тебя, оставив ледяной ожог.",{hp:-10,md:3})],
+  ["👂 Прислушаться",()=>{const s=mk3("cem","Знаков некроманта");return Object.assign(dd("👂 Ты прикладываешь ухо к двери. Изнутри — скрип пера и монотонное бормотание на мёртвом языке. Кто-то пишет там, под землёй.\n\n"+s.trim(),{md:2}),bossIf("cem","necro"))}],
+  ["↩ Уйти",()=>dd("↩ Ты отступаешь от склепа. Печать тихо поскрипывает, как будто вздыхая с облегчением.")]]},
+ c_whispers:{art:"c_whispers",t:"🌫 Туман между надгробиями шепчет. Не одним голосом — десятками, на разных языках, и среди них один — детский. Имена на плитах медленно меняются, подстраиваясь под твоё.\n\n«Останься… мы так давно одни…»",ch:[
+  ["👂 Выслушать мёртвых",()=>dd("👂 Ты слушаешь. Мёртвые рассказывают, где закопаны их сбережения, и просят только одного: не уходить. Ты берёшь монеты у ближайшей плиты и всё-таки уходишь.",{pn:5,md:7})],
+  ["🙏 Помолиться за них",()=>dd("🙏 Ты молишься за каждого, чьё имя успел прочесть. Шёпот стихает, туман расходится, на камнях проступает слабый свет.",{hp:8,md:-4})],
+  ["🏃 Бежать",()=>roll()<60?dd("🏃 Ты бежишь, не оглядываясь. Шёпот остаётся позади, превращаясь в шелест листьев."):dd("🏃 Ты спотыкаешься о корень, падаешь, и мёртвые руки — или показалось? — на миг хватают за лодыжку.",{hp:-4,md:3})]]},
+ c_hawk:{art:"c_hawk",t:"🛡 У ограды сидит человек в чёрном плаще. На плаще — серебряный знак Ночных Ястребов. Он зажимает бок, из-под пальцев течёт тёмное.\n\n«Не подходи близко… тут кто-то из своих сыграл не по правилам.»",ch:[
+  ["🩹 Помочь",()=>dd("🩹 Ты перевязываешь рану, как умеешь. Ястреб хрипло смеётся: «Должен тебе.» Он суёт тебе тугой кошелёк и серебряную монету с гербом.",{hp:-3,pn:10})],
+  ["🗣 Расспросить",()=>{const s=mk3("cem","Знаков некроманта");return Object.assign(dd("🗣 «Один самоучка в чёрном… Нашёл книгу, которая не для людей. Роет под старой часовней. Если встретишь — не жди, пока он закончит читать.»\n\n"+s.trim(),{md:1}),bossIf("cem","necro"))}],
+  ["↩ Уйти",()=>dd("↩ Ты отступаешь. Ястреб провожает тебя долгим взглядом: «Правильно. Не твоё дело.»")]]},
+ c_ritual:{art:"c_ritual",t:"🕯 На маленькой поляне горят свечи. Мелом нарисован круг, в центре — миска с чем-то тёмным и пергамент с наполовину дописанным заклинанием.\n\nЧей-то ритуал оборвали на полуслове. Свечи ещё тёплые.",ch:[
+  ["📜 Дописать заклинание",()=>{const s=mk3("cem","Знаков некроманта"),b=bossIf("cem","necro");return Object.assign(roll()<50?dd("📜 Ты дописываешь строку, не понимая слов. Свечи вспыхивают чёрным, миска опустошается, и на мел падают монеты, которых там не было.\n"+s.trim(),{pn:15,md:6}):dd("📜 Ты дописываешь строку. Пламя взвивается, круг выпускает волну холода и бьёт тебя в грудь.\n"+s.trim(),{hp:-9,md:6}),b)}],
+  ["💥 Разрушить круг",()=>{const s=mk3("cem","Знаков некроманта");return Object.assign(dd("💥 Ты пинаешь миску и стираешь круг ногой. Свечи гаснут разом. Где-то под землёй раздаётся недовольный вой — кто-то понял, что ритуал сорван.\n"+s.trim(),{md:-2}),bossIf("cem","necro"))}],
+  ["↩ Не трогать",()=>dd("↩ Ты не трогаешь круг. Но чувствуешь взгляд в спину, пока не выйдешь из света свечей.",{md:2})]]},
+ c_angel:{art:"c_angel",t:"🗿 Плачущий ангел из серого камня склонил голову над безымянной могилой. По щекам течёт чёрная влага. Руки сложены — и между пальцев что-то блестит.\n\nКажется, статуя следит за тобой.",ch:[
+  ["🙏 Помолиться",()=>dd("🙏 Ты склоняешь голову. Чёрные слёзы на щеках ангела на миг становятся прозрачными. Тёплый свет ложится на плечи.",{hp:10})],
+  ["✋ Взять блестящее",()=>roll()<45?dd("✋ Между пальцев — старая золотая брошь. Статуя не двигается. Ты почти уверен, что она улыбнулась.",{pn:14}):dd("✋ Едва пальцы коснулись камня, ангел поднимает голову. Глаза — пустые ямы. Он шепчет одно слово, и боль пронзает тебя.",{hp:-7,md:4})],
+  ["↩ Отвернуться",()=>dd("↩ Ты отворачиваешься. Статуя будто провожает тебя взглядом. Когда ты оглядываешься, её голова склонена по-прежнему.")]]},
+ c_procession:{art:"c_procession",t:"🕯 Из тумана выходит процессия: люди в траурных одеждах несут пустой гроб. Лиц не видно, шагов не слышно. Один из них останавливается и протягивает тебе свечу.\n\n«Пойдёшь с нами? Нам не хватает одного.»",ch:[
+  ["🕯 Взять свечу и идти",()=>roll()<50?dd("🕯 Ты берёшь свечу и идёшь с ними. Шагов нет, дыхания нет. У последней могилы тебе протягивают маленький кошелёк: «Спасибо, что проводил.»",{md:-5,pn:8}):dd("🕯 Ты идёшь слишком долго. Лица под капюшонами поворачиваются к тебе. Пустые. Свеча в руке тухнет, и холод пробирает до костей.",{hp:-6,md:8})],
+  ["👀 Смотреть со стороны",()=>dd("👀 Ты стоишь в стороне, пока они проходят. Один из несущих гроб поворачивает голову, смотрит на тебя и медленно кивает.",{md:2})],
+  ["↩ Отказаться",()=>dd("↩ Ты качаешь головой. Процессия растворяется в тумане, будто её и не было.")]]},
+ /* --- роща --- */
+ f_whisper:{art:"f_whisper",t:"🌲 Лес вдруг стихает. Между стволами кто-то зовёт тебя по имени — тихо, на разные голоса. Один похож на голос матери, другой — на твой собственный.\n\n«Подойди… мы расскажем, что с тобой будет…»",ch:[
+  ["👂 Слушать",()=>dd("👂 Ты слушаешь. Голоса рассказывают о твоих страхах, о людях, которых ты ещё не встретил, и о месте, где всё кончится. Половину ты тут же забываешь — но в кармане оказываются две монеты, которых там не было.",{pn:2,md:5})],
+  ["🙉 Заткнуть уши",()=>dd("🙉 Ты плотно зажимаешь уши и идёшь вперёд, считая шаги. Шёпот стихает, превращаясь в шелест листвы. Лес разочарованно вздыхает за спиной.")],
+  ["🗣 Ответить",()=>roll()<50?dd("🗣 «Кто вы?» — спрашиваешь ты. Тишина. Потом десятки голосов отвечают разом твоим голосом. На земле у ног блестит горсть монет — плата за разговор.",{pn:6,md:8}):dd("🗣 Ты отвечаешь — и голоса вцепляются в тебя, как острые ветки. Из-под кожи будто вытягивают тепло.",{hp:-5,md:5})]]},
+ f_ring:{art:"f_ring",t:"🍄 На поляне — идеальный круг из бледных грибов. В воздухе плывут светящиеся споры, и тишина такая, что слышно собственное сердце.\n\nГоворят, внутри круга время течёт иначе…",ch:[
+  ["🍄 Войти в круг",()=>roll()<60?dd("🍄 Ты ступаешь в круг. Споры оседают на коже тёплым светом, раны затягиваются сами собой. У корней одного из грибов лежит кошель.",{hp:12,pn:4}):dd("🍄 Едва ты входишь в круг, споры вспыхивают и бьют в лицо. В глазах плывёт, во рту горечь. Круг выпускает тебя нехотя.",{hp:-8})],
+  ["↩ Обойти",()=>dd("↩ Ты обходишь грибной круг стороной. Споры тянутся за тобой тонкими нитями, но отстают. Умнее иногда — ничего не трогать.")]]},
+ f_hut:{art:"f_hut",t:"🛖 Из чащи тянется дымок. Кривая хижина на куриных ногах, на пороге — старуха с глазами, как мокрые угли.\n\n«Садись, путник. Чую в тебе усталость… и тайну.»",ch:[
+  ["🧪 Зелье (5 £)",()=>P.pn>=5?dd("🧪 Старуха разливает по плошке тёмный отвар. Горький, как сама правда, но от него по телу бежит тепло.\n\nЗдоровье восстановлено.",{pn:-5,full:1}):dd("🧪 «Нет монет — нет зелья», — каркает старуха и закрывает дверь. Нужно 5 £.")],
+  ["🔮 Погадай мне",()=>dd("🔮 Старуха бросает на стол кости и щурится. "+pick(["«Рыжая тень идёт за тобой по пятам. Не оглядывайся.»","«Дерево не бьёт, пока не накопит силу. Бей, когда оно отдыхает.»","«Кабан не умеет в ловкость, умеет в упрямство.»","«Паутина — это ожидание. Яд — это терпение. Не затягивай бой.»"]),{md:2})],
+  ["↩ Уйти",()=>dd("↩ Ты вежливо кланяешься. «Дверь не запирается», — шепчет старуха, провожая тебя взглядом. Хижина уходит в чащу на своих птичьих ногах.")]]},
+ f_tracks:{art:"f_tracks",t:"🦊 На коре старой сосны — следы когтей, клочок рыжей шерсти и капля чего-то тёмного. След свежий и ведёт вглубь леса.\n\nКто-то большой, хитрый и очень умный наблюдает за тобой.",ch:[
+  ["🔍 Изучить след",()=>{const s=mk3("for","Следов собрано");return Object.assign(dd("🔍 Ты присаживаешься и изучаешь след: пять когтей, мягкая подушечка… и странный отпечаток, похожий на женскую ладонь. Теперь ты чувствуешь, где лиса.\n\n"+s.trim()),bossIf("for","fox"))}],
+  ["🧹 Стереть",()=>dd("🧹 Ты стираешь след рукавом. Лес будто выдыхает с облегчением. Где-то далеко раздаётся тихий смех.")]]},
+ f_altar:{art:"f_altar",t:"🗿 В круге мёртвых деревьев — каменный алтарь без имени. На нём выжжены руны, которых нет ни в одной книге. Камень тёплый, как живой.\n\nЧто-то требует жертвы.",ch:[
+  ["💷 Принести фунты (5 £)",()=>P.pn>=5?dd("💷 Ты кладёшь на камень монеты. Руны вспыхивают золотом, монеты рассыпаются в пыль. Тепло наполняет тело.\n\nЗдоровье полностью восстановлено.",{pn:-5,full:1}):dd("💷 В карманах не хватает монет. Алтарь остаётся холодным. Нужно 5 £.")],
+  ["🩸 Отдать кровь (−5 HP)",()=>dd("🩸 Ты прикладываешь ладонь к руне. Камень пьёт кровь жадно. Через мгновение на алтаре лежат монеты — старые, чужие.",{hp:-5,pn:8})],
+  ["↩ Не трогать",()=>dd("↩ Ты отходишь от алтаря. Камень гаснет. Странно, но на душе легче.",{md:-3})]]},
+ f_loop:{art:"f_loop",t:"🌀 Ты проходишь мимо дерева с зарубкой… и через час снова видишь его. Тот же сучок, те же вороны. Лес зациклился.\n\nКомпас вращается, как безумный.",ch:[
+  ["🧭 Искать выход",()=>roll()<50?dd("🧭 Ты вспоминаешь: компасу верить нельзя, а мху — можно. Выходишь на тропу и по дороге находишь чей-то кошель.",{pn:3}):dd("🧭 Ты блуждаешь кругами, пока ноги не подкашиваются. Ветки царапают лицо и руки.",{hp:-4})],
+  ["➡ Идти прямо",()=>dd("➡ Ты идёшь прямо, не сворачивая. Дерево с зарубкой снова впереди. И снова. И снова. Наконец лес сдаётся и отпускает тебя — но что-то в голове остаётся там.",{md:4})],
+  ["🪓 Рубить метки",()=>dd("🪓 Ты вырубаешь на каждом дереве метку. Через час понимаешь: меток всё больше, а деревьев тех же. Но к ночи тропа сама находит тебя.")]]},
+ f_hunter:{art:"f_hunter",t:"💀 Под елью сидит мёртвый охотник. Пальцы всё ещё сжимают дневник, рядом — разорванная сумка. Следов борьбы нет, только страх на лице.\n\nВороны на ветвях молчат.",ch:[
+  ["📖 Прочесть дневник",()=>{const s=mk3("for","Следов собрано");return Object.assign(dd("📖 Почерк дрожит: «Лиса — не зверь. Она ходит на двух ногах, когда думает, что её не видят. Я видел девять хвостов. Не смотри ей в глаза…»\n\n"+s.trim(),{md:2}),bossIf("for","fox"))}],
+  ["🎒 Взять сумку",()=>dd("🎒 Ты вытряхиваешь сумку: несколько монет, нож и засушенный амулет. Едва ты берёшь его, вороны взлетают с воплем.",{pn:5,md:4})],
+  ["🙏 Помолиться",()=>dd("🙏 Ты закрываешь мертвецу глаза и шепчешь короткую молитву. Ветер стихает, и по телу разливается тёплая тишина.",{hp:6})]]},
+ /* --- озеро --- */
+ l_fisherman:{art:"l_fisherman",t:"🎣 На шатких мостках сидит старик в заплатанном плаще. Поплавок не дрожит уже, кажется, целую вечность. В ведре серебрится улов.\n\n«Рыба берёт только у тех, кто умеет ждать, — говорит он, не оборачиваясь. — Хочешь рыбы? Могу продать. А могу взять плату другую: из тех, что не пересчитать монетами.»",ch:[
+  ["🐟 Купить рыбу (5 £)",()=>P.pn>=5?dd("🐟 Старик, не глядя, достаёт из ведра рыбину и заворачивает в лист. «Съешь сразу, пока она помнит воду.» Рыба жирная, тёплая внутри. Силы возвращаются.",{pn:-5,hp:10}):dd("🐟 «Нет монет — нет рыбы», — усмехается старик и снова смотрит на поплавок. Нужно 5 £.")],
+  ["🧠 Отдать воспоминание",()=>dd("🧠 Старик кладёт сухую ладонь тебе на лоб. Ты на миг забываешь, как звали твою первую собаку. Взамен на мостках лежат монеты.",{pn:12,md:3})],
+  ["↩ Уйти",()=>dd("↩ Ты кивнул и пошёл дальше. «Приходи, когда будет нечего терять», — доносится вслед. Поплавок так и не дрогнул.")]]},
+ l_boat:{art:"l_boat",t:"🛶 У камышей качается лодка без вёсел. Её никто не привязывал, но она всё время возвращается к одному и тому же месту. На скамье лежат письмо с печатью и маленький ключ.\n\nВода вокруг тихая, слишком тихая.",ch:[
+  ["🛶 Залезть в лодку",()=>roll()<55?dd("🛶 Лодка сама отходит от берега и мягко утыкается в сваи. В письме адрес тайника под корнем вербы. Ты находишь его и забираешь кошель, а ключ остаётся у тебя в кармане.",{pn:15}):dd("🛶 Лодка внезапно кренится, и ты оказываешься по пояс в ледяной воде. Что-то хватает за ногу и отпускает. Ты выбираешься на берег, дрожа.",{hp:-6,md:2})],
+  ["✉ Взять письмо с берега",()=>dd("✉ Ты осторожно тянешься с берега палкой и подцепляешь письмо. Внутри пара монет и короткая строка: «Вернись за ключом, когда будешь готов.»",{pn:4})],
+  ["↩ Оттолкнуть лодку",()=>dd("↩ Ты отталкиваешь лодку от берега. Она тихо уплывает в туман, а на душе становится чуть спокойнее.",{md:-2})]]},
+ l_lights:{art:"l_lights",t:"🕯 Над болотом плывут бледные огоньки. Они собираются цепочкой и уходят вглубь по гнилым мосткам. Кажется, что кто-то зовёт идти следом.\n\nГоворят, огоньки ведут либо к кладу, либо в трясину. Заранее не узнаешь.",ch:[
+  ["🕯 Пойти за огоньками",()=>roll()<45?dd("🕯 Огоньки ведут тебя по гнилым мосткам к одинокому островку. На нём под ржавой скобой припрятан мешочек с монетами. Огоньки гаснут один за другим.",{pn:18}):dd("🕯 Мостки обрываются, и ты по колено проваливаешься в трясину. Огоньки кружат над головой и смеются тонкими голосами. Выбираться приходится долго.",{hp:-7,md:3})],
+  ["🪙 Бросить монету (1 £)",()=>P.pn>=1?dd("🪙 Ты бросаешь монету в воду. Огоньки замирают, кланяются и растворяются в тумане. Дышать становится легче.",{pn:-1,md:-2}):dd("🪙 Бросать нечего: в карманах пусто. Огоньки обиженно гаснут.")],
+  ["🙈 Не смотреть",()=>dd("🙈 Ты отворачиваешься и идёшь, не поднимая глаз. Огоньки ещё долго трепещут за спиной, но не догоняют.")]]},
+ l_bell:{art:"l_bell",t:"🔔 Из воды торчит верхушка затонувшей колокольни. Купол в тине, крест покосился. Внутри, под водой, медленно раскачивается колокол, и по озеру идёт низкий, тоскливый звон.\n\nСтарики говорят, что церковь утонула вместе со всеми, кто пришёл на службу.",ch:[
+  ["👂 Слушать звон",()=>dd("👂 Звон проникает под кожу. Среди гула проступает шёпот: "+pick(["«Жаба регенерирует. Не затягивай бой.»","«Утопленница лечится, когда бьёт. Бей быстро.»","«Пиявка уходит в тину и тогда неуязвима.»","«Щука бьёт вдвое каждый третий раз. Готовься заранее.»"])+"\n\nТы запоминаешь, а потом находишь в иле горсть монет.",{pn:10,md:4})],
+  ["🙉 Заткнуть уши",()=>dd("🙉 Ты затыкаешь уши и отворачиваешься. Звон ещё некоторое время гудит в костях, но потом стихает.")],
+  ["🔔 Ответить звоном",()=>roll()<35?dd("🔔 Ты бросаешь в воду камень, и колокол отвечает чистым звоном. Вода у колокольни светлеет, и на поверхность всплывают старые монеты, оставшиеся после службы.",{pn:30}):dd("🔔 Звон выходит слишком громким. Он бьёт в виски, из носа течёт тёплое, а имена утонувших складываются в одно слово.",{hp:-6,md:4})]]},
+ l_mermaid:{art:"l_mermaid",t:"🧜 Из камышей доносится песня. Без слов, но от неё щемит в груди. Среди листьев виднеется бледное лицо, венок из кувшинок и закрытые глаза.\n\nГолос зовёт ближе. Только вода под ногами уже очень глубокая.",ch:[
+  ["🎵 Подпевать",()=>dd("🎵 Ты тихо подпеваешь. Песня подхватывает тебя, и усталость уходит, как вода сквозь пальцы. Но когда она смолкает, ты долго не можешь вспомнить, где ты.",{hp:9,md:5})],
+  ["🙉 Заткнуть уши",()=>dd("🙉 Ты зажимаешь уши и идёшь прочь, не оглядываясь. Песня стихает, а в камышах кто-то разочарованно вздыхает.")],
+  ["🌼 Бросить венок (2 £)",()=>P.pn>=2?dd("🌼 Ты кидаешь в воду венок. Русалка берёт его, улыбается и касается воды у твоих ног. Вода на миг становится тёплой.",{pn:-2,hp:5,md:-2}):dd("🌼 Венок плести не из чего, а монет нет. Русалка отворачивается и ныряет. Нужно 2 £.")]]},
+ l_fishhut:{art:"l_fishhut",t:"🛖 На сваях у берега стоит рыбацкая хижина. Сети на стенах, перевёрнутые корзины, на крыльце горит маленький фонарь. Дверь приоткрыта, внутри тихо, на очаге ещё тёплая зола.\n\nХозяина нигде нет.",ch:[
+  ["🛏 Отдохнуть у очага",()=>dd("🛏 Ты греешься у очага и ложишься на сети. Зола ещё тёплая, фонарь тихо потрескивает. Через час ты встаёшь отдохнувшим.",{hp:10})],
+  ["🔍 Обыскать хижину",()=>roll()<60?dd("🔍 Под половицей ты находишь жестяную коробку. В ней рыбацкие сбережения.",{pn:14}):dd("🔍 Ты тянешься к полке, и на тебя падает сеть с крючками. Выпутываешься с трудом, руки в царапинах.",{hp:-5})],
+  ["📖 Прочесть дневник",()=>dd("📖 Почерк корявый, страницы в пятнах: "+pick(["«Водяной не любит, когда его будят. Если вода встала стеной, не лезь.»","«Змея видел трижды. Каждый раз он линяет, когда ему тяжело.»","«Щуку лучше не злить: она бьёт вдвое.»","«Кикимора шепчет, чтобы ты замер. Не слушай.»"]),{md:1})]]},
+ l_reflection:{art:"l_reflection",t:"🪞 У берега вода совершенно неподвижна. Ты наклоняешься и видишь своё отражение. Оно чуть запаздывает за тобой, будто думает, и по губам скользит улыбка, которой у тебя нет.\n\nОно смотрит так, как будто ждёт вопроса.",ch:[
+  ["🙂 Улыбнуться в ответ",()=>dd("🙂 Ты улыбаешься, и отражение улыбается чуть шире. Протягивает руку, и на ладони в воде лежат монеты. Ты выуживаешь их, не глядя.",{md:4,pn:8})],
+  ["🌊 Разбить воду рукой",()=>dd("🌊 Ты бьёшь ладонью по воде. Отражение рассыпается кругами, а в руке остаётся холод. Что-то тихо ругается под водой.",{hp:-3,md:-3})],
+  ["💬 Заговорить с отражением",()=>roll()<50?dd("💬 «Что ты хочешь?» — спрашиваешь ты. Отражение шевелит губами, но слова приходят уже из твоей головы: «Ты знаешь». Ты знаешь. В кармане оказывается кошель, которого там не было.",{pn:22,md:8}):dd("💬 Отражение отвечает слишком быстро, твоим голосом, тем, что ты скажешь через год. Тебя качнёт, и ты падаешь на колени.",{hp:-7,md:6})]]},
+ l_frog:{art:"l_frog",t:"🐸 На кочке у топей сидит огромная жаба в тине. На голове — крошечная корона из ряски. Глаза почти человеческие.\n\n«Поцелуй меня, путник...» — квакает она хрипло. — «Я — заколдованная царевна. Сними чары — и я одарю тебя благословением. Но от неё можно подхватить заразу.»",ch:[
+  ["💋 Поцеловать",()=>roll()<50?dd("💋 Жаба вспыхивает светом, шепчет «спасибо» и растворяется в тумане. На кочке остаётся тёплый кошелёк, а в груди — спокойствие.",{pn:10,hp:10,md:-3}):dd("💋 Жаба квакает, смеётся и обдаёт тебя тиной. Кожа горит, во рту горечь. Это была просто жаба.",{hp:-6,md:2})],
+  ["↩ Уйти",()=>dd("↩ Ты брезгливо отворачиваешься. Жаба обиженно булькает и ныряет в ряску.")]]},
+ l_chest:{art:"l_chest",t:"📦 Сквозь мутную воду омута ты видишь сундук. Дубовый, окованный железом, крышка приоткрыта — внутри тускло блестят монеты.\n\nТечение тянет вглубь. Вода ледяная. Старики говорят: «Кто нырнёт без здоровья — останется там навсегда». Нужно иметь хотя бы 70% здоровья.",ch:[
+  ["📦 Нырнуть",()=>P.hp>=maxHp()*.7?dd("📦 Ты набираешь воздуха и ныряешь. Течение лижет ноги, но пальцы нащупывают тяжёлый мешочек. Ты вырываешься на поверхность, хватая ртом воздух.",{pn:20,hp:-4}):dd("📦 Ты делаешь шаг в воду — и ноги тут же подкашиваются. Силы не хватит. Ты отступаешь на берег.")],
+  ["↩ Уйти",()=>dd("↩ Ты благоразумно отступаешь от омута. Сундук ещё долго мерцает в глубине.")]]}
+};
+
+/* ============ окно события ============ */
+let EVc=null;
+function evShow(art,loc,text,btns){
+  $("#evbg").style.backgroundImage="url(img/"+art+".jpg)";
+  $("#evloc").textContent=loc;$("#evtx").textContent=text;$("#evwin").scrollTop=0;
+  const b=$("#evbtn");b.innerHTML="";
+  btns.forEach(([l,fn])=>{const e=document.createElement("button");e.textContent=l;e.onclick=()=>{ac();fn()};b.appendChild(e)});
+  $("#ev").style.display="block";
+}
+function openEvent(id){
+  const E=EV[id];if(!E)return;
+  S.st="event";setUI();held=0;path=[];pend=null;mark=null;
+  EVc={id,E};snd("ok");
+  evShow(E.art,EVL[id[0]],E.t,E.ch.map(c=>[c[0],()=>evPick(c[1])]));
+}
+function evPick(fn){
+  const r=fn(),parts=[];
+  if(r.pn){P.pn=Math.max(0,P.pn+r.pn);parts.push((r.pn>0?"+":"−")+Math.abs(r.pn)+" £")}
+  if(r.full){P.hp=maxHp();parts.push("здоровье восстановлено")}
+  if(r.hp){P.hp=Math.max(1,Math.min(maxHp(),P.hp+r.hp));parts.push((r.hp>0?"+":"−")+Math.abs(r.hp)+" HP")}
+  if(r.md){P.md=Math.max(0,Math.min(100,P.md+r.md));parts.push((r.md>0?"+":"−")+Math.abs(r.md)+" 🌀")}
+  snd(r.hp<0?"hurt":(r.hp>0||r.full)?"heal":"ok");
+  F.used[EVc.id]=1;P.evn=(P.evn||0)+1;
+  evShow(EVc.E.art,EVL[EVc.id[0]],r.t+(parts.length?"\n\n"+parts.join(", "):""),[["Продолжить",()=>closeEvent(r)]]);
+}
+function closeEvent(r){
+  $("#ev").style.display="none";save();
+  S.st="map";setUI();
+  if(r.boss){F.mk[r.reset]=0;startBattle(r.boss)}
+}
+
+/* ============ связь с ботом: профиль, чат, топ ============ */
+const QS=new URLSearchParams(location.search),AENC=QS.get("a")||"";
+const AURL=AENC?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(AENC):"";
+const unwrap=v=>{for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v};
+function api(p){
+  if(!AURL)return Promise.reject(new Error("noapi"));
+  const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),15000);
+  return fetch(AURL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store",signal:ac.signal})
+    .then(r=>{clearTimeout(tm);if(!r.ok)throw new Error("http");return r.json()})
+    .then(d=>{d=unwrap(d);if(!d||typeof d!=="object")throw new Error("bad");return d});
+}
+const TGU=(()=>{try{return Telegram.WebApp.initDataUnsafe.user||null}catch(e){return null}})();
+const myName=()=>String((TGU&&(TGU.first_name||TGU.username))||"Потусторонний").slice(0,24);
+let pushT=0,pushQ=null;
+function pushSave(){
+  if(!AURL)return;
+  const go=()=>{pushQ=null;pushT=Date.now();api({action:"save",nick:myName(),sv:{P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir},pf:{lv:P.lv,kills:P.kills||0}}}).catch(()=>{})};
+  if(Date.now()-pushT>10000)go();else if(!pushQ)pushQ=setTimeout(go,10000);
+}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+let socTab="p",chatLast=0,chatTm=null,chatMsgs=[];
+function stopChat(){clearInterval(chatTm);chatTm=null}
+function openSoc(tab){
+  socTab=tab;S.st="soc";setUI();held=0;stopChat();
+  $("#soc").classList.add("show");
+  document.querySelectorAll("#soctabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+  const body=$("#socbody");
+  if(tab==="p"){
+    const done=F.done?"Артефакт запечатан":F.amulet?"Артефакт у тебя":F.elder?"Идёт к склепу":"Только начал";
+    body.innerHTML="<div class='prof'><div class='hf'><canvas id='pface' width='16' height='16'></canvas></div><div><b>"+esc(myName())+"</b><div class='dim'>Потусторонний · ур. "+P.lv+"</div></div></div>"+
+      "<dl><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Мана</dt><dd>"+P.mp+" / "+maxMp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Фунты</dt><dd>"+P.pn+" £</dd><dt>Безумие</dt><dd>"+P.md+" 🌀"+(P.md>=50?" (враги бьют сильнее)":"")+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd><dt>Побед в боях</dt><dd>"+(P.kills||0)+"</dd><dt>Событий</dt><dd>"+(P.evn||0)+"</dd><dt>Боссы</dt><dd>"+(["fox","necro","serp","vod"].filter(k=>F.def&&F.def[k]).length)+" / 4</dd><dt>Задание</dt><dd>"+done+"</dd></dl>"+
+      (AURL?"<div class='dim' style='margin-top:8px'>Прогресс хранится на сервере бота.</div>":"<div class='dim' style='margin-top:8px'>Запусти игру через бота, чтобы работали чат и сохранение на сервере.</div>");
+    drawFace($("#pface"),"hero");
+  }else if(tab==="c"){
+    body.innerHTML="<div id='chlist'></div><form id='chform'><input id='chin' maxlength='200' placeholder='Сообщение…' autocomplete='off'><button class='mbtn pri' type='submit'>➤</button></form>";
+    chatMsgs=[];chatLast=0;
+    const poll=()=>api({action:"chat_get",after:chatLast}).then(d=>{
+      if(!d.ok||S.st!=="soc"||socTab!=="c")return;
+      if(d.msgs.length){chatMsgs=chatMsgs.concat(d.msgs).slice(-60);chatLast=chatMsgs[chatMsgs.length-1].id;renderChat(d.me)}
+      else if(!chatMsgs.length)$("#chlist").innerHTML="<div class='dim'>Пока тихо. Напиши первым.</div>";
+    }).catch(()=>{if(!chatMsgs.length)$("#chlist").innerHTML="<div class='dim'>"+(AURL?"Нет связи с ботом. Попробуй позже.":"Чат работает, если открыть игру через бота.")+"</div>"});
+    poll();if(AURL)chatTm=setInterval(poll,4000);
+    $("#chform").onsubmit=e=>{
+      e.preventDefault();const inp=$("#chin"),t=inp.value.trim();if(!t||!AURL)return;
+      inp.value="";
+      api({action:"chat_send",txt:t,nick:myName(),lv:P.lv}).then(d=>{if(d.ok)poll();else if(d.error==="slow")toast("Не так быстро")}).catch(()=>toast("Не отправилось"));
+    };
+  }else{
+    body.innerHTML="<div class='dim'>Загрузка…</div>";
+    api({action:"top"}).then(d=>{
+      if(socTab!=="t")return;
+      body.innerHTML=d.rows&&d.rows.length?"<ol class='top'>"+d.rows.map((r,i)=>"<li"+(r[3]?" class='me'":"")+"><span>"+(i+1)+".</span><b>"+esc(r[0])+"</b><span class='dim'>ур. "+r[1]+" · побед "+r[2]+"</span></li>").join("")+"</ol>":"<div class='dim'>Пока никого нет.</div>";
+    }).catch(()=>{body.innerHTML="<div class='dim'>"+(AURL?"Нет связи с ботом.":"Топ доступен, если открыть игру через бота.")+"</div>"});
+  }
+}
+function renderChat(me){
+  const l=$("#chlist"),stick=l.scrollTop+l.clientHeight>=l.scrollHeight-40;
+  l.innerHTML=chatMsgs.map(m=>{const d=new Date(m.t*1000),tm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");return "<div class='cm"+(m.uid===me?" me":"")+"'><b>"+esc(m.nick)+"</b> <span class='dim'>ур."+m.lv+" · "+tm+"</span><div>"+esc(m.txt)+"</div></div>"}).join("");
+  if(stick||chatMsgs.length<=12)l.scrollTop=l.scrollHeight;
+}
+function closeSoc(){stopChat();$("#soc").classList.remove("show");S.st="map";setUI()}
+function hud(){const e=$("#hud");if(!e)return;e.textContent=P.pn+" £   "+P.md+" 🌀";e.style.display=(S.st==="map"||S.st==="dialog")?"block":"none"}
 
 /* ============ цикл ============ */
 let last=0;
@@ -902,6 +1267,7 @@ $("#btnA").addEventListener("pointerdown",e=>{e.preventDefault();ac();interact()
 $("#btnM").addEventListener("click",()=>{ac();openMenu()});
 const KD={ArrowDown:0,s:0,S:0,ArrowLeft:1,a:1,A:1,ArrowRight:2,d:2,D:2,ArrowUp:3,w:3,W:3};
 addEventListener("keydown",e=>{
+  if(e.target&&e.target.tagName==="INPUT")return;
   if(e.repeat&&(e.key===" "||e.key==="Enter"))return;
   if(e.key in KD&&S.st==="map"){e.preventDefault();ac();press(KD[e.key])}
   else if(e.key===" "||e.key==="Enter"||e.key==="e"||e.key==="E"){e.preventDefault();ac();if(S.st==="map"||S.st==="dialog")interact()}
@@ -913,9 +1279,10 @@ addEventListener("keyup",e=>{if(e.key in KD)release(KD[e.key])});
 function openMenu(){
   S.st="menu";setUI();held=0;
   const q=F.done?"Выполнено: артефакт запечатан.":F.amulet?"Отнеси артефакт капитану Ночных Ястребов.":F.elder?"Забрать запечатанный артефакт из склепа на севере Туманной рощи.":"Поговорить с капитаном Ночных Ястребов (дом справа от главной дороги).";
-  $("#mbox").innerHTML="<h2>Потусторонний</h2><dl><dt>Уровень</dt><dd>"+P.lv+"</dd><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Мана</dt><dd>"+P.mp+" / "+maxMp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd></dl><div class='q'><b>Задание.</b> "+q+"</div><div class='rw'><button class='mbtn' id='mUse'"+(P.pot<1||P.hp>=maxHp()?" disabled":"")+">Выпить зелье</button><button class='mbtn' id='mSnd'>Звук: "+(sound?"вкл":"выкл")+"</button></div><div class='rw'><button class='mbtn' id='mSave'>Сохранить</button><button class='mbtn pri' id='mBack'>Закрыть</button></div>";
+  $("#mbox").innerHTML="<h2>Потусторонний</h2><dl><dt>Уровень</dt><dd>"+P.lv+"</dd><dt>Здоровье</dt><dd>"+P.hp+" / "+maxHp()+"</dd><dt>Мана</dt><dd>"+P.mp+" / "+maxMp()+"</dd><dt>Сила удара</dt><dd>"+atk()+"</dd><dt>Опыт</dt><dd>"+P.xp+" / "+need()+"</dd><dt>Зелья</dt><dd>"+P.pot+"</dd><dt>Фунты</dt><dd>"+P.pn+" £</dd><dt>Безумие</dt><dd>"+P.md+" 🌀</dd></dl><div class='q'><b>Задание.</b> "+q+"</div><div class='rw'><button class='mbtn' id='mUse'"+(P.pot<1||P.hp>=maxHp()?" disabled":"")+">Выпить зелье</button><button class='mbtn' id='mSnd'>Звук: "+(sound?"вкл":"выкл")+"</button></div><div class='rw'><button class='mbtn' id='mProf'>Профиль</button><button class='mbtn' id='mChat'>Чат</button><button class='mbtn' id='mTop'>Топ</button></div><div class='rw'><button class='mbtn' id='mSave'>Сохранить</button><button class='mbtn pri' id='mBack'>Закрыть</button></div>";
   $("#menu").classList.add("show");
   $("#mBack").onclick=closeMenu;
+  $("#mProf").onclick=()=>{$("#menu").classList.remove("show");openSoc("p")};$("#mChat").onclick=()=>{$("#menu").classList.remove("show");openSoc("c")};$("#mTop").onclick=()=>{$("#menu").classList.remove("show");openSoc("t")};
   $("#mSave").onclick=()=>{save();toast("Сохранено");closeMenu()};
   $("#mSnd").onclick=()=>{setSound(!sound);openMenu()};
   $("#mUse").onclick=()=>{if(P.pot>0&&P.hp<maxHp()){P.pot--;P.hp=Math.min(maxHp(),P.hp+25);snd("heal");openMenu()}};
@@ -930,16 +1297,19 @@ function begin(newg){
   S.st="map";setUI();toastLoc();
   if(newg)setTimeout(()=>say([{t:"Туман над Тингеном. Тебя привела сюда весть о запечатанном артефакте, который теряет силу. Поговори с капитаном Ночных Ястребов, его участок справа от главной дороги."},{t:"Управление: нажми на землю, чтобы идти. Нажми на человека или алтарь, чтобы подойти и заговорить."}]),300);
 }
+document.querySelectorAll("#soctabs button").forEach(b=>b.onclick=()=>{ac();openSoc(b.dataset.t)});
+$("#socX").onclick=closeSoc;
 $("#tNew").onclick=()=>begin(true);
 $("#tCont").onclick=()=>begin(false);
 $("#eBack").onclick=()=>{$("#end").classList.remove("show");S.st="map";setUI()};
 try{if(!localStorage.getItem("sumerki_save"))$("#tCont").style.display="none"}catch(e){$("#tCont").style.display="none"}
+if(AURL)api({action:"load"}).then(d=>{try{if(d.ok&&d.sv&&!localStorage.getItem("sumerki_save")){localStorage.setItem("sumerki_save",JSON.stringify(d.sv));$("#tCont").style.display=""}}catch(e){}}).catch(()=>{});
 try{const tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}tg.setHeaderColor&&tg.setHeaderColor("#0b0912");tg.setBackgroundColor&&tg.setBackgroundColor("#0b0912")}}catch(e){}
 resize();
 // на титуле показываем деревню под затемнением
 S.map="village";S.x=12;S.y=11;S.dir=3;
 requestAnimationFrame(loop);
-window.__g={get cam(){return [camX,camY,scale]},P,F,S,MAPS,startBattle,act,say,begin,warp,talk,get B(){return B}};
+window.__g={EV,openEvent,evPick,openSoc,pushSave,AURL,get cam(){return [camX,camY,scale]},P,F,S,MAPS,startBattle,act,say,begin,warp,talk,get B(){return B}};
 </script>
 
 </body>
