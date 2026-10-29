@@ -434,6 +434,40 @@ function person(dir,fr,p){
     im.data.set(out);x.putImageData(im,0,0);
   });
 }
+
+/* HQ: сглаживание Scale2x + объёмная подсветка + цветной контур */
+function hq(c){
+  const w=c.width,h=c.height,s=c.getContext("2d").getImageData(0,0,w,h).data,W=w*2,H=h*2;
+  const o=document.createElement("canvas");o.width=W;o.height=H;const ox=o.getContext("2d"),im=ox.createImageData(W,H),d=im.data;
+  const P=(a,b)=>{a=a<0?0:a>=w?w-1:a;b=b<0?0:b>=h?h-1:b;const i=(b*w+a)*4;return[s[i],s[i+1],s[i+2],s[i+3]]};
+  const eq=(p,q)=>p[0]===q[0]&&p[1]===q[1]&&p[2]===q[2]&&p[3]===q[3];
+  const put=(a,b,p)=>{const i=(b*W+a)*4;d[i]=p[0];d[i+1]=p[1];d[i+2]=p[2];d[i+3]=p[3]};
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const p=P(x,y),A=P(x,y-1),B=P(x+1,y),C=P(x-1,y),D=P(x,y+1);
+    let p1=p,p2=p,p3=p,p4=p;
+    if(eq(C,A)&&!eq(C,D)&&!eq(A,B))p1=A;
+    if(eq(A,B)&&!eq(A,C)&&!eq(B,D))p2=B;
+    if(eq(D,C)&&!eq(D,B)&&!eq(C,A))p3=C;
+    if(eq(B,D)&&!eq(B,A)&&!eq(D,C))p4=D;
+    put(x*2,y*2,p1);put(x*2+1,y*2,p2);put(x*2,y*2+1,p3);put(x*2+1,y*2+1,p4);
+  }
+  const src=new Uint8ClampedArray(d);
+  const A=(a,b)=>a<0||b<0||a>=W||b>=H?0:src[(b*W+a)*4+3];
+  const isO=(a,b)=>{if(a<0||b<0||a>=W||b>=H)return false;const i=(b*W+a)*4;return src[i+3]>200&&src[i]<30&&src[i+1]<26&&src[i+2]<36};
+  const clamp=v=>v<0?0:v>255?255:v;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+    const i=(y*W+x)*4;if(src[i+3]<10)continue;
+    if(isO(x,y)){ // цветной контур: тёмный оттенок соседней заливки
+      for(const [dx,dy] of [[0,1],[1,0],[0,-1],[-1,0]]){const a=x+dx,b=y+dy;if(A(a,b)>200&&!isO(a,b)){const j=(b*W+a)*4;d[i]=src[j]*.36+8;d[i+1]=src[j+1]*.34+6;d[i+2]=src[j+2]*.4+14;break}}
+      continue}
+    let k=1-.14*(y/H);
+    const tl=!A(x-1,y-1)||isO(x-1,y-1)||!A(x,y-1)||isO(x,y-1)||!A(x-1,y)||isO(x-1,y);
+    const br=!A(x+1,y+1)||isO(x+1,y+1)||!A(x+1,y)||isO(x+1,y)||!A(x,y+1)||isO(x,y+1);
+    if(tl)k*=1.2;else if(br)k*=.8;
+    d[i]=clamp(src[i]*k+(tl?6:0));d[i+1]=clamp(src[i+1]*k+(tl?5:0));d[i+2]=clamp(src[i+2]*k+(tl?2:-2));
+  }
+  ox.putImageData(im,0,0);o.lw=w;o.lh=h;return o;
+}
 const PAL={
   hero:{skin:"#d9a77c",hair:"#2a1d18",cloak:"#2e2c3a",cloak2:"#1c1a26",trim:"#e8e2d0",belt:"#8a6a3a",boot:"#15121a",pants:"#23212e",spats:1,tails:1,vest:"#7a2230",scarf:"#b23a48",hat:"top",hatC:"#1a1820",band:"#b23a48",cane:"#6a4a2a",gloves:"#e8e2d0"},
   inn:{skin:"#d9a77c",hair:"#4a3320",cloak:"#8a6a3a",cloak2:"#5a4424",trim:"#cfcfcf",boot:"#2b1d16",apron:"#e8e0d0",stache:"#4a3320",hat:"bowler",hatC:"#5a3a1f",band:"#2a1a0c"},
@@ -449,7 +483,7 @@ const PAL={
   crone:{skin:"#c9b6a0",skinS:"#9a8a78",hair:"#b8b8c8",cloak:"#4a2f5a",cloak2:"#2e1d3a",trim:"#e0a24a",boot:"#1a1a20",robe:1,hat:"wide",hatC:"#2e1d3a",band:"#e0a24a",feather:"#c98aff",veil:"rgba(60,40,80,.55)",cane:"#4a3a2a"}
 };
 const SP={};
-for(const k in PAL){SP[k]=[0,1,2,3].map(d=>[0,1,2].map(f=>person(d,f,PAL[k])))}
+for(const k in PAL){SP[k]=[0,1,2,3].map(d=>[0,1,2].map(f=>hq(person(d,f,PAL[k]))))}
 
 function outl(c,col){
   const w=c.width,h=c.height,x=c.getContext("2d"),im=x.getImageData(0,0,w,h),dt=im.data,out=new Uint8ClampedArray(dt);
@@ -458,7 +492,7 @@ function outl(c,col){
   for(let b=0;b<h;b++)for(let a=0;a<w;a++){if(al(a,b))continue;if(al(a-1,b)||al(a+1,b)||al(a,b-1)||al(a,b+1)){const i=(b*w+a)*4;out[i]=cc[0];out[i+1]=cc[1];out[i+2]=cc[2];out[i+3]=255}}
   im.data.set(out);x.putImageData(im,0,0);return c;
 }
-const sp=(w,h,fn)=>[0,1].map(f=>outl(mk(w,h,x=>fn(x,f))));
+const sp=(w,h,fn)=>[0,1].map(f=>hq(outl(mk(w,h,x=>fn(x,f)))));
 function sprWolf(){return sp(40,32,(x,f)=>{
   const t=f?-2:0,j=f?2:0;
   R(x,"#4c4c5a",3+0,12+t,6,3);R(x,"#4c4c5a",1,10+t*2,4,3);R(x,"#5e5e70",0,8+t*2,3,3);          // хвост
@@ -682,7 +716,7 @@ function say(lines,cb,opts){
   S.st="dialog";setUI();$("#dlg").style.display="block";showLine();
 }
 const FACE={"Страж Церкви":"guard","Стражник":"guard","Угольщик":"vil","Газетчица":"girl","Гадалка":"crone","Трактирщик":"inn","Хозяин трактира":"inn","Капитан Ночных Ястребов":"elder","Потусторонний":"hero","Могильщик":"digger","Ночной Ястреб":"hawk","Скорбящий":"mourner","Старый рыбак":"fisher","Русалка":"mermaid"};
-function drawFace(cv,key){const x=cv.getContext("2d");x.clearRect(0,0,16,16);if(key&&SP[key])x.drawImage(SP[key][0][0],0,3,16,13,0,3,16,13)}
+function drawFace(cv,key){const x=cv.getContext("2d");x.clearRect(0,0,16,16);if(key&&SP[key])x.drawImage(SP[key][0][0],0,6,32,26,0,3,16,13)}
 function heroFace(c,i){const cv=$("#"+c),im=$("#"+i);if(P.gender){im.src=avSrc();im.style.display="block";cv.style.display="none"}else{im.style.display="none";cv.style.display="block";drawFace(cv,"hero")}}
 function showLine(){const l=D.lines[D.i];{const fk=FACE[l.n];$("#dlg").classList.toggle("pt",!!fk);if(fk==="hero")heroFace("dface","dimg");else if(fk){$("#dimg").style.display="none";$("#dface").style.display="block";drawFace($("#dface"),fk)}}D.pos=0;D.full=l.t;$("#dlg .nm").textContent=l.n||"";$("#dlg .nm").style.display=l.n?"block":"none";$("#dlg .tx").textContent="";$("#dlg .opts").innerHTML="";$("#dlg .nx").style.display="none"}
 function dlgTick(dt){
@@ -987,10 +1021,10 @@ function draw(now){
     }else if(it.k==="mob"){drawMob(it,now)}else if(it.k==="n"){
       const n=it.n;
       if(n.prop){const pb=PB[n.prop];ctx.drawImage(O[n.prop],n.x*TS,n.y*TS-(n.prop==="E"||n.prop==="x"?4:0)+(pb?Math.round(Math.sin(now/pb[0]+n.x)*pb[1]):0))}
-      else{shadowAt(n.x*TS,n.y*TS);ctx.drawImage(SP[n.sp][n.dir][0],n.x*TS,n.y*TS-12-(Math.floor(now/550+n.x*3+n.y)%2?1:0))}
+      else{shadowAt(n.x*TS,n.y*TS);ctx.drawImage(SP[n.sp][n.dir][0],n.x*TS,n.y*TS-12-(Math.floor(now/550+n.x*3+n.y)%2?1:0),16,28)}
       if(n.ev){const sy=n.y*TS-(n.prop?3:15)+Math.sin(now/260+n.x)*1.5,sx=n.x*TS+8;ctx.fillStyle="rgba(255,214,120,.95)";ctx.beginPath();ctx.moveTo(sx,sy-3);ctx.lineTo(sx+2,sy);ctx.lineTo(sx,sy+3);ctx.lineTo(sx-2,sy);ctx.fill()}
     }
-    else{shadowAt(Math.round(it.px),Math.round(it.py));ctx.drawImage(SP.hero[S.dir][mv?(fr%2?1:2):0],Math.round(it.px),Math.round(it.py)-12)}
+    else{shadowAt(Math.round(it.px),Math.round(it.py));{const wf=Math.floor(now/130)%4,wi=mv?[1,0,2,0][wf]:0,bb=mv&&wf%2===0?0:mv?-1:(Math.floor(now/700)%2?0:0);ctx.drawImage(SP.hero[S.dir][wi],Math.round(it.px),Math.round(it.py)-12+bb,16,28)}}
   }
   if(mark&&S.st==="map"){const t=(now%900)/900,a=1-t,r=3+t*5;ctx.strokeStyle="rgba(224,162,74,"+a.toFixed(2)+")";ctx.lineWidth=1;ctx.strokeRect(mark.x*TS+8-r,mark.y*TS+8-r,r*2,r*2);ctx.fillStyle="rgba(224,162,74,.8)";ctx.fillRect(mark.x*TS+7,mark.y*TS+7,2,2)}
   ctx.restore();
@@ -1089,7 +1123,7 @@ function drawBattle(now){
   const hi=heroImg(),hc=feather("h"+HKEY,hi,320);
   const hy=feet-hs*.88+hb;
   if(hc){ctx.save();ctx.globalAlpha=en;ctx.translate(hcx+hdx+ox,0);if(hflash)ctx.filter="brightness("+(1+hflash*1.8)+") saturate("+(1+hflash)+")";ctx.drawImage(hc,-hs/2,hy,hs,hs);ctx.restore()}
-  else{const f=SP.hero[1][0];const k=Math.floor(hs/f.height*.9);ctx.imageSmoothingEnabled=false;ctx.drawImage(f,hcx+hdx-f.width*k/2,feet-f.height*k+hb,f.width*k,f.height*k)}
+  else{const f=SP.hero[1][0];const k=Math.floor(hs/f.lh*.9);ctx.imageSmoothingEnabled=false;ctx.drawImage(f,hcx+hdx-f.lw*k/2,feet-f.lh*k+hb,f.lw*k,f.lh*k)}
   // враг
   const ei=art(B.e.spr),ec=feather("e"+B.e.spr,ei,360);
   const ey=feet-es*.88+eb+eoy;
@@ -1616,7 +1650,7 @@ function drawMobs(items,now){
   }
 }
 function drawMob(it,now){
-  const o=it.o,fr=SPM[o.k],spr=fr[o.mv?(Math.floor(now/180)%2):(Math.floor(now/600+o.hx)%2)],w=spr.width,h=spr.height;
+  const o=it.o,fr=SPM[o.k],spr=fr[o.mv?(Math.floor(now/180)%2):(Math.floor(now/600+o.hx)%2)],w=spr.lw,h=spr.lh;
   const water=!!AQUA[o.k],bob=water?Math.sin(now/300+o.hx)*1:0;
   const cx=it.x+8,by=it.yy+16+(water?-2:0);
   if(!water){ctx.fillStyle="rgba(0,0,0,.35)";ctx.beginPath();ctx.ellipse(cx,it.yy+15,Math.min(8,w/2.2),2.2,0,0,7);ctx.fill()}
