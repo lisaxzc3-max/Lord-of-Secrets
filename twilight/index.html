@@ -1543,15 +1543,37 @@ const myName=()=>String(P.nick||(TGU&&(TGU.first_name||TGU.username))||"Поту
 let pushT=0,pushQ=null;
 function pushSave(){
   if(!AURL)return;
-  const go=()=>{pushQ=null;pushT=Date.now();api({action:"save",nick:myName(),sv:{P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir},ts:Date.now(),pf:{lv:P.lv,kills:P.kills||0,p:P.path||""}}}).catch(()=>{})};
+  const go=()=>{pushQ=null;pushT=Date.now();api({action:"save",nick:myName(),sv:{P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir},ts:Date.now(),pf:{lv:P.lv,kills:P.kills||0,p:P.path||""}}}).then(d=>{srvOk=d&&d.ok?"ок "+new Date().toLocaleTimeString().slice(0,5):"ответ без ok"}).catch(e=>{srvOk="нет связи ("+(e&&e.message||"?")+")"})};
   if(Date.now()-pushT>10000)go();else if(!pushQ)pushQ=setTimeout(go,10000);
 }
+/* Telegram CloudStorage: второй независимый слой сохранения */
+let cloudT=0,cloudOk="",srvOk="";
+function cloudOn(){const tg=window.Telegram&&Telegram.WebApp;return !!(tg&&tg.CloudStorage&&tg.isVersionAtLeast&&tg.isVersionAtLeast("6.9"))}
+function cloudSave(force){
+  if(!cloudOn()||!P.path)return;
+  if(!force&&Date.now()-cloudT<15000)return;cloudT=Date.now();
+  try{
+    const j=JSON.stringify({P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir},ts:Date.now()}),n=Math.ceil(j.length/3500),cs=Telegram.WebApp.CloudStorage;
+    for(let i=0;i<n;i++)cs.setItem("sv_"+i,j.slice(i*3500,(i+1)*3500),(e,ok)=>{if(e)cloudOk="ошибка: "+e});
+    cs.setItem("sv_n",String(n),(e,ok)=>{cloudOk=e?"ошибка: "+e:"ок "+new Date().toLocaleTimeString().slice(0,5)});
+  }catch(e){cloudOk="ошибка"}
+}
+let cloudDone=!1;
+function cloudLoad(){
+  if(!cloudOn()){cloudDone=true;return}
+  const fin=()=>{cloudDone=true};setTimeout(fin,2500);
+  try{const cs=Telegram.WebApp.CloudStorage;
+    cs.getItem("sv_n",(e,v)=>{const n=parseInt(v)||0;if(e||!n)return fin();const ks=[];for(let i=0;i<n;i++)ks.push("sv_"+i);
+      cs.getItems(ks,(e2,o)=>{try{if(!e2&&o){const j=JSON.parse(ks.map(k=>o[k]||"").join(""));if(j&&j.P&&j.P.path){let l=null;try{l=JSON.parse(localStorage.getItem("sumerki_save")||"null")}catch(x){}if(!l||(j.ts||0)>(l.ts||0)){localStorage.setItem("sumerki_save",JSON.stringify(j));try{$("#tCont").style.display=""}catch(x){}}}}}catch(x){}fin()})})
+  }catch(e){fin()}
+}
+cloudLoad();
 function flushSave(){
-  if(!P.path||S.st==="title")return;save(false);
+  if(!P.path||S.st==="title")return;save(false);cloudSave(true);
   if(!AURL)return;
   try{fetch(AURL,{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,body:JSON.stringify({action:"save",nick:myName(),sv:{P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir},ts:Date.now(),pf:{lv:P.lv,kills:P.kills||0,p:P.path||""}}})}).catch(()=>{});pushT=Date.now()}catch(e){}
 }
-setInterval(()=>{if(P.path&&S.st!=="title"&&S.st!=="create")save()},6000);
+setInterval(()=>{if(P.path&&S.st!=="title"&&S.st!=="create"){save();cloudSave()}},6000);
 document.addEventListener("visibilitychange",()=>{if(document.hidden)flushSave()});
 addEventListener("pagehide",flushSave);addEventListener("beforeunload",flushSave);
 try{const tg=window.Telegram&&Telegram.WebApp;if(tg&&tg.onEvent){tg.onEvent("deactivated",flushSave);tg.onEvent("closing_behavior",flushSave)}}catch(e){}
@@ -1566,7 +1588,7 @@ function openSoc(tab){
   if(tab==="p"){
     const done=F.done?"Артефакт запечатан":F.amulet?"Артефакт у тебя":F.elder?"Идёт к склепу":"Только начал";
     body.innerHTML=heroCard(done)+
-      skillsHtml()+(AURL?"<div class='dim' style='margin-top:8px'>Прогресс хранится на сервере бота.</div>":"<div class='dim' style='margin-top:8px'>Запусти игру через бота, чтобы работали чат и сохранение на сервере.</div>");
+      skillsHtml()+("<div class='dim' style='margin-top:8px'>Сохранение: телефон "+(()=>{try{localStorage.setItem("_t","1");return "ок"}catch(e){return "нет"}})()+" · облако Telegram: "+(cloudOn()?(cloudOk||"ждёт"):"недоступно")+" · бот: "+(AURL?(srvOk||"ждёт"):"не подключён")+"</div>")+(AURL?"":"<div class='dim' style='margin-top:8px'>Запусти игру через бота, чтобы работали чат и сохранение на сервере.</div>");
     heroFace("pface","pimg");
   }else if(tab==="c"){
     body.innerHTML="<div id='chlist'></div><form id='chform'><input id='chin' maxlength='200' placeholder='Сообщение…' autocomplete='off'><button class='mbtn pri' type='submit'>➤</button></form>";
@@ -1853,7 +1875,8 @@ function bootGo(){
   const b=$("#boot");b.classList.add("out");$("#title").classList.add("show");
   setTimeout(()=>{b.style.display="none"},700);
   try{enterFs(true)}catch(e){}
-  setTimeout(()=>{try{const j=JSON.parse(localStorage.getItem("sumerki_save")||"null");if(j&&j.P&&j.P.path&&S.st==="title")begin(false)}catch(e){}},350);
+  const t1=Date.now(),tryGo=()=>{if(!cloudDone&&Date.now()-t1<2600)return setTimeout(tryGo,150);try{const j=JSON.parse(localStorage.getItem("sumerki_save")||"null");if(j&&j.P&&j.P.path&&S.st==="title")begin(false)}catch(e){}};
+  setTimeout(tryGo,350);
 }
 function skipBoot(){bootReady=true;bootGo();$("#boot").style.display="none"}
 (function bootInit(){
