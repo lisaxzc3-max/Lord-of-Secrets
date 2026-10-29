@@ -202,156 +202,35 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <script src="../../shared/sound.js"></script>
 <script>sndMusic("battle")</script>
 <style id="perfCss">button,.skill{touch-action:manipulation;-webkit-tap-highlight-color:transparent}#battleSkills{contain:layout style}.skill{contain:layout style;transition:transform .08s,opacity .15s}.skill:active:not(:disabled){transform:scale(.97)}.spark,.float{will-change:transform,opacity}@media(max-width:600px){.spark:nth-child(3n){display:none}}</style>
-<style id="vn">
-/* ===== ВИЗУАЛЬНАЯ НОВЕЛЛА: бой в руинах ===== */
-:root{--sat:max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)));--sab:env(safe-area-inset-bottom,0px);--sal:max(env(safe-area-inset-left,0px),var(--tg-safe-area-inset-left,0px));--sar:max(env(safe-area-inset-right,0px),var(--tg-safe-area-inset-right,0px));--dock:calc(168px + var(--sab));--fw:min(66vw,40vh)}
-html,body{height:100%;overflow:hidden;background:#050304}
-.wrap{position:fixed;inset:0;max-width:none;margin:0;padding:0}
-main{position:absolute;inset:0}
-.head{position:absolute;top:0;left:0;right:0;z-index:14;padding:calc(var(--sat) + 8px) calc(var(--sar) + 10px) 0 calc(var(--sal) + 10px);margin:0;pointer-events:none}
-.head>*{pointer-events:auto}
-.headTitle{flex:1}
-.back,.statusPill,.logBtn{background:rgba(18,10,7,.72);backdrop-filter:blur(3px);border:1.5px solid #8a5a2c;box-shadow:inset 0 0 0 1px #1a0e0a}
-.logBtn{width:38px;height:36px;border-radius:10px;color:#e0b46a;font-size:16px;padding:0}
-.eyebrow{display:none}
-.arena{position:absolute;inset:0;margin:0;padding:0;border:0;border-radius:0;background:#050304;box-shadow:none;overflow:hidden}
-.arena:before,.arena:after{display:none}
-.bg{position:absolute;inset:-6%;background:#0a0605 center 30%/cover no-repeat;filter:brightness(.5) saturate(1.1) blur(2.5px);animation:kb 24s ease-in-out infinite alternate}
-@keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.1) translate(-1.5%,-1%)}}
-.arena.phase2 .bg{filter:brightness(.55) saturate(1.5) hue-rotate(-12deg) blur(2.5px)}
-.bgTint{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 44%,transparent 28%,rgba(6,3,3,.62) 100%),linear-gradient(180deg,rgba(8,4,3,.7),transparent 22%,transparent 50%,rgba(6,3,3,.92) 92%)}
-.embers{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
-.arenaTop{position:absolute;left:0;right:0;top:calc(var(--sat) + 58px + 74px);z-index:5;justify-content:center;margin:0;pointer-events:none}
-.sectionLabel{display:none}
-.roundLabel{padding:3px 12px;border-radius:999px;background:rgba(14,8,6,.6);border:1px solid #6a4428;color:#e8c27a;font-size:11px;letter-spacing:.06em}
-.fighters{position:absolute;inset:0;display:block;z-index:4}
-.fighter{position:absolute;top:0;bottom:0;width:50%;margin:0;animation:none}
-.fighter.pl{left:0}.fighter.en{right:0}
-.vs{display:none}
-.plate{position:absolute;top:calc(var(--sat) + 54px);left:10px;right:6px;padding:7px 10px 6px;border:1.5px solid #8a5a2c;border-radius:12px;background:linear-gradient(180deg,rgba(40,22,15,.9),rgba(14,8,6,.92));box-shadow:inset 0 0 0 1px #1a0e0a,0 4px 14px rgba(0,0,0,.6);z-index:6;text-align:left}
-.fighter.pl .plate{left:calc(var(--sal) + 10px)}
-.fighter.en .plate{left:6px;right:calc(var(--sar) + 10px);text-align:right}
-.fighterName{font:700 15px/1.15 Philosopher,Georgia,serif;color:#ffe3b0;letter-spacing:.02em;min-height:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fighterRole{font-size:10px;color:#c8a080;margin:1px 0 5px;min-height:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar{height:10px;margin:0;border:1px solid #5a3a2c;background:#0a0605}
-.bar.hp i{background:linear-gradient(180deg,#e46a6a,#9a2f34)}
-.bar.enemyHp i{background:linear-gradient(180deg,#f0b060,#a8552a)}
-.hpLine{display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:3px;font-size:9.5px;color:#a89080}
-.hpLine strong{font-size:11px;color:#f1e2cf;font-variant-numeric:tabular-nums}
-.fighter.en .hpLine{flex-direction:row-reverse}
-.portraitFrame{position:absolute;bottom:calc(var(--dock) + 70px);width:var(--fw);left:calc(50% - var(--fw)/2);aspect-ratio:1;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible;z-index:3;transform-origin:50% 90%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))}
-.fighter.pl .portraitFrame{left:calc(50% - var(--fw)/2 - 6vw)}
-.fighter.en .portraitFrame{left:calc(50% - var(--fw)/2 + 6vw)}
-.arena.boss .fighter.en .portraitFrame{width:calc(var(--fw)*1.12);left:calc(50% - var(--fw)*.56 + 6vw);border:0;box-shadow:none;animation:idle 3.4s ease-in-out -1.7s infinite}
-.portraitFrame:before{content:"";position:absolute;left:12%;right:12%;bottom:-2%;height:9%;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.65),transparent 70%);z-index:-1}
-.portraitFrame img{border-radius:0;background:none;-webkit-mask-image:radial-gradient(ellipse 50% 52% at 50% 46%,#000 52%,rgba(0,0,0,.85) 66%,transparent 100%);mask-image:radial-gradient(ellipse 50% 52% at 50% 46%,#000 52%,rgba(0,0,0,.85) 66%,transparent 100%)}
-.fighter.pl .portraitFrame img{transform:none}
-.emo{background:none;font-size:90px;filter:none}
-.arena.phase2 #enemyFrame{filter:drop-shadow(0 0 22px rgba(255,90,30,.6)) drop-shadow(0 10px 14px rgba(0,0,0,.6))}
-.chips{position:absolute;left:calc(var(--sal) + 10px);top:calc(var(--sat) + 54px + 76px);z-index:6;margin:0}
-.battleMessage{position:absolute;left:calc(var(--sal) + 12px);right:calc(var(--sar) + 12px);bottom:calc(var(--dock) + 6px);margin:0;max-height:84px;overflow:auto;z-index:7;border:1.5px solid #8a5a2c;border-radius:12px;background:linear-gradient(180deg,rgba(28,15,10,.88),rgba(12,7,5,.92));box-shadow:0 4px 14px rgba(0,0,0,.6);padding:8px 11px}
-.messageIcon{font-size:15px}.messageTitle{font-size:9px;color:#e0b46a;letter-spacing:.14em;margin-bottom:2px}
-#battleText{font-size:12.5px;line-height:1.45;color:#ecdccb}
-.skillCard{position:fixed;left:0;right:0;bottom:0;margin:0;border:0;border-top:1.5px solid #8a5a2c;border-radius:16px 16px 0 0;padding:10px calc(var(--sar) + 10px) calc(var(--sab) + 10px) calc(var(--sal) + 10px);background:linear-gradient(180deg,rgba(24,12,8,.88),rgba(8,4,3,.96));backdrop-filter:blur(3px);z-index:10;box-shadow:0 -8px 24px rgba(0,0,0,.6)}
-.skillHeader,.skillFoot{display:none}
-.skillGrid{grid-template-columns:repeat(3,1fr);gap:6px}
-.skill{min-height:60px;padding:8px 8px;border-radius:11px;border:1px solid #6a4428;background:linear-gradient(160deg,#3a2216,#1a0e0a);box-shadow:inset 0 1px 0 rgba(255,220,180,.06)}
-.skill:not(:disabled):active{box-shadow:0 0 16px rgba(255,138,58,.45);border-color:#ff9a4a}
-.skill.basic{background:linear-gradient(160deg,#2c2a2c,#161214);border-color:#5a4a42}
-.skill.escape{background:linear-gradient(160deg,#3a1d1d,#1a0e0e);border-color:#7a3a3a}
-.skillName{font-size:12px;line-height:1.2}
-.skillDesc{display:none}
-.cooldown{right:5px;top:5px;background:#6a4a22}
-.resultCard{position:fixed;left:calc(var(--sal) + 12px);right:calc(var(--sar) + 12px);bottom:calc(var(--sab) + 14px);margin:0 auto;max-width:480px;z-index:20;box-shadow:0 0 0 100vmax rgba(0,0,0,.55),0 10px 40px #000}
-.errorBox{position:fixed;left:12px;right:12px;top:calc(var(--sat) + 62px);z-index:22;margin:0 auto;max-width:460px}
-.logCard{display:none;position:fixed;left:12px;right:12px;top:calc(var(--sat) + 56px);bottom:calc(var(--dock) + 12px);z-index:18;margin:0 auto;max-width:480px;overflow:auto;background:rgba(14,8,6,.97)}
-.logCard.open{display:block;animation:cardIn .25s ease-out}
-#enemyInfo{position:absolute;left:calc(var(--sal) + 10px);right:calc(var(--sar) + 10px);top:calc(var(--sat) + 54px + 84px);z-index:9;max-height:0;overflow:auto}
-#enemyInfo.open{max-height:calc(100vh - var(--dock) - 200px)}
-.eiBadge{right:auto;left:50%}
-body.shake .wrap{animation:screenShake .7s ease-in-out}
-/* вход в бой */
-.fighter.pl .portraitFrame{animation:vnInL .7s cubic-bezier(.2,.9,.3,1) backwards,idle 3.6s ease-in-out .7s infinite}
-.fighter.en .portraitFrame{animation:vnInR .7s cubic-bezier(.2,.9,.3,1) .12s backwards,idle 3.6s ease-in-out .8s infinite}
-@keyframes vnInL{from{opacity:0;transform:translateX(-60px) scale(.94)}to{opacity:1;transform:none}}
-@keyframes vnInR{from{opacity:0;transform:translateX(60px) scale(.94)}to{opacity:1;transform:none}}
-.plate{animation:plIn .5s ease-out .2s backwards}
-@keyframes plIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
-.skillCard{animation:dockIn .5s ease-out .3s backwards}
-@keyframes dockIn{from{transform:translateY(100%)}to{transform:none}}
-.portraitFrame{max-width:none}
-.bg{filter:brightness(.95) saturate(1.12) blur(2px)}
-.bgTint{background:radial-gradient(ellipse at 50% 44%,transparent 34%,rgba(6,3,3,.5) 100%),linear-gradient(180deg,rgba(8,4,3,.55),transparent 20%,transparent 52%,rgba(6,3,3,.88) 92%)}
-#chFab,button[data-nosnd]{bottom:auto!important;right:calc(var(--sar) + 10px)!important;width:34px!important;height:34px!important;font-size:15px!important;z-index:13!important}
-#chFab{top:calc(var(--sat) + 54px + 84px)!important}
-button[data-nosnd]{top:calc(var(--sat) + 54px + 124px)!important}
-/* горизонтальный экран */
-@media (orientation:landscape) and (max-height:520px){
- :root{--dock:calc(84px + var(--sab));--fw:min(34vw,60vh)}
- .skillGrid{grid-template-columns:repeat(6,1fr)}
- .skill{min-height:52px;padding:6px 6px}
- .skillName{font-size:11px}
- .skillCard{padding-top:8px;padding-bottom:calc(var(--sab) + 8px)}
- .portraitFrame{bottom:calc(var(--dock) + 52px)}
- .fighter.pl .portraitFrame{left:calc(50% - var(--fw)/2 - 3vw)}.fighter.en .portraitFrame{left:calc(50% - var(--fw)/2 + 3vw)}
- .battleMessage{left:25%;right:25%;max-height:56px;padding:5px 10px;bottom:calc(var(--dock) + 4px)}
- .plate{top:calc(var(--sat) + 8px);max-width:260px}.fighter.en .plate{left:auto}
- .head{width:auto;right:auto}
- .head .headTitle{display:none}
- .arenaTop{top:calc(var(--sat) + 8px)}
- .chips{top:calc(var(--sat) + 80px)}
- #chFab{top:calc(var(--sat) + 8px)!important;right:calc(var(--sar) + 62px)!important}button[data-nosnd]{top:calc(var(--sat) + 8px)!important}
- .resultCard{max-width:420px;bottom:auto;top:50%;transform:translateY(-50%)}
-}
-@media(max-width:360px){.skillGrid{gap:5px}.skillName{font-size:11px}}
-/* позиции бойцов: каждый в своей половине экрана */
-:root{--fw:min(52vw,40vh)}
-#playerFrame,#enemyFrame,.fighter .portraitFrame{position:absolute!important}
-.fighter .portraitFrame{background:none!important;border:0!important;padding:0!important}
-.fighter.pl .portraitFrame{left:calc(50% - var(--fw)/2 + 2vw)}
-.fighter.en .portraitFrame{left:calc(50% - var(--fw)/2 - 2vw)}
-.arena.boss .fighter.en .portraitFrame{width:calc(var(--fw)*1.1);left:calc(50% - var(--fw)*.55 - 2vw)}
-@media (orientation:landscape) and (max-height:520px){
- :root{--fw:min(26vw,46vh)}
- .plate{top:calc(var(--sat) + 50px)!important}
- .chips{top:calc(var(--sat) + 130px)}
- .fighter.pl .portraitFrame{left:calc(50% - var(--fw)/2 + 1vw)}.fighter.en .portraitFrame{left:calc(50% - var(--fw)/2 - 1vw)}
- .arena.boss .fighter.en .portraitFrame{left:calc(50% - var(--fw)*.55 - 1vw)}
-}
-</style>
 </head>
 <body>
 <div class="wrap">
 <header class="head">
 <a class="back" id="backHome" href="../index.html">← Руины</a>
-<div class="headTitle"><div class="eyebrow">Руины Фаркарда</div></div>
-<button class="logBtn" id="logBtn" type="button" aria-label="Хроника боя">📜</button>
+<div class="headTitle"><div class="eyebrow">Lord of the Mysteries</div><h1>Руины · Сражение</h1></div>
 <div class="statusPill" id="statusPill">Загрузка</div>
 </header>
 <main>
 <section class="card arena" id="arena">
-<div class="bg" id="bgArt"></div><div class="bgTint"></div><canvas class="embers" id="embers"></canvas>
 <div class="fx" id="fx"></div><div class="amb" id="amb"></div>
 <div class="arenaTop"><span class="sectionLabel">Руины Фаркарда</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
 <div class="fighters">
-<div class="fighter pl">
-<div class="plate">
+<div class="fighter">
+<div class="portraitFrame" id="playerFrame"><img id="playerImg" src="../../avatars/m_seer.svg" alt="Игрок"><div class="stat" id="playerStat"></div><div class="zzz" id="zzz">💤</div></div>
 <div class="fighterName" id="playerName">Путешественник</div>
 <div class="fighterRole" id="playerPath">Путь неизвестен</div>
+<div class="hpNumbers"><span>❤️ Здоровье</span><strong id="playerHp">—</strong></div>
 <div class="bar hp"><i id="playerHpBar"></i></div>
-<div class="hpLine"><span id="playerHpPercent">—</span><strong id="playerHp">—</strong><span id="playerHpState">—</span></div>
-</div>
-<div class="portraitFrame" id="playerFrame"><img id="playerImg" src="../../avatars/m_seer.svg" alt="Игрок"><div class="stat" id="playerStat"></div><div class="zzz" id="zzz">💤</div></div>
+<div class="hpCaption"><span id="playerHpPercent">—</span><span id="playerHpState">—</span></div>
 </div>
 <div class="vs">VS</div>
-<div class="fighter en">
-<div class="plate">
+<div class="fighter">
+<div class="portraitFrame" id="enemyFrame"><img id="enemyImg" class="hidden" alt="Противник"><div class="emo" id="enemyEmo">💀</div><div class="stat" id="enemyStat"></div></div>
 <div class="fighterName" id="enemyLabel">Противник</div>
 <div class="fighterRole" id="enemyRole">Враждебная сущность</div>
+<div class="hpNumbers"><span>🩸 Здоровье</span><strong id="enemyHp">—</strong></div>
 <div class="bar enemyHp"><i id="enemyHpBar"></i></div>
-<div class="hpLine"><span id="enemyHpPercent">—</span><strong id="enemyHp">—</strong><span id="enemyHpState">—</span></div>
-</div>
-<div class="portraitFrame" id="enemyFrame"><img id="enemyImg" class="hidden" alt="Противник"><div class="emo" id="enemyEmo">💀</div><div class="stat" id="enemyStat"></div></div>
+<div class="hpCaption"><span id="enemyHpPercent">—</span><span id="enemyHpState">—</span></div>
 </div>
 </div>
 <div class="chips" id="chips"></div>
@@ -383,14 +262,15 @@ button[data-nosnd]{top:calc(var(--sat) + 54px + 124px)!important}
 <section class="card errorBox hidden" id="errorBox" role="alert">
 <div id="errorText"></div><button class="actionBtn" id="retryBtn" type="button" style="margin-top:10px">Повторить загрузку</button>
 </section>
-<section class="card logCard" id="logCard">
+<section class="card logCard">
 <div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div>
-<details class="logDisclosure" id="logDisclosure" open>
-<summary><span>📜 События боя</span><span class="logSummarySub" id="logSummarySub">Хроника свёрнута</span></summary>
+<details class="logDisclosure" id="logDisclosure">
+<summary><span>📜 Показать события боя</span><span class="logSummarySub" id="logSummarySub">Хроника свёрнута</span></summary>
 <div id="battleLog"><div class="logEntry info">Из темноты выходит противник.</div></div>
 </details>
 </section>
 </main>
+<div class="bottomNote">Ход боя и награды обрабатываются сервером.<br>Фаркард помнит каждого, кто сюда спускался. Не торопись.</div>
 </div>
 <script>
 "use strict";
@@ -418,7 +298,6 @@ const pics={
 "Пепельный культист":"../img/cultist.webp",
 "Верховный жрец":"../img/priest.webp"
 };
-const BGS={"Фанатик с кинжалом":"bell","Каменная горгулья":"well","Одержимый стражник":"mural","Крыса-мутант":"cache","Пепельный культист":"altar","Верховный жрец":"altar"};
 const INTRO_SND={"Фанатик с кинжалом":"cmrattle","Каменная горгулья":"cmrumble","Одержимый стражник":"cmcreak","Крыса-мутант":"cmgrowl","Пепельный культист":"cmritual","Верховный жрец":"cmtoll"};
 const EMO={"Фанатик с кинжалом":"🗡","Каменная горгулья":"🗿","Одержимый стражник":"⚔","Крыса-мутант":"🐀","Пепельный культист":"🔥","Верховный жрец":"🔱"};
 const ROLE={"Фанатик с кинжалом":"Сектант","Каменная горгулья":"Страж-статуя","Одержимый стражник":"Одержимый","Крыса-мутант":"Мутант","Пепельный культист":"Маг-сектант","Верховный жрец":"Босс"};
@@ -665,7 +544,6 @@ function setImageForEnemy(enemy){
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"💀";
 const src=(enemy==="Верховный жрец"&&$("arena").classList.contains("phase2"))?"../img/priest2.webp":pics[enemy];
-const bg=BGS[enemy]||"altar";const bgEl=$("bgArt"),want="url(../img/"+bg+".webp)";if(bgEl.style.backgroundImage!==want)bgEl.style.backgroundImage=want;
 if(src){
 img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
 img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
@@ -797,7 +675,7 @@ if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_h
 else setHealth("enemy",null,null);
 renderSkills(state?.cds||{});
 if(!initialized){
-setTimeout(()=>{try{snd(INTRO_SND[enemy]||"banner",.9)}catch(_){}if(!state?.boss)banner(enemy,"#ff8a3a")},450);
+setTimeout(()=>{try{snd(INTRO_SND[enemy]||"banner",.9)}catch(_){}},450);
 addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
 if(state?.boss){
 setMessage("В главном зале, под рухнувшим куполом, горит алтарь. Верховный жрец стоит спиной к тебе и дочитывает последнюю строку обряда. Он знает, что ты здесь.","БОСС РУИН","💀");
@@ -912,23 +790,6 @@ location.href="./index.html?"+params.toString();
 finally{setBusy(false)}
 }
 $("exploreAgainBtn").addEventListener("click",exploreAgain);
-$("logBtn").addEventListener("click",()=>{snd("tap");$("logCard").classList.toggle("open")});
-$("logCard").addEventListener("click",e=>{if(e.target.closest(".logHead"))$("logCard").classList.remove("open")});
-/* тлеющие искры над ареной */
-(function(){
-const c=$("embers"),x=c.getContext("2d");let W=0,H=0,P=[],run=true;
-const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener("resize",rs);
-for(let i=0;i<46;i++)P.push({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.5,s:Math.random()*.05+.02,t:Math.random()*6.3,a:Math.random()<.35});
-document.addEventListener("visibilitychange",()=>{run=!document.hidden;if(run)requestAnimationFrame(f)});
-function f(){
-if(!run)return;x.clearRect(0,0,W,H);
-const red=$("arena").classList.contains("phase2");
-for(const p of P){p.t+=.02;p.y-=p.s*.004*(p.a?2:1);if(p.y<-.02){p.y=1.02;p.x=Math.random()}
-const al=.25+.6*Math.abs(Math.sin(p.t));x.fillStyle=p.a?(red?"rgba(255,90,40,"+al+")":"rgba(255,170,80,"+al+")"):"rgba(220,200,180,"+al*.45+")";
-x.beginPath();x.arc(p.x*W+Math.sin(p.t*.7)*12,p.y*H,p.r,0,6.3);x.fill()}
-requestAnimationFrame(f)}
-f();
-})();
 $("victoryCloseBtn").addEventListener("click",goCem);
 $("defeatCloseBtn").addEventListener("click",goCem);
 $("defeatRetryBtn").addEventListener("click",load);
