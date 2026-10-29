@@ -22,7 +22,10 @@ h1{font-size:20px;margin:4px 0 0}
 /* ===== визуальная новелла ===== */
 body{background:#05060a;overflow:hidden}
 .stage{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#26334d,#05070c 75%)}
-.stage img{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;object-position:50% 38%;animation:kb 22s ease-in-out infinite alternate;transform-origin:50% 40%}
+.stage img{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;object-position:50% 38%;animation:kb 22s ease-in-out infinite alternate,sceneIn 1.6s ease-out;transform-origin:50% 40%}
+@keyframes sceneIn{from{opacity:0;filter:brightness(2.2) blur(8px)}}
+#sceneCard{animation:boxIn .7s cubic-bezier(.2,.9,.3,1) .5s backwards}
+@keyframes boxIn{from{opacity:0;transform:translateY(40px)}}
 @keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.1) translate(-1.5%,-1%)}}
 .stage .symbol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:110px;filter:drop-shadow(0 0 22px var(--glow,#8fb4e888));animation:bob 4s ease-in-out infinite}
 .stage:before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 50% 35%,transparent 40%,#000a 100%),linear-gradient(180deg,#000a 0,transparent 18%,transparent 45%,#000d 100%)}
@@ -184,12 +187,19 @@ function buildScene(k){
  else if(k==="angel"){mk("beam",{"--gx":"62%"});glow(66,14,"#dfe9ff88",240,4,0);sp(16,0,100,"",5,9,"mote");glow(12,80,"#ffb04a88",100,1.2,0);glow(90,86,"#ffb04a88",100,1.4,-.5)}
  else if(k==="procession"){for(let i=0;i<6;i++)glow(10+i*16,rnd(58,72),"#ffb04acc",110,rnd(.8,1.6),-i*.2);mk("tint",{"--gc":"#5a4a9a","--t":"6s"});sp(8,0,100,"#aab4c4",5,9)}
 }
+const EVSND={gravedigger:["cmshovel",6000,"event"],crypt:["cmcreak",9000,"event"],whispers:["whisper",5500,"whisper"],hawk:["cmwings",7000,"event"],ritual:["cmritual",7000,"cmritual"],angel:["qchime",7000,"divine"],procession:["cmtoll",7500,"cmtoll"]};
+let ambT=0;
+function startAmbient(k){
+ clearInterval(ambT);const e=EVSND[k];if(!e)return;
+ try{snd(e[2])}catch(_){}
+ ambT=setInterval(()=>{if(document.hidden)return;try{snd(e[0])}catch(_){}},e[1]);
+}
 let twTimer=0,twDone=null,twNode=null,twFull="";
 function typeText(node,txt,cb){
  clearInterval(twTimer);twNode=node;twFull=txt;twDone=cb;
  if(reduce){node.textContent=txt;cb&&cb();return}
  node.textContent="";node.classList.add("typing");let i=0;
- twTimer=setInterval(()=>{i+=2;node.textContent=txt.slice(0,i);if(i>=txt.length)finishType()},22);
+ twTimer=setInterval(()=>{i+=2;if(i%6===0){try{snd("vntick")}catch(_){}}node.textContent=txt.slice(0,i);if(i>=txt.length)finishType()},22);
 }
 function finishType(){
  if(!twNode)return;clearInterval(twTimer);twNode.textContent=twFull;twNode.classList.remove("typing");
@@ -208,7 +218,7 @@ function renderEvent(d){
  const m=META[evKey]||{t:"🪦 Событие на кладбище",s:"🪦"};
  $("evTitle").textContent=m.t;$("hTitle").textContent="Кладбище · Событие";
  $("symbol").textContent=m.s;
- buildScene(evKey);setImage(evKey);try{snd(evKey==="angel"?"divine":evKey==="whispers"?"whisper":evKey==="procession"?"bell":"event")}catch(_){}
+ buildScene(evKey);setImage(evKey);startAmbient(evKey);
  const box=$("actions");box.replaceChildren();
  const acts=Array.isArray(d.actions)?d.actions:[];
  box.classList.add("hidden");typeText($("evText"),d.text||"Туман шевелится между надгробиями.",()=>box.classList.remove("hidden"));
@@ -237,7 +247,7 @@ async function choose(id){
  finally{busy=false}
 }
 function showResult(r){
- const fx=r.fx||"calm";
+ const fx=r.fx||"calm";clearInterval(ambT);
  snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
  const st=$("stage");st.classList.remove("fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx-"+fx);
  if(fx==="hurt"||fx==="poison"){$("sceneCard").classList.add("shake");setTimeout(()=>$("sceneCard").classList.remove("shake"),520)}

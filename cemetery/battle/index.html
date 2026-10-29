@@ -576,7 +576,7 @@ $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.s
 function setMob(enemy,src){
 const fr=$("enemyFrame"),key=(enemy==="Некромант-самоучка")?(/necro2/.test(src||"")?"necro2":"necro"):({"Призрак":"ghost","Гуль":"ghoul","Скелет-страж":"skeleton","Могильный червь":"worm","Плакальщица":"banshee"})[enemy];
 if(!key||fr.dataset.mob===key)return;
-fr.dataset.mob=key;
+fr.dataset.mob=key;try{snd({ghost:"cmghost",ghoul:"cmgrowl",skeleton:"cmrattle",worm:"cmrumble",banshee:"cmwail",necro:"cmnecro",necro2:"cmnecro2"}[key])}catch(_){}
 $("arena").style.setProperty("--ebg","url("+src+")");
 let m=fr.querySelector(".mfx");if(m)m.remove();
 m=document.createElement("div");m.className="mfx";

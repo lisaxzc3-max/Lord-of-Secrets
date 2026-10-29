@@ -176,6 +176,23 @@ qwhoosh:function(t){noise(t,0.8,0.28,"bandpass",300,2400,1.1,{attack:0.3,wet:0.5
 qchime:function(t){[79,83,86,91].forEach(function(m,i){osc("sine",N(m),t+i*0.11,1.8,0.08,{wet:0.9,attack:0.02})})}
 };
 for(var _k3 in QS)SFX[_k3]=QS[_k3];
+/* ===== кладбище: события и монстры ===== */
+var CM={
+vntick:function(t){noise(t,0.018,0.05,"bandpass",2200+Math.random()*900,1500,4)},
+cmshovel:function(t){noise(t,0.35,0.28,"bandpass",900,300,1.2,{attack:0.05});noise(t+0.5,0.3,0.28,"bandpass",800,260,1.2,{attack:0.05});osc("sine",90,t+0.38,0.14,0.35,{to:50});osc("sine",85,t+0.88,0.14,0.35,{to:48});noise(t+0.4,0.1,0.25,"lowpass",600,150)},
+cmcreak:function(t){osc("sawtooth",95,t,1.5,0.14,{to:62,vib:9,vibd:10,wet:0.5,attack:0.15});noise(t,1.4,0.1,"bandpass",500,1400,5,{attack:0.4,wet:0.6});osc("sine",N(31),t+1.2,1.8,0.22,{wet:0.9})},
+cmwings:function(t){for(var i=0;i<5;i++)noise(t+i*0.09,0.07,0.22,"bandpass",1800+i*200,900,1.6);osc("triangle",1300,t+0.5,0.15,0.08,{to:900})},
+cmritual:function(t){osc("sine",N(33),t,2.4,0.22,{wet:0.9,attack:0.3,vib:3});osc("sine",N(40),t+0.2,2.2,0.12,{wet:0.9,attack:0.3});for(var i=0;i<5;i++)noise(t+0.2+Math.random()*1.6,0.04,0.14,"highpass",3000,8000,0.5);osc("sine",N(76),t+0.6,1.4,0.05,{wet:0.95,attack:0.1})},
+cmtoll:function(t){osc("sine",N(41),t,3.2,0.32,{wet:0.9});osc("sine",N(41)*2.41,t,2.2,0.09,{wet:0.9});osc("sine",N(41)*3.8,t,1.4,0.05,{wet:0.9});noise(t,0.04,0.2,"lowpass",700,250)},
+cmghost:function(t){osc("sine",300,t,1.8,0.18,{to:640,vib:5,vibd:14,wet:0.9,attack:0.5});osc("sine",450,t+0.1,1.6,0.1,{to:300,vib:6,vibd:10,wet:0.9,attack:0.5});noise(t,1.6,0.08,"bandpass",1200,2600,3,{attack:0.6,wet:0.8})},
+cmgrowl:function(t){osc("sawtooth",70,t,1,0.3,{to:48,vib:22,vibd:18,wet:0.3,attack:0.06});osc("square",96,t,0.9,0.12,{to:60,vib:26,vibd:12});noise(t,0.9,0.25,"lowpass",900,200,0.8,{attack:0.05})},
+cmrattle:function(t){for(var i=0;i<9;i++)noise(t+i*0.06+Math.random()*0.04,0.03,0.3,"highpass",1500+Math.random()*2500,5000,2);osc("sine",N(36),t,0.8,0.18,{wet:0.7});osc("sine",N(48),t+0.05,0.5,0.06,{wet:0.8})},
+cmrumble:function(t){noise(t,1.4,0.5,"lowpass",260,70,0.9,{attack:0.15});osc("sine",48,t,1.4,0.4,{to:30});noise(t+0.9,0.5,0.18,"bandpass",600,300,1.5)},
+cmwail:function(t){osc("sawtooth",520,t,1.6,0.14,{to:880,vib:7,vibd:30,wet:0.8,attack:0.08});osc("sine",1040,t+0.05,1.5,0.1,{to:1500,vib:8,vibd:40,wet:0.9});noise(t,1.5,0.14,"bandpass",2500,4500,2.5,{attack:0.1,wet:0.7})},
+cmnecro:function(t){[38,45,50,53].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.1,1.8,0.09,{wet:0.8,attack:0.2,vib:4})});osc("sine",N(26),t,2,0.4,{wet:0.5});noise(t,1.6,0.1,"bandpass",400,1600,2,{attack:0.5,wet:0.6})},
+cmnecro2:function(t){[36,43,48,51,55].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.08,2.6,0.12,{wet:0.85,attack:0.1,vib:6})});osc("sine",N(24),t,3,0.5,{wet:0.5,to:N(22)});noise(t,2.2,0.3,"lowpass",3000,150,1,{attack:0.1,wet:0.7});noise(t+0.3,0.5,0.3,"highpass",2500,7000,0.5)}
+};
+for(var _k4 in CM)SFX[_k4]=CM[_k4];
 
 function sfx(name,delay){
 if(!st.on||!AC)return;
