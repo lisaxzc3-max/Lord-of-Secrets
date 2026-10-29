@@ -148,12 +148,19 @@ function setImage(k){
  img.onerror=()=>img.classList.add("hidden");
  img.src=src;
 }
+const EVSND={whisper:["whisper",5500,"whisper"],ring:["frshimmer",7000,"frshimmer"],hut:["frcauldron",6500,"frcauldron"],tracks:["frsnap",6000,"frsnap"],altar:["fraltar",9000,"fraltar"],loop:["frloop",7000,"frloop"],hunter:["frcaw",7500,"frcaw"]};
+let ambT=0;
+function startAmbient(k){
+ clearInterval(ambT);const e=EVSND[k];if(!e)return;
+ try{snd(e[2])}catch(_){}
+ ambT=setInterval(()=>{if(document.hidden)return;try{snd(e[0])}catch(_){}},e[1]);
+}
 function renderEvent(d){
  ev=d;evKey=String(d.event||d.image||"");
  const m=META[evKey]||{t:"Событие в лесу",s:"🌲"};
  $("evTitle").textContent=m.t;
  $("symbol").textContent=m.s;
- setImage(evKey);
+ setImage(evKey);startAmbient(evKey);
  const box=$("actions");box.replaceChildren();
  const acts=Array.isArray(d.actions)?d.actions:[];
  const build=()=>{
@@ -183,6 +190,7 @@ async function choose(id){
  finally{busy=false}
 }
 function showResult(r){
+ clearInterval(ambT);
  const fx=r.fx||"calm";
  snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");
  const st=$("art");st.classList.remove("fx","fx-heal","fx-hurt","fx-mad","fx-poison","fx-rune","fx-calm");void st.offsetWidth;st.classList.add("fx","fx-"+fx);

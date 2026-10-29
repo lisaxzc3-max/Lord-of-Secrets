@@ -512,7 +512,9 @@ const count=logEntries.length;
 $("logCount").textContent=count+" "+(count===1?"запись":count>=2&&count<=4?"записи":"записей");
 $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":""):"Хроника пуста";
 }
+const MOBSND={"Утопленница":"lkgurgle","Утопленник":"lkgurgle","Жаба":"frog","Лягушка":"frog","Змей":"lkhiss","Пиявка-великанша":"lksquelch","Зубастая щука":"lksplash","Кикимора":"lkcackle","Водяной":"lkroar"};let lastMob="";
 function setImageForEnemy(enemy){
+if(enemy&&enemy!==lastMob){lastMob=enemy;const sn=MOBSND[enemy];if(sn)setTimeout(()=>{try{snd(sn)}catch(_){}},350)}
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌊";
 const src=(PIC2[enemy]&&$("arena").classList.contains("phase2"))?PIC2[enemy]:pics[enemy];

@@ -150,12 +150,19 @@ function setImage(k){
  img.onerror=()=>img.classList.add("hidden");
  img.src=src;
 }
+const EVSND={frog:["frog",5500,"frog"],chest:["lkwater",6000,"lkplunk"],fisherman:["lkreel",7000,"lkwater"],boat:["lkcreak",7000,"lkwater"],lights:["lklights",8000,"lklights"],bell:["lkbell",8500,"lkbell"],mermaid:["lksong",9000,"lksong"],fishhut:["lkcreak",7500,"lkcrackle"],reflection:["lkglass",8000,"lkglass"]};
+let ambT=0;
+function startAmbient(k){
+ clearInterval(ambT);const e=EVSND[k];if(!e)return;
+ try{snd(e[2])}catch(_){}
+ ambT=setInterval(()=>{if(document.hidden)return;try{snd(e[0])}catch(_){}},e[1]);
+}
 function renderEvent(d){
  ev=d;evKey=String(d.event||d.image||"");
  const m=META[evKey]||{t:"Событие у озера",s:"🌲"};
  $("evTitle").textContent=m.t;
  $("symbol").textContent=m.s;
- setImage(evKey);
+ setImage(evKey);startAmbient(evKey);
  const box=$("actions");box.replaceChildren();
  const acts=Array.isArray(d.actions)?d.actions:[];
  const build=()=>{
@@ -185,6 +192,7 @@ async function choose(id){
  finally{busy=false}
 }
 function showResult(r){
+ clearInterval(ambT);
  const ev0=String(r.event||"");const fx=r.fx||(ev0==="frog_kiss"?"poison":ev0==="chest_dive"?"rune":ev0==="chest_dive_fail"?"hurt":"calm");
  if(ev0==="frog_kiss"){snd("kiss")}else if(ev0==="chest_dive"){snd("dive")}
  snd(fx==="hurt"||fx==="poison"?"bad":fx==="heal"?"heal":fx==="mad"?"whisper":"good");

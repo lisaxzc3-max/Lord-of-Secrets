@@ -14,7 +14,7 @@ function init(){
 if(ctx||!AC)return !!ctx;
 try{
 ctx=new AC();
-master=ctx.createGain();master.gain.value=st.on?1:0;var tone=ctx.createBiquadFilter();tone.type="lowpass";tone.frequency.value=3000;tone.Q.value=0.4;master.connect(tone);tone.connect(ctx.destination);
+master=ctx.createGain();master.gain.value=st.on?1:0;var tone=ctx.createBiquadFilter();tone.type="lowpass";tone.frequency.value=3000;tone.Q.value=0.4;var cmp=ctx.createDynamicsCompressor();cmp.threshold.value=-16;cmp.knee.value=18;cmp.ratio.value=6;cmp.attack.value=0.004;cmp.release.value=0.2;master.connect(cmp);cmp.connect(tone);tone.connect(ctx.destination);
 sfxG=ctx.createGain();sfxG.gain.value=st.sfx;sfxG.connect(master);
 musG=ctx.createGain();musG.gain.value=st.mus*0.5;musG.connect(master);
 /* простая «пещерная» реверберация: несколько задержек с обратной связью */
@@ -193,12 +193,53 @@ cmnecro:function(t){[38,45,50,53].forEach(function(m,i){osc("sawtooth",N(m),t+i*
 cmnecro2:function(t){[36,43,48,51,55].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.08,2.6,0.12,{wet:0.85,attack:0.1,vib:6})});osc("sine",N(24),t,3,0.5,{wet:0.5,to:N(22)});noise(t,2.2,0.3,"lowpass",3000,150,1,{attack:0.1,wet:0.7});noise(t+0.3,0.5,0.3,"highpass",2500,7000,0.5)}
 };
 for(var _k4 in CM)SFX[_k4]=CM[_k4];
+/* ===== озеро и лес ===== */
+var LF={
+lkwater:function(t){noise(t,1.4,0.16,"bandpass",500,1100,1.2,{attack:0.5,wet:0.4});for(var i=0;i<3;i++)osc("sine",200+Math.random()*200,t+0.2+i*0.3,0.1,0.08,{to:420+Math.random()*200,wet:0.5})},
+lkplunk:function(t){osc("sine",420,t,0.14,0.3,{to:120,wet:0.5});noise(t,0.2,0.2,"lowpass",1400,300)},
+lkreel:function(t){for(var i=0;i<6;i++)noise(t+i*0.07,0.03,0.2,"highpass",3500,6000,2);noise(t+0.5,0.5,0.14,"bandpass",500,900,1,{attack:0.2,wet:0.4})},
+lkcreak:function(t){osc("sawtooth",110,t,0.9,0.1,{to:80,vib:10,vibd:12,wet:0.4,attack:0.1});noise(t,0.9,0.08,"bandpass",600,1200,5,{attack:0.3,wet:0.4});noise(t+0.7,0.5,0.1,"lowpass",800,300,1,{attack:0.2})},
+lklights:function(t){[84,88,91,96].forEach(function(m,i){osc("sine",N(m),t+i*0.4,1.8,0.05,{wet:0.95,attack:0.3,vib:6})});osc("sine",N(48),t,3,0.1,{wet:0.9,attack:1})},
+lkbell:function(t){osc("sine",N(45),t,3.4,0.26,{wet:0.95,vib:0.4,vibd:3});osc("sine",N(45)*2.41,t,2.6,0.08,{wet:0.95});noise(t,1.8,0.06,"lowpass",600,200,1,{attack:0.3,wet:0.6})},
+lksong:function(t){[76,79,83,81,79,76].forEach(function(m,i){osc("sine",N(m),t+i*0.5,0.9,0.08,{wet:0.9,attack:0.15,vib:5,vibd:6})});osc("sine",N(52),t,3.4,0.07,{wet:0.9,attack:0.8})},
+lkcrackle:function(t){for(var i=0;i<6;i++)noise(t+Math.random()*1.2,0.04,0.16,"highpass",2500,6000,0.7);noise(t,1.4,0.05,"bandpass",500,900,1,{attack:0.5})},
+lkglass:function(t){[88,95,100].forEach(function(m,i){osc("sine",N(m),t+i*0.18,1.6,0.06,{wet:0.95,vib:7})});noise(t,1.2,0.05,"bandpass",4500,2500,6,{attack:0.3,wet:0.8})},
+lkhiss:function(t){noise(t,0.9,0.22,"highpass",3500,7000,0.6,{attack:0.1,wet:0.3});osc("sawtooth",110,t,0.8,0.07,{to:80,vib:14,vibd:14})},
+lksplash:function(t){noise(t,0.5,0.4,"bandpass",1800,400,0.8,{attack:0.01});osc("sine",260,t,0.2,0.2,{to:80});noise(t+0.15,0.5,0.14,"lowpass",1800,300)},
+lksquelch:function(t){osc("sine",220,t,0.25,0.2,{to:90,vib:30,vibd:30});noise(t,0.3,0.15,"bandpass",500,250,2);osc("sine",150,t+0.3,0.2,0.16,{to:70,vib:25,vibd:20})},
+lkgurgle:function(t){for(var i=0;i<4;i++)osc("sine",150+Math.random()*120,t+i*0.16,0.14,0.15,{to:300+Math.random()*180,wet:0.5});osc("sawtooth",120,t,1,0.08,{to:90,vib:6,vibd:10,wet:0.6,attack:0.2})},
+lkcackle:function(t){for(var i=0;i<5;i++)osc("sawtooth",420+i*30,t+i*0.1,0.09,0.1,{to:330+i*20,vib:40,vibd:30});noise(t,0.6,0.05,"bandpass",2500,1800,2)},
+lkroar:function(t){osc("sawtooth",60,t,1.5,0.32,{to:42,vib:10,vibd:10,wet:0.7,attack:0.08});for(var i=0;i<6;i++)osc("sine",120+Math.random()*100,t+0.2+i*0.17,0.12,0.1,{to:300,wet:0.5});noise(t,1.2,0.2,"lowpass",700,150,0.8,{attack:0.1,wet:0.5})},
+frwind:function(t){noise(t,2.2,0.17,"bandpass",350,900,1.1,{attack:0.8,wet:0.5})},
+frshimmer:function(t){[84,88,91,95].forEach(function(m,i){osc("sine",N(m),t+i*0.12,1.4,0.05,{wet:0.95,vib:7})});noise(t,0.8,0.05,"highpass",5000,9000,0.4,{attack:0.2,wet:0.6})},
+frcauldron:function(t){for(var i=0;i<6;i++){var f=130+Math.random()*180;osc("sine",f,t+i*0.2+Math.random()*0.1,0.12,0.12,{to:f*1.8,wet:0.5})}noise(t,1.4,0.08,"lowpass",1200,500,1,{attack:0.3,wet:0.4})},
+frsnap:function(t){noise(t,0.05,0.4,"highpass",1500,5000,1.5);noise(t+0.35,0.12,0.18,"lowpass",900,300);noise(t+0.55,0.1,0.15,"lowpass",800,260)},
+fraltar:function(t){osc("sine",N(31),t,2.6,0.34,{wet:0.8,attack:0.3,vib:2});osc("sine",N(43),t+0.2,2.2,0.12,{wet:0.9,attack:0.3});osc("sine",N(55),t+0.4,2,0.06,{wet:0.95,attack:0.3});noise(t,0.12,0.15,"lowpass",600,200)},
+frloop:function(t){for(var i=0;i<4;i++)noise(t+i*0.55,0.5,0.12,"bandpass",500+i*250,1100+i*200,1.4,{attack:0.25,wet:0.5});osc("sine",N(52),t,2.4,0.05,{to:N(50),wet:0.9,attack:0.8})},
+frcaw:function(t){for(var i=0;i<2;i++){osc("sawtooth",430,t+i*0.32,0.22,0.12,{to:290,vib:30,vibd:25});noise(t+i*0.32,0.2,0.05,"bandpass",1600,1000,2)}},
+frpuff:function(t){noise(t,0.5,0.26,"bandpass",900,2800,1,{attack:0.04});osc("sine",200,t,0.2,0.12,{to:90});for(var i=0;i<4;i++)noise(t+0.2+i*0.07,0.04,0.1,"highpass",4000,8000,0.6)},
+frskitter:function(t){for(var i=0;i<12;i++)noise(t+i*0.045+Math.random()*0.02,0.02,0.16,"highpass",4000+Math.random()*2500,8000,2)},
+frgroan:function(t){osc("sawtooth",75,t,1.8,0.2,{to:55,vib:7,vibd:12,wet:0.5,attack:0.3});noise(t,1.7,0.1,"bandpass",300,700,4,{attack:0.5,wet:0.4});osc("sine",N(31),t+0.9,1.3,0.12,{wet:0.7})},
+frsnort:function(t){noise(t,0.22,0.3,"bandpass",600,1500,2.5,{attack:0.02});noise(t+0.3,0.22,0.3,"bandpass",600,1400,2.5,{attack:0.02});osc("sawtooth",95,t,0.5,0.12,{to:70,vib:20,vibd:10})},
+frwolf:function(t){osc("sawtooth",65,t,1,0.28,{to:46,vib:20,vibd:16,wet:0.4,attack:0.05});osc("sine",320,t+0.4,1.4,0.07,{to:520,vib:5,vibd:14,wet:0.9,attack:0.3});osc("sine",520,t+0.9,1.2,0.06,{to:330,vib:5,vibd:12,wet:0.9})},
+frfox:function(t){[88,91,95,100].forEach(function(m,i){osc("sine",N(m),t+i*0.14,0.8,0.08,{wet:0.9,attack:0.02})});osc("sawtooth",700,t+0.3,0.3,0.05,{to:1100,vib:20,vibd:30,wet:0.6});noise(t,0.6,0.06,"bandpass",3000,5500,3,{wet:0.7})}
+};
+for(var _k5 in LF)SFX[_k5]=LF[_k5];
 
+var lastAt={},recent=[],KEEP={hurt:1,hit:1,crit:1,win:1,lose:1,level:1,banner:1,phase:1,heal:1};
 function sfx(name,delay){
 if(!st.on||!AC)return;
 if(!init())return;
 if(ctx.state!=="running"){try{ctx.resume()}catch(e){}return}
 var f=SFX[name];if(!f)return;
+if(!delay){
+var now=performance.now(),gap=(name==="vntick"?70:name==="tap"?45:30);
+if(lastAt[name]&&now-lastAt[name]<gap)return;
+lastAt[name]=now;
+while(recent.length&&now-recent[0]>250)recent.shift();
+if(recent.length>=9&&!KEEP[name])return;
+recent.push(now);
+}
 try{f(ctx.currentTime+(delay||0)+0.01)}catch(e){}
 }
 

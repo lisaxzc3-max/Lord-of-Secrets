@@ -539,7 +539,9 @@ const count=logEntries.length;
 $("logCount").textContent=count+" "+(count===1?"запись":count>=2&&count<=4?"записи":"записей");
 $("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":""):"Хроника пуста";
 }
+const MOBSND={"Гриб-спорник":"frpuff","Паук-ткач":"frskitter","Проклятое дерево":"frgroan","Шипастый кабан":"frsnort","Костяной волк":"frwolf","Лиса-оборотень":"frfox"};let lastMob="";
 function setImageForEnemy(enemy){
+if(enemy&&enemy!==lastMob){lastMob=enemy;const sn=MOBSND[enemy];if(sn)setTimeout(()=>{try{snd(sn)}catch(_){}},350)}
 const img=$("enemyImg"),emo=$("enemyEmo");
 emo.textContent=EMO[enemy]||"🌲";
 const src=(enemy==="Лиса-оборотень"&&$("arena").classList.contains("phase2"))?"../img/kitsune2.jpg?v=1":pics[enemy];
