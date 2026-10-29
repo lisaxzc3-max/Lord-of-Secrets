@@ -312,6 +312,7 @@ const P={lv:1,xp:0,hp:40,mp:12,pot:2};
 const F={elder:0,boss:0,amulet:0,done:0,gift:0,inn:0};
 const S={map:"village",x:12,y:15,dir:3,st:"title",steps:0,safe:6};
 let mv=null,fr=0,frT=0,held=0,keys={},sound=true;
+let path=[],pend=null,mark=null;
 const maxHp=()=>40+(P.lv-1)*8, maxMp=()=>12+(P.lv-1)*3, atk=()=>8+(P.lv-1)*2, need=()=>P.lv*20;
 function cur(){return MAPS[S.map]}
 function save(){try{localStorage.setItem("sumerki_save",JSON.stringify({P,F,S:{map:S.map,x:S.x,y:S.y,dir:S.dir}}))}catch(e){}}
@@ -343,8 +344,8 @@ function solid(m,x,y){if(x<0||y<0||x>=m.w||y>=m.h)return true;const o=m.o[y][x];
 function npcAt(m,x,y){return m.npcs.find(n=>n.x===x&&n.y===y)}
 function setUI(){
   const map=S.st==="map",bat=S.st==="battle",dl=S.st==="dialog";
-  $("#pad").style.display=map?"block":"none";
-  $("#btnA").style.display=map?"block":"none";
+  $("#pad").style.display="none";
+  $("#btnA").style.display="none";
   $("#btnM").style.display=map?"block":"none";
   $("#loc").style.display=(map||dl)?"block":"none";
   $("#bt").style.display=bat?"block":"none";
@@ -353,6 +354,7 @@ function setUI(){
 /* ============ диалоги ============ */
 let D=null;
 function say(lines,cb,opts){
+  path=[];pend=null;mark=null;
   D={lines:lines.map(l=>typeof l==="string"?{n:"",t:l}:l),i:0,pos:0,cb:cb||null,opts:opts||null,prev:S.st};
   S.st="dialog";setUI();$("#dlg").style.display="block";showLine();
 }
@@ -416,6 +418,7 @@ const ENEMIES={
 };
 let B=null,fx=[];
 function startBattle(k){
+  path=[];pend=null;mark=null;
   const e=ENEMIES[k];
   B={k,e:{...e},hp:e.hp,max:e.hp,turn:1,busy:true,charge:0,flash:0,shake:0,menu:"main",boss:!!e.boss};
   S.st="battle";setUI();snd("enc");fx=[];
@@ -511,6 +514,7 @@ function tryBlock(){
   say([{n:"Стражник",t:"Стой! Роща закрыта. Сначала поговори с капитаном Ночных Ястребов."}]);
 }
 function warp(w){
+  path=[];pend=null;mark=null;
   snd("door");S.map=w.to;S.x=w.tx;S.y=w.ty;S.dir=w.dir;S.safe=S.steps+4;
   toastLoc();save();
 }
@@ -578,6 +582,7 @@ function draw(now){
     }else if(it.k==="n"){ctx.drawImage(SP[it.n.sp][it.n.dir][0],it.n.x*TS,it.n.y*TS)}
     else ctx.drawImage(SP.hero[S.dir][mv?(fr%2?1:2):0],Math.round(it.px),Math.round(it.py));
   }
+  if(mark&&S.st==="map"){const t=(now%900)/900,a=1-t,r=3+t*5;ctx.strokeStyle="rgba(224,162,74,"+a.toFixed(2)+")";ctx.lineWidth=1;ctx.strokeRect(mark.x*TS+8-r,mark.y*TS+8-r,r*2,r*2);ctx.fillStyle="rgba(224,162,74,.8)";ctx.fillRect(mark.x*TS+7,mark.y*TS+7,2,2)}
   ctx.restore();
   // освещение
   const L=m.light;
@@ -628,6 +633,11 @@ function loop(now){
   frT+=dt;if(frT>130){frT=0;fr++}
   if(B){if(B.flash>0)B.flash-=dt/1000;if(B.shake>0)B.shake-=dt/1000;for(const f of fx)f.age+=dt/900;fx=fx.filter(f=>f.age<1)}
   if(S.st==="map"){
+    if(!mv&&!held){
+      if(path.length){const d=path.shift();tryMove(d);if(!mv){path=[];pend=null;mark=null}}
+      else if(pend){const p=pend;pend=null;mark=null;const dx=p.x-S.x,dy=p.y-S.y;for(let d=0;d<4;d++)if(DX[d]===dx&&DY[d]===dy){S.dir=d;interact();break}}
+      else if(mark&&mark.x===S.x&&mark.y===S.y)mark=null;
+    }
     if(mv){mv.t+=dt/150;if(mv.t>=1){mv.t=1;stepDone();if(S.st==="map"&&!mv&&held!==0)tryMove(heldDir)}}
     else if(held)tryMove(heldDir);
   }
@@ -636,8 +646,53 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 let heldDir=0;
-function press(d){heldDir=d;held=1;if(!mv)tryMove(d)}
+function press(d){path=[];pend=null;mark=null;heldDir=d;held=1;if(!mv)tryMove(d)}
 function release(d){if(heldDir===d)held=0}
+
+/* ============ касания по экрану ============ */
+function passable(m,x,y,goalX,goalY){
+  if(solid(m,x,y)||npcAt(m,x,y))return false;
+  if(x===goalX&&y===goalY)return true;
+  return !m.warps.some(w=>w.x===x&&w.y===y);
+}
+function findPath(m,sx,sy,goals,gx,gy){
+  const key=(x,y)=>y*100+x,prev=new Map([[key(sx,sy),null]]),q=[[sx,sy]];
+  const isGoal=(x,y)=>goals.some(g=>g[0]===x&&g[1]===y);
+  if(isGoal(sx,sy))return [];
+  while(q.length){
+    const [x,y]=q.shift();
+    for(let d=0;d<4;d++){
+      const nx=x+DX[d],ny=y+DY[d],k=key(nx,ny);
+      if(prev.has(k)||!passable(m,nx,ny,gx,gy))continue;
+      prev.set(k,[x,y,d]);
+      if(isGoal(nx,ny)){const out=[];let c=k;while(prev.get(c)){const p=prev.get(c);out.unshift(p[2]);c=key(p[0],p[1])}return out}
+      q.push([nx,ny]);
+    }
+  }
+  return null;
+}
+cv.addEventListener("pointerdown",e=>{
+  if(S.st!=="map")return;
+  ac();e.preventDefault();
+  const r=cv.getBoundingClientRect(),m=cur();
+  const wx=(e.clientX-r.left)*(cv.width/r.width)/scale+Math.round(camX),wy=(e.clientY-r.top)*(cv.height/r.height)/scale+Math.round(camY);
+  const tx=Math.floor(wx/TS),ty=Math.floor(wy/TS);
+  if(tx<0||ty<0||tx>=m.w||ty>=m.h)return;
+  const sx=mv?mv.tx:S.x,sy=mv?mv.ty:S.y;
+  const npc=npcAt(m,tx,ty),ob=m.o[ty][tx],inter=npc||ob==="A"||ob==="+";
+  if(inter){
+    const goals=[];for(let d=0;d<4;d++){const nx=tx+DX[d],ny=ty+DY[d];if(!solid(m,nx,ny)&&!npcAt(m,nx,ny)&&!m.warps.some(w=>w.x===nx&&w.y===ny))goals.push([nx,ny])}
+    const p=findPath(m,sx,sy,goals,-1,-1);
+    if(p===null)return toast("Туда не пройти");
+    path=p;pend={x:tx,y:ty};mark={x:tx,y:ty};
+  }else{
+    if(solid(m,tx,ty))return;
+    const p=findPath(m,sx,sy,[[tx,ty]],tx,ty);
+    if(p===null)return toast("Туда не пройти");
+    path=p;pend=null;mark={x:tx,y:ty};
+  }
+  held=0;
+});
 
 /* ============ ввод ============ */
 document.querySelectorAll("#pad button").forEach(b=>{
@@ -676,7 +731,7 @@ function begin(newg){
   if(newg){try{localStorage.removeItem("sumerki_save")}catch(e){}newGame()}else load();
   $("#title").classList.remove("show");$("#end").classList.remove("show");
   S.st="map";setUI();toastLoc();
-  if(newg)setTimeout(()=>say([{t:"Туман над Тингеном. Тебя привела сюда весть о запечатанном артефакте, который теряет силу. Поговори с капитаном Ночных Ястребов, его участок справа от главной дороги."},{t:"Управление: крестовина или стрелки для ходьбы, кнопка A или пробел для разговора."}]),300);
+  if(newg)setTimeout(()=>say([{t:"Туман над Тингеном. Тебя привела сюда весть о запечатанном артефакте, который теряет силу. Поговори с капитаном Ночных Ястребов, его участок справа от главной дороги."},{t:"Управление: нажми на землю, чтобы идти. Нажми на человека или алтарь, чтобы подойти и заговорить."}]),300);
 }
 $("#tNew").onclick=()=>begin(true);
 $("#tCont").onclick=()=>begin(false);
@@ -687,7 +742,7 @@ resize();
 // на титуле показываем деревню под затемнением
 S.map="village";S.x=12;S.y=11;S.dir=3;
 requestAnimationFrame(loop);
-window.__g={P,F,S,MAPS,startBattle,act,say,begin,warp,talk,get B(){return B}};
+window.__g={get cam(){return [camX,camY,scale]},P,F,S,MAPS,startBattle,act,say,begin,warp,talk,get B(){return B}};
 </script>
 
 </body>
