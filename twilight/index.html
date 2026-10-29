@@ -316,6 +316,10 @@ button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 #rot b{font:700 32px/1.1 var(--disp);color:#ffe3a8;letter-spacing:.04em;text-shadow:0 0 18px rgba(224,162,74,.5)}
 #rot p{margin:0;font-size:19px;color:#f1e6c8;max-width:22ch;line-height:1.35}
 #rot button{padding:12px 26px;border-radius:12px;border:1.5px solid var(--gold);background:rgba(40,28,64,.8);font-size:16px;color:#cfc4e6}
+
+/* меню слева под названием локации */
+#btnM{right:auto!important;left:max(12px,env(safe-area-inset-left,0px),var(--sal));top:calc(max(12px,env(safe-area-inset-top,0px),var(--sat)) + 82px);width:50px;height:50px;z-index:6}
+@media (orientation:landscape) and (max-height:520px){#btnM{top:calc(max(10px,env(safe-area-inset-top,0px),var(--sat)) + 68px);width:46px;height:46px}}
 </style>
 </head>
 <body>
