@@ -1249,6 +1249,9 @@ function buildPageUrl(path) {
     params.set("u", uid);
   }
 
+  /* уникальная ссылка на каждый переход: страницы не берутся из старого кэша */
+  params.set("_t", String(Date.now()));
+
   return path + "?" + params.toString();
 }
 
