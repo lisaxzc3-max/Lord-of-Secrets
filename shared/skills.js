@@ -26,6 +26,22 @@ seer:["divination","seer_bullet","boomerang","acting"],
 sailor:["sailor_hit","sailor_wave","sailor_drink","sailor_pray"],
 hunter:["hunter_shot","hunter_dagger","hunter_trap","hunter_boost"]
 };
+/* От каких характеристик считается урон и эффект: base + Σ(стат × %) */
+var DMG={
+basic:{base:5,s:[["str",50]]},
+seer_bullet:{base:8,s:[["int",50],["agi",20]]},
+boomerang:{base:6,s:[["str",30]],note:"Эхо через ход: 3 + 30% Силы"},
+sailor_hit:{base:10,s:[["str",40]]},
+sailor_wave:{base:9,s:[["str",30],["con",30]]},
+hunter_shot:{base:9,s:[["agi",60],["str",15]],note:"30% шанс ударить в 1,5 раза сильнее"},
+hunter_dagger:{base:10,s:[["str",50]],note:"Первый удар ×2 · цена 3% текущих HP"},
+sailor_pray:{eff:[["str","×2"],["agi","×2"]],note:"На 1 ход: усиливает удары и шанс крита"},
+hunter_boost:{eff:[["con","10% макс. HP"]],note:"Лечение: 10% здоровья (мин. 3)"},
+divination:{none:"Не зависит от характеристик"},
+acting:{none:"Не зависит от характеристик"},
+sailor_drink:{none:"Не зависит от характеристик"},
+hunter_trap:{none:"Не зависит от характеристик"}
+};
 var PASS={
 seer:["👁️","Предчувствие опасности","ПАССИВ","Уклонение от первой атаки в бою."],
 sailor:["🛡️","Чешуя под кожей","ПАССИВ","+30 к максимальному здоровью."],
@@ -196,5 +212,5 @@ var s=SK[key];if(!s)return;ensure();
 btn.style.setProperty("--sk",s.c);
 }
 try{if(document.head&&!document.getElementById('sfxCss')){var _s=document.createElement('style');_s.id='sfxCss';_s.textContent=css;document.head.appendChild(_s)}}catch(e){}
-window.LOTM_SKILLS={SK:SK,ORDER:ORDER,PASS:PASS,PATHNAME:PATHNAME,pathKey:pathKey,list:list,play:play,decorate:decorate,css:css,ensure:ensure};
+window.LOTM_SKILLS={DMG:DMG,SK:SK,ORDER:ORDER,PASS:PASS,PATHNAME:PATHNAME,pathKey:pathKey,list:list,play:play,decorate:decorate,css:css,ensure:ensure};
 })();

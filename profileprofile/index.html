@@ -291,6 +291,18 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   background:rgba(215,183,117,.08);border:1px solid rgba(215,183,117,.22);font-size:9px;
 }
 .skillDesc{font-size:11px;line-height:1.55;color:#c4b9b8;margin-top:9px;position:relative}
+.skillCalc{margin-top:9px;padding:8px 10px;border-radius:9px;border:1px solid rgba(215,183,117,.16);border-left:3px solid var(--gold);background:linear-gradient(100deg,rgba(215,183,117,.09),rgba(215,183,117,.02));position:relative}
+.calcHead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:9px;letter-spacing:.12em;color:var(--muted)}
+.calcHead b{color:var(--gold);font-size:12px;letter-spacing:0;font-weight:800}
+.calcRow{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:6px;font-size:11px;color:#e6d8c0}
+.calcBase{padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.07);font-weight:700}
+.calcPlus{opacity:.5}
+.calcStat{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:6px;border:1px solid var(--c,#d7b775);color:var(--c,#d7b775);background:rgba(0,0,0,.25);font-weight:700;white-space:nowrap}
+.calcNote{margin-top:6px;font-size:10px;line-height:1.45;color:#a99f98}
+.calcNone{font-size:10.5px;color:#a99f98}
+.calcCrit{margin-top:10px;font-size:10px;line-height:1.55;color:#a99f98;text-align:center}
+.calcCrit b{color:#e6d8c0}
+
 .skill.passive{border-style:dashed;border-color:rgba(139,107,255,.45);background:linear-gradient(115deg,rgba(44,34,66,.5),rgba(22,19,30,.8))}
 .passive .skillIcon{background:rgba(139,107,255,.14);border-color:rgba(139,107,255,.4)}
 .passive .badge{color:#cdb8ff;background:rgba(139,107,255,.12);border-color:rgba(139,107,255,.35)}
@@ -908,7 +920,48 @@ async function addStat(stat, x, y) {
   }
 }
 
-function skillCard(icon, name, type, description, passive = false, index = 0) {
+function calcBlock(c) {
+  if (!c) return null;
+  const COL = {str:"#ff8a6a", agi:"#7be3a0", int:"#7aa8ff", spi:"#d9a3ff", con:"#ffd27a"};
+  const NAME = {str:"⚔ Сила", agi:"🏃 Ловкость", int:"🧠 Интеллект", spi:"✨ Дух", con:"🛡 Тело"};
+  const box = document.createElement("div");
+  box.className = "skillCalc";
+  if (c.none) { const n = document.createElement("div"); n.className = "calcNone"; n.textContent = "✦ " + c.none; box.appendChild(n); return box; }
+  const head = document.createElement("div");
+  head.className = "calcHead";
+  const lab = document.createElement("span");
+  lab.textContent = c.eff ? "ЭФФЕКТ ЗАВИСИТ ОТ" : "УРОН СЧИТАЕТСЯ ОТ";
+  head.appendChild(lab);
+  if (c.s) {
+    let v = c.base;
+    c.s.forEach(x => { v += Math.floor(number(CUR[x[0]]) * x[1] / 100); });
+    const val = document.createElement("b");
+    val.textContent = "≈ " + v;
+    val.title = "По твоим текущим характеристикам, без бонусов экипировки и критов";
+    head.appendChild(val);
+  }
+  box.appendChild(head);
+  const row = document.createElement("div");
+  row.className = "calcRow";
+  if (c.s) {
+    const b = document.createElement("span"); b.className = "calcBase"; b.textContent = String(c.base); row.appendChild(b);
+    c.s.forEach(x => {
+      const pl = document.createElement("span"); pl.className = "calcPlus"; pl.textContent = "+"; row.appendChild(pl);
+      const ch = document.createElement("span"); ch.className = "calcStat"; ch.style.setProperty("--c", COL[x[0]]);
+      ch.textContent = NAME[x[0]] + " × " + x[1] + "%"; row.appendChild(ch);
+    });
+  } else if (c.eff) {
+    c.eff.forEach(x => {
+      const ch = document.createElement("span"); ch.className = "calcStat"; ch.style.setProperty("--c", COL[x[0]]);
+      ch.textContent = NAME[x[0]] + " " + x[1]; row.appendChild(ch);
+    });
+  }
+  box.appendChild(row);
+  if (c.note) { const n = document.createElement("div"); n.className = "calcNote"; n.textContent = c.note; box.appendChild(n); }
+  return box;
+}
+
+function skillCard(icon, name, type, description, passive = false, index = 0, calc = null) {
   const card = document.createElement("article");
   card.className = "skill" + (passive ? " passive" : "");
   card.style.animationDelay = (index * 0.09) + "s";
@@ -945,6 +998,8 @@ function skillCard(icon, name, type, description, passive = false, index = 0) {
   desc.textContent = description;
 
   card.append(top, desc);
+  const cb = calcBlock(calc);
+  if (cb) card.appendChild(cb);
   return card;
 }
 
@@ -1018,7 +1073,7 @@ function renderSkills(path) {
     title = names[pk];
     { const sn = window._seqNum || 9; title = title.replace(/^\S+\s/, "") ; title = (window._seqName ? "✦ " : (names[pk].split(" ")[0] + " ")) + sn + " · " + (window._seqName || title); }
     subtitle = LOTM_SKILLS.PATHNAME[pk][0].toUpperCase();
-    LOTM_SKILLS.list(pk).forEach(sk => { skills.push([sk.icon, sk.name, sk.tag, sk.desc, false]); keys.push(sk.key); });
+    LOTM_SKILLS.list(pk).forEach(sk => { skills.push([sk.icon, sk.name, sk.tag, sk.desc, false, (LOTM_SKILLS.DMG || {})[sk.key] || null]); keys.push(sk.key); });
     { const ps = LOTM_SKILLS.PASS[pk]; skills.push([ps[0], ps[1], ps[2], ps[3], true]); }
     keys.push("");
   }
@@ -1035,13 +1090,17 @@ function renderSkills(path) {
   }
 
   skills.forEach((skill, i) => {
-    const card = skillCard(skill[0], skill[1], skill[2], skill[3], skill[4], i);
+    const card = skillCard(skill[0], skill[1], skill[2], skill[3], skill[4], i, skill[5] || null);
     if (keys[i]) {
       card.style.cursor = "pointer";
       card.addEventListener("click", () => LOTM_SKILLS.play(keys[i], document.querySelector(".portrait"), card));
     }
     box.appendChild(card);
   });
+  const cr = document.createElement("div");
+  cr.className = "calcCrit";
+  cr.innerHTML = "💥 <b>Критический удар:</b> шанс растёт от <b>Ловкости</b> (до 35%), множитель — от <b>Духа</b> (до ×2,5).<br>Базовая атака: <b>5 + Сила × 50%</b>.";
+  box.appendChild(cr);
 }
 
 const MAX_LEVEL = 20;
