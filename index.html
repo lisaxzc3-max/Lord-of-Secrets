@@ -356,6 +356,74 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .bgSpark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;background:var(--c,#e2c27a);box-shadow:0 0 8px var(--c,#e2c27a);animation:bgSp .7s ease-out forwards}
 @keyframes bgSp{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
 @media(prefers-reduced-motion:reduce){.bagWrap *,.bagWrap::before{animation:none!important;transition:none!important}}
+
+/* ===== Сумка v2 ===== */
+.bgTabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:2px 0 10px;padding:4px;border-radius:14px;background:#0006;border:1px solid #2f2745}
+.bgTabs button{border:0;border-radius:10px;padding:9px 6px;background:transparent;color:#a99dba;font:700 12px inherit;font-family:inherit;letter-spacing:.04em;cursor:pointer;transition:.2s}
+.bgTabs button b{font-weight:800;color:#e2c27a;margin-left:3px}
+.bgTabs button.on{background:linear-gradient(135deg,#6b5530,#3c2f4a);color:#f6e8c4;box-shadow:0 0 12px #e2c27a33}
+.bgSubRow{align-items:center;margin-top:12px}
+.bgSubRow b{color:#e2c27a;font-weight:800;margin-left:4px;letter-spacing:0}
+.bgTools{display:flex;gap:6px;text-transform:none;letter-spacing:0}
+.bgTool{border:1px solid #3a3057;background:#120c1e;color:#cdbf9f;border-radius:99px;padding:4px 10px;font:600 11px inherit;font-family:inherit;cursor:pointer}
+.bgTool.on{background:#e2c27a;color:#1a1020;border-color:#e2c27a}
+.eqGrid{grid-template-columns:repeat(7,1fr)!important;gap:5px!important}
+.eqSlot{aspect-ratio:1/1.15!important;padding:2px!important;border-radius:10px!important}
+.eqSlot .ic{font-size:19px!important}.eqSlot .nm{display:none!important}
+.eqSlot .sl{font-size:8px!important;letter-spacing:0!important}
+.ivList{display:flex;flex-direction:column;gap:6px}
+.ivRow{position:relative;display:flex;align-items:center;gap:9px;width:100%;text-align:left;border-radius:12px;border:1px solid var(--rc);background:linear-gradient(165deg,#241a38,#130d20);padding:7px 9px;color:inherit;font:inherit;cursor:pointer;overflow:hidden;box-shadow:0 0 8px var(--rg);animation:bgIn .4s backwards;animation-delay:calc(var(--i)*35ms);transition:transform .15s,opacity .3s}
+.ivRow:active{transform:scale(.985)}
+.ivRow::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 0,var(--rg),transparent 60%);opacity:.6;pointer-events:none}
+.ivRow.fog{background:linear-gradient(165deg,#12262a,#0a1316);border-color:#4a8f86}
+.ivRow.vipSeal{border-color:#d4607a;background:linear-gradient(165deg,#3a1428,#150a1c)}
+.ivRow .ic{position:relative;flex:0 0 36px;height:36px;border-radius:10px;background:#0007;border:1px solid var(--rc);display:flex;align-items:center;justify-content:center;font-size:19px}
+.ivRow .ic svg{width:22px;height:22px}
+.ivRow .mid{position:relative;flex:1;min-width:0}
+.ivRow .nm{font-weight:800;font-size:13px;color:#f6ecd0;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ivRow .rr{font-size:9.5px;letter-spacing:.4px;color:var(--rc);text-transform:uppercase;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ivRow .sm{position:relative;display:flex;flex-direction:row;align-items:center;gap:7px;font-size:10.5px;color:#d8cdea;white-space:nowrap}
+.ivRow .sm b{color:#e2c27a}
+.ivRow .ck{position:relative;flex:0 0 22px;height:22px;border-radius:7px;border:1.5px solid #6a5d86;display:none;align-items:center;justify-content:center;font-size:14px;color:#1a1020}
+body.bgSelMode .ivRow .ck{display:flex}
+.ivRow.sel{border-color:#ff7b6b;box-shadow:0 0 14px #ff7b6b66}
+.ivRow.sel .ck{background:#ff7b6b;border-color:#ff7b6b}
+.ivRow.out{transform:scale(.9);opacity:0}
+.bgMore{width:100%;margin-top:8px;border:1px dashed #4a3f62;background:#120c1e88;color:#cdbf9f;border-radius:12px;padding:10px;font:600 12px inherit;font-family:inherit;cursor:pointer}
+.bgSelBar{position:fixed;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:2147481000;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:14px;background:#1b1226f5;border:1px solid #ff7b6b88;box-shadow:0 6px 24px #000a}
+.bgSelBar span{flex:1;font-size:12px;color:#e8dcc0;line-height:1.25}
+.bgDanger{border:1px solid #ff7b6b;background:linear-gradient(135deg,#7a2a2a,#4a1a24);color:#ffe0d8;border-radius:11px;padding:9px 12px;font:700 12px inherit;font-family:inherit;cursor:pointer}
+.bgDanger:disabled{opacity:.4}
+.bgDanger.arm{background:linear-gradient(135deg,#d9443c,#8a2a2a);animation:bgNew .5s}
+.bgGhost{border:1px solid #4a3f62;background:#120c1e;color:#cdbf9f;border-radius:11px;padding:9px 10px;font:600 12px inherit;font-family:inherit;cursor:pointer}
+.bgSh{position:fixed;inset:0;z-index:2147482000;pointer-events:none}
+.bgShBk{position:absolute;inset:0;background:#000a;opacity:0;transition:opacity .25s}
+.bgShBox{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;max-height:82vh;overflow:auto;border-radius:20px 20px 0 0;border:1px solid #4a3f62;border-bottom:0;background:linear-gradient(180deg,#221836,#120c1e);padding:8px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.bgSh.on{pointer-events:auto}.bgSh.on .bgShBk{opacity:1}.bgSh.on .bgShBox{transform:none}
+.bgShGrip{display:block;width:40px;height:4px;border-radius:4px;background:#4a3f62;margin:2px auto 12px}
+.shHd{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.shHd .ic{flex:0 0 52px;height:52px;border-radius:14px;background:#0008;border:1.5px solid var(--rc);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 16px var(--rg);color:var(--rc)}
+.shHd .ic svg{width:30px;height:30px}
+.shHd .nm{font:700 17px Philosopher,Georgia,serif;color:#f6ecd0;line-height:1.15}
+.shHd .rr{font-size:10.5px;letter-spacing:.8px;color:var(--rc);text-transform:uppercase;margin-top:3px}
+.shChips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.shChips .chip{font-size:12px;padding:4px 10px;border-radius:9px;background:#0007;border:1px solid #ffffff1c;color:#d8cdea}
+.shChips .chip b{color:#e2c27a}
+.shNote{font-size:12px;color:#9fd7c4;margin:6px 0}
+.shTx{font-size:12px;line-height:1.5;color:#b8accb;margin:6px 0 10px}
+.shBtns{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.shBtns .btn{margin:0;padding:12px}
+.shBtns .bgDanger{padding:12px;font-size:13px}
+.adRow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;border:1px solid #3a3057;background:#120c1e;margin-bottom:6px;cursor:pointer;width:100%;font:inherit;color:inherit;text-align:left}
+.adRow .dot{flex:0 0 12px;height:12px;border-radius:50%;background:var(--rc);box-shadow:0 0 8px var(--rc)}
+.adRow .t{flex:1;font-size:13px;color:#e8dcc0}.adRow .t small{display:block;font-size:10.5px;color:#8d86a0;margin-top:1px}
+.adRow .sw{flex:0 0 38px;height:22px;border-radius:99px;background:#2a2040;position:relative;transition:.2s}
+.adRow .sw::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#8d86a0;transition:.2s}
+.adRow.on{border-color:var(--rc)}.adRow.on .sw{background:#7a2a2a}.adRow.on .sw::after{left:19px;background:#ffd0c8}
+.adRow.keep.on .sw{background:#2a6a5a}.adRow.keep.on .sw::after{background:#c8ffee}
+.bgAlchTop{display:none}
+body.bgSelMode .bagWrap{padding-bottom:84px}
+@media(prefers-reduced-motion:reduce){.bgSh *,.ivRow{animation:none!important;transition:none!important}}
 .tile.hasNew{border-color:#e2c27a;box-shadow:0 0 16px #e2c27a55}
 #menuBtn.hasNew::after,#sideMenu .smIt.hasNew::after{content:"";position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:#d9443c;box-shadow:0 0 8px #d9443c}
 #sideMenu .smIt.hasNew::after{top:50%;right:16px;margin-top:-4px}
@@ -658,14 +726,24 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 <div id="bag" class="card hidden bagWrap">
   <div class="bgHead"><h3>🎒 Сумка</h3><span id="bagCnt" class="bgCnt"></span></div>
   <div class="bgBar"><i id="bagBar"></i></div>
-  <div class="bgSub">⬢ Надето <span id="eqCnt"></span></div>
-  <div id="eqList" class="eqGrid"></div>
-  <div id="setBox" class="setBox hidden"></div>
-  <div class="bgSub">Предметы</div>
-  <div id="bagFilter" class="bgFilter"></div>
-  <div id="invList" class="invGrid"></div>
-  <div id="alchBag"></div>
+  <div class="bgTabs" id="bgTabs">
+    <button type="button" data-t="gear" class="on">⚔ Снаряжение</button>
+    <button type="button" data-t="alch">⚗ Алхимия <b id="bgAlchN"></b></button>
+  </div>
+  <div id="bgPaneGear">
+    <div class="bgSub">⬢ Надето <span id="eqCnt"></span></div>
+    <div id="eqList" class="eqGrid"></div>
+    <div id="setBox" class="setBox hidden"></div>
+    <div class="bgSub bgSubRow"><span>Предметы <b id="invCnt"></b></span>
+      <span class="bgTools"><button type="button" id="bgSelBtn" class="bgTool">☑ Выбрать</button><button type="button" id="bgAdBtn" class="bgTool">⚙ Авторазбор</button></span></div>
+    <div id="bagFilter" class="bgFilter"></div>
+    <div id="invList" class="ivList"></div>
+    <button type="button" id="invMore" class="bgMore hidden"></button>
+  </div>
+  <div id="bgPaneAlch" class="hidden"><div id="alchBag"></div></div>
 </div>
+<div id="bgSelBar" class="bgSelBar hidden"><span id="bgSelTx"></span><button type="button" id="bgSelGo" class="bgDanger">🔨 Разрушить</button><button type="button" id="bgSelX" class="bgGhost">Отмена</button></div>
+<div id="bgSh" class="bgSh"><div class="bgShBk" id="bgShBk"></div><div class="bgShBox"><i class="bgShGrip"></i><div id="bgShBody"></div></div></div>
 
 <div id="eventCard" class="card hidden">
   <h3 id="eventTitle">Событие</h3>
@@ -1467,15 +1545,226 @@ function bagStats(item) {
   return box;
 }
 
+const AD_VAL = { "обычная": 1, "необычная": 2, "редкая": 5, "эпическая": 12, "легендарная": 30 };
+const AD_LIST = [["обычная", "Обычная"], ["необычная", "Необычная"], ["редкая", "Редкая"], ["эпическая", "Эпическая"], ["легендарная", "Легендарная"]];
+const BAG_RANK = { "легендарная": 5, "эпическая": 4, "редкая": 3, "необычная": 2, "обычная": 1 };
+let bagShown = 10, bagSel = null, bagTab = "gear";
+G.ad = G.ad || { r: [], keep: true };
+
+function itRar(it) { return String(it?.rarity || "обычная").toLowerCase(); }
+function itVal(it) { return AD_VAL[itRar(it)] || 1; }
+function canDestroy(it) { return !!it && typeof it === "object" && !it.quest && !it.vip_days; }
+
+function shOpen(build) {
+  const body = byId("bgShBody");
+  body.replaceChildren();
+  build(body);
+  byId("bgSh").classList.add("on");
+  try { snd("open"); } catch (e) {}
+}
+function shClose() { byId("bgSh").classList.remove("on"); }
+
+function bagStatTxt(it) {
+  const st = it && it.stats && typeof it.stats === "object" ? it.stats : {};
+  const SH = { str: "💪", agi: "⚡", int: "🔮", spi: "✨", con: "🛡", dmg: "⚔", def: "🛡", hp: "❤", mp: "🔷" };
+  const out = [];
+  Object.keys(st).forEach(k => { if (st[k]) out.push((SH[k] || k) + " <b>" + (st[k] > 0 ? "+" : "") + st[k] + "</b>"); });
+  return out.slice(0, 2).join("  ");
+}
+
+function itemSheet(item, where) { // where: {inv: index} | {eq: slot}
+  const [rc, rg] = bagRar(item);
+  shOpen(body => {
+    const hd = document.createElement("div");
+    hd.className = "shHd";
+    hd.style.cssText = "--rc:" + rc + ";--rg:" + rg;
+    const ic = document.createElement("div");
+    ic.className = "ic";
+    bagIcon(ic, item, (BAG_SLOT[item?.slot] || [0, 0, "📦"])[2]);
+    if (item?.vip_days) ic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12Q12 5 20.5 12Q12 19 3.5 12z"/><circle cx="12" cy="12" r="2.4"/></svg>';
+    const tx = document.createElement("div");
+    const nm = document.createElement("div");
+    nm.className = "nm";
+    nm.textContent = String(item?.name ?? "Предмет");
+    const rr = document.createElement("div");
+    rr.className = "rr";
+    rr.textContent = (item?.quest ? "Квестовый" : item?.vip_days ? "Редкая · Печать" : String(item?.rarity || "Обычная")) + (BAG_SLOT[item?.slot] ? " · " + BAG_SLOT[item.slot][1] : "");
+    tx.append(nm, rr);
+    hd.append(ic, tx);
+    body.appendChild(hd);
+    const chips = bagStats(item);
+    chips.className = "shChips";
+    body.appendChild(chips);
+    if (item?.set) {
+      const st = document.createElement("div");
+      st.className = "shNote";
+      st.textContent = "◈ Комплект: " + (SET_NAMES[item.set] || item.set) + (SET_INFO[item.set] ? " · " + SET_INFO[item.set][1] : "");
+      body.appendChild(st);
+    }
+    if (item?.vip_days) {
+      const d = document.createElement("div");
+      d.className = "shTx";
+      d.textContent = "Посвящённый на " + item.vip_days + " дн.: +10% опыта и фунтов, автобой, рамка и префикс";
+      body.appendChild(d);
+    }
+    const bt = document.createElement("div");
+    bt.className = "shBtns";
+    if ("eq" in where) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn gold"; b.textContent = "Снять";
+      b.onclick = () => { shClose(); try { snd("back"); } catch (e) {} doUnequip(where.eq); };
+      bt.appendChild(b);
+    } else if (item?.vip_days) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn gold"; b.textContent = "Активировать";
+      b.onclick = () => { b.disabled = true; shClose(); doVipActivate(where.inv, document.createElement("div"), b); };
+      bt.appendChild(b);
+    } else if (!item?.quest) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn gold"; b.textContent = "Надеть";
+      b.onclick = () => { b.disabled = true; shClose(); try { snd("good"); } catch (e) {} doEquip(where.inv); };
+      bt.appendChild(b);
+    } else {
+      const q = document.createElement("div");
+      q.className = "shTx";
+      q.textContent = "Квестовый предмет нельзя надеть или разрушить.";
+      bt.appendChild(q);
+    }
+    if ("inv" in where && canDestroy(item)) {
+      const d = document.createElement("button");
+      d.type = "button"; d.className = "bgDanger";
+      const lbl = "🔨 Разрушить · +" + itVal(item) + " ₸";
+      d.textContent = lbl;
+      let armed = false;
+      d.onclick = () => {
+        if (!armed) { armed = true; d.classList.add("arm"); d.textContent = "Точно разрушить? Нажми ещё раз"; setTimeout(() => { armed = false; d.classList.remove("arm"); d.textContent = lbl; }, 3500); return; }
+        d.disabled = true; shClose(); doDestroy([where.inv]);
+      };
+      bt.appendChild(d);
+    }
+    body.appendChild(bt);
+  });
+}
+
+async function doDestroy(idxs) {
+  try {
+    const d = await api({ action: "item_destroy", idxs: idxs.join(",") });
+    if (d && d.ok) {
+      try { snd("deny"); } catch (e) {}
+      const ds = {};
+      idxs.forEach(i => { ds[i] = 1; });
+      G.inv = G.inv.filter((it, i) => !(ds[i] && canDestroy(it)));
+      bagSel = null; document.body.classList.remove("bgSelMode");
+      bagToast(d.text || "Разрушено");
+      renderBagFromJ({ inventory: G.inv, equipped: G.eq });
+      loadProfileWithRetry(false);
+    } else bagToast((d && (d.text || d.error)) || "Не удалось разрушить");
+  } catch (e) { bagToast("Не удалось разрушить: " + e.message); }
+}
+
+function adSheet() {
+  const cur = new Set(G.ad.r || []);
+  let keep = G.ad.keep !== false;
+  shOpen(body => {
+    const h = document.createElement("div");
+    h.className = "shHd";
+    h.innerHTML = '<div class="ic" style="--rc:#ff7b6b;--rg:#ff7b6b33">🔨</div><div><div class="nm">Авторазрушение</div><div class="rr" style="color:#b8accb">Новые предметы выбранной редкости разрушаются сами</div></div>';
+    body.appendChild(h);
+    const info = document.createElement("div");
+    info.className = "shTx";
+    info.textContent = "За каждый разрушенный предмет ты получаешь фунты. Надетые, квестовые предметы и печати никогда не затрагиваются.";
+    body.appendChild(info);
+    const rows = [];
+    const sum = document.createElement("div");
+    sum.className = "shNote";
+    const upd = () => {
+      rows.forEach(r => r.el.classList.toggle("on", cur.has(r.k)));
+      let n = 0, g = 0;
+      G.inv.forEach(it => { if (canDestroy(it) && cur.has(itRar(it)) && !(keep && it.set)) { n++; g += itVal(it); } });
+      sum.textContent = cur.size ? "Сейчас подходит: " + n + " шт. · +" + g + " ₸" : "Ничего не выбрано";
+      go.disabled = !n;
+    };
+    AD_LIST.forEach(([k, t]) => {
+      const el = document.createElement("button");
+      el.type = "button"; el.className = "adRow";
+      el.style.setProperty("--rc", BAG_RAR[k][0]);
+      el.innerHTML = '<i class="dot"></i><span class="t">' + t + '<small>+' + AD_VAL[k] + ' ₸ за предмет</small></span><i class="sw"></i>';
+      el.onclick = () => { try { snd("tap"); } catch (e) {} cur.has(k) ? cur.delete(k) : cur.add(k); upd(); };
+      body.appendChild(el); rows.push({ k, el });
+    });
+    const kp = document.createElement("button");
+    kp.type = "button"; kp.className = "adRow keep"; kp.style.setProperty("--rc", "#5fbfa8");
+    kp.innerHTML = '<i class="dot"></i><span class="t">Беречь предметы комплектов<small>Реликвии Серого Тумана и снаряжение новичка</small></span><i class="sw"></i>';
+    kp.classList.toggle("on", keep);
+    kp.onclick = () => { keep = !keep; kp.classList.toggle("on", keep); upd(); };
+    body.appendChild(kp);
+    body.appendChild(sum);
+    const bt = document.createElement("div");
+    bt.className = "shBtns";
+    const sv = document.createElement("button");
+    sv.type = "button"; sv.className = "btn gold"; sv.textContent = "Сохранить";
+    sv.onclick = async () => {
+      sv.disabled = true;
+      try {
+        const d = await api({ action: "ad_set", rars: Array.from(cur).join(","), keep: keep ? 1 : 0 });
+        if (d && d.ok) { G.ad = { r: d.rars || [], keep: !!d.keep }; shClose(); bagToast(d.text || "Сохранено"); loadProfileWithRetry(false); }
+        else { sv.disabled = false; bagToast((d && (d.text || d.error)) || "Не удалось сохранить"); }
+      } catch (e) { sv.disabled = false; bagToast("Не удалось сохранить: " + e.message); }
+    };
+    const go = document.createElement("button");
+    go.type = "button"; go.className = "bgDanger"; go.textContent = "🔨 Разрушить подходящие сейчас";
+    go.onclick = async () => {
+      go.disabled = true;
+      try {
+        const d = await api({ action: "item_destroy", rars: Array.from(cur).join(","), keep: keep ? 1 : 0 });
+        if (d && d.ok) { shClose(); bagToast(d.text || "Готово"); loadProfileWithRetry(false); }
+        else { go.disabled = false; bagToast((d && (d.text || d.error)) || "Не удалось"); }
+      } catch (e) { go.disabled = false; bagToast("Не удалось: " + e.message); }
+    };
+    bt.append(sv, go);
+    body.appendChild(bt);
+    upd();
+  });
+}
+
+function bagSelUpdate() {
+  const bar = byId("bgSelBar");
+  const on = !!bagSel;
+  bar.classList.toggle("hidden", !on);
+  document.body.classList.toggle("bgSelMode", on);
+  byId("bgSelBtn").classList.toggle("on", on);
+  if (!on) return;
+  let g = 0;
+  bagSel.forEach(i => { if (G.inv[i]) g += itVal(G.inv[i]); });
+  byId("bgSelTx").textContent = bagSel.size ? "Выбрано: " + bagSel.size + " · +" + g + " ₸" : "Выбери предметы для разрушения";
+  const b = byId("bgSelGo");
+  b.disabled = !bagSel.size;
+  b.classList.remove("arm");
+  b.textContent = "🔨 Разрушить";
+}
+
+function bagSetTab(t) {
+  bagTab = t;
+  byId("bgPaneGear").classList.toggle("hidden", t !== "gear");
+  byId("bgPaneAlch").classList.toggle("hidden", t !== "alch");
+  byId("bgTabs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  if (t !== "gear" && bagSel) { bagSel = null; bagSelUpdate(); }
+}
+
 function renderBagFromJ(data) {
   G.inv = Array.isArray(data.inventory) ? data.inventory : [];
   G.eq = data.equipped && typeof data.equipped === "object" ? data.equipped : {};
+  if (data.ad && typeof data.ad === "object") G.ad = { r: Array.isArray(data.ad.r) ? data.ad.r : [], keep: data.ad.keep !== false };
+  if (data.ingr || data.pots) G.alch = data;
+  if (data.auto_destroy && data.auto_destroy.n) bagToast("🔨 Авторазрушение: " + data.auto_destroy.n + " шт. · +" + data.auto_destroy.gain + " ₸");
 
   const total = G.inv.length;
   byId("bagCnt").textContent = total + "/50";
   const bar = byId("bagBar");
   bar.style.width = Math.min(100, total * 2) + "%";
   bar.parentElement.classList.toggle("full", total >= 45);
+  byId("invCnt").textContent = total;
+  if (bagSel) { bagSel.forEach(i => { if (!G.inv[i] || !canDestroy(G.inv[i])) bagSel.delete(i); }); }
 
   // Надето
   const eqList = byId("eqList");
@@ -1498,16 +1787,7 @@ function renderBagFromJ(data) {
       b.classList.add("on");
       b.style.setProperty("--rc", rc);
       b.style.setProperty("--rg", rg);
-      b.title = "Снять: " + String(item.name ?? "");
-      const nm = document.createElement("div");
-      nm.className = "nm";
-      nm.textContent = String(item.name ?? "Предмет");
-      b.appendChild(nm);
-      b.addEventListener("click", () => {
-        bagSpark(b, rc);
-        try { snd("back"); } catch (e) {}
-        doUnequip(slot);
-      });
+      b.addEventListener("click", () => { bagSpark(b, rc); itemSheet(item, { eq: slot }); });
     } else {
       const sl = document.createElement("div");
       sl.className = "sl";
@@ -1520,7 +1800,7 @@ function renderBagFromJ(data) {
   byId("eqCnt").textContent = worn + "/7";
   bagSets();
 
-  // Фильтры
+  // Фильтры по слотам
   const filter = byId("bagFilter");
   filter.replaceChildren();
   const present = new Set(G.inv.map(it => it?.slot).filter(Boolean));
@@ -1532,92 +1812,70 @@ function renderBagFromJ(data) {
       c.className = "bgChip" + (bagFilter === k ? " on" : "");
       c.textContent = t;
       c.addEventListener("click", () => {
-        bagFilter = k;
+        bagFilter = k; bagShown = 10;
         try { snd("tap"); } catch (e) {}
-        renderBagFromJ(data);
+        renderBagFromJ({ inventory: G.inv, equipped: G.eq });
       });
       filter.appendChild(c);
     });
   }
 
-  // Предметы
+  // Предметы: компактный список, новые и редкие выше
   const invList = byId("invList");
   invList.replaceChildren();
   const grew = bagPrevCount >= 0 && total > bagPrevCount;
   bagPrevCount = total;
-  let shown = 0;
-  G.inv.forEach((item, index) => {
-    if (bagFilter !== "all" && item?.slot !== bagFilter) return;
-    shown++;
+  const list = [];
+  G.inv.forEach((item, index) => { if (bagFilter === "all" || item?.slot === bagFilter) list.push({ item, index }); });
+  const rank = it => it?.vip_days ? 9 : (it?.quest ? 0 : (BAG_RANK[itRar(it)] || 1));
+  list.sort((a, b) => rank(b.item) - rank(a.item) || b.index - a.index);
+  const shownList = list.slice(0, bagShown);
+  shownList.forEach(({ item, index }, n) => {
     const [rc, rg, cls] = bagRar(item);
-    const card = document.createElement("div");
-    card.className = "invCard " + (item?.set === "fog" ? "fog " : "") + cls + (grew && index === total - 1 ? " new" : "");
-    card.style.cssText = "--rc:" + rc + ";--rg:" + rg + ";--i:" + Math.min(shown, 12);
-
-    const top = document.createElement("div");
-    top.className = "tp";
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "ivRow " + (item?.set === "fog" ? "fog " : "") + (item?.vip_days ? "vipSeal " : "") + cls + (bagSel && bagSel.has(index) ? " sel" : "");
+    row.style.cssText = "--rc:" + rc + ";--rg:" + rg + ";--i:" + Math.min(n, 10);
     const ic = document.createElement("div");
     ic.className = "ic";
     bagIcon(ic, item, (BAG_SLOT[item?.slot] || [0, 0, "📦"])[2]);
-    const tx = document.createElement("div");
+    if (item?.vip_days) ic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12Q12 5 20.5 12Q12 19 3.5 12z"/><circle cx="12" cy="12" r="2.4"/></svg>';
+    const mid = document.createElement("div");
+    mid.className = "mid";
     const nm = document.createElement("div");
     nm.className = "nm";
     nm.textContent = String(item?.name ?? "Предмет");
     const rr = document.createElement("div");
     rr.className = "rr";
-    rr.textContent = (item?.quest ? "Квестовый" : String(item?.rarity || "Обычная")) +
-      (BAG_SLOT[item?.slot] ? " · " + BAG_SLOT[item.slot][1] : "");
-    tx.append(nm, rr);
-    top.append(ic, tx);
-    card.append(top, bagStats(item));
-
-    if (item?.set) {
-      const st = document.createElement("div");
-      st.className = "set";
-      st.textContent = "◈ Комплект: " + (SET_NAMES[item.set] || item.set);
-      card.appendChild(st);
-    }
-
-    if (item?.vip_days) {
-      card.classList.add("vipSeal");
-      ic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12Q12 5 20.5 12Q12 19 3.5 12z"/><circle cx="12" cy="12" r="2.4"/></svg>';
-      rr.textContent = "Редкая · Печать";
-      const vd = document.createElement("div");
-      vd.className = "vsd";
-      vd.textContent = "Посвящённый на " + item.vip_days + " дн.: +10% опыта и фунтов, автобой, рамка и префикс";
-      card.appendChild(vd);
-      const vb = document.createElement("button");
-      vb.type = "button";
-      vb.className = "btn gold vsb";
-      vb.textContent = "Активировать";
-      vb.addEventListener("click", () => {
-        vb.disabled = true;
-        doVipActivate(index, card, vb);
-      });
-      card.appendChild(vb);
-    } else if (item?.quest) {
-      const q = document.createElement("div");
-      q.className = "qk";
-      q.textContent = "Квестовый предмет";
-      card.appendChild(q);
-    } else {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "btn gold";
-      btn.textContent = "Надеть";
-      btn.addEventListener("click", () => {
-        btn.disabled = true;
-        bagSpark(card, rc);
-        card.classList.add("out");
-        try { snd("good"); } catch (e) {}
-        doEquip(index);
-      });
-      card.appendChild(btn);
-    }
-    invList.appendChild(card);
+    rr.textContent = (item?.quest ? "Квестовый" : item?.vip_days ? "Печать" : String(item?.rarity || "Обычная")) + (BAG_SLOT[item?.slot] ? " · " + BAG_SLOT[item.slot][1] : "") + (item?.set ? " · ◈" : "");
+    mid.append(nm, rr);
+    const sm = document.createElement("div");
+    sm.className = "sm";
+    sm.innerHTML = bagStatTxt(item) || "";
+    const ck = document.createElement("div");
+    ck.className = "ck";
+    ck.textContent = bagSel && bagSel.has(index) ? "✓" : "";
+    row.append(ic, mid, sm, ck);
+    row.addEventListener("click", () => {
+      if (bagSel) {
+        if (!canDestroy(item)) { bagToast("Этот предмет нельзя разрушить"); return; }
+        bagSel.has(index) ? bagSel.delete(index) : bagSel.add(index);
+        try { snd("tap"); } catch (e) {}
+        row.classList.toggle("sel", bagSel.has(index));
+        ck.textContent = bagSel.has(index) ? "✓" : "";
+        bagSelUpdate();
+        return;
+      }
+      itemSheet(item, { inv: index });
+    });
+    invList.appendChild(row);
   });
+  const more = byId("invMore");
+  const rest = list.length - shownList.length;
+  more.classList.toggle("hidden", rest <= 0);
+  more.textContent = "Показать ещё · " + rest;
 
-  if (!shown) {
+  if (!list.length) {
     const e = document.createElement("div");
     e.className = "bgEmpty";
     const big = document.createElement("span");
@@ -1626,8 +1884,39 @@ function renderBagFromJ(data) {
     e.append(big, total ? "Здесь ничего нет" : "Сумка пуста — добудь что-нибудь в походах");
     invList.appendChild(e);
   }
-  try { renderAlchBag(data); } catch (e) {}
+  bagSelUpdate();
+  try {
+    const A = G.alch || data;
+    renderAlchBag(A);
+    const n = Object.values(A.ingr || {}).reduce((a, v) => a + (v | 0), 0) + Object.values(A.pots || {}).reduce((a, v) => a + (v | 0), 0);
+    byId("bgAlchN").textContent = n ? n : "";
+  } catch (e) {}
 }
+
+(function () {
+  document.body.appendChild(byId("bgSh")); document.body.appendChild(byId("bgSelBar"));
+  byId("bgTabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { try { snd("tap"); } catch (x) {} bagSetTab(b.dataset.t); } });
+  byId("invMore").addEventListener("click", () => { bagShown += 10; try { snd("tap"); } catch (e) {} renderBagFromJ({ inventory: G.inv, equipped: G.eq }); });
+  byId("bgShBk").addEventListener("click", shClose);
+  byId("bgAdBtn").addEventListener("click", adSheet);
+  byId("bgSelBtn").addEventListener("click", () => {
+    try { snd("tap"); } catch (e) {}
+    bagSel = bagSel ? null : new Set();
+    renderBagFromJ({ inventory: G.inv, equipped: G.eq });
+  });
+  byId("bgSelX").addEventListener("click", () => { bagSel = null; renderBagFromJ({ inventory: G.inv, equipped: G.eq }); });
+  byId("bgSelGo").addEventListener("click", () => {
+    const b = byId("bgSelGo");
+    if (!bagSel || !bagSel.size) return;
+    if (!b.classList.contains("arm")) {
+      b.classList.add("arm"); b.textContent = "Точно? Нажми ещё раз";
+      setTimeout(() => { if (b.classList.contains("arm")) { b.classList.remove("arm"); b.textContent = "🔨 Разрушить"; } }, 3500);
+      return;
+    }
+    b.disabled = true;
+    doDestroy(Array.from(bagSel));
+  });
+})();
 
 function renderAlchBag(data) {
   const box = byId("alchBag");
