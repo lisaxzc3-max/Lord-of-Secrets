@@ -115,6 +115,12 @@ input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:1
 .res .d{font:400 40px Philosopher,Georgia,serif}.res .av{width:120px;height:120px;flex:none;margin-bottom:16px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
+<style id="locBg">
+html body{background:none!important}
+body::before{content:"";position:fixed;inset:-3%;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#05030a8c 0%,#05030a38 38%,#05030aa6 100%),url(../shared/art/place_arena.jpg) center/cover no-repeat;filter:brightness(1.12) saturate(1.1);animation:locBgDrift 26s ease-in-out infinite alternate}
+@keyframes locBgDrift{from{transform:scale(1) translate(0,0)}to{transform:scale(1.07) translate(-1.2%,.8%)}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+</style>
 </head>
 <body>
 <canvas id="cv"></canvas>
