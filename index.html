@@ -300,6 +300,17 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .plc small{font-size:10.5px;color:#a99dba;line-height:1.3}
 .plc .tg{margin-top:3px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;padding:2px 7px;border-radius:8px;background:#0007;border:1px solid #ffffff18}
 .plc.live .tg{color:#8fe8b0;border-color:#3aa86a66}
+/* арты мест города */
+.plc.art{min-height:128px;justify-content:flex-end;background-size:cover;background-position:center;border-color:#ffffff33}
+.plc.art .pi{position:absolute;top:9px;left:10px;font-size:20px;opacity:.9}
+.plc.art b{font-size:14px;text-shadow:0 1px 6px #000,0 0 12px #000}
+.plc.art small{color:#eee4d2;text-shadow:0 1px 5px #000}
+.plc.art-clan{grid-column:1/-1;min-height:140px}
+.plc.art-top{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_top.jpg)}
+.plc.art-arena{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_arena.jpg)}
+.plc.art-bazaar{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_bazaar.jpg)}
+.plc.art-bureau{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_bureau.jpg)}
+.plc.art-clan{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_clan.jpg)}
 .plc.soon{opacity:.55!important;cursor:default;filter:saturate(.5)}
 .plc.soon .tg{color:#b3a8c8}
 .d0{--dc1:#2a2210;--dc2:#b8984e;--dg:#d6b77955}
@@ -2238,6 +2249,7 @@ function toggleDistrict(district, force) {
   try { window.snd && window.snd(open ? "open" : "back"); } catch (_) {}
 }
 
+const PLACE_ART = { top: 1, arena: 1, bazaar: 1, bureau: 1, clan: 1 };
 const PLACE_URL = { arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html", pier: "./pier/index.html", bank: "./bank/index.html", clinic: "./clinic/index.html", boulevard: "./boulevard/index.html" };
 try { LOTM_FAST.idle(() => Object.keys(PLACE_URL).forEach(k => LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[k])))); } catch (_) {}
 function openPlace(key) {
@@ -2278,9 +2290,9 @@ function openPlace(key) {
     d.places.forEach((p, k) => {
       const b = document.createElement("button");
       b.type = "button";
-      b.className = "plc " + (p.key ? "live" : "soon");
+      b.className = "plc " + (p.key ? "live" : "soon") + (PLACE_ART[p.key] ? " art art-" + p.key : "");
       b.style.setProperty("--k", k);
-      b.innerHTML = '<span class="pi">' + p.icon + '</span><b>' + p.name + '</b><small>' + p.npc + '</small><span class="tg">' + (p.key ? "Войти" : "Скоро") + '</span>';
+      b.innerHTML = '<span class="pi">' + p.icon + '</span><b>' + p.name + '</b><small>' + p.npc + '</small>' + (p.key ? "" : '<span class="tg">Скоро</span>');
       if (p.key) b.addEventListener("click", () => openPlace(p.key));
       if (p.key && PLACE_URL[p.key]) b.addEventListener("pointerdown", () => { try { LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[p.key])); } catch (_) {} });
       if (!p.key) b.disabled = true;
