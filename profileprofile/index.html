@@ -382,6 +382,27 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   *,*:before,*:after{animation:none!important;transition:none!important}
   #veil{display:none}
 }
+
+/* вложить все очки */
+.allIn{margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(215,183,117,.28);background:linear-gradient(115deg,rgba(215,183,117,.1),rgba(215,183,117,.02))}
+.allHead{display:flex;align-items:center;justify-content:space-between;font-size:10px;letter-spacing:.14em;color:var(--muted)}
+.allHead b{font-size:15px;letter-spacing:0;color:var(--gold)}
+.allChips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:9px}
+.allChip{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px 6px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.25);color:#cbbfb0;font:inherit;font-size:10px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.allChip span{font-size:18px;line-height:1}
+.allChip:active{transform:scale(.94)}
+.allChip.on{border-color:var(--gold);background:rgba(215,183,117,.18);color:#fff3d2}
+.allPrev{margin-top:9px;text-align:center;font-size:11px;color:#cbbfb0}
+.allPrev b{color:var(--gold)}
+.allGo{width:100%;margin-top:9px;padding:12px;border-radius:12px;border:1px solid var(--gold);background:linear-gradient(180deg,#e9cf95,#b48f45);color:#1d1308;font-family:inherit;font-weight:800;font-size:13px;letter-spacing:.04em;cursor:pointer}
+.allGo:active{transform:scale(.98)}
+.allGo.sure{background:linear-gradient(180deg,#ff9d8a,#c9533f);border-color:#ffb3a3;color:#2a0b06}
+.allGo:disabled{opacity:.5}
+
+/* меньше лишних анимаций: оставлены только отклик на действия */
+*:not(.burst):not(.floatPlus):not(.levelBanner):not(.flashOv):not(#veil):not(#veil i):not(.bump):not(.toast):not(.sectionBody):not(#chFab):not(#chPanel):not(#chPanel *),
+*:not(.burst):not(.floatPlus):not(.levelBanner):not(.flashOv):not(#veil):not(#veil i):not(.bump):not(.toast):not(.sectionBody):not(#chFab):not(#chPanel):not(#chPanel *)::before,
+*:not(.burst):not(.floatPlus):not(.levelBanner):not(.flashOv):not(#veil):not(#veil i):not(.bump):not(.toast):not(.sectionBody):not(#chFab):not(#chPanel):not(#chPanel *)::after{animation:none!important}
 </style>
 <script src="../shared/skills.js"></script>
 <script src="../shared/vip.js"></script>
@@ -817,6 +838,69 @@ const statDefinitions = [
   {key:"con", icon:"🛡️", name:"Тело", hint:"Выносливость"}
 ];
 
+let ALL_SEL = null;
+let allBusy = false;
+function renderAllIn(data, points) {
+  const old = $("allIn"); if (old) old.remove();
+  if (points <= 0) return;
+  if (!ALL_SEL) {
+    let best = statDefinitions[0].key;
+    statDefinitions.forEach(s => { if (number(data[s.key]) > number(data[best])) best = s.key; });
+    ALL_SEL = best;
+  }
+  const box = document.createElement("div");
+  box.className = "allIn"; box.id = "allIn";
+  const head = document.createElement("div"); head.className = "allHead";
+  const t = document.createElement("span"); t.textContent = "ВЛОЖИТЬ ВСЕ ОЧКИ";
+  const n = document.createElement("b"); n.textContent = "+" + points;
+  head.append(t, n);
+  const chips = document.createElement("div"); chips.className = "allChips";
+  const prev = document.createElement("div"); prev.className = "allPrev";
+  const go = document.createElement("button"); go.type = "button"; go.className = "allGo";
+  const upd = () => {
+    const st = statDefinitions.find(s => s.key === ALL_SEL);
+    const cur = number(data[ALL_SEL]);
+    prev.replaceChildren();
+    prev.append(st.name + ": " + cur + " → ");
+    const b = document.createElement("b"); b.textContent = String(cur + points); prev.append(b);
+    go.textContent = "Вложить все в «" + st.name + "»";
+    go.classList.remove("sure");
+    chips.querySelectorAll(".allChip").forEach(c => c.classList.toggle("on", c.dataset.k === ALL_SEL));
+  };
+  statDefinitions.forEach(s => {
+    const c = document.createElement("button"); c.type = "button"; c.className = "allChip"; c.dataset.k = s.key;
+    const ic = document.createElement("span"); ic.textContent = s.icon;
+    c.append(ic, document.createTextNode(s.name));
+    c.addEventListener("click", () => { ALL_SEL = s.key; haptic("light"); upd(); });
+    chips.appendChild(c);
+  });
+  let armT = null;
+  go.addEventListener("click", async ev => {
+    if (allBusy) return;
+    if (!go.classList.contains("sure")) {
+      go.classList.add("sure"); go.textContent = "Нажми ещё раз: вложить +" + points;
+      clearTimeout(armT); armT = setTimeout(upd, 3500); return;
+    }
+    clearTimeout(armT); allBusy = true; go.disabled = true;
+    const r = go.getBoundingClientRect();
+    try {
+      const result = await api({action:"addstat", stat:ALL_SEL, n:"all"});
+      if (result.ok !== true) { showToast(result.error || "Не удалось вложить очки"); return; }
+      burstAt(r.left + r.width / 2, r.top + r.height / 2);
+      haptic("medium");
+      showToast("Вложено очков: " + (result.added || points));
+      await loadProfile();
+      const el = $("stat_" + ALL_SEL);
+      if (el) { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
+    } catch (error) {
+      showToast(error.message || "Ошибка связи с сервером");
+    } finally { allBusy = false; go.disabled = false; }
+  });
+  box.append(head, chips, prev, go);
+  $("statsList").appendChild(box);
+  upd();
+}
+
 function renderStats(data) {
   CUR = data;
   const points = Math.max(0, Math.floor(number(data.stat_points)));
@@ -878,6 +962,7 @@ function renderStats(data) {
     row.append(left, right);
     box.appendChild(row);
   });
+  renderAllIn(data, points);
 }
 
 let resetArm = 0;
