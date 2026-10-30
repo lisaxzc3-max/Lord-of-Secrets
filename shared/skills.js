@@ -100,7 +100,13 @@ var css=
 "@keyframes skShine{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}"+
 ".skill .skIc{display:inline-block;margin-right:5px;animation:skBob 2.6s ease-in-out infinite;filter:drop-shadow(0 0 5px var(--sk))}"+
 "@keyframes skBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(1.12)}}"+
-".skill .skTag{position:absolute;right:7px;top:6px;font-size:9px;letter-spacing:.08em;opacity:.55}";
+".skill .skTag{position:absolute;right:7px;top:6px;font-size:9px;letter-spacing:.08em;opacity:.55}"+
+".skFm{display:flex;flex-wrap:wrap;align-items:center;gap:3px 4px;margin-top:6px;padding-top:5px;border-top:1px dashed #ffffff22;font-size:10px;line-height:1.3;color:#cfc3b2}"+
+".skFm i{font-style:normal;font-size:8px;letter-spacing:.1em;opacity:.6;margin-right:1px}"+
+".skFm .n{padding:1px 5px;border-radius:5px;background:#ffffff12;font-weight:700}"+
+".skFm .st{padding:1px 5px;border-radius:5px;border:1px solid var(--c);color:var(--c);background:#0006;font-weight:700;white-space:nowrap}"+
+".skFm em{margin-left:auto;font-style:normal;font-weight:800;color:#f2d98d}"+
+".skFm.nn{opacity:.6}";
 
 var layer=null;
 function ensure(){
@@ -207,10 +213,29 @@ try{FX[s.fx](ctr(pEl),ctr(eEl))}catch(e){}
 try{if(window.snd)snd(s.fx)}catch(e){}
 }
 /* кнопка навыка (в бою) */
+
+var FCOL={str:"#ff8a6a",agi:"#7be3a0",int:"#7aa8ff",spi:"#d9a3ff",con:"#ffd27a"};
+var FNAME={str:"Сила",agi:"Ловк.",int:"Инт.",spi:"Дух",con:"Тело"};
+function formula(key){
+var c=DMG[key];if(!c)return null;ensure();
+var d=document.createElement("div");d.className="skFm";
+function sp(t,cl,x){var e=document.createElement(t);if(cl)e.className=cl;e.textContent=x;return e}
+if(c.none){d.classList.add("nn");d.textContent="Без зависимости от статов";return d}
+d.appendChild(sp("i","",c.eff?"ЗАВИСИТ":"УРОН"));
+if(c.s){
+d.appendChild(sp("span","n",String(c.base)));
+c.s.forEach(function(x){d.appendChild(sp("span","","+"));var e=sp("span","st",FNAME[x[0]]+" "+x[1]+"%");e.style.setProperty("--c",FCOL[x[0]]);d.appendChild(e)});
+var S=window.LOTM_STATS;
+if(S){var v=c.base;c.s.forEach(function(x){v+=Math.floor((+S[x[0]]||0)*x[1]/100)});d.appendChild(sp("em","","≈ "+v))}
+}else if(c.eff){
+c.eff.forEach(function(x){var e=sp("span","st",FNAME[x[0]]+" "+x[1]);e.style.setProperty("--c",FCOL[x[0]]);d.appendChild(e)});
+}
+return d;
+}
 function decorate(btn,key){
 var s=SK[key];if(!s)return;ensure();
 btn.style.setProperty("--sk",s.c);
 }
 try{if(document.head&&!document.getElementById('sfxCss')){var _s=document.createElement('style');_s.id='sfxCss';_s.textContent=css;document.head.appendChild(_s)}}catch(e){}
-window.LOTM_SKILLS={DMG:DMG,SK:SK,ORDER:ORDER,PASS:PASS,PATHNAME:PATHNAME,pathKey:pathKey,list:list,play:play,decorate:decorate,css:css,ensure:ensure};
+window.LOTM_SKILLS={DMG:DMG,SK:SK,ORDER:ORDER,PASS:PASS,PATHNAME:PATHNAME,pathKey:pathKey,list:list,play:play,decorate:decorate,formula:formula,css:css,ensure:ensure};
 })();

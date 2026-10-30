@@ -623,7 +623,7 @@ if(cdk)button.dataset.cdk=cdk;
 button.dataset.cooldown="false";
 const name=document.createElement("div");name.className="skillName";name.textContent=(info?.name||key);if(info?.icon){const ic=document.createElement("span");ic.className="skIc";ic.textContent=info.icon+" ";name.prepend(ic)}LOTM_SKILLS.decorate(button,key);if(info?.tag){const tg=document.createElement("span");tg.className="skTag";tg.textContent=info.tag;button.appendChild(tg)}
 const desc=document.createElement("div");desc.className="skillDesc";desc.textContent=info?.desc||"";
-button.append(name,desc);
+button.append(name,desc);try{const _fm=LOTM_SKILLS.formula(key);if(_fm)button.appendChild(_fm)}catch(e){}
 button.addEventListener("click",()=>{if(button.dataset.cooldown!=="true")doBattle(key)});
 $("battleSkills").appendChild(button);
 }
@@ -663,7 +663,7 @@ document.body.classList.remove("defeatFx");
 setBusy(true,"Загрузка…");hideError();
 try{
 const stP=api({action:"battle_state"}).catch(e=>({__err:e}));const profile=await loadProfile();
-PLAYER_PATH=profile.path||"";try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+((profile.sequence|0)&&(profile.sequence|0)<=8?"8":"")+".svg"}catch(e){}
+PLAYER_PATH=profile.path||"";window.LOTM_STATS=profile;try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+((profile.sequence|0)&&(profile.sequence|0)<=8?"8":"")+".svg"}catch(e){}
 $("playerName").textContent=profile.nickname||"Путешественник";
 $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
 setHealth("player",profile.hp,profile.max_hp);
