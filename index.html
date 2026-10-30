@@ -77,6 +77,22 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .timerBox.dead{background:rgba(60,18,26,.92);border:1px solid #8a2a3a;animation:deadPulse 2s ease-in-out infinite}
 .timerBox.regen{background:rgba(18,52,34,.92);border:1px solid #2a7a4a;animation:regenPulse 2.4s ease-in-out infinite}
 
+/* Кальветуа: еженедельный босс */
+.loc.bossLoc{cursor:pointer;border-color:#2f86a6;background:linear-gradient(145deg,#0e3a4e,#06141d);box-shadow:0 0 22px #3fb6d633}
+.loc.bossLoc:hover{box-shadow:0 0 26px #6fd3e655}
+.loc.bossLoc.live{animation:bossLive 2.4s ease-in-out infinite;border-color:#ff7a5a}
+@keyframes bossLive{0%,100%{box-shadow:0 0 18px #ff6a4a33}50%{box-shadow:0 0 30px #ff6a4a99}}
+.bossLoc .locArt{position:relative;height:auto;min-height:176px;flex:0 0 112px}
+.bossLoc .locArt img{position:absolute;inset:0;height:100%;object-position:30% 14%;animation:bossArt 9s ease-in-out infinite}
+@keyframes bossArt{0%,100%{transform:scale(1.02)}50%{transform:scale(1.1) translateY(-2%)}}
+.bossT{display:block;font-weight:900;font-size:19px;letter-spacing:.5px;color:#ffd98a;font-variant-numeric:tabular-nums;text-shadow:0 0 14px #e7b86a55;line-height:1.1}
+.bossT small{display:block;font-size:9px;letter-spacing:1.5px;color:#9fc5d2;font-weight:600;text-transform:uppercase;opacity:1;margin-top:3px}
+.bossS{display:block;font-size:11px;color:#a6f0c4;min-height:14px}
+.bossBtns{display:flex;gap:6px;flex-wrap:wrap}
+.bBtn{border:1px solid #6fd3e6;border-radius:10px;padding:8px 11px;font:inherit;font-size:12px;font-weight:800;color:#04202c;background:linear-gradient(135deg,#a8ecf7,#4fb4d8);cursor:pointer}
+.bBtn.gold{color:#20190f;background:linear-gradient(135deg,#f0d298,#c18f45);border-color:#e7b86a}
+.bBtn.ghost{background:#0c2634;color:#cfe8f0;border-color:#3d6a7c;font-weight:700}
+.bBtn:disabled{opacity:.55}
 /* город */
 .district{margin:8px 0;border:1px solid #2f2745;border-radius:14px;overflow:hidden;background:rgba(22,17,34,.6)}
 .districtHead{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;padding:12px 13px;cursor:pointer;background:linear-gradient(145deg,#2e2542,#221a33);font-size:13px;font-weight:700;color:#e0d4b8;transition:background .3s}
@@ -668,6 +684,15 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 
 <div id="travel" class="card hidden">
   <h3>🧭 Куда отправимся?</h3>
+  <div class="loc bossLoc" id="bossCard" role="button" tabindex="0" onclick="openBoss()">
+    <span class="locArt"><img src="./boss/img/kalvetua1_s.jpg?v=1" alt="" loading="lazy"></span>
+    <span class="locBody"><b>🌊 Кальветуа (Морской бог)</b>
+    <small>Еженедельный бой с богом глубин. Здоровье бесконечно, смерч удваивает урон каждый ход. Бейся за место в рейтинге игроков и кланов.</small>
+    <span class="bossT" id="bossT">…<small>загрузка</small></span>
+    <span class="bossS" id="bossS"></span>
+    <span class="bossBtns" id="bossBtns"></span>
+    <span class="tags"><i class="boss">Босс недели</i><i>3 попытки</i><i>Сб 20:00 МСК</i></span></span>
+  </div>
   <button type="button" class="loc lake" onclick="openLake()">
     <span class="locArt"><img src="./lake/img/serpent_s.jpg?v=2" alt="" loading="lazy"></span>
     <span class="locBody"><b>Озёра · Топи</b><small>Жабы, пиявки, щуки, кикиморы и Змей, что просыпается в глубине.</small>
@@ -1184,6 +1209,7 @@ function showTab(id) {
   });
 
   if (id === "bag") renderBag();
+  if (id === "travel") { try { bossLoad(); } catch (_) {} }
 }
 
 function buildPageUrl(path) {
@@ -1241,6 +1267,86 @@ function openForest() {
   rememberLoc("forest");
   location.href = buildPageUrl("./forest/index.html");
 }
+
+/* ===== Кальветуа: еженедельный босс ===== */
+const BOSS = { s: null, off: 0, last: 0, key: "", busy: false };
+async function bossApi(payload) {
+  if (!ACTION_URL && !await ensureUrls()) throw new Error("Нет связи с игрой");
+  const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), cache: "no-store" });
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return unwrap(await r.json());
+}
+function bossNow() { return Math.floor(Date.now() / 1000) + BOSS.off; }
+function bossFmt(sec) {
+  sec = Math.max(0, Math.floor(sec));
+  const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  const p = x => String(x).padStart(2, "0");
+  return (d > 0 ? d + "д " : "") + p(h) + ":" + p(m) + ":" + p(s);
+}
+function bossApply(d) {
+  if (!d || d.ok !== true) return false;
+  BOSS.s = d; BOSS.off = (d.now || bossNow()) - Math.floor(Date.now() / 1000); BOSS.last = Date.now();
+  return true;
+}
+async function bossLoad() {
+  try {
+    const d = await bossApi({ action: "boss_state" });
+    if (bossApply(d)) bossRender(true);
+    else if (d && d.error === "dead") { BOSS.s = null; byId("bossS").textContent = "💀 Ты мёртв. Бой доступен после воскрешения"; byId("bossBtns").replaceChildren(); }
+  } catch (e) {}
+}
+function bossBtn(label, cls, fn) {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "bBtn " + cls; b.textContent = label;
+  b.addEventListener("click", ev => { ev.stopPropagation(); fn(b); });
+  return b;
+}
+function bossRender(force) {
+  const s = BOSS.s, card = byId("bossCard");
+  if (!s || !card) return;
+  const n = bossNow();
+  const t = byId("bossT");
+  let target, cap;
+  if (s.ph === "wait") { target = s.reg_at; cap = "до открытия регистрации"; }
+  else if (s.ph === "reg") { target = s.bat_at; cap = "до начала боя"; }
+  else { target = s.end_at; cap = "до конца боя"; }
+  t.textContent = bossFmt(target - n);
+  const sm = document.createElement("small"); sm.textContent = cap; t.appendChild(sm);
+  card.classList.toggle("live", s.ph === "battle" && !!s.registered);
+  const key = s.ph + "|" + (s.registered ? 1 : 0) + "|" + (s.run ? 1 : 0);
+  if (force !== true && key === BOSS.key) return;
+  BOSS.key = key;
+  const st = byId("bossS"), bt = byId("bossBtns");
+  bt.replaceChildren();
+  if (s.ph === "wait") {
+    st.textContent = s.was_in ? "Прошлый бой: твой урон " + (s.tot || 0) : "Регистрация откроется в субботу в 08:00 МСК";
+    bt.appendChild(bossBtn("Локация и рейтинг", "ghost", openBoss));
+  } else if (!s.registered) {
+    st.textContent = s.ph === "reg" ? "Регистрация открыта · записалось " + (s.players || 0) : "Бой идёт · записаться ещё можно";
+    bt.appendChild(bossBtn("Регистрация", "gold", bossReg));
+  } else {
+    st.textContent = "✅ Вы зарегистрированы" + (s.ph === "battle" ? " · попыток " + Math.max(0, (s.tries || 3) - (s.ar || 0)) + "/" + (s.tries || 3) : "");
+    bt.appendChild(bossBtn(s.ph === "battle" ? "⚔ Войти на локацию" : "Войти на локацию", s.ph === "battle" ? "gold" : "", openBoss));
+  }
+}
+async function bossReg(btn) {
+  if (BOSS.busy) return;
+  BOSS.busy = true; if (btn) btn.disabled = true;
+  try {
+    const d = await bossApi({ action: "boss_reg" });
+    if (d && d.ok) { bossApply(d); try { snd("good"); } catch (_) {} bagToast("Ты записан на бой с Кальветуа"); bossRender(true); }
+    else { bagToast((d && d.text) || "Не удалось зарегистрироваться"); if (btn) btn.disabled = false; bossLoad(); }
+  } catch (e) { bagToast(e.message || "Нет связи"); if (btn) btn.disabled = false; }
+  BOSS.busy = false;
+}
+function openBoss() { location.href = buildPageUrl("./boss/index.html"); }
+setInterval(() => {
+  const tr = byId("travel");
+  if (!tr || tr.classList.contains("hidden") || document.hidden || !BOSS.s) return;
+  bossRender(false);
+  const tgt = BOSS.s.ph === "wait" ? BOSS.s.reg_at : BOSS.s.ph === "reg" ? BOSS.s.bat_at : BOSS.s.end_at;
+  if (Date.now() - BOSS.last > 45000 || (tgt - bossNow() <= 0 && Date.now() - BOSS.last > 3000)) bossLoad();
+}, 1000);
 
 function openTop() {
   location.href = buildPageUrl("./top/index.html");
@@ -2327,7 +2433,7 @@ function arenaBanner(d){
   }else{b.style.display="none";ARB.shown=false}
 }
 </script>
-<script>try{var _q=new URLSearchParams(location.search),_t=_q.get("tab");if(_t&&window.showTab){showTab(_t);_q.delete("tab");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash)}}catch(e){}</script>
+<script>try{var _q=new URLSearchParams(location.search),_t=_q.get("tab");if(_t&&window.showTab){showTab(_t);_q.delete("tab");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash)}var _g=_q.get("go");if(_g==="boss"&&window.showTab){showTab("travel");_q.delete("go");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash);setTimeout(function(){if(window.openBoss)openBoss()},700)}}catch(e){}</script>
 <script src="./shared/hero.js?v=5"></script>
 <script src="./shared/icons.js?v=i1"></script>
 </body>

@@ -198,6 +198,16 @@ cmnecro:function(t){[38,45,50,53].forEach(function(m,i){osc("sawtooth",N(m),t+i*
 cmnecro2:function(t){[36,43,48,51,55].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.08,2.6,0.12,{wet:0.85,attack:0.1,vib:6})});osc("sine",N(24),t,3,0.5,{wet:0.5,to:N(22)});noise(t,2.2,0.3,"lowpass",3000,150,1,{attack:0.1,wet:0.7});noise(t+0.3,0.5,0.3,"highpass",2500,7000,0.5)}
 };
 for(var _k4 in CM)SFX[_k4]=CM[_k4];
+/* ===== Кальветуа: морской бог ===== */
+var KV={
+kvroar:function(t){osc("sawtooth",62,t,1.6,0.34,{to:34,vib:9,vibd:10,wet:0.5,attack:0.12});osc("square",93,t+0.05,1.3,0.12,{to:48,vib:14,vibd:9});noise(t,1.5,0.26,"lowpass",900,120,0.9,{attack:0.1,wet:0.4});noise(t+0.2,1.2,0.1,"bandpass",300,1400,2,{attack:0.5,wet:0.6})},
+kvswirl:function(t){noise(t,1.1,0.42,"bandpass",260,2400,2.4,{attack:0.5,wet:0.3});noise(t+0.15,0.9,0.28,"bandpass",2200,500,3,{attack:0.35});osc("sine",90,t,1.1,0.32,{to:240,vib:7,vibd:30,attack:0.5});osc("sawtooth",140,t+0.2,0.8,0.1,{to:380,vib:11,vibd:26,wet:0.4,attack:0.4})},
+kvsplash:function(t){noise(t,0.5,0.46,"highpass",1800,5200,0.6,{attack:0.01});noise(t+0.03,0.8,0.36,"lowpass",2400,180,0.8);osc("sine",110,t,0.45,0.42,{to:42})},
+kvbig:function(t){noise(t,1.2,0.62,"lowpass",800,50,0.9,{attack:0.02});osc("sine",64,t,1.2,0.55,{to:26});osc("sawtooth",48,t+0.05,0.9,0.22,{to:30,vib:20,vibd:10});noise(t+0.1,0.6,0.4,"highpass",2000,6000,0.5)},
+kvphase:function(t){osc("sawtooth",80,t,2.4,0.4,{to:30,vib:5,vibd:12,wet:0.6,attack:0.2});noise(t,2.4,0.34,"lowpass",300,2600,1.1,{attack:0.8,wet:0.5});[40,43,46,52].forEach(function(m,i){osc("sine",N(m),t+0.3+i*0.2,2,0.16,{wet:0.9,attack:0.3})});noise(t+1.7,0.7,0.5,"lowpass",1500,60,0.9)},
+kvtide:function(t){noise(t,2.2,0.2,"bandpass",250,1200,1,{attack:0.9,wet:0.5});noise(t+1.4,1.6,0.16,"lowpass",1800,200,0.8,{attack:0.1,wet:0.4})}
+};
+for(var _kk in KV)SFX[_kk]=KV[_kk];
 /* ===== озеро и лес ===== */
 var LF={
 lkwater:function(t){noise(t,1.4,0.16,"bandpass",500,1100,1.2,{attack:0.5,wet:0.4});for(var i=0;i<3;i++)osc("sine",200+Math.random()*200,t+0.2+i*0.3,0.1,0.08,{to:420+Math.random()*200,wet:0.5})},
@@ -231,7 +241,7 @@ frfox:function(t){[88,91,95,100].forEach(function(m,i){osc("sine",N(m),t+i*0.14,
 };
 for(var _k5 in LF)SFX[_k5]=LF[_k5];
 
-var lastAt={},recent=[],KEEP={hurt:1,hit:1,crit:1,win:1,lose:1,level:1,banner:1,phase:1,heal:1};
+var lastAt={},recent=[],KEEP={hurt:1,hit:1,crit:1,win:1,lose:1,level:1,banner:1,phase:1,heal:1,kvbig:1,kvphase:1,kvswirl:1,kvroar:1};
 function sfx(name,delay){
 if(!st.on||!AC)return;
 if(!init())return;
@@ -261,6 +271,7 @@ garden:{root:36,scale:[0,1,3,7,8,12],pad:[[0,7,12],[-2,5,9],[1,8,13]],bpm:24,bel
 cemetery:{root:33,scale:[0,1,3,5,6,8],pad:[[0,6,12],[-4,3,8],[1,8,13]],bpm:20,bell:0.3,heart:0.4,whisp:0.45,dis:0.45,wind:1,water:0,drum:0,vol:1},
 ruins:{root:31,scale:[0,1,4,5,7,8],pad:[[0,7,12],[-5,2,7],[1,8,13]],bpm:22,bell:0.35,heart:0.3,whisp:0.3,dis:0.5,wind:1,water:0,drum:0.15,vol:1},
 battle:{root:33,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,8]],bpm:78,bell:0.1,heart:0,whisp:0,dis:0.3,wind:0,water:0,drum:1,vol:1},
+kalvetua:{root:27,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,7],[-3,4]],bpm:74,bell:0.16,heart:0.2,whisp:0.2,dis:0.45,wind:1,water:1,drum:2,vol:1.1},
 boss:{root:29,scale:[0,1,3,6,7,10],pad:[[0,6],[1,7],[-1,5]],bpm:96,bell:0.1,heart:0,whisp:0,dis:0.5,wind:0,water:0,drum:2,vol:1.1}
 };
 function clearMusic(){

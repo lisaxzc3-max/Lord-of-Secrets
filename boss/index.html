@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#050c11">
+<title>Кальветуа · Морской бог</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#050c11;--panel:rgba(9,21,29,.95);--line:#2c5160;--text:#e3e0d6;--muted:#93a9b3;--gold:#e7b86a;--sea:#6fd3e6;--red:#ff6b5a;--green:#7be3a0;--stageH:50vh}
+@supports(height:1dvh){:root{--stageH:50dvh}}
+*{box-sizing:border-box}
+html{background:var(--bg);min-height:100%}
+body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 50% 0,#12384a55,transparent 60%),linear-gradient(#06121a,#04090d);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%;overflow-x:hidden}
+button{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.hidden{display:none!important}
+
+/* ===== СЦЕНА БОСА (верхняя половина экрана) ===== */
+.stage{position:sticky;top:0;z-index:20;height:var(--stageH);min-height:270px;max-height:560px;overflow:hidden;background:#050c11;border-bottom:1px solid #2c5160;box-shadow:0 8px 28px #000c}
+.artWrap{position:absolute;inset:-4%;animation:breathe 8s ease-in-out infinite;transform-origin:50% 70%}
+.art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:38% 28%;filter:brightness(1.25) contrast(1.08) saturate(1.12);transition:opacity 1.8s ease,filter .25s}
+.art.a2{opacity:0}
+body.phase2 .art.a1{opacity:0}
+body.phase2 .art.a2{opacity:1;filter:brightness(1.5) contrast(1.1) saturate(1.15)}
+.stage.hurt .art{filter:brightness(1.7) saturate(1.3)}
+.stage.roar .artWrap{animation:roarKick .9s ease-out,breathe 8s ease-in-out infinite}
+.stage.lunge .artWrap{animation:lunge .7s cubic-bezier(.3,.1,.3,1),breathe 8s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1.04) translate(0,0) rotate(0)}30%{transform:scale(1.08) translate(-.8%,-1%) rotate(-.35deg)}65%{transform:scale(1.06) translate(.8%,-.5%) rotate(.3deg)}}
+@keyframes roarKick{0%{transform:scale(1.04)}20%{transform:scale(1.16) translateY(-2%)}100%{transform:scale(1.05)}}
+@keyframes lunge{0%{transform:scale(1.05)}35%{transform:scale(1.22) translateY(5%)}100%{transform:scale(1.05)}}
+.sunGlow{position:absolute;right:6%;top:30%;width:46%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ff9a4a66,#ff6a2a22 45%,transparent 70%);mix-blend-mode:screen;animation:sunPulse 5s ease-in-out infinite;pointer-events:none}
+body.phase2 .sunGlow{background:radial-gradient(circle,#ff2a2a77,#a0101022 45%,transparent 70%);animation-duration:2.4s}
+@keyframes sunPulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+.mist{position:absolute;left:-40%;width:180%;height:46%;pointer-events:none;mix-blend-mode:screen;opacity:.5;filter:blur(10px)}
+.mist.m1{bottom:8%;background:radial-gradient(ellipse at 20% 50%,#9fd9e844,transparent 50%),radial-gradient(ellipse at 70% 60%,#c9ecf433,transparent 55%);animation:mistA 24s linear infinite}
+.mist.m2{bottom:-4%;opacity:.38;background:radial-gradient(ellipse at 40% 50%,#7fc8dc55,transparent 55%),radial-gradient(ellipse at 90% 40%,#9fd9e833,transparent 50%);animation:mistA 32s linear infinite reverse}
+@keyframes mistA{from{transform:translateX(0)}to{transform:translateX(22%)}}
+.waves{position:absolute;left:0;right:0;bottom:0;height:54px;pointer-events:none;overflow:hidden}
+.waves i{position:absolute;left:0;bottom:0;width:200%;height:100%;background-repeat:repeat-x;background-size:50% 100%;opacity:.8}
+.waves i:nth-child(1){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 54' preserveAspectRatio='none'%3E%3Cpath d='M0 28 Q50 6 100 28 T200 28 T300 28 T400 28 V54 H0Z' fill='%230a2a3a' fill-opacity='.85'/%3E%3C/svg%3E");animation:waveA 9s linear infinite}
+.waves i:nth-child(2){bottom:-6px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 54' preserveAspectRatio='none'%3E%3Cpath d='M0 32 Q50 14 100 32 T200 32 T300 32 T400 32 V54 H0Z' fill='%23061a26'/%3E%3C/svg%3E");animation:waveA 6s linear infinite reverse}
+@keyframes waveA{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.parts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.parts b{position:absolute;bottom:-10px;width:5px;height:5px;border-radius:50%;background:#bfeaf5;opacity:0;box-shadow:0 0 8px #8fdcef;animation:rise var(--t) linear var(--d) infinite}
+@keyframes rise{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:.8}100%{transform:translateY(-330px) translateX(var(--x)) scale(1);opacity:0}}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,transparent 58%,#02070b88 100%),linear-gradient(#02070b99,transparent 84px),linear-gradient(transparent 58%,#02070bdd)}
+body.phase2 .vig{background:radial-gradient(ellipse at 50% 42%,transparent 55%,#2a030599 100%),linear-gradient(#14020499,transparent 84px),linear-gradient(transparent 58%,#150204ee)}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.flash.on{animation:flashA .6s ease-out}
+.flash.red{background:#ff4a3a}
+@keyframes flashA{0%{opacity:.8}100%{opacity:0}}
+body.phase2 .stage:after{content:"";position:absolute;inset:0;pointer-events:none;background:#fff;opacity:0;animation:lightning 9s linear infinite}
+@keyframes lightning{0%,86%,90%,100%{opacity:0}87%{opacity:.5}88%{opacity:.05}89%{opacity:.35}}
+.topBar{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:8px;padding:max(8px,env(safe-area-inset-top)) 10px 8px;z-index:5}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid #ffffff2a;border-radius:10px;padding:8px 11px;background:#04101699;font-size:12px;backdrop-filter:blur(4px)}
+.tTitle{min-width:0;flex:1;text-shadow:0 2px 8px #000}
+.tTitle small{display:block;font-size:9px;letter-spacing:3px;color:var(--sea);text-transform:uppercase}
+.tTitle b{font-size:17px;letter-spacing:.5px}
+.pill{flex-shrink:0;border:1px solid #ffffff2a;border-radius:999px;padding:5px 10px;font-size:10px;color:#dfeef3;background:#04101699;backdrop-filter:blur(4px);white-space:nowrap}
+.pill.live{border-color:#ff7a5a;color:#ffc2b0;animation:pillLive 1.6s ease-in-out infinite}
+@keyframes pillLive{0%,100%{box-shadow:0 0 0 #ff6a4a00}50%{box-shadow:0 0 14px #ff6a4acc}}
+.bossInfo{position:absolute;left:0;right:0;bottom:0;padding:0 12px 36px;z-index:4}
+.bossName{display:flex;justify-content:space-between;align-items:baseline;gap:8px;text-shadow:0 2px 6px #000}
+.bossName b{font-size:15px;letter-spacing:.4px}
+.bossName span{font-size:10px;color:#cfe3ea}
+.infBar{position:relative;height:10px;margin-top:5px;border-radius:99px;border:1px solid #6fd3e688;background:#04121a;overflow:hidden}
+.infBar i{position:absolute;inset:0;background:linear-gradient(90deg,#1b6f8c,#6fd3e6,#1b6f8c);background-size:200% 100%;animation:infFlow 3s linear infinite}
+.infBar em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;font-weight:900;letter-spacing:2px;color:#04202c}
+body.phase2 .infBar{border-color:#ff7a5a99}
+body.phase2 .infBar i{background:linear-gradient(90deg,#8a1c1c,#ff7a4a,#8a1c1c);background-size:200% 100%}
+@keyframes infFlow{to{background-position:200% 0}}
+.threat{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.threat span{font-size:10px;padding:3px 8px;border-radius:99px;background:#04101699;border:1px solid #ffffff22;color:#e7f2f6;backdrop-filter:blur(3px)}
+.threat span.dng{border-color:#ff6b5a99;color:#ffc9bd}
+.bossTarget{position:absolute;left:38%;top:34%;width:30%;height:26%;pointer-events:none}
+.fxl{position:fixed;inset:0;pointer-events:none;z-index:96;overflow:hidden}
+.fnum{position:fixed;font-weight:900;pointer-events:none;text-shadow:0 2px 8px #000,0 0 14px #000;white-space:nowrap;animation:fnum 1.25s ease-out forwards;z-index:97;transform:translate(-50%,-50%)}
+.fnum.dmg{color:#ffd27a}.fnum.crit{color:#fff0a0}.fnum.hurt{color:#ff6b5a}.fnum.miss{color:#9fe8ff}.fnum.heal{color:#7be3a0}
+@keyframes fnum{0%{opacity:0;transform:translate(-50%,-30%) scale(.5)}15%{opacity:1;transform:translate(-50%,-70%) scale(1.25)}100%{opacity:0;transform:translate(-50%,-190%) scale(1)}}
+.banner{position:fixed;left:0;right:0;top:26%;text-align:center;font-weight:900;font-size:26px;letter-spacing:5px;color:#fff;text-shadow:0 0 22px var(--c,#6fd3e6),0 0 4px #000;animation:banner 2s ease-out forwards;z-index:98;pointer-events:none;padding:0 10px}
+.banner small{display:block;font-size:11px;letter-spacing:3px;margin-top:6px;opacity:.9}
+@keyframes banner{0%{opacity:0;transform:scale(2)}14%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(.96)}}
+/* Водяной смерч */
+.tornado{position:fixed;width:110px;height:170px;margin:-85px 0 0 -55px;pointer-events:none;z-index:95;animation:tGo var(--t,.8s) cubic-bezier(.45,0,.6,1) forwards}
+.tornado i{position:absolute;left:50%;top:var(--y);width:var(--w);height:calc(var(--w)*.34);margin-left:calc(var(--w)/-2);border-radius:50%;border:4px solid transparent;border-top-color:#e6fbff;border-bottom-color:#4fb4d8;background:radial-gradient(ellipse,#6fd3e622,transparent 70%);box-shadow:0 0 16px #6fd3e6aa;animation:tSpin var(--sp) linear infinite}
+.tornado.miss{opacity:.7}
+@keyframes tSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes tGo{0%{transform:translate(0,0) scale(.25);opacity:0}15%{opacity:1}72%{transform:translate(var(--dx),var(--dy)) scale(var(--s));opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(calc(var(--s)*1.35));opacity:0}}
+.drop{position:fixed;width:7px;height:7px;border-radius:50%;background:#bfeaf5;box-shadow:0 0 8px #6fd3e6;pointer-events:none;z-index:95;animation:dropA .8s ease-out forwards;transform:translate(-50%,-50%)}
+@keyframes dropA{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)));opacity:0}}
+.ring{position:fixed;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:3px solid var(--c,#6fd3e6);box-shadow:0 0 18px var(--c),inset 0 0 14px var(--c);pointer-events:none;z-index:95;animation:ringA 1s ease-out forwards}
+@keyframes ringA{from{transform:scale(.3);opacity:1}to{transform:scale(3.8);opacity:0}}
+body.shake .wrap{animation:shake .5s}
+body.shakeBig .wrap{animation:shakeBig .8s}
+@keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+@keyframes shakeBig{0%,100%{transform:translate(0)}10%{transform:translate(-14px,8px)}25%{transform:translate(12px,-8px)}40%{transform:translate(-10px,6px)}55%{transform:translate(8px,-5px)}70%{transform:translate(-5px,3px)}85%{transform:translate(3px,-2px)}}
+
+/* ===== НИЖНЯЯ ПОЛОВИНА ===== */
+.wrap{max-width:520px;margin:0 auto;padding:10px 12px calc(30px + env(safe-area-inset-bottom))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:11px;box-shadow:0 8px 24px #0003}
+.card h2{font-size:12px;letter-spacing:2px;margin:0 0 10px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pcard{display:grid;grid-template-columns:78px minmax(0,1fr);gap:12px;align-items:center}
+.pFrame{position:relative;width:78px;height:78px;padding:3px;border-radius:14px;border:1px solid #3d6a7c;background:linear-gradient(145deg,#173646,#0a1a23)}
+.pFrame img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px;background:#0c1d27}
+.pFrame.hit{animation:pHit .5s}
+.pFrame.flashB img{animation:flashB .5s}
+.pFrame.glow img{animation:glowG .8s}
+.pFrame.dead img{filter:grayscale(1) brightness(.5)}
+@keyframes pHit{0%{transform:translateX(0)}15%{transform:translateX(-10px) rotate(-3deg)}35%{transform:translateX(9px) rotate(2deg)}55%{transform:translateX(-6px)}100%{transform:none}}
+@keyframes flashB{0%,100%{filter:none}30%{filter:brightness(1.8) saturate(2) hue-rotate(150deg) drop-shadow(0 0 10px #6fd3e6)}}
+@keyframes glowG{0%,100%{filter:none}40%{filter:brightness(1.3) drop-shadow(0 0 12px #7be3a0)}}
+.pName{font-weight:800;font-size:14px;overflow-wrap:anywhere}
+.pPath{font-size:10px;color:var(--muted);margin-top:2px}
+.hpRow{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:9px}
+.hpRow strong{color:var(--text);font-variant-numeric:tabular-nums}
+.bar{position:relative;height:9px;margin-top:4px;border-radius:99px;overflow:hidden;background:#1a2a33;border:1px solid #2f4651}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8c333d,#e46a72);transition:width .5s}
+.bar b{position:absolute;left:0;top:0;bottom:0;width:0;background:#ffffffa8;border-radius:99px;transition:width .9s ease .45s}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;min-height:2px}
+.chip{font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;border:1px solid #3d6a7c;background:#0a1a23;color:#cfe8f0;animation:pop .3s ease-out}
+.chip.good{border-color:#4f9a78;color:#a6f0c4}.chip.boss{border-color:#6fd3e6;color:#bff1ff}.chip.rage{border-color:#ff7b5e;color:#ffc0b0}
+@keyframes pop{from{opacity:0;transform:scale(.7)}}
+.lobbyTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.lobbyTop h3{margin:0;font-size:16px}
+.lobbyTop small{display:block;font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+.big{font-size:30px;font-weight:900;letter-spacing:1px;font-variant-numeric:tabular-nums;color:var(--gold);text-shadow:0 0 18px #e7b86a55;margin:12px 0 2px;text-align:center}
+.bigCap{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;text-align:center}
+.tries{display:flex;gap:7px;justify-content:center;margin:12px 0 4px}
+.tries i{width:14px;height:14px;border-radius:50%;border:2px solid #4a7a8c;background:transparent}
+.tries i.on{background:var(--sea);box-shadow:0 0 10px #6fd3e688;border-color:var(--sea)}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
+.stats3 div{border:1px solid #29495a;background:#0a1a23;border-radius:11px;padding:9px 4px;text-align:center}
+.stats3 b{display:block;font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums}
+.stats3 span{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.btn{display:block;width:100%;margin-top:12px;border:1px solid #3d6a7c;border-radius:12px;padding:13px 10px;background:#12303d;color:var(--text);font-weight:800;font-size:13px;cursor:pointer;letter-spacing:.3px}
+.btn.primary{color:#20190f;background:linear-gradient(135deg,#f0d298,#c18f45);border-color:#e7b86a;box-shadow:0 0 18px #e7b86a44}
+.btn.sea{color:#04202c;background:linear-gradient(135deg,#a8ecf7,#4fb4d8);border-color:#8fe0f0;box-shadow:0 0 18px #6fd3e655}
+.btn:disabled{opacity:.5;cursor:default;box-shadow:none}
+.btn.ghost{background:transparent;font-weight:600;font-size:11px;padding:9px;color:var(--muted)}
+.note{font-size:11px;line-height:1.5;color:var(--muted);margin-top:10px}
+.skillHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.skillHead h2{margin:0}.skillHead span{font-size:10px;color:var(--muted)}
+.skillGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.skill{position:relative;min-height:62px;text-align:left;padding:9px 10px;border-radius:12px;border:1px solid #3d5a6a;color:var(--text);background:linear-gradient(145deg,#1b3342,#10202a);cursor:pointer;transition:transform .12s,box-shadow .2s}
+.skill:not(:disabled):active{transform:scale(.96);box-shadow:0 0 16px var(--sk,#6fd3e6)}
+.skill:disabled{cursor:default;opacity:.5}
+.skill.basic{background:linear-gradient(145deg,#232c31,#171d22);border-color:#3b4a52}
+.skillName{font-weight:750;font-size:12px;line-height:1.35;padding-right:18px}
+.skillDesc{font-size:9.5px;color:var(--muted);line-height:1.3;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#skills .skFm{display:none}
+.cooldown{position:absolute;right:7px;top:7px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#f1d5a0;background:#5a462a;font-size:10px;font-weight:800}
+.result{position:relative;text-align:center;border-color:#7a3b42;background:linear-gradient(155deg,#2c1319f5,#0f1a21f5)}
+.result h3{margin:0 0 6px;font-size:18px;letter-spacing:3px;color:#ff9a8a}
+.result p{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+.result .rv{font-size:28px;font-weight:900;color:var(--gold);margin:8px 0}
+.logHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.logHead h2{margin:0}.logHead span{font-size:10px;color:#6f8791}
+#log{display:flex;flex-direction:column;gap:6px;max-height:270px;overflow:auto;overscroll-behavior:contain}
+.le{font-size:11px;line-height:1.45;padding:7px 10px;border-left:2px solid #3d6a7c;background:#ffffff08;border-radius:0 7px 7px 0;overflow-wrap:anywhere;animation:pop .3s ease-out}
+.le.good{border-color:var(--green)}.le.bad{border-color:var(--red)}.le.info{border-color:var(--gold)}.le.sea{border-color:var(--sea)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.tabs button{border:1px solid #2c5160;background:#0a1a23;color:var(--muted);border-radius:10px;padding:9px;font-weight:700;font-size:12px;cursor:pointer}
+.tabs button.on{color:#04202c;background:linear-gradient(135deg,#a8ecf7,#4fb4d8);border-color:#8fe0f0}
+.rows{display:flex;flex-direction:column;gap:5px}
+.row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;border:1px solid #223f4c;background:#0a1a23}
+.row.me{border-color:#e7b86a;background:linear-gradient(90deg,#2b2412,#0a1a23)}
+.row .rk{font-weight:900;text-align:center;font-size:13px;color:var(--muted)}
+.row:nth-child(1) .rk,.row:nth-child(2) .rk,.row:nth-child(3) .rk{font-size:17px}
+.row .nm{min-width:0;font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .nm small{display:block;font-size:9px;font-weight:500;color:var(--muted);margin-top:1px}
+.row .dm{font-weight:900;font-size:12px;color:var(--gold);font-variant-numeric:tabular-nums}
+.empty{font-size:12px;color:var(--muted);text-align:center;padding:14px 6px;line-height:1.6}
+.rfoot{display:flex;justify-content:space-between;align-items:center;margin-top:9px;font-size:10px;color:#6f8791}
+.rfoot button{border:1px solid #2c5160;background:#0a1a23;color:var(--muted);border-radius:8px;padding:6px 10px;font-size:10px;cursor:pointer}
+.info p{font-size:12px;line-height:1.6;color:#c4d2d8;margin:0 0 9px}
+.info b{color:var(--gold)}
+.info table{width:100%;border-collapse:collapse;font-size:11px;margin:4px 0 8px}
+.info td{padding:5px 6px;border-bottom:1px solid #1f3b48;color:#c4d2d8}
+.info td:last-child{text-align:right;color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);max-width:90%;z-index:99;background:#0b2230f2;border:1px solid #6fd3e6;color:#e7f6fa;padding:11px 16px;border-radius:12px;font-size:12px;line-height:1.45;opacity:0;transition:.3s;pointer-events:none;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.err{border-color:#ff6b5a;color:#ffd0c8}
+.gift{border-color:#e7b86a;background:linear-gradient(145deg,#2d2511f5,#0f1a21f5);text-align:center;animation:pop .5s}
+.gift h3{margin:0 0 6px;font-size:15px;color:var(--gold)}
+.gift p{margin:3px 0;font-size:12px;color:#e9dcb8}
+@media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.skill{padding:9px 8px}.skillName{font-size:11px}.big{font-size:26px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+</head>
+<body>
+<script src="../shared/fast.js"></script>
+<script src="../shared/skills.js"></script>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js"></script>
+<script>sndMusic("kalvetua")</script>
+
+<div class="stage" id="stage">
+  <div class="artWrap" id="artWrap">
+    <img class="art a1" id="art1" src="img/kalvetua1.jpg" alt="Кальветуа, Морской бог">
+    <img class="art a2" id="art2" src="img/kalvetua2.jpg" alt="Кальветуа, вторая фаза">
+  </div>
+  <div class="sunGlow"></div>
+  <div class="mist m1"></div><div class="mist m2"></div>
+  <div class="parts" id="parts"></div>
+  <div class="waves"><i></i><i></i></div>
+  <div class="vig"></div>
+  <div class="flash" id="flash"></div>
+  <div class="bossTarget" id="bossTarget"></div>
+  <div class="topBar">
+    <a class="back" id="backHome" href="../index.html">← Поход</a>
+    <div class="tTitle"><small>Еженедельный босс</small><b>Кальветуа</b></div>
+    <div class="pill" id="phasePill">Загрузка…</div>
+  </div>
+  <div class="bossInfo">
+    <div class="bossName"><b id="bossTitle">Кальветуа · Морской бог</b><span id="bossPhaseTxt">Фаза I</span></div>
+    <div class="infBar"><i></i><em>∞ БЕСКОНЕЧНОЕ ЗДОРОВЬЕ ∞</em></div>
+    <div class="threat" id="threat"></div>
+  </div>
+</div>
+
+<div class="wrap" id="wrap">
+  <section class="card" id="giftCard" hidden></section>
+
+  <section class="card pcard" id="playerCard">
+    <div class="pFrame" id="pFrame"><img id="pImg" src="../avatars/m_seer.svg" alt="Игрок"></div>
+    <div>
+      <div class="pName" id="pName">Путешественник</div>
+      <div class="pPath" id="pPath">—</div>
+      <div class="hpRow"><span>❤️ Здоровье</span><strong id="pHp">—</strong></div>
+      <div class="bar"><b id="pGhost"></b><i id="pBar"></i></div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </section>
+
+  <section class="card hidden result" id="resultCard">
+    <h3>☠ СМЕРЧ ПОГЛОТИЛ ТЕБЯ</h3>
+    <div class="rv" id="rDmg">0</div>
+    <p id="rTxt"></p>
+    <button class="btn sea" id="rBtn" type="button">К рейтингу</button>
+  </section>
+
+  <section class="card" id="lobby"></section>
+
+  <section class="card hidden" id="skillCard">
+    <div class="skillHead"><h2>Твои действия</h2><span id="skPath">Способности пути</span></div>
+    <div class="skillGrid" id="skills"></div>
+    <button class="btn ghost" id="leaveBtn" type="button">Покинуть попытку</button>
+  </section>
+
+  <section class="card" id="logCard">
+    <div class="logHead"><h2>📜 Хроника сражения</h2><span id="logCount">0 записей</span></div>
+    <div id="log"><div class="le info">Над водой поднимается тень. Кальветуа ждёт.</div></div>
+  </section>
+
+  <section class="card" id="ratingCard">
+    <h2>🏆 Рейтинг урона</h2>
+    <div class="tabs"><button class="on" id="tabP" type="button">Игроки</button><button id="tabC" type="button">Кланы</button></div>
+    <div class="rows" id="rows"></div>
+    <div class="rfoot"><span id="rInfo">—</span><button id="rRefresh" type="button">↻ Обновить</button></div>
+  </section>
+
+  <section class="card info" id="infoCard">
+    <h2>📖 О бое</h2>
+    <p><b>Кальветуа</b> — Морской бог. Его здоровье бесконечно, победить его нельзя: бойцы соревнуются, кто нанесёт больше урона.</p>
+    <p><b>Водяной смерч.</b> Единственный навык босса. Урон растёт вдвое каждый ход: 2 → 4 → 8 → 16 … После 10 хода начинается <b>вторая фаза</b>: урон ×3 — 30 → 90 → 270 … максимум 9999.</p>
+    <p><b>Попытки.</b> У каждого бойца 3 попытки, между ними отдых 30 минут. Бой идёт на отдельном запасе здоровья (твоё здоровье в мире не тратится). Без действий 3 минуты попытка прерывается.</p>
+    <p><b>Расписание (МСК).</b> Суббота 08:00 — регистрация. Суббота 20:00 — начало боя. Воскресенье 16:00 — итоги и награды.</p>
+    <p><b>Награды</b> (по месту в рейтинге игроков):</p>
+    <table>
+      <tr><td>🥇 1 место</td><td>500 £ · 5 💎 · чешуя змея ×2 · кристалл ×2</td></tr>
+      <tr><td>🥈 2 место</td><td>350 £ · 3 💎 · чешуя ×1 · кристалл ×2</td></tr>
+      <tr><td>🥉 3 место</td><td>250 £ · 2 💎 · чешуя ×1 · кристалл ×2</td></tr>
+      <tr><td>4–10 место</td><td>150 £ · 1 💎 · кристалл ×2</td></tr>
+      <tr><td>Остальные с уроном</td><td>60 £ · кристалл ×1</td></tr>
+      <tr><td>Топ-3 клана</td><td>в казну 600 / 400 / 250</td></tr>
+    </table>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const tg=window.Telegram?.WebApp||null;
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#050c11")}catch(_){}
+const qs=new URLSearchParams(location.search);
+const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
+const pEnc=qs.get("p_enc")||qs.get("p")||"";
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const $=id=>document.getElementById(id);
+const sk=LOTM_SKILLS.SK;
+
+let S=null,DEAD=null,PROF=null,PK="seer",offset=0,busy=false,ended=false,ratingTab="p",RAT=null,logN=0,lastRefresh=0,idleRoar=null,builtPk="";
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+function unwrap(v){for(let i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
+function srvNow(){return Math.floor(Date.now()/1000)+offset}
+function fmtNum(n){n=Math.max(0,Math.floor(Number(n)||0));return String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ")}
+function fmtT(sec){
+sec=Math.max(0,Math.floor(sec));
+const d=Math.floor(sec/86400),h=Math.floor(sec%86400/3600),m=Math.floor(sec%3600/60),s=sec%60;
+const p=x=>String(x).padStart(2,"0");
+return (d>0?d+"д ":"")+p(h)+":"+p(m)+":"+p(s);
+}
+function fmtMs(sec){sec=Math.max(0,Math.floor(sec));return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}
+function toast(t,err){const e=$("toast");e.textContent=t;e.classList.toggle("err",!!err);e.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("on"),3400)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function sfx(n){try{snd(n)}catch(_){}}
+
+async function api(payload){
+if(!ACTION_URL){await needStart()}
+const ctl=window.AbortController?new AbortController():null,tm=setTimeout(()=>{try{ctl&&ctl.abort()}catch(_){}} ,25000);
+try{
+const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store",signal:ctl?ctl.signal:undefined});
+if(!r.ok)throw new Error("Ошибка сервера (HTTP "+r.status+")");
+const d=unwrap(await r.json());
+if(!d||typeof d!=="object")throw new Error("Сервер вернул некорректный ответ");
+return d;
+}finally{clearTimeout(tm)}
+}
+async function loadProfile(){
+if(!PROFILE_URL){await needStart()}
+const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"profile"}),cache:"no-store"});
+if(!r.ok)throw new Error("Профиль недоступен (HTTP "+r.status+")");
+return unwrap(await r.json());
+}
+
+/* ===== ЭФФЕКТЫ ===== */
+function center(el){const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2,w:r.width,h:r.height}}
+function addTemp(el,cls,ms){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),ms)}
+function shake(big){const b=document.body,c=big?"shakeBig":"shake";b.classList.remove("shake","shakeBig");void b.offsetWidth;b.classList.add(c);setTimeout(()=>b.classList.remove(c),big?820:520)}
+function flash(red){const f=$("flash");f.classList.toggle("red",!!red);f.classList.remove("on");void f.offsetWidth;f.classList.add("on")}
+function fnum(x,y,text,kind,size){const d=document.createElement("div");d.className="fnum "+kind;d.textContent=text;d.style.left=x+"px";d.style.top=y+"px";d.style.fontSize=(size||24)+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),1300)}
+function banner(text,sub,color){sfx("banner");const b=document.createElement("div");b.className="banner";if(color)b.style.setProperty("--c",color);b.textContent=text;if(sub){const s=document.createElement("small");s.textContent=sub;b.appendChild(s)}document.body.appendChild(b);setTimeout(()=>b.remove(),2100)}
+function ringAt(x,y,color){const r=document.createElement("div");r.className="ring";r.style.left=x+"px";r.style.top=y+"px";r.style.setProperty("--c",color||"#6fd3e6");document.body.appendChild(r);setTimeout(()=>r.remove(),1000)}
+function splash(x,y,n,power){
+if(reduce)return;
+for(let i=0;i<n;i++){
+const d=document.createElement("div");d.className="drop";d.style.left=x+"px";d.style.top=y+"px";
+const a=Math.random()*Math.PI*2,r=(30+Math.random()*60)*power;
+d.style.setProperty("--dx",Math.cos(a)*r+"px");d.style.setProperty("--dy",(Math.sin(a)*r-20)+"px");
+document.body.appendChild(d);setTimeout(()=>d.remove(),900);
+}}
+function tornado(from,to,power,miss){
+const t=document.createElement("div");t.className="tornado"+(miss?" miss":"");
+const dur=reduce?.2:(miss?.95:.8);
+t.style.setProperty("--dx",(to.x-from.x)+"px");t.style.setProperty("--dy",(to.y-from.y)+"px");
+t.style.setProperty("--s",String(Math.min(2.6,.8+power*1.8)));t.style.setProperty("--t",dur+"s");
+t.style.left=from.x+"px";t.style.top=from.y+"px";
+const ws=[110,92,76,60,44,28];
+ws.forEach((w,i)=>{const r=document.createElement("i");r.style.setProperty("--w",w+"px");r.style.setProperty("--y",(i*24)+"px");r.style.setProperty("--sp",(.35+i*.07)+"s");r.style.animationDirection=i%2?"reverse":"normal";t.appendChild(r)});
+document.body.appendChild(t);setTimeout(()=>t.remove(),dur*1000+200);
+return dur*1000;
+}
+function ambient(){
+const box=$("parts");if(!box||reduce)return;
+for(let i=0;i<16;i++){const b=document.createElement("b");b.style.left=(4+Math.random()*92)+"%";b.style.setProperty("--t",(5+Math.random()*6).toFixed(1)+"s");b.style.setProperty("--d",(-Math.random()*8).toFixed(1)+"s");b.style.setProperty("--x",((Math.random()-.5)*50).toFixed(0)+"px");box.appendChild(b)}
+}
+function roar(){
+const st=$("stage");addTemp(st,"roar",950);sfx("kvroar");
+const c=center($("bossTarget"));ringAt(c.x,c.y,"#6fd3e6");
+}
+function startIdleRoar(){
+clearInterval(idleRoar);
+idleRoar=setInterval(()=>{if(!document.hidden&&S&&S.ph==="battle"&&S.run&&!busy)roar()},19000);
+}
+function setPhase2(on,anim){
+const was=document.body.classList.contains("phase2");
+document.body.classList.toggle("phase2",!!on);
+$("bossPhaseTxt").textContent=on?"Фаза II · Затмение":"Фаза I";
+$("bossTitle").textContent=on?"Кальветуа · Бог Затмения":"Кальветуа · Морской бог";
+if(on&&!was&&anim){flash(true);shake(true);sfx("kvphase");banner("ВТОРАЯ ФАЗА","Затмение · урон смерча ×3","#ff6a4a");roar()}
+}
+
+/* ===== СОСТОЯНИЕ ===== */
+function applyState(d){
+if(!d||!d.ok)return false;
+S=d;offset=(d.now||srvNow())-Math.floor(Date.now()/1000);lastRefresh=Date.now();
+S.cd_at=d.cd_left>0?srvNow()+d.cd_left:null;
+return true;
+}
+async function refresh(quiet){
+try{
+const d=await api({action:"boss_state"});
+if(d&&d.error==="dead"){S=null;DEAD=d;renderLobby();$("phasePill").textContent="Ты мёртв";if(!quiet)toast(d.text||"Ты мёртв",true);return}
+DEAD=null;
+if(!applyState(d))throw new Error(d.text||"Не удалось получить состояние боя");
+if(d.claimed&&d.claimed.length)showGift(d.claimed);
+renderAll();
+}catch(e){if(!quiet)toast(e.message||"Нет связи",true);$("phasePill").textContent="Нет связи"}
+}
+function showGift(list){
+const c=$("giftCard");let tp=0,tr=0;const ig=[];
+list.forEach(x=>{tp+=x.p||0;tr+=x.r||0;if(x.i)ig.push(x.i)});
+c.innerHTML="<h3>🎁 Награда за бой с Кальветуа</h3><p>"+list.map(x=>"Место "+x.rank+" · урон "+fmtNum(x.d)).join("<br>")+"</p><p><b>+"+fmtNum(tp)+" £</b>"+(tr?" · <b>+"+tr+" 💎</b>":"")+"</p>"+(ig.length?"<p>🧪 "+esc(ig.join(", "))+"</p>":"");
+c.hidden=false;sfx("level");
+}
+
+/* ===== ОТРИСОВКА ===== */
+function runOf(){return S&&S.run?S.run:null}
+function setPlayerHp(hp,max,anim){
+const bar=$("pBar"),gh=$("pGhost");
+const pc=max>0?Math.max(0,Math.min(100,hp/max*100)):0;
+const old=parseFloat(bar.style.width)||0;
+gh.style.transition=pc<old?"width .9s ease .45s":"none";gh.style.width=pc+"%";bar.style.width=pc+"%";
+$("pHp").textContent=fmtNum(hp)+" / "+fmtNum(max);
+$("pFrame").classList.toggle("dead",hp<=0);
+}
+function drawChips(){
+const box=$("chips");box.replaceChildren();
+const r=runOf();if(!r)return;
+const f=r.fx||{};
+const add=(t,c)=>{const s=document.createElement("span");s.className="chip "+c;s.textContent=t;box.appendChild(s)};
+if(f.ev>0)add("🔮 Уклонение","good");
+if(f.db>0)add("🎭 Смерч −25%","good");
+if(f.pr>0)add("😤 Провокация ×"+f.pr,"good");
+if(f.rg>0)add("⚡ Ярость ×"+f.rg,"rage");
+if(f.sl>0)add("😴 Смерч спит ×"+f.sl,"boss");
+if(f.tr>0)add("🪤 Смерч в ловушке ×"+f.tr,"boss");
+}
+function drawThreat(){
+const r=runOf(),box=$("threat");box.replaceChildren();
+const add=(t,c)=>{const s=document.createElement("span");if(c)s.className=c;s.textContent=t;box.appendChild(s)};
+if(r){
+add("🌪 Водяной смерч: след. удар "+fmtNum(r.next),"dng");
+add("Ход "+r.turn);
+add("Урон попытки: "+fmtNum(r.dmg));
+add("Всего: "+fmtNum(S.tot||0)+(S.rank?" · #"+S.rank:""));
+}else{
+add("🌪 Водяной смерч · 2 → 4 → 8 …","dng");
+if(S&&S.registered)add("Мой урон: "+fmtNum(S.tot||0));
+}
+}
+function drawPhasePill(){
+const p=$("phasePill");if(!S){p.textContent="Загрузка…";return}
+const n=srvNow();
+p.classList.remove("live");
+if(S.ph==="wait"){p.textContent="Регистрация через "+fmtT(S.reg_at-n)}
+else if(S.ph==="reg"){p.textContent="Бой через "+fmtT(S.bat_at-n)}
+else{p.textContent="⚔ Бой · "+fmtT(S.end_at-n);p.classList.add("live")}
+}
+function renderPlayer(){
+if(!PROF)return;
+$("pName").textContent=PROF.nickname||"Путешественник";
+$("pPath").textContent=(LOTM_SKILLS.PATHNAME[PK]?LOTM_SKILLS.PATHNAME[PK][0]+" · "+LOTM_SKILLS.PATHNAME[PK][1]:(PROF.path||"—"));
+try{if(PROF.gender)$("pImg").src="../avatars/"+(PROF.gender==="female"?"f":"m")+"_"+PK+((PROF.sequence|0)&&(PROF.sequence|0)<=8?"8":"")+".svg"}catch(_){}
+const r=runOf();
+if(r)setPlayerHp(r.hp,r.max);
+else{const m=Number(PROF.max_hp)||50;setPlayerHp(m,m)}
+drawChips();
+}
+function dots(used,total){let h="";for(let i=0;i<total;i++)h+='<i class="'+(i>=used?"on":"")+'"></i>';return '<div class="tries" title="Попытки">'+h+'</div>'}
+function renderLobby(){
+const L=$("lobby");
+if(!S){
+if(DEAD){L.classList.remove("hidden");L.innerHTML='<div class="lobbyTop"><div><h3>💀 Ты мёртв</h3><small>'+esc(DEAD.text||"Дождись воскрешения, чтобы вступить в бой с Кальветуа.")+'</small></div></div><button class="btn sea" id="retryBtn" type="button">Проверить снова</button>';$("retryBtn").onclick=()=>refresh(false)}
+else L.innerHTML='<div class="empty">Загрузка…</div>';
+return}
+const n=srvNow(),r=runOf();
+$("skillCard").classList.toggle("hidden",!(S.ph==="battle"&&r));
+if(S.ph==="battle"&&r){L.classList.add("hidden");L.innerHTML="";return}
+L.classList.remove("hidden");
+let h="";
+if(S.ph==="wait"){
+h='<div class="lobbyTop"><div><h3>🌊 Море спит</h3><small>Следующий бой с Кальветуа. Регистрация откроется в субботу в 08:00 МСК.</small></div></div>'+
+'<div class="big" id="bigT">'+fmtT(S.reg_at-n)+'</div><div class="bigCap">до открытия регистрации</div>';
+if(S.was_in)h+='<div class="stats3"><div><b>'+fmtNum(S.tot||0)+'</b><span>Твой урон</span></div><div><b>'+fmtNum(S.best||0)+'</b><span>Лучшая попытка</span></div><div><b>#'+(S.rank||"—")+'</b><span>Место</span></div></div>';
+if(S.last&&S.last.top&&S.last.top.length){h+='<div class="note"><b>Итоги прошлого боя:</b><br>'+S.last.top.slice(0,3).map((x,i)=>["🥇","🥈","🥉"][i]+" "+esc(x.n)+" — "+fmtNum(x.d)).join("<br>")+'</div>'}
+}else if(S.ph==="reg"){
+h='<div class="lobbyTop"><div><h3>📝 Регистрация открыта</h3><small>Сражаться могут только зарегистрированные бойцы. Бой начнётся в субботу в 20:00 МСК.</small></div></div>'+
+'<div class="big" id="bigT">'+fmtT(S.bat_at-n)+'</div><div class="bigCap">до начала боя</div>';
+if(S.registered)h+='<div class="note" style="text-align:center">✅ Ты в списке бойцов. Всего записалось: <b>'+(S.players||0)+'</b></div>';
+else h+='<button class="btn primary" id="regBtn" type="button">📝 Зарегистрироваться</button><div class="note" style="text-align:center">Уже записалось: '+(S.players||0)+'</div>';
+}else{
+const left=S.cd_left>0?Math.max(0,(S.cd_at||0)-n):0;
+h='<div class="lobbyTop"><div><h3>⚔ Бой идёт</h3><small>Урон смерча удваивается каждый ход. Продержись как можно дольше и нанеси максимум урона.</small></div></div>'+
+'<div class="big" id="bigT">'+fmtT(S.end_at-n)+'</div><div class="bigCap">до конца боя и раздачи наград</div>';
+if(!S.registered){
+h+='<button class="btn primary" id="regBtn" type="button">📝 Зарегистрироваться и вступить</button><div class="note" style="text-align:center">Сражаться могут только зарегистрированные бойцы.</div>';
+}else{
+h+=dots(S.ar||0,S.tries);
+h+='<div class="stats3"><div><b>'+fmtNum(S.tot||0)+'</b><span>Всего урона</span></div><div><b>'+fmtNum(S.best||0)+'</b><span>Лучшая</span></div><div><b>#'+(S.rank||"—")+'</b><span>Место</span></div></div>';
+if((S.ar||0)>=S.tries)h+='<div class="note" style="text-align:center">Все попытки использованы. Итоги — в воскресенье в 16:00 МСК.</div>';
+else if(S.cd_left>0)h+='<button class="btn" id="startBtn" type="button" disabled>⏳ Море успокоится через <span id="cdT">'+fmtMs(Math.max(0,S.cd_at-n))+'</span></button>';
+else h+='<button class="btn primary" id="startBtn" type="button">⚔ Начать попытку ('+((S.ar||0)+1)+'/'+S.tries+')</button>';
+}
+}
+L.innerHTML=h;
+const rb=$("regBtn");if(rb)rb.onclick=doRegister;
+const sb=$("startBtn");if(sb&&!sb.disabled)sb.onclick=doStart;
+}
+function renderSkills(){
+const r=runOf(),box=$("skills");
+if(!r)return;
+if(builtPk!==PK||!box.children.length){
+box.replaceChildren();builtPk=PK;
+$("skPath").textContent=LOTM_SKILLS.PATHNAME[PK][0];
+LOTM_SKILLS.list(PK).forEach(s=>addSkill(s.key,s.cd,""));
+addSkill("basic","basic","basic");
+}
+const cds=r.cds||{};
+box.querySelectorAll("button.skill").forEach(b=>{
+const cd=b.dataset.cdk?Number(cds[b.dataset.cdk]||0):0;
+b.dataset.cd=cd>0?"1":"0";
+b.disabled=busy||ended||cd>0;
+let bd=b.querySelector(".cooldown");
+if(cd>0){if(!bd){bd=document.createElement("span");bd.className="cooldown";b.appendChild(bd)}bd.textContent=cd}else if(bd)bd.remove();
+});
+}
+function addSkill(key,cdk,cls){
+const info=sk[key],b=document.createElement("button");
+b.type="button";b.className="skill "+cls;if(cdk)b.dataset.cdk=cdk;b.dataset.key=key;
+const nm=document.createElement("div");nm.className="skillName";nm.textContent=(info?.icon?info.icon+" ":"")+(info?.name||key);
+LOTM_SKILLS.decorate(b,key);
+const ds=document.createElement("div");ds.className="skillDesc";ds.textContent=info?.desc||"";
+b.append(nm,ds);
+try{const f=LOTM_SKILLS.formula(key);if(f)b.appendChild(f)}catch(_){}
+b.addEventListener("click",()=>act(key));
+$("skills").appendChild(b);
+}
+function renderStage(){
+const r=runOf();
+const p2=(r&&r.ph===2)||(!r&&false);
+setPhase2(!!(r&&r.ph===2),false);
+drawThreat();drawPhasePill();
+}
+function renderAll(){
+renderStage();renderPlayer();renderLobby();renderSkills();
+if(S&&S.ph==="battle")$("pPath").title="";
+}
+function tickTimers(){
+if(!S)return;
+drawPhasePill();
+const n=srvNow();
+const bt=$("bigT");
+if(bt){
+let target=S.ph==="wait"?S.reg_at:S.ph==="reg"?S.bat_at:S.end_at;
+bt.textContent=fmtT(target-n);
+if(target-n<=0&&Date.now()-lastRefresh>3000)refresh(true);
+}
+if(S.cd_left>0&&S.cd_at==null)S.cd_at=n+S.cd_left;
+const ct=$("cdT");
+if(ct){const left=Math.max(0,(S.cd_at||0)-n);ct.textContent=fmtMs(left);if(left<=0&&Date.now()-lastRefresh>2000){S.cd_left=0;refresh(true)}}
+const r=runOf();
+if(r&&S.last_act&&n-S.last_act>180&&Date.now()-lastRefresh>5000)refresh(true);
+}
+
+/* ===== ДЕЙСТВИЯ ===== */
+async function doRegister(){
+const b=$("regBtn");if(b)b.disabled=true;
+try{
+const d=await api({action:"boss_reg"});
+if(!d.ok){toast(d.text||"Не удалось зарегистрироваться",true);if(b)b.disabled=false;refresh(true);return}
+applyState(d);sfx("good");toast("Ты в списке бойцов Кальветуа");addLog("Ты записан на бой с Кальветуа.","info");
+if(d.claimed&&d.claimed.length)showGift(d.claimed);
+renderAll();loadRating();
+}catch(e){toast(e.message,true);if(b)b.disabled=false}
+}
+async function doStart(){
+const b=$("startBtn");if(b)b.disabled=true;
+try{
+const d=await api({action:"boss_start"});
+if(d.error==="captcha"){toast("Подтверди, что ты не бот");if(b)b.disabled=false;return}
+if(!d.ok){toast(d.text||"Нельзя начать попытку",true);if(d.left){S.cd_left=d.left;S.cd_at=srvNow()+d.left}if(b)b.disabled=false;refresh(true);return}
+applyState(d);ended=false;S.last_act=srvNow();
+$("resultCard").classList.add("hidden");
+document.body.classList.remove("dead");
+renderAll();roar();banner("ПОПЫТКА "+(S.ar||1),"Водяной смерч поднимается…","#6fd3e6");
+addLog("Попытка "+(S.ar||1)+" из "+S.tries+". Смерч набирает силу.","info");
+startIdleRoar();
+window.scrollTo({top:0,behavior:"smooth"});
+}catch(e){toast(e.message,true);if(b)b.disabled=false}
+}
+async function act(move){
+if(busy||ended||!runOf())return;
+busy=true;renderSkills();
+const P=$("pFrame"),T=$("bossTarget");
+try{LOTM_SKILLS.play(move,P,T)}catch(_){}
+let d;
+try{d=await api({action:"boss_act",move})}
+catch(e){busy=false;toast(e.message||"Нет связи",true);renderSkills();return}
+if(d.error==="captcha"){busy=false;toast("Подтверди, что ты не бот");renderSkills();return}
+if(d.error==="cooldown"){busy=false;if(d.cds&&S.run){S.run.cds=d.cds}renderSkills();toast("Способность ещё восстанавливается");return}
+if(!d.ok){busy=false;toast(d.text||"Действие не выполнено",true);if(["no_run","not_battle","not_reg"].includes(d.error))await refresh(true);else renderSkills();return}
+try{await playTurn(d,move)}catch(e){console.error(e)}
+busy=false;
+S.last_act=srvNow();
+if(d.type==="battle"){renderLobby();renderPlayer();renderStage();renderSkills()}
+}
+async function playTurn(d,move){
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const run=d.run||{};
+const P=$("pFrame"),T=$("bossTarget");
+const pc=center(P),bc=center(T);
+if(d.log)addLog(d.log,"good");
+/* удар игрока по боссу */
+if(d.pd>0){
+await sleep(reduce?50:380);
+addTemp($("stage"),"hurt",260);
+sfx(d.crit?"crit":"hit");
+fnum(bc.x+(Math.random()*40-20),bc.y,"−"+fmtNum(d.pd),d.crit?"crit":"dmg",d.crit?38:Math.min(36,22+String(d.pd).length*3));
+splash(bc.x,bc.y,d.crit?14:8,1);
+if(d.crit)shake(false);
+}
+if(S.run){S.run.dmg=run.dmg??S.run.dmg}
+S.tot=d.tot;S.best=d.best;S.ar=d.ar;
+const ld=$("lDmg"),lt=$("lTot");if(ld)ld.textContent=fmtNum(run.dmg||0);if(lt)lt.textContent=fmtNum(d.tot||0);
+/* ход Кальветуа */
+await sleep(reduce?50:620);
+const evt=d.evt||[];
+const maxHp=Number(run.max||1);
+if(evt.includes("sleep")||evt.includes("trap")){
+addTemp($("stage"),"roar",600);ringAt(bc.x,bc.y,evt.includes("sleep")?"#7aa8ff":"#d6b779");
+fnum(bc.x,bc.y-10,evt.includes("sleep")?"💤":"⛓","miss",30);sfx(evt.includes("sleep")?"lull":"trap");
+if(d.e_log)addLog(d.e_log,"sea");
+}else{
+const hit=evt.includes("hit");
+const power=Math.min(1,Math.log10(Math.max(2,d.bd))/Math.log10(9999));
+sfx("kvswirl");
+addTemp($("stage"),"lunge",720);
+const dur=tornado({x:bc.x,y:bc.y+10},{x:pc.x,y:pc.y},hit?power:.2,!hit);
+await sleep(dur*.72);
+if(hit){
+const frac=d.ed/maxHp,big=frac>=.35||d.ed>=500;
+sfx(big?"kvbig":"kvsplash");sfx("hurt");
+addTemp(P,"hit",520);addTemp(P,"flashB",520);
+fnum(pc.x,pc.y-10,"−"+fmtNum(d.ed),"hurt",Math.min(54,24+Math.log10(Math.max(2,d.ed))*9));
+splash(pc.x,pc.y,big?22:12,big?1.8:1);
+flash(false);shake(big);
+}else{
+sfx("dodge");
+const word=evt.includes("passive")?"УКЛОН":evt.includes("evade")?"УКЛОНЕНИЕ":"МИМО";
+fnum(pc.x,pc.y-10,word,"miss",26);addTemp(P,"glow",800);
+}
+if(d.e_log)addLog(d.e_log,hit?"bad":"sea");
+}
+setPlayerHp(run.hp??0,run.max??1);
+S.run=d.type==="defeat"?null:run;
+drawChips();
+if(d.type==="battle"&&d.phase_change){
+await sleep(500);setPhase2(true,true);
+addLog("🌑 ВТОРАЯ ФАЗА: Кальветуа — Бог Затмения. Урон смерча ×3 каждый ход.","bad");
+await sleep(900);
+}
+if(d.type==="defeat"){
+await sleep(500);
+onDefeat(d);
+}
+}
+function onDefeat(d){
+sfx("lose");ended=false;
+const fin=d.run||{};
+S.run=null;S.tot=d.tot;S.best=d.best;S.ar=d.ar;S.cd_left=d.cd_left||0;S.cd_at=S.cd_left>0?srvNow()+S.cd_left:null;
+clearInterval(idleRoar);
+setPlayerHp(0,fin.max||1);$("pFrame").classList.add("dead");
+addLog("☠ Смерч поглотил тебя. Урон за попытку: "+fmtNum(fin.dmg||0)+".","bad");
+$("rDmg").textContent=fmtNum(fin.dmg||0)+" урона";
+const left=S.tries-S.ar;
+$("rTxt").textContent="Всего за бой: "+fmtNum(S.tot||0)+". "+(left>0?"Осталось попыток: "+left+". Следующая — через 30 минут.":"Попытки закончились. Награды — в воскресенье в 16:00 МСК.");
+$("resultCard").classList.remove("hidden");
+document.body.classList.add("dead");
+renderAll();loadRating();
+}
+async function leave(){
+const b=$("leaveBtn");
+if(!leave.arm){leave.arm=true;b.textContent="Точно выйти? Попытка сгорит";b.style.color="#ff9a8a";setTimeout(()=>{leave.arm=false;b.textContent="Покинуть попытку";b.style.color=""},3200);return}
+leave.arm=false;b.textContent="Покинуть попытку";b.style.color="";
+if(busy)return;busy=true;
+try{
+const d=await api({action:"boss_leave"});
+if(d.ok){applyState(d);if(S.cd_left>0)S.cd_at=srvNow()+S.cd_left;addLog("Ты покинул бой. Попытка потрачена.","info");clearInterval(idleRoar);renderAll();loadRating()}
+else toast(d.text||"Не удалось",true);
+}catch(e){toast(e.message,true)}
+busy=false;
+}
+
+/* ===== ХРОНИКА ===== */
+function addLog(text,kind){
+if(!text)return;
+logN++;
+const box=$("log"),e=document.createElement("div");e.className="le "+(kind||"info");e.textContent=text;
+box.prepend(e);
+while(box.children.length>60)box.lastChild.remove();
+$("logCount").textContent=logN+" "+(logN%10===1&&logN%100!==11?"запись":(logN%10>=2&&logN%10<=4&&(logN%100<10||logN%100>=20))?"записи":"записей");
+}
+
+/* ===== РЕЙТИНГ ===== */
+const MEDAL=["🥇","🥈","🥉"];
+async function loadRating(){
+try{
+const d=await api({action:"boss_rating"});
+if(d.ok){RAT=d;renderRating()}
+}catch(_){$("rInfo").textContent="Нет связи"}
+}
+function renderRating(){
+const box=$("rows");box.replaceChildren();
+if(!RAT){box.innerHTML='<div class="empty">Загрузка…</div>';return}
+const list=ratingTab==="p"?RAT.players:RAT.clans;
+if(!list||!list.length){box.innerHTML='<div class="empty">'+(ratingTab==="p"?"Пока никто не записался. Будь первым, кто бросит вызов морю.":"Кланов в рейтинге пока нет. Вступи в клан, чтобы бить Кальветуа вместе.")+'</div>'}
+list.forEach(x=>{
+const r=document.createElement("div");r.className="row"+(x.me?" me":"");
+const rk=document.createElement("div");rk.className="rk";rk.textContent=x.rank<=3?MEDAL[x.rank-1]:x.rank;
+const nm=document.createElement("div");nm.className="nm";
+if(ratingTab==="p"){nm.textContent=x.n;if(x.cn){const s=document.createElement("small");s.textContent="Клан «"+x.cn+"» · лучшая "+fmtNum(x.b)+" · попыток "+x.ar+"/3";nm.appendChild(s)}else{const s=document.createElement("small");s.textContent="Лучшая "+fmtNum(x.b)+" · попыток "+x.ar+"/3";nm.appendChild(s)}}
+else{nm.textContent="«"+x.cn+"»";const s=document.createElement("small");s.textContent="Бойцов: "+x.n;nm.appendChild(s)}
+const dm=document.createElement("div");dm.className="dm";dm.textContent=fmtNum(x.d);
+r.append(rk,nm,dm);box.appendChild(r);
+});
+const my=ratingTab==="p"?RAT.my_rank:RAT.my_clan_rank;
+$("rInfo").textContent=(ratingTab==="p"?"Бойцов: "+RAT.total:"Кланов: "+(RAT.clans||[]).length)+(my?" · ты на "+my+" месте":"");
+}
+
+/* ===== ЗАПУСК ===== */
+function wire(){
+$("tabP").onclick=()=>{ratingTab="p";$("tabP").classList.add("on");$("tabC").classList.remove("on");renderRating()};
+$("tabC").onclick=()=>{ratingTab="c";$("tabC").classList.add("on");$("tabP").classList.remove("on");renderRating()};
+$("rRefresh").onclick=()=>{loadRating();toast("Рейтинг обновлён")};
+$("leaveBtn").onclick=leave;
+$("rBtn").onclick=()=>{$("ratingCard").scrollIntoView({behavior:"smooth",block:"start"})};
+const p=new URLSearchParams(location.search);p.delete("enemy");p.delete("event_data");
+$("backHome").href="../index.html"+(p.toString()?"?"+p.toString()+"&tab=travel":"?tab=travel");
+}
+async function init(){
+wire();ambient();
+try{
+const [prof]=await Promise.all([loadProfile(),refresh(true)]);
+PROF=prof||{};
+PK=LOTM_SKILLS.pathKey(PROF.path_key||PROF.path)||"seer";
+window.LOTM_STATS=PROF;
+}catch(e){toast(e.message||"Нет связи",true)}
+renderAll();
+if(S&&S.run){if(S.run.ph===2)setPhase2(true,false);S.last_act=srvNow();startIdleRoar();addLog("Ты вернулся в бой. Ход "+S.run.turn+".","info")}
+loadRating();
+setInterval(tickTimers,1000);
+setInterval(()=>{if(!document.hidden){loadRating();if(Date.now()-lastRefresh>45000&&!busy)refresh(true)}},20000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&!busy){refresh(true);loadRating()}});
+}
+init();
+</script>
+</body>
+</html>
