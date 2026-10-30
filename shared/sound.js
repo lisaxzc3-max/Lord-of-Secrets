@@ -409,3 +409,51 @@ try{var _ss=document.querySelector('script[src*="sound.js"]');if(_ss&&!document.
 try{var _ss2=document.querySelector('script[src*="sound.js"]');if(_ss2){var _t=document.createElement("script");_t.src=_ss2.src.replace(/sound\.js(\?.*)?$/,"theme.js");document.head.appendChild(_t)}}catch(e){}
 try{var _ss3=document.querySelector('script[src*="sound.js"]');if(_ss3){var _i=document.createElement("script");_i.src=_ss3.src.replace(/sound\.js(\?.*)?$/,"icons.js");document.head.appendChild(_i)}}catch(e){}
 })();
+
+/* проверка «ты не бот»: сервер отвечает error:"captcha" на подозрительную активность */
+(function(){
+"use strict";
+if(!window.fetch||window.__acGuard)return;window.__acGuard=1;
+var _f=window.fetch,box=null,url="";
+function un(d){for(var i=0;i<3;i++){if(d&&d.result&&typeof d.result==="object")d=d.result;else break}return d}
+function show(d){
+ if(!d||!d.q||!d.o)return;
+ if(!box){
+  box=document.createElement("div");
+  box.style.cssText="position:fixed;inset:0;z-index:2147483000;background:#05030af2;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Georgia,serif;color:#efe6d6";
+  document.body.appendChild(box);
+ }
+ box.replaceChildren();
+ var c=document.createElement("div");
+ c.style.cssText="max-width:340px;width:100%;padding:22px 18px;border-radius:18px;border:1px solid #a58bff88;background:linear-gradient(180deg,#14101f,#07050c);text-align:center;box-shadow:0 0 40px #a58bff44";
+ var t=document.createElement("div");t.textContent="🧩 Ты не бот?";t.style.cssText="font-size:18px;letter-spacing:.08em;margin-bottom:6px;color:#e8c987";
+ var s=document.createElement("div");s.textContent="Ответь, чтобы продолжить играть";s.style.cssText="font-size:12px;color:#a99fba;margin-bottom:14px";
+ var q=document.createElement("div");q.textContent=d.q;q.style.cssText="font-size:24px;margin-bottom:16px;color:#fff";
+ var g=document.createElement("div");g.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:10px";
+ d.o.forEach(function(v){
+  var b=document.createElement("button");b.textContent=v;
+  b.style.cssText="padding:14px 0;border-radius:12px;border:1px solid #a58bff88;background:#0b0710;color:#efe6d6;font:20px Georgia,serif";
+  b.onclick=function(){send(v,g)};g.appendChild(b);
+ });
+ var m=document.createElement("div");m.id="acMsg";m.style.cssText="min-height:16px;margin-top:12px;font-size:12px;color:#ff9a9a";
+ c.appendChild(t);c.appendChild(s);c.appendChild(q);c.appendChild(g);c.appendChild(m);box.appendChild(c);box.style.display="flex";
+}
+function send(v,g){
+ Array.prototype.forEach.call(g.children,function(b){b.disabled=true});
+ _f(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"ac_answer",ans:v}),cache:"no-store"})
+ .then(function(r){return r.json()}).then(function(d){d=un(d);
+  if(d&&d.ok){box.style.display="none";box.replaceChildren()}
+  else if(d&&d.q){show(d);var m=document.getElementById("acMsg");if(m)m.textContent="Неверно, попробуй ещё"}
+  else Array.prototype.forEach.call(g.children,function(b){b.disabled=false});
+ }).catch(function(){Array.prototype.forEach.call(g.children,function(b){b.disabled=false})});
+}
+window.fetch=function(a,o){
+ var u=typeof a==="string"?a:(a&&a.url)||"";
+ var p=_f.apply(this,arguments);
+ if(u.indexOf("telebotcreator")<0)return p;
+ return p.then(function(r){
+  try{r.clone().json().then(function(d){d=un(d);if(d&&d.error==="captcha"){url=u;show(d)}}).catch(function(){})}catch(e){}
+  return r;
+ });
+};
+})();
