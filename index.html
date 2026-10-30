@@ -1953,6 +1953,8 @@ function seqUpdate(d){
   var left=Number(d&&d.seq_left)||0;
   if(left>0){
     SEQ.dur=Number(d.seq_dur)||left;SEQ.end=Date.now()+left*1000;
+    try{localStorage.setItem("lotm_seq_end",String(SEQ.end))}catch(e){}
+    if(!window.__seqGo){window.__seqGo=1;location.replace(buildPageUrl("./transition/index.html"));return}
     if(!SEQ.on){seqStart(d)}
     var nm=byId("sqN");if(nm&&d.sequence_name!==undefined)nm.textContent="Путь к последовательности 8";
   }else if(SEQ.on&&Date.now()>=SEQ.end){seqStop(true)}

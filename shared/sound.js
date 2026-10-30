@@ -1,4 +1,9 @@
 /* Повелитель Тайн — звуки и музыка. Всё синтезируется кодом (WebAudio), файлов нет. */
+/* замок перехода: пока идёт обряд, другие страницы закрыты */
+try{var _se=+localStorage.getItem("lotm_seq_end")||0;
+if(_se>Date.now()&&!/\/transition\//.test(location.pathname)){
+var _b=(document.currentScript&&document.currentScript.src||"").replace(/shared\/sound\.js.*$/,"");
+if(_b)location.replace(_b+"transition/index.html"+location.search)}}catch(e){}
 (function(){
 "use strict";
 var KEY="lotm_snd";
