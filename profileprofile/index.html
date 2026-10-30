@@ -383,6 +383,18 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   #veil{display:none}
 }
 
+/* что дают характеристики */
+.statLeft{cursor:pointer}
+.statName i{font-style:normal;margin-left:6px;font-size:10px;color:var(--gold);opacity:.8}
+.statInfo{display:none;margin:-4px 3px 9px;padding:11px 12px 10px;border-radius:0 0 12px 12px;border:1px solid rgba(215,183,117,.2);border-top:0;background:linear-gradient(180deg,rgba(215,183,117,.08),rgba(215,183,117,.02));font-size:11px;line-height:1.5;color:#d8cdc0}
+.statInfo.on{display:block}
+.infoLine{display:flex;gap:8px;align-items:flex-start;margin-top:6px}
+.infoLine:first-child{margin-top:0}
+.infoLine:before{content:"";flex:0 0 5px;height:5px;border-radius:50%;background:var(--c,#d7b775);margin-top:6px}
+.infoNow{margin-top:9px;padding:6px 9px;border-radius:8px;background:rgba(0,0,0,.28);border-left:3px solid var(--c,#d7b775);font-size:11px;color:#f1e3c8}
+.infoNow b{color:var(--c,#d7b775)}
+.statsTip{margin:0 0 9px;font-size:10px;color:var(--muted);text-align:center}
+
 /* вложить все очки */
 .allIn{margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(215,183,117,.28);background:linear-gradient(115deg,rgba(215,183,117,.1),rgba(215,183,117,.02))}
 .allHead{display:flex;align-items:center;justify-content:space-between;font-size:10px;letter-spacing:.14em;color:var(--muted)}
@@ -838,6 +850,30 @@ const statDefinitions = [
   {key:"con", icon:"🛡️", name:"Тело", hint:"Выносливость"}
 ];
 
+const STAT_INFO = {
+  str: {c:"#ff8a6a", lines:[
+    "<b>Основа физического урона.</b> Базовая атака: 5 + Сила × 50%.",
+    "Растёт урон «Бумажного кинжала», «Удара шторма», «Морской волны» и «Поджога»."],
+    now: d => { const s = number(d.str); return "Базовая атака сейчас: <b>" + (5 + Math.floor(s / 2)) + "</b>"; }},
+  agi: {c:"#7be3a0", lines:[
+    "<b>Шанс критического удара:</b> 5% + 1,2% за каждое очко, максимум 35%.",
+    "Даёт урон «Меткому выстрелу» (60%) и «Воздушной пуле» (20%)."],
+    now: d => { const a = number(d.agi); return "Шанс крита сейчас: <b>" + Math.min(35, 5 + Math.floor(a * 12 / 10)) + "%</b>"; }},
+  int: {c:"#7aa8ff", lines:[
+    "<b>Сила мысли.</b> Главный источник урона «Воздушной пули» Провидца: 50% Интеллекта.",
+    "Для остальных путей урон напрямую не повышает."],
+    now: d => { const i = number(d.int); return "Бонус к «Воздушной пуле»: <b>+" + Math.floor(i / 2) + "</b>"; }},
+  spi: {c:"#d9a3ff", lines:[
+    "<b>Сила критического удара:</b> множитель ×1,5 и +0,03 за каждое очко, максимум ×2,5.",
+    "Чем выше Дух, тем больнее бьют твои криты."],
+    now: d => { const s = number(d.spi); return "Множитель крита сейчас: <b>×" + (Math.min(250, 150 + s * 3) / 100).toString().replace(".", ",") + "</b>"; }},
+  con: {c:"#ffd27a", lines:[
+    "<b>Здоровье.</b> Каждое очко выше 5 даёт +5 к максимальному HP.",
+    "Влияет на урон «Морской волны» (30% Тела)."],
+    now: d => { const c = number(d.con); return "Бонус к макс. здоровью: <b>+" + Math.max(0, c - 5) * 5 + "</b>"; }}
+};
+let OPEN_STAT = null;
+
 let ALL_SEL = null;
 let allBusy = false;
 function renderAllIn(data, points) {
@@ -913,6 +949,7 @@ function renderStats(data) {
 
   const box = $("statsList");
   box.replaceChildren();
+  { const tip = document.createElement("div"); tip.className = "statsTip"; tip.textContent = "Нажми на характеристику, чтобы узнать, что она даёт"; box.appendChild(tip); }
 
   statDefinitions.forEach((stat, index) => {
     const row = document.createElement("div");
@@ -961,6 +998,24 @@ function renderStats(data) {
     right.append(value, button);
     row.append(left, right);
     box.appendChild(row);
+
+    const inf = STAT_INFO[stat.key];
+    if (inf) {
+      const ic = document.createElement("i"); ic.textContent = "ⓘ"; name.appendChild(ic);
+      const panel = document.createElement("div");
+      panel.className = "statInfo" + (OPEN_STAT === stat.key ? " on" : "");
+      panel.style.setProperty("--c", inf.c);
+      inf.lines.forEach(t => { const l = document.createElement("div"); l.className = "infoLine"; l.innerHTML = "<span>" + t + "</span>"; panel.appendChild(l); });
+      const now = document.createElement("div"); now.className = "infoNow"; now.innerHTML = inf.now(data); panel.appendChild(now);
+      left.addEventListener("click", () => {
+        const open = !panel.classList.contains("on");
+        box.querySelectorAll(".statInfo.on").forEach(x => x.classList.remove("on"));
+        panel.classList.toggle("on", open);
+        OPEN_STAT = open ? stat.key : null;
+        haptic("light");
+      });
+      box.appendChild(panel);
+    }
   });
   renderAllIn(data, points);
 }
