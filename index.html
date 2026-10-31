@@ -710,6 +710,17 @@ body[data-tab="hall"] .wrap{position:absolute;left:0;right:0;top:calc(var(--u)*3
 body[data-tab="hall"] .wrap>*{pointer-events:auto}
 .wrap{padding-top:0}
 @media(prefers-reduced-motion:reduce){#hall .ctaAr{animation:none}}
+
+/* модели снаряжения */
+.gearIc{padding:0}
+.gearIc img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;filter:drop-shadow(0 2px 4px #000a)}
+.eqSlot .ic.gearIc{flex:1 1 0;min-height:0;width:100%;font-size:0}
+.eqSlot:not(.on) .ic.gearIc img{filter:grayscale(1) brightness(.7)}
+.ivRow .ic.gearIc{padding:2px}
+.shHd .ic.gearIc{padding:5px}
+#bag .eqSlot.on .ic{opacity:1;filter:none}
+#bag .eqSlot:not(.on) .ic.gearIc{opacity:.34}
+#bag .eqSlot.on .ic.gearIc img{filter:drop-shadow(0 2px 5px #000c)}
 </style>
 <script src="./shared/vip.js"></script>
 <script src="./shared/fast.js"></script>
@@ -1727,9 +1738,17 @@ const FOG_ART = {
 };
 const SET_NAMES = { novice: "Новичок", fog: "Реликвии Серого Тумана" };
 const SET_INFO = { novice: [7, "+10 Сила, Вын, Дух"], fog: [7, "+3 ко всем характеристикам"] };
+const GEAR_ART = { head: 1, face: 1, body: 1, weapon: 1, legs: 1, necklace: 1, ring: 1 };
+function gearImg(slot) {
+  return '<img src="./shared/art/gear/' + slot + '.webp?v=1" alt="" draggable="false" loading="lazy">';
+}
 function bagIcon(el, item, fallback) {
+  el.classList.remove("gearIc");
   const art = item && item.set === "fog" ? FOG_ART[item.name] : null;
-  if (!art) { el.textContent = fallback; return; }
+  if (!art) {
+    if (item && !item.quest && !item.vip_days && GEAR_ART[item.slot]) { el.classList.add("gearIc"); el.innerHTML = gearImg(item.slot); return; }
+    el.textContent = fallback; return;
+  }
   el.classList.add("fogIc");
   el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + art + "</svg>";
 }
@@ -2043,7 +2062,7 @@ function renderBagFromJ(data) {
     b.style.setProperty("--i", i);
     const ic = document.createElement("div");
     ic.className = "ic";
-    ic.textContent = icon;
+    if (GEAR_ART[slot]) { ic.classList.add("gearIc"); ic.innerHTML = gearImg(slot); } else ic.textContent = icon;
     b.appendChild(ic);
     if (item) {
       bagIcon(ic, item, icon);
