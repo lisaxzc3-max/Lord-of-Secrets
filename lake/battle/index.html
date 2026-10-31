@@ -97,7 +97,6 @@ button{font:inherit}
 #battleText{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45;font-size:12px;color:#e4e0d6;max-height:68px;overflow:hidden}
 #battleText.pop{animation:msgPop .3s ease-out}
 @keyframes msgPop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-body.shake .stage{animation:none}
 
 /* ===== ДЕЙСТВИЯ ===== */
 .dock{margin:10px 10px 0}
@@ -356,7 +355,6 @@ function tickEffects(){
 }
 
 /* ===== СЦЕНА ===== */
-function enemyIsDown(){return false}
 
 /* ===== НАВЫКИ ===== */
 let skBuilt="",tipTimer=0,tipShown=false;
