@@ -721,6 +721,33 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 #bag .eqSlot.on .ic{opacity:1;filter:none}
 #bag .eqSlot:not(.on) .ic.gearIc{opacity:.34}
 #bag .eqSlot.on .ic.gearIc img{filter:drop-shadow(0 2px 5px #000c)}
+
+/* ===== новое меню: арт-панель с кнопками-капсулами ===== */
+#sideMenu{z-index:9}
+#sideMenu .smDim{background:#02030acc;transition:opacity .35s!important}
+#sideMenu .smPanel{left:50%;right:auto;top:0;bottom:0;width:min(100vw,440px);margin-left:calc(min(100vw,440px)/-2);padding:0;border:0;display:block;overflow:hidden;transform:none!important;opacity:0;transition:opacity .38s!important;background:#07080f url(shared/art/menu.webp?v=m1) top center/100% auto no-repeat}
+#sideMenu.show .smPanel{opacity:1}
+#sideMenu .smSig,#sideMenu .smFog,#sideMenu .smLine,#sideMenu .smFoot,#sideMenu .smTtl{display:none!important}
+#sideMenu .smHead{position:absolute;left:0;top:0;width:100%;height:0;margin:0;display:block}
+#sideMenu .smX{position:absolute;left:calc(var(--u)*732);top:calc(var(--u)*138);width:calc(var(--u)*98);height:calc(var(--u)*98);border:0;border-radius:50%;background:transparent;color:transparent;font-size:0;box-shadow:none;transition:background .2s!important}
+#sideMenu .smX:active{background:#ffffff1c}
+#sideMenu .smList{position:absolute;left:0;top:0;width:100%;height:100%;display:block;pointer-events:none}
+#sideMenu .smIt{pointer-events:auto}
+#sideMenu .smHead{z-index:4}
+#sideMenu .smIt{position:absolute;left:calc(var(--u)*60);width:calc(var(--u)*732);height:calc(var(--u)*146);margin:0;padding:0;border:0!important;border-radius:999px;background:transparent!important;box-shadow:none!important;color:transparent;font-size:0;gap:0;overflow:visible;opacity:0!important;transform:translateY(calc(var(--u)*16))!important;animation:none!important;transition:opacity .45s,transform .45s,background .2s!important;transition-delay:calc(.1s + var(--i)*.07s),calc(.1s + var(--i)*.07s),0s!important}
+#sideMenu.show .smIt{opacity:1!important;transform:none!important}
+#sideMenu .smIt:before{display:none!important}
+#sideMenu .smIc{display:none!important}
+#sideMenu .smIt:hover{box-shadow:none}
+#sideMenu .smIt:active{background:#ffe8b81c!important;transform:scale(.985)!important}
+#sideMenu .smIt>span,#sideMenu .smIt small{font-size:0;color:transparent}
+#sideMenu .smIt:nth-child(1){top:calc(var(--u)*286)}
+#sideMenu .smIt:nth-child(2){top:calc(var(--u)*455)}
+#sideMenu .smIt:nth-child(3){top:calc(var(--u)*624)}
+#sideMenu .smIt:nth-child(4){top:calc(var(--u)*793)}
+#sideMenu .smIt:nth-child(5){top:calc(var(--u)*961)}
+#sideMenu .smIt:nth-child(6){top:calc(var(--u)*1128)}
+#sideMenu .smIt.hasNew::after{content:"";position:absolute;left:calc(var(--u)*676);top:calc(var(--u)*28);right:auto;margin:0;width:calc(var(--u)*24);height:calc(var(--u)*24);border-radius:50%;background:#e0423a;box-shadow:0 0 calc(var(--u)*14) #ff3b30,0 0 0 calc(var(--u)*3) #0006}
 </style>
 <script src="./shared/vip.js"></script>
 <script src="./shared/fast.js"></script>
@@ -1366,6 +1393,7 @@ function showTab(id) {
     a.classList.toggle("active", a.dataset.tab === id);
   });
   byId("nav")?.setAttribute("data-a", id);
+  try { closeMenu(); } catch (_) {}
   document.body.setAttribute("data-tab", id);
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 
