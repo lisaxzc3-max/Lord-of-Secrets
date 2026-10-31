@@ -239,6 +239,28 @@ frsnort:function(t){noise(t,0.22,0.3,"bandpass",600,1500,2.5,{attack:0.02});nois
 frwolf:function(t){osc("sawtooth",65,t,1,0.28,{to:46,vib:20,vibd:16,wet:0.4,attack:0.05});osc("sine",320,t+0.4,1.4,0.07,{to:520,vib:5,vibd:14,wet:0.9,attack:0.3});osc("sine",520,t+0.9,1.2,0.06,{to:330,vib:5,vibd:12,wet:0.9})},
 frfox:function(t){[88,91,95,100].forEach(function(m,i){osc("sine",N(m),t+i*0.14,0.8,0.08,{wet:0.9,attack:0.02})});osc("sawtooth",700,t+0.3,0.3,0.05,{to:1100,vib:20,vibd:30,wet:0.6});noise(t,0.6,0.06,"bandpass",3000,5500,3,{wet:0.7})}
 };
+/* ---------- звуки боя (сцена с моделями) ---------- */
+var BF={
+bturn:function(t){osc("triangle",660,t,0.16,0.16,{to:990,wet:0.4});osc("sine",1320,t+0.07,0.2,0.08,{wet:0.5})},
+bwoosh:function(t){noise(t,0.26,0.4,"bandpass",600,2800,1.4)},
+bdash:function(t){noise(t,0.3,0.5,"highpass",900,5200,0.7);osc("sine",150,t,0.25,0.3,{to:300})},
+bslash:function(t){noise(t,0.16,0.5,"highpass",6000,1400,0.8);osc("sine",980,t,0.14,0.18,{to:260})},
+bcast:function(t){osc("sine",380,t,0.45,0.14,{to:1250,wet:0.6,attack:0.05});osc("triangle",760,t+0.05,0.4,0.07,{to:1900,wet:0.6})},
+bbuff:function(t){[523,659,784,1046].forEach(function(f,i){osc("sine",f,t+i*0.07,0.5,0.1,{wet:0.7,attack:0.02})})},
+bfire:function(t){noise(t,0.55,0.38,"bandpass",420,2100,1.1,{attack:0.06});noise(t+0.05,0.4,0.18,"highpass",3000,6000,0.6)},
+bfirehit:function(t){noise(t,0.5,0.6,"lowpass",3200,260);osc("sine",150,t,0.4,0.6,{to:38});noise(t,0.25,0.25,"highpass",2500,5000,0.7)},
+bzap:function(t){osc("square",2000,t,0.18,0.1,{to:260});noise(t,0.2,0.4,"highpass",3000,900,1)},
+bthunder:function(t){noise(t,0.07,0.8,"highpass",2600,2600,0.7);noise(t+0.03,1.0,0.55,"lowpass",900,90,0.8,{attack:0.05});osc("sine",85,t+0.03,0.8,0.5,{to:30})},
+bcards:function(t){for(var i=0;i<5;i++)noise(t+i*0.05,0.06,0.3,"bandpass",4200+i*300,3000,2);osc("sine",1568,t+0.2,0.5,0.07,{wet:0.8})},
+bpillar:function(t){noise(t,0.5,0.45,"lowpass",2200,180,0.8);osc("sine",110,t,0.5,0.5,{to:40})},
+benemy:function(t){osc("sawtooth",110,t,0.38,0.22,{to:55,vib:14,vibd:12,wet:0.4});noise(t,0.3,0.15,"bandpass",500,180,1.2)},
+bbite:function(t){noise(t,0.12,0.5,"highpass",3500,1200,1);osc("square",320,t,0.1,0.16,{to:90})},
+bclaw:function(t){noise(t,0.2,0.45,"highpass",5000,1800,0.8);osc("sawtooth",700,t,0.18,0.12,{to:200})},
+bsplash:function(t){noise(t,0.45,0.4,"bandpass",1200,300,0.9);osc("sine",300,t,0.3,0.12,{to:900,wet:0.5})},
+bdie:function(t){osc("sine",320,t,0.9,0.3,{to:40,wet:0.5});noise(t,0.7,0.25,"lowpass",1800,80,0.8)},
+bmiss:function(t){noise(t,0.22,0.2,"bandpass",1500,3500,1.5)}
+};
+for(var _kb in BF)SFX[_kb]=BF[_kb];
 for(var _k5 in LF)SFX[_k5]=LF[_k5];
 
 var lastAt={},recent=[],KEEP={hurt:1,hit:1,crit:1,win:1,lose:1,level:1,banner:1,phase:1,heal:1,kvbig:1,kvphase:1,kvswirl:1,kvroar:1};
