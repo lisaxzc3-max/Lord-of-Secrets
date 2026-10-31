@@ -4,88 +4,123 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#0a0605">
+<meta name="theme-color" content="#03101a">
 <title>Руины · Сражение</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--panel:rgba(24,14,11,.96);--line:#5a3a2c;--text:#eadccb;--muted:#b29a8a;--gold:#e0b46a;--red:#e0585a;--green:#8ac48a}
+:root{--panel:rgba(8,22,30,.96);--line:#2d4d5c;--text:#e2dcd0;--muted:#a59cae;--gold:#d6b779;--red:#d65d63;--green:#77b98b}
 *{box-sizing:border-box}
-html{min-height:100%;background:#0a0605}
-body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);background:radial-gradient(ellipse at 50% -10%,#8a3a1a50,transparent 55%),linear-gradient(#0d0806,#050304)}
+html{min-height:100%;background:#03101a}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);overflow-x:hidden;background:linear-gradient(#051722,#030a10)}
 button,a{-webkit-tap-highlight-color:transparent}
 button{font:inherit}
-.wrap{max-width:520px;margin:auto;padding:10px 12px calc(34px + env(safe-area-inset-bottom))}
-.head{display:flex;align-items:center;gap:10px;padding:7px 0 14px}
-.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#1e110de0;font-size:12px}
-.headTitle{min-width:0;flex:1}
-.eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-.headTitle h1{font-size:19px;line-height:1.25;margin:3px 0 0;font-weight:800}
-.statusPill{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:10px;color:var(--muted);background:#19181dc9}
+.hidden{display:none!important}
+.wrap{position:relative;max-width:520px;margin:auto;padding:0 0 calc(30px + env(safe-area-inset-bottom))}
+
+/* ===== СЦЕНА ===== */
+.stage{position:relative;height:clamp(330px,54vh,470px);overflow:hidden;border-radius:0 0 22px 22px;border-bottom:1px solid var(--line);background:#06141c url(../../shared/art/loc_ruins.jpg) 50% 100%/cover no-repeat;box-shadow:0 12px 30px #0006}
+.stage:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#02080ccc 0%,#02080c33 30%,#02080c00 55%,#02080c99 100%)}
+.stage:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 50% 60%,transparent 55%,#02070bcc)}
+.mist{position:absolute;left:-50%;width:200%;z-index:3;pointer-events:none;background:radial-gradient(ellipse at center,#d0b8a026,transparent 65%);filter:blur(8px)}
+.mist.a{bottom:6%;height:30%;animation:mist 34s linear infinite}
+.mist.b{bottom:0;height:22%;opacity:.7;animation:mist 48s linear -20s infinite reverse}
+@keyframes mist{from{transform:translateX(0)}to{transform:translateX(25%)}}
+.top{position:absolute;z-index:40;left:0;right:0;top:0;display:flex;align-items:center;gap:8px;padding:9px 10px}
+.back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid #2d4d5ccc;border-radius:10px;padding:7px 10px;background:#06141ccc;font-size:12px;backdrop-filter:blur(4px)}
+.turn{flex:1;text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-shadow:0 1px 6px #000}
+.turn.foe{color:#f08b8b}
+.turn.wait{color:var(--muted)}
+.statusPill{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:6px 9px;font-size:10px;color:var(--muted);background:#06141ccc}
 .statusPill.live{color:var(--green);border-color:#42644e}
 .statusPill.busy{color:var(--gold);border-color:#8e7040}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 10px 30px #0002}
-.arena{position:relative;overflow:hidden;padding:13px}
-.arena:before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,#8e7040,transparent)}
-.arena.boss{border-color:#6b3b4a}
-.arena.boss:before{background:linear-gradient(90deg,transparent,#c45a6a,transparent)}
-.arenaTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.sectionLabel{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.roundLabel{font-size:10px;color:var(--gold)}
-.fighters{display:grid;grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);gap:7px;align-items:start}
-.fighter{min-width:0;text-align:center}
-.portraitFrame{position:relative;width:100%;max-width:150px;aspect-ratio:1;margin:0 auto 9px;padding:4px;border:1px solid #514653;border-radius:15px;background:linear-gradient(145deg,#38303e,#15141b,#111116)}
-.portraitFrame img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px;background:#19171e}
-.fighterName{font-weight:800;font-size:13px;overflow-wrap:anywhere;min-height:18px}
-.fighterRole{font-size:10px;color:var(--muted);margin-top:2px;min-height:14px}
-.fighterRole.boss{color:#e58a96}
-.hpNumbers{display:flex;justify-content:space-between;gap:4px;margin-top:11px;font-size:10px;color:var(--muted)}
-.hpNumbers strong{color:var(--text);font-size:11px;font-variant-numeric:tabular-nums}
-.bar{position:relative;height:9px;margin-top:5px;border-radius:999px;overflow:hidden;background:#302b35;border:1px solid #403742}
+.spd{flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#06141ccc;color:var(--muted);font-size:13px;line-height:1}
+.spd.on{color:#20190f;background:var(--gold);border-color:var(--gold)}
+.hud{position:absolute;z-index:30;top:46px;width:calc(50% - 14px);min-width:0}
+.hud.l{left:10px}.hud.r{right:10px;text-align:right}
+.hud .nm{font-weight:800;font-size:13px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 6px #000}
+.hud .rl{font-size:10px;color:#b9c6cb;margin-top:1px;text-shadow:0 1px 4px #000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hud .rl.boss{color:#f19aa4}
+.bar{position:relative;height:9px;margin-top:5px;border-radius:999px;overflow:hidden;background:#0b1a22cc;border:1px solid #ffffff2a}
 .bar i{position:relative;z-index:1;display:block;width:0;height:100%;border-radius:999px;transition:width .35s}
-.bar .ghost{position:absolute;left:0;top:0;bottom:0;width:0;background:#ffffffa8;border-radius:999px}
+.bar .ghost{position:absolute;left:0;top:0;bottom:0;width:0;background:#ffffffb0;border-radius:999px}
 .bar.hp i{background:linear-gradient(90deg,#8c333d,#e46a72)}
 .bar.enemyHp i{background:linear-gradient(90deg,#8d4c2c,#e2a05d)}
-.hpCaption{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:#847c8b}
-.vs{margin-top:37px;text-align:center;font-weight:900;font-size:13px;color:var(--gold);animation:vsPulse 2.2s ease-in-out infinite}
-.battleMessage{margin-top:14px;padding:11px 12px;border:1px solid #39333f;border-radius:12px;background:#0a0a0e7d;display:flex;gap:9px;align-items:flex-start}
-.messageIcon{font-size:17px}
-.messageBody{min-width:0;flex:1}
-.messageTitle{font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
-#battleText{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;font-size:12px;color:#d1c8d6}
-#battleText.pop{animation:msgPop .35s ease-out}
-.logCard{padding:12px;margin-top:4px}
-.logHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
-.logTitle{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.logCount{font-size:10px;color:#77717d}
-#battleLog{display:flex;flex-direction:column;gap:6px}
-.logDisclosure{margin-top:2px}
-.logDisclosure summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;border:1px solid #45404b;border-radius:11px;background:#1d1a20}
-.logDisclosure summary::-webkit-details-marker{display:none}
-.logDisclosure summary:after{content:"＋";color:var(--gold);font-size:15px}
-.logDisclosure[open] summary{margin-bottom:9px;border-color:#6b5940}
-.logDisclosure[open] summary:after{content:"−"}
-.logSummarySub{font-size:10px;color:var(--muted);font-weight:500}
-.logEntry{font-size:11px;line-height:1.45;padding:8px 10px;border-left:2px solid #55475e;background:#ffffff08;border-radius:0 7px 7px 0;overflow-wrap:anywhere}
-.logEntry.good{border-color:var(--green)}
-.logEntry.bad{border-color:var(--red)}
-.logEntry.info{border-color:var(--gold)}
-.skillCard{padding:13px}
-.skillHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.skillHeader h2{font-size:12px;letter-spacing:1.5px;margin:0}
-.skillHeader span{font-size:10px;color:var(--muted)}
-.skillGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.skill{position:relative;min-height:77px;text-align:left;padding:11px 10px;border-radius:12px;border:1px solid #514456;color:var(--text);background:linear-gradient(145deg,#302738,#211e27);cursor:pointer;transition:transform .12s,box-shadow .2s}
-.skill:not(:disabled):active{transform:scale(.96);box-shadow:0 0 16px #b48cff55}
-.skill:disabled{cursor:default;opacity:.52}
-.skill.basic{background:linear-gradient(145deg,#292c31,#1d1d23);border-color:#41434a}
-.skill.escape{background:linear-gradient(145deg,#30252a,#211c22);border-color:#684248}
-.skillName{font-weight:750;font-size:12px;line-height:1.4}
-.skillDesc{font-size:10px;color:var(--muted);line-height:1.35;margin-top:5px}
-.cooldown{position:absolute;right:7px;top:7px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#f1d5a0;background:#5a462a;font-size:10px;font-weight:800}
-.skillFoot{display:flex;align-items:center;gap:7px;margin-top:10px;color:var(--muted);font-size:10px;line-height:1.4}
-.skillFoot .dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--green)}
-.bottomNote{font-size:10px;color:#827b89;text-align:center;line-height:1.6;padding:0 12px 12px}
-.hidden{display:none!important}
+.hud .num{font-size:10px;margin-top:3px;color:#d8e3e6;font-variant-numeric:tabular-nums;text-shadow:0 1px 4px #000}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;min-height:0}
+.hud.r .chips{justify-content:flex-end}
+.chip{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;border:1px solid #3a6a7a;background:#08181fd9;color:#cfe8ee;animation:pop .3s ease-out}
+.chip.bad{border-color:#4f9a58;color:#a6f0a8}.chip.warn{border-color:#c4a45a;color:#f0dca0}.chip.good{border-color:#6a8ad0;color:#bcd0ff}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+
+.fighters{position:absolute;inset:0;z-index:5;pointer-events:none}
+.fighter{position:absolute;inset:0;pointer-events:none}
+.unit{position:absolute;pointer-events:none;transform-origin:50% 100%;will-change:transform}
+.unit:before{content:"";position:absolute;left:4%;right:4%;bottom:-7px;height:15px;border-radius:50%;background:radial-gradient(ellipse,#000c,#0000 72%);z-index:-1}
+.unit .fl{position:absolute;inset:0;transform:scaleX(var(--f,1))}
+.unit img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;transform-origin:50% 100%;-webkit-user-drag:none;user-select:none}
+.unit.hero img{filter:drop-shadow(0 0 3px #bfe9ff90) drop-shadow(0 0 12px #4fd0ff30);animation:idleH 3.2s ease-in-out infinite}
+.unit.foe{pointer-events:auto;cursor:pointer}
+.unit.foe img{filter:drop-shadow(0 4px 10px #000a)}
+.unit.foe.idle-breath img{animation:idleB 3s ease-in-out infinite}
+.unit.foe.idle-sway img{animation:idleS 3.6s ease-in-out infinite}
+.unit.foe.idle-bob img{animation:idleF 2.6s ease-in-out infinite}
+.unit.foe.idle-float img{animation:idleF 3.4s ease-in-out infinite}
+.arenaBoss .unit.foe{filter:drop-shadow(0 0 16px #c45a6a77)}
+.arenaP2 .unit.foe{filter:drop-shadow(0 0 22px #ff4a7acc)}
+.unit.foe.shielded{filter:drop-shadow(0 0 14px #cfd8e8cc)}
+.unit.foe.fadeOut .fl{opacity:.28;transition:opacity .4s}
+.unit.foe.burrow .fl{transform:scaleX(var(--f,1)) translateY(58%);opacity:.5}
+.eHit.magic b{background:radial-gradient(circle,#fff,#b86bff88 45%,transparent 70%)}
+@keyframes idleH{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-3px) scale(1.012,1.01)}}
+@keyframes idleB{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,1.03)}}
+@keyframes idleS{0%,100%{transform:rotate(-1.2deg) scale(1)}50%{transform:rotate(1.4deg) scale(1.02,1.03)}}
+@keyframes idleF{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.stIc{position:absolute;left:50%;top:-4px;margin-left:-14px;font-size:22px;filter:drop-shadow(0 0 6px #000);animation:idleF 1.4s ease-in-out infinite}
+.eiBadge{z-index:6}
+.fxl{position:absolute;inset:0;z-index:20;pointer-events:none;overflow:hidden}
+.fxs{position:absolute;pointer-events:none;will-change:transform}
+.fnum{position:absolute;z-index:25;transform:translate(-50%,0);font-weight:900;font-size:24px;text-shadow:0 2px 8px #000,0 0 12px #000;animation:fnum 1.1s ease-out forwards;white-space:nowrap}
+.fnum.dmg{color:#ff7a82}.fnum.crit{color:#ffd24a;font-size:32px}.fnum.heal{color:#7be3a0}.fnum.miss{color:#cfe8ee;font-size:16px;letter-spacing:1px}
+@keyframes fnum{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,-6px) scale(1.25)}100%{opacity:0;transform:translate(-50%,-56px) scale(1)}}
+.sflash{position:absolute;inset:0;z-index:28;pointer-events:none;opacity:0}
+.auraG{position:absolute;left:-30%;right:-30%;top:10%;bottom:-6%;border-radius:50%;background:radial-gradient(ellipse,var(--c),transparent 68%);opacity:0;pointer-events:none;mix-blend-mode:screen;z-index:-1}
+.eHit{position:absolute;z-index:22;width:0;height:0;pointer-events:none}
+.eHit i{position:absolute;left:-40px;top:-3px;width:90px;height:5px;border-radius:5px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 14px #ff6a5a;transform:rotate(-38deg) scaleX(0);animation:claw .42s ease-out forwards}
+.eHit i:nth-child(2){margin-top:14px;animation-delay:.06s}.eHit i:nth-child(3){margin-top:-14px;animation-delay:.12s}
+.eHit.bite i{left:-24px;width:60px;transform:rotate(-70deg) scaleX(0)}.eHit.bite i:nth-child(2){transform:rotate(70deg) scaleX(0);animation-name:claw2}
+.eHit b{position:absolute;left:-36px;top:-36px;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#fff,#ff6a5a88 45%,transparent 70%);animation:burstA .45s ease-out forwards}
+.eHit.tongue b{background:radial-gradient(circle,#fff,#8dff7a88 45%,transparent 70%)}
+@keyframes claw{0%{transform:rotate(-38deg) scaleX(0);opacity:1}50%{transform:rotate(-38deg) scaleX(1.1);opacity:1}100%{transform:rotate(-38deg) scaleX(1.2);opacity:0}}
+@keyframes claw2{0%{transform:rotate(70deg) scaleX(0);opacity:1}50%{transform:rotate(70deg) scaleX(1.1);opacity:1}100%{transform:rotate(70deg) scaleX(1.2);opacity:0}}
+@keyframes burstA{0%{transform:scale(.2);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.tongue{position:absolute;z-index:21;height:7px;border-radius:7px;background:linear-gradient(90deg,#c0457a,#ff7aa8);box-shadow:0 0 10px #ff7aa8aa;pointer-events:none}
+.banner{position:absolute;left:0;right:0;top:34%;z-index:35;text-align:center;font-weight:900;font-size:24px;letter-spacing:5px;color:#fff;text-shadow:0 0 20px var(--c,#c45a6a),0 0 4px #000;pointer-events:none;animation:banner 1.7s ease-out forwards}
+@keyframes banner{0%{opacity:0;transform:scale(1.9)}15%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(.96)}}
+.msg{position:absolute;z-index:36;left:10px;right:10px;bottom:10px;display:flex;gap:8px;align-items:flex-start;padding:8px 11px;border:1px solid #ffffff1c;border-radius:12px;background:#040d13d9;backdrop-filter:blur(4px);min-height:40px}
+.msg .mi{font-size:15px;line-height:1.3}
+#battleText{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45;font-size:12px;color:#e4e0d6;max-height:68px;overflow:hidden}
+#battleText.pop{animation:msgPop .3s ease-out}
+@keyframes msgPop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+body.shake .stage{animation:none}
+
+/* ===== ДЕЙСТВИЯ ===== */
+.dock{margin:10px 10px 0}
+.dockHead{display:flex;justify-content:space-between;align-items:center;padding:0 3px 7px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.skillGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.sk{position:relative;display:flex;flex-direction:column;justify-content:center;gap:3px;min-height:54px;padding:7px 8px;text-align:left;border-radius:12px;border:1px solid #2d4d5c;color:var(--text);background:#0b1b25;cursor:pointer;overflow:hidden;touch-action:manipulation}
+.sk:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--sk,#d6b779);opacity:.85}
+.sk:active:not(:disabled){transform:scale(.96);background:#112634}
+.sk:disabled{opacity:.5}
+.sk .skIc{font-size:16px;line-height:1;filter:drop-shadow(0 0 6px var(--sk,#fff))}
+.sk .skN{font-weight:750;font-size:11.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sk .skT{position:absolute;right:6px;top:5px;font-size:9px;color:#8aa0aa}
+.sk.basic:before{background:#8a8e96}.sk.escape:before{background:#c46a72}
+.sk .cd{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#050d12b3;font-weight:900;font-size:20px;color:#f1d5a0}
+.skTip{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;max-width:496px;margin:auto;padding:10px 12px;border-radius:12px;border:1px solid var(--gold);background:#06141cf5;font-size:12px;line-height:1.45;animation:msgPop .2s ease-out}
+.skTip b{color:var(--gold)}
+
+/* ===== ИТОГИ ===== */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px;margin:10px 10px 0;box-shadow:0 10px 30px #0002}
 .resultCard{position:relative;overflow:hidden;text-align:center;padding:22px 16px}
 .resultCard:not(.hidden){animation:cardIn .5s ease-out}
 .resultSymbol{font-size:36px;margin-bottom:8px}
@@ -94,7 +129,8 @@ button{font:inherit}
 .rewardGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
 .reward{border:1px solid #4a4147;background:#211e25;border-radius:11px;padding:12px 7px}
 .rewardValue{font-size:19px;font-weight:850;color:var(--gold)}
-.ingDrop{grid-column:1/-1;border-color:#6a4a8a;background:linear-gradient(145deg,#241830,#15101c);animation:ingIn .8s ease-out .5s backwards;box-shadow:0 0 18px #6a3a9a55}.ingDrop .rewardValue{font-size:14px;color:#c9b8e8;font-weight:700;line-height:1.35}@keyframes ingIn{from{opacity:0;transform:scale(.9);filter:blur(5px)}}
+.ingDrop{grid-column:1/-1;border-color:#6a4a8a;background:linear-gradient(145deg,#241830,#15101c);animation:ingIn .8s ease-out .5s backwards;box-shadow:0 0 18px #6a3a9a55}.ingDrop .rewardValue{font-size:15px;color:#d9b8ff}
+@keyframes ingIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 .rewardLabel{font-size:10px;color:var(--muted);margin-top:3px}
 .resultActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}
 .actionBtn{display:block;width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 9px;background:#29252f;color:var(--text);text-decoration:none;font-weight:750;font-size:12px;cursor:pointer}
@@ -104,149 +140,77 @@ button{font:inherit}
 .defeatCard .resultTitle{color:#f08b8b}
 .victoryCard{border-color:#79603b;background:linear-gradient(155deg,#30271af5,#18161cf5)}
 .victoryCard .resultTitle{color:var(--gold);animation:titleGlow 2s ease-in-out infinite}
-.errorBox{border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.5}
-.loading{opacity:.72;pointer-events:none}
-
-/* ===== АНИМАЦИИ БОЯ ===== */
-.fighter:first-child{animation:inL .6s ease-out backwards}
-.fighter:last-child{animation:inR .6s ease-out .12s backwards}
-.portraitFrame{animation:idle 3.4s ease-in-out infinite}
-.fighter:last-child .portraitFrame{animation-delay:-1.7s}
-.arena.boss .fighter:last-child .portraitFrame{border-color:#c45a6a;box-shadow:0 0 18px #c45a6a66;animation:idle 3.4s ease-in-out -1.7s infinite,bossAura 2.2s ease-in-out infinite}
-.hit{animation:hitShake .45s!important}
-.lungeR{animation:lungeR .42s ease-out!important}
-.lungeL{animation:lungeL .42s ease-out!important}
-.coil{animation:coil 1.7s ease-in-out!important}
-.poison{animation:poison 1s ease-in-out!important}
-.flashR img{animation:flashR .45s}
-.flashW img{animation:flashW .4s}
-.healGlow img{animation:healG .8s}
-body.shake .wrap{animation:screenShake .7s ease-in-out}
-.fx{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden}
-.float{position:absolute;left:50%;top:28%;font-weight:900;font-size:24px;pointer-events:none;text-shadow:0 2px 8px #000,0 0 12px #000;animation:floatUp 1.15s ease-out forwards;z-index:7;white-space:nowrap}
-.float.dmg{color:#ff6b73}
-.float.heal{color:#7be3a0}
-.fxSlash{position:absolute;width:120px;height:5px;margin:-2px 0 0 -60px;border-radius:5px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 14px #fff,0 0 30px var(--c,#d6b779);transform:rotate(var(--rot,-35deg)) scaleX(0);animation:slash .4s ease-out forwards}
-.fxRing{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid var(--c,#fff);box-shadow:0 0 18px var(--c),inset 0 0 14px var(--c);animation:ringA .95s ease-out forwards}
-.fxEmoji{position:absolute;font-size:32px;margin:-16px 0 0 -16px;filter:drop-shadow(0 0 8px var(--c,#fff));animation:emojiPop 1s ease-out forwards}
-.fxDrop{position:absolute;font-size:34px;margin:-17px 0 0 -17px;filter:drop-shadow(0 0 8px var(--c,#fff));animation:dropIn .7s cubic-bezier(.3,1.4,.5,1) forwards}
-.fxBoom{position:absolute;font-size:32px;margin:-16px 0 0 -16px;filter:drop-shadow(0 0 8px #d6b779);animation:boom 1s ease-in-out forwards}
-.fxFlash{position:absolute;inset:0;background:#fff;animation:flashOv .55s ease-out forwards}
-.banner{position:absolute;left:0;right:0;top:40%;text-align:center;font-weight:900;font-size:24px;letter-spacing:5px;color:#fff;text-shadow:0 0 20px var(--c,#c45a6a),0 0 4px #000;animation:banner 1.7s ease-out forwards;z-index:8}
-.spark{position:absolute;top:-12px;width:6px;height:11px;background:var(--c);opacity:.95;animation:fall var(--t) linear forwards;pointer-events:none}
-body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:radial-gradient(ellipse at center,transparent 45%,#7a0f1acc);animation:vig 2.6s ease-in-out infinite}
-@keyframes idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-@keyframes inL{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
-@keyframes inR{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
-@keyframes vsPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.25);opacity:1;text-shadow:0 0 12px #d6b779}}
-@keyframes msgPop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes titleGlow{0%,100%{text-shadow:0 0 0 #d6b779}50%{text-shadow:0 0 18px #d6b779}}
-@keyframes hitShake{0%{transform:translateX(0)}30%{transform:translateX(-4px)}60%{transform:translateX(3px)}100%{transform:translateX(0)}}
-@keyframes lungeR{0%{transform:none}35%{transform:translateX(36px) scale(1.08)}100%{transform:none}}
-@keyframes lungeL{0%{transform:none}35%{transform:translateX(-36px) scale(1.08)}100%{transform:none}}
-@keyframes coil{0%,100%{transform:scale(1);box-shadow:0 0 0 #4cff8800}50%{transform:scale(.9) rotate(-2deg);box-shadow:0 0 30px #4cff88bb}}
-@keyframes poison{0%,100%{box-shadow:0 0 0 #6dff7a00}50%{box-shadow:0 0 24px #6dff7acc}}
-@keyframes bossAura{0%,100%{box-shadow:0 0 14px #c45a6a55}50%{box-shadow:0 0 30px #c45a6add}}
-@keyframes flashR{0%,100%{filter:none}30%{filter:brightness(1.7) saturate(3) hue-rotate(-20deg) drop-shadow(0 0 10px #f33)}}
-@keyframes flashW{0%,100%{filter:none}30%{filter:brightness(2.3)}}
-@keyframes healG{0%,100%{filter:none}40%{filter:brightness(1.3) drop-shadow(0 0 12px #7be3a0)}}
-@keyframes screenShake{0%,100%{transform:translate(0)}30%{transform:translate(-2px,1px)}60%{transform:translate(2px,-1px)}}
-@keyframes floatUp{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,-4px) scale(1.3)}100%{opacity:0;transform:translate(-50%,-58px) scale(1)}}
-@keyframes slash{0%{transform:rotate(var(--rot,-35deg)) scaleX(0);opacity:1}60%{transform:rotate(var(--rot,-35deg)) scaleX(1.2);opacity:1}100%{transform:rotate(var(--rot,-35deg)) scaleX(1.45);opacity:0}}
-@keyframes ringA{from{transform:scale(.3);opacity:1}to{transform:scale(3.6);opacity:0}}
-@keyframes emojiPop{0%{transform:translateY(8px) scale(.4);opacity:0}25%{opacity:1;transform:translateY(-8px) scale(1.3)}100%{transform:translateY(-50px) scale(1);opacity:0}}
-@keyframes dropIn{0%{transform:translateY(-80px);opacity:0}60%{opacity:1}100%{transform:translateY(0);opacity:.9}}
-@keyframes boom{0%{transform:translate(0,0) rotate(0);opacity:1}50%{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:1}100%{transform:translate(0,0) rotate(1080deg);opacity:0}}
-@keyframes flashOv{0%{opacity:.85}100%{opacity:0}}
-@keyframes banner{0%{opacity:0;transform:scale(1.9)}15%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(.96)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+.errorBox{border-color:#783b42;color:#f0a3a3;font-size:12px;line-height:1.5}
+.spark{position:absolute;top:-12px;width:6px;height:11px;background:var(--c);opacity:.95;animation:fall var(--t) linear forwards;pointer-events:none}
 @keyframes fall{to{transform:translateY(380px) rotate(600deg);opacity:0}}
+body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:radial-gradient(ellipse at center,transparent 45%,#7a0f1acc);animation:vig 2.6s ease-in-out infinite}
 @keyframes vig{0%,100%{opacity:.9}50%{opacity:.45}}
-@media(max-width:360px){.wrap{padding-left:8px;padding-right:8px}.card{padding:11px}.fighters{grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:5px}.fighterName{font-size:12px}.skill{padding:9px 8px;min-height:75px}.skillName{font-size:11px}.headTitle h1{font-size:16px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
-
-/* ===== ЛЕС ===== */
-.hidden{display:none!important}
-.portraitFrame{overflow:visible}
-.emo{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:10px;font-size:64px;background:radial-gradient(circle at 50% 40%,#5a2a1a,#150a07 80%);filter:drop-shadow(0 0 14px #ff8a3a55)}
-.arena.phase2 .portraitFrame:last-child,.arena.phase2 #enemyFrame{border-color:#ff7a3a;box-shadow:0 0 28px #ff7a3aaa}
-.arena.phase2 .emo{background:radial-gradient(circle at 50% 40%,#7a2a10,#1a0805 80%);filter:drop-shadow(0 0 18px #ff7a3a)}
-.amb{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:hidden}
-.amb-p{position:absolute;font-size:22px;font-style:normal;animation:ambUp 1.5s ease-out forwards}
-.amb-p.web{font-size:34px;animation:ambDown 1.4s ease-in forwards}
-@keyframes ambUp{0%{opacity:0;transform:translateY(14px) scale(.5)}25%{opacity:.95}100%{opacity:0;transform:translateY(-70px) scale(1.2) rotate(40deg)}}
-@keyframes ambDown{0%{opacity:0;transform:translateY(-40px)}30%{opacity:.9}100%{opacity:0;transform:translateY(40px) scale(1.3)}}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:0}
-.chip{font-size:10px;font-weight:800;padding:4px 8px;border-radius:999px;border:1px solid #7a4a3a;background:#1a0d0a;color:#f0dccb;animation:cardIn .3s ease-out}
-.chip.sleep{border-color:#5a78c8;color:#a9c2ff}.chip.web{border-color:#9aa59a}.chip.weak{border-color:#8a6ab0;color:#d0b0ff}
-.chip.poison,.chip.stack{border-color:#7a9a4f;color:#cdf0a0}.chip.shield{border-color:#c4a45a;color:#f0dca0}
-.zzz{display:none;position:absolute;right:-6px;top:-10px;font-size:26px;animation:zzz 1.6s ease-in-out infinite;z-index:4}
-@keyframes zzz{0%,100%{transform:translateY(0) rotate(-8deg);opacity:.7}50%{transform:translateY(-8px) rotate(8deg);opacity:1}}
-.portraitFrame.asleep img{filter:brightness(.55) saturate(.6)}
-.portraitFrame.webbed:after{content:"🕸";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px;opacity:.55;pointer-events:none}
-.portraitFrame.shielded{box-shadow:0 0 0 2px #c4a45a,0 0 22px #c4a45a88}
-.portraitFrame.ghosting .emo{animation:ghost 1s ease-in-out infinite}
-@keyframes ghost{0%,100%{opacity:1;transform:translateX(0)}50%{opacity:.45;transform:translateX(14px)}}
-.portraitFrame.feign .emo{transform:rotate(80deg) scale(.85);filter:grayscale(.8);transition:.4s}
-.fadeOut{animation:fadeOut 1s ease-in-out!important}@keyframes fadeOut{0%,100%{opacity:1;filter:none}40%,60%{opacity:.18;filter:blur(3px)}}
-.burrow{animation:burrow 1s ease-in-out!important}@keyframes burrow{0%,100%{transform:translateY(0)}40%,60%{transform:translateY(46px);opacity:.25}}
-.dizzy{animation:dizzy .9s linear!important}
-@keyframes dizzy{0%{transform:translateX(0) rotate(0)}25%{transform:translateX(24px) rotate(10deg)}50%{transform:translateX(0) rotate(0)}75%{transform:translateX(-24px) rotate(-10deg)}100%{transform:none}}
-.flashR .emo{animation:flashR .45s}.flashW .emo{animation:flashW .4s}.healGlow .emo{animation:healG .8s}
-.stat{position:absolute;inset:0}
-.arena:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 100%,#ff7a3a18,transparent 55%),radial-gradient(ellipse at 80% 0%,#ffb07a10,transparent 55%)}
+.logCard{padding:12px}
+.logHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
+.logTitle{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.logCount{font-size:10px;color:#77717d}
+#battleLog{display:flex;flex-direction:column;gap:6px}
+.logDisclosure summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;border:1px solid #45404b;border-radius:11px;background:#1a1820;font-size:12px}
+.logDisclosure summary::-webkit-details-marker{display:none}
+.logDisclosure summary:after{content:"＋";color:var(--gold);font-size:15px}
+.logDisclosure[open] summary{margin-bottom:9px;border-color:#6b5940}
+.logDisclosure[open] summary:after{content:"−"}
+.logSummarySub{font-size:10px;color:var(--muted);font-weight:500}
+.logEntry{font-size:11px;line-height:1.45;padding:8px 10px;border-left:2px solid #55475e;background:#ffffff08;border-radius:0 7px 7px 0;overflow-wrap:anywhere}
+.logEntry.good{border-color:var(--green)}.logEntry.bad{border-color:var(--red)}.logEntry.info{border-color:var(--gold)}
+.bottomNote{font-size:10px;color:#827b89;text-align:center;line-height:1.6;padding:12px}
+@media(prefers-reduced-motion:reduce){.mist,.unit img,.stIc{animation:none!important}}
 </style>
 <script src="../../shared/fast.js"></script>
 <script src="../../shared/skills.js"></script>
 <script src="../../shared/auth.js"></script>
 <script src="../../shared/sound.js"></script>
+<script src="../../shared/battle/bscene.js"></script>
 <script>sndMusic("battle")</script>
-<style id="perfCss">button,.skill{touch-action:manipulation;-webkit-tap-highlight-color:transparent}#battleSkills{contain:layout style}.skill{contain:layout style;transition:transform .08s,opacity .15s}.skill:active:not(:disabled){transform:scale(.97)}.spark,.float{will-change:transform,opacity}@media(max-width:600px){.spark:nth-child(3n){display:none}}</style>
 </head>
 <body>
 <div class="wrap">
-<header class="head">
+<section class="stage" id="stage">
+<div class="mist a"></div><div class="mist b"></div>
+<div class="top">
 <a class="back" id="backHome" href="../index.html">← Руины</a>
-<div class="headTitle"><div class="eyebrow">Lord of the Mysteries</div><h1>Руины · Сражение</h1></div>
+<div class="turn wait" id="turn">Загрузка</div>
+<button class="spd" id="spd" type="button" aria-label="Скорость боя">⏩</button>
 <div class="statusPill" id="statusPill">Загрузка</div>
-</header>
-<main>
-<section class="card arena" id="arena">
-<div class="fx" id="fx"></div><div class="amb" id="amb"></div>
-<div class="arenaTop"><span class="sectionLabel">Руины Фаркарда</span><span class="roundLabel" id="roundLabel">⚔ Столкновение</span></div>
-<div class="fighters">
-<div class="fighter">
-<div class="portraitFrame" id="playerFrame"><img id="playerImg" src="../../avatars/m_seer.svg" alt="Игрок"><div class="stat" id="playerStat"></div><div class="zzz" id="zzz">💤</div></div>
-<div class="fighterName" id="playerName">Путешественник</div>
-<div class="fighterRole" id="playerPath">Путь неизвестен</div>
-<div class="hpNumbers"><span>❤️ Здоровье</span><strong id="playerHp">—</strong></div>
+</div>
+<div class="hud l">
+<div class="nm" id="playerName">Путешественник</div>
+<div class="rl" id="playerPath">Путь неизвестен</div>
 <div class="bar hp"><i id="playerHpBar"></i></div>
-<div class="hpCaption"><span id="playerHpPercent">—</span><span id="playerHpState">—</span></div>
+<div class="num">❤ <span id="playerHp">—</span></div>
+<div class="chips" id="heroChips"></div>
 </div>
-<div class="vs">VS</div>
-<div class="fighter">
-<div class="portraitFrame" id="enemyFrame"><img id="enemyImg" class="hidden" alt="Противник"><div class="emo" id="enemyEmo">💀</div><div class="stat" id="enemyStat"></div></div>
-<div class="fighterName" id="enemyLabel">Противник</div>
-<div class="fighterRole" id="enemyRole">Враждебная сущность</div>
-<div class="hpNumbers"><span>🩸 Здоровье</span><strong id="enemyHp">—</strong></div>
+<div class="hud r">
+<div class="nm" id="enemyLabel">Противник</div>
+<div class="rl" id="enemyRole">Враждебная сущность</div>
 <div class="bar enemyHp"><i id="enemyHpBar"></i></div>
-<div class="hpCaption"><span id="enemyHpPercent">—</span><span id="enemyHpState">—</span></div>
-</div>
-</div>
+<div class="num">🩸 <span id="enemyHp">—</span></div>
 <div class="chips" id="chips"></div>
-<div class="battleMessage hidden" id="battleMessage">
-<div class="messageIcon" id="messageIcon">📜</div>
-<div class="messageBody"><div class="messageTitle" id="messageTitle">ХОД СРАЖЕНИЯ</div><div id="battleText" aria-live="polite"></div></div>
 </div>
+<div class="fighters" id="fighters">
+<div class="fighter heroSlot"><div class="unit hero" id="playerFrame" style="position:absolute"><div class="fl"><img id="playerImg" alt="Герой" draggable="false"></div></div></div>
+<div class="fighter foeSlot"><div class="unit foe" id="enemyFrame" style="position:absolute"><div class="fl"><img id="enemyImg" alt="Противник" draggable="false"></div></div></div>
+</div>
+<div class="fxl" id="fx"></div>
+<div class="msg" id="battleMessage"><div class="mi" id="messageIcon">📜</div><div id="battleText" aria-live="polite">Из темноты под сводами выходит противник.</div></div>
 </section>
-<section class="card skillCard" id="skillCard">
-<div class="skillHeader"><h2>ТВОИ ДЕЙСТВИЯ</h2><span id="skillPathLabel">Способности пути</span></div>
+<div id="eiAnchor"></div>
+
+<section class="dock" id="skillCard">
+<div class="dockHead"><span id="skillPathLabel">Способности пути</span><span>Удерживай — описание</span></div>
 <div class="skillGrid" id="battleSkills"></div>
-<div class="skillFoot"><span class="dot"></span><span>Перезарядка и результат определяются игровой системой.</span></div>
 </section>
+
 <section class="card resultCard victoryCard hidden" id="victoryCard">
 <div class="resultSymbol">✦</div><div class="resultTitle">ПОБЕДА</div>
-<div class="resultText">Пепел оседает на камни. Среди обломков остаётся награда.</div>
+<div class="resultText">Эхо стихает под сводами. Среди камней остаётся награда.</div>
 <div class="rewardGrid">
 <div class="reward"><div class="rewardValue">+<span id="vTenge">—</span></div><div class="rewardLabel">£ Фунты</div></div>
 <div class="reward"><div class="rewardValue">+<span id="vExp">—</span></div><div class="rewardLabel">✨ Опыт</div></div>
@@ -266,17 +230,15 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 <div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div>
 <details class="logDisclosure" id="logDisclosure">
 <summary><span>📜 Показать события боя</span><span class="logSummarySub" id="logSummarySub">Хроника свёрнута</span></summary>
-<div id="battleLog"><div class="logEntry info">Из темноты выходит противник.</div></div>
+<div id="battleLog"><div class="logEntry info">Из темноты под сводами выходит противник.</div></div>
 </details>
 </section>
-</main>
-<div class="bottomNote">Ход боя и награды обрабатываются сервером.<br>Фаркард помнит каждого, кто сюда спускался. Не торопись.</div>
+<div class="bottomNote">Ход боя и награды обрабатываются сервером.<br>Руины помнят каждого, кто приходил сюда.</div>
 </div>
 <script>
 "use strict";
-
 const tg=window.Telegram?.WebApp||null;
-try{tg?.ready();tg?.expand();tg?.setHeaderColor("#0a0605")}catch(_){}
+try{tg?.ready();tg?.expand();tg?.setHeaderColor("#101014")}catch(_){}
 
 const qs=new URLSearchParams(location.search);
 const uid=String(qs.get("u")||tg?.initDataUnsafe?.user?.id||"0");
@@ -285,516 +247,476 @@ const aEnc=qs.get("a_enc")||qs.get("a")||"";
 /* вход только по личным ссылкам бота */
 let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
-let curEnemy="",handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
+let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
+let curEnemy="",curBoss=false,curPhase=1,curMob="";
+const cur={hero:null,heroMax:null,foe:null,foeMax:null};
 
 const $=id=>document.getElementById(id);
+const B=window.LOTM_BSCENE;
 const skillInfo=LOTM_SKILLS.SK;
-/* Картинки монстров лежат в ruins/img. Чтобы заменить на фото, поменяй путь. Если файла нет, показывается эмодзи. */
-const pics={
-"Фанатик с кинжалом":"../img/fanatic.webp",
-"Каменная горгулья":"../img/gargoyle.webp",
-"Одержимый стражник":"../img/guard.webp",
-"Крыса-мутант":"../img/ratmut.webp",
-"Пепельный культист":"../img/cultist.webp",
-"Верховный жрец":"../img/priest.webp"
-};
-const INTRO_SND={"Фанатик с кинжалом":"cmrattle","Каменная горгулья":"cmrumble","Одержимый стражник":"cmcreak","Крыса-мутант":"cmgrowl","Пепельный культист":"cmritual","Верховный жрец":"cmtoll"};
-const EMO={"Фанатик с кинжалом":"🗡","Каменная горгулья":"🗿","Одержимый стражник":"⚔","Крыса-мутант":"🐀","Пепельный культист":"🔥","Верховный жрец":"🔱"};
+const sleep=ms=>B.sleep(ms);
+
+const MOB={"Фанатик с кинжалом":"fanatic","Каменная горгулья":"gargoyle","Одержимый стражник":"guard","Крыса-мутант":"ratmut","Пепельный культист":"cultist","Верховный жрец":"priest"};
+const P2={priest:"priest2"};
 const ROLE={"Фанатик с кинжалом":"Сектант","Каменная горгулья":"Страж-статуя","Одержимый стражник":"Одержимый","Крыса-мутант":"Мутант","Пепельный культист":"Маг-сектант","Верховный жрец":"Босс"};
+const MOBSND={"Фанатик с кинжалом":"cmrattle","Каменная горгулья":"cmrumble","Одержимый стражник":"cmcreak","Крыса-мутант":"cmgrowl","Пепельный культист":"cmritual","Верховный жрец":"cmtoll"};
+/* временные эффекты на героя и врага: ключ → [значок, подпись, длительность в ходах, класс] */
+const BUFF={
+divination:["hero","🔮 Уклонение",1,"good"],
+sailor_pray:["hero","⚡ Ярость",1,"good"],
+acting:["foe","🎭 Ослаблен",1,"warn"],
+sailor_drink:["foe","💤 Сон",2,"warn"],
+hunter_trap:["foe","⛓ Оглушён",2,"warn"],
+hunter_boost:["foe","🎯 Промахи",2,"warn"]
+};
+const eff={hero:{},foe:{}};
 
-/* ===== ЭФФЕКТЫ ===== */
-const prevHp={player:null,enemy:null};
-const framePlayer=()=>$("playerFrame");
-const frameEnemy=()=>$("enemyFrame");
-function addTemp(el,cls,ms){
-if(!el)return;
-el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);
-setTimeout(()=>el.classList.remove(cls),ms);
+/* ===== ВСПОМОГАТЕЛЬНОЕ ===== */
+function unwrap(value){for(let i=0;i<3;i++){if(value&&value.result&&typeof value.result==="object")value=value.result;else break}return value}
+function setStatus(text,kind=""){const el=$("statusPill");el.textContent=text;el.className="statusPill"+(kind?" "+kind:"")}
+function setTurn(text,cls){const t=$("turn");t.textContent=text;t.className="turn "+(cls||"")}
+function setMessage(text,title,icon="📜"){
+ const el=$("battleText");el.textContent=text||"Туман скрывает дальнейшие события.";
+ el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");$("messageIcon").textContent=icon;
 }
-function arenaPos(el){
-const a=$("arena").getBoundingClientRect(),r=el.getBoundingClientRect();
-return{x:r.left-a.left+r.width/2,y:r.top-a.top+r.height/2};
-}
-function spawn(cls,x,y,vars,ms,text){
-const d=document.createElement("div");
-d.className=cls;d.style.left=x+"px";d.style.top=y+"px";
-if(vars)for(const k in vars)d.style.setProperty(k,vars[k]);
-if(text)d.textContent=text;
-$("fx").appendChild(d);
-setTimeout(()=>d.remove(),ms);
-return d;
-}
-function slashAt(el,color,rot){const p=arenaPos(el);spawn("fxSlash",p.x,p.y,{"--c":color,"--rot":rot},520)}
-function ringAt(el,color){const p=arenaPos(el);spawn("fxRing",p.x,p.y,{"--c":color},1000)}
-function emojiAt(el,emoji,color,cls){const p=arenaPos(el);spawn(cls||"fxEmoji",p.x,p.y,{"--c":color},1050,emoji)}
-function shakeScreen(){addTemp(document.body,"shake",700)}
-function softShake(){addTemp(document.body,"shake",700)}
-let bannerFree=0;
-function banner(text,color){
-snd("banner");
-const now=Date.now(),wait=Math.max(0,bannerFree-now);
-bannerFree=now+wait+900;
-setTimeout(()=>{
-const b=document.createElement("div");
-b.className="banner";b.textContent=text;
-if(color)b.style.setProperty("--c",color);
-$("fx").appendChild(b);setTimeout(()=>b.remove(),1750);
-},wait);
-}
-function flashScreen(){
-const f=document.createElement("div");f.className="fxFlash";
-$("fx").appendChild(f);setTimeout(()=>f.remove(),600);
-}
-function floatNum(frame,text,kind){
-const f=document.createElement("div");
-f.className="float "+kind;f.textContent=text;
-frame.appendChild(f);setTimeout(()=>f.remove(),1200);
-}
-function sparks(box){
-const colors=["#e4ca91","#d6b779","#fff3c4","#b28c4d"];
-for(let i=0;i<24;i++){
-const s=document.createElement("i");s.className="spark";
-s.style.left=(Math.random()*100)+"%";
-s.style.setProperty("--c",colors[i%colors.length]);
-s.style.setProperty("--t",(1.6+Math.random()*1.6).toFixed(2)+"s");
-s.style.animationDelay=(Math.random()*.7).toFixed(2)+"s";
-box.appendChild(s);
-setTimeout(()=>s.remove(),3800);
-}
-}
-function hpFx(side,delta,max){
-snd(delta<0?(side==="player"?"hurt":"hit"):"heal",delta<0?(side==="player"?0.45:0.2):0.4);
-const frame=side==="player"?framePlayer():frameEnemy();
-const abs=Math.abs(delta);
-if(delta<0){
-if(side==="player"){
-setTimeout(()=>addTemp(frameEnemy(),"lungeL",420),250);
-setTimeout(()=>{
-addTemp(frame,"hit",450);addTemp(frame,"flashR",450);
-floatNum(frame,"−"+abs,"dmg");
-if(abs>=max*0.25)shakeScreen();
-},450);
-}else{
-setTimeout(()=>{
-addTemp(frame,"hit",450);addTemp(frame,"flashW",420);
-floatNum(frame,"−"+abs,"dmg");
-if(abs>=max*0.3)shakeScreen();
-},200);
-}
-}else{
-setTimeout(()=>{
-floatNum(frame,"+"+abs,"heal");addTemp(frame,"healGlow",850);
-},side==="player"?500:250);
-}
-}
-function playSkillFx(move){LOTM_SKILLS.play(move,framePlayer(),frameEnemy())}
-/* ===== СТАТУСЫ И ЭФФЕКТЫ ЛЕСА ===== */
-const st={sleep:0,web:0,weak:0,poison:0,stack:0,shield:0};
-const CHIP={sleep:["😵","Оцепенение"],web:["🕸","Путы"],weak:["🔻","Слабость"],poison:["☠","Яд"],stack:["🕷","Яд"],shield:["🛡","Щит"]};
-function drawChips(){
-const box=$("chips");box.replaceChildren();
-for(const k in st){
-if(st[k]>0){
-const c=document.createElement("span");c.className="chip "+k;
-c.textContent=CHIP[k][0]+" "+CHIP[k][1]+(k==="sleep"||k==="shield"?"":" ×"+st[k]);
-box.appendChild(c);
-}}
-$("playerFrame").classList.toggle("asleep",st.sleep>0);
-$("playerFrame").classList.toggle("webbed",st.web>0);
-$("enemyFrame").classList.toggle("shielded",st.shield>0);
-$("zzz").style.display=st.sleep>0?"block":"none";
-}
-function tickStatuses(){
-st.web=Math.max(0,st.web-1);st.weak=Math.max(0,st.weak-1);
-if(st.poison>0)st.poison--;
-st.sleep=0;
-}
-function ambient(kind,n){
-const box=$("amb"),icons={soul:["👻","✨","💨"],bones:["🦴","💀"],dark:["🌑","🩸","✨"],acid:["🟢","💧"],blood:["🩸"],fire:["🔥","✨","🔥"],ash:["🌫","✨","💨"],stone:["🪨","✨","💨"],necro:["🔱","🔥","✨"]};
-const set=icons[kind]||["✨"];
-for(let i=0;i<n;i++){
-const e=document.createElement("i");e.className="amb-p "+kind;e.textContent=set[i%set.length];
-e.style.left=(8+Math.random()*84)+"%";e.style.top=(10+Math.random()*60)+"%";
-e.style.animationDelay=(Math.random()*.4).toFixed(2)+"s";
-box.appendChild(e);setTimeout(()=>e.remove(),1700);
-}}
-function bossFx(text){
-if(!text)return;
-tickStatuses();
-const P=framePlayer(),E=frameEnemy();
-const setsShield=/Каменная кожа|Стойка стража|Призыв прислужников|Алтарь жертвы/.test(text);
-if(/ЧЁРНАЯ ЛИТУРГИЯ/.test(text)){flashScreen();banner("ЧЁРНАЯ ЛИТУРГИЯ","#ff7a3a");softShake();ambient("necro",12);$("arena").classList.add("phase2");setImageForEnemy("Верховный жрец");snd("phase")}
-if(/Молитва рвения/.test(text)){ringAt(E,"#ff8a3a");ambient("fire",5);banner("МОЛИТВА","#ff8a3a")}
-if(/Жертвенный удар|Выпад|Бросок из тьмы|Бросок из темноты/.test(text)){addTemp(E,"lungeL",420);slashAt(P,"#ff5d5d","-30deg")}
-if(/Отравленный кинжал|Гнилой укус/.test(text)){addTemp(E,"lungeL",420);slashAt(P,"#9bff6a","25deg");ambient("acid",5)}
-if(/кровотечение/.test(text)){ambient("blood",5)}
-if(/Каменная кожа/.test(text)){st.shield=1;ringAt(E,"#cfc3aa");ambient("stone",7);banner("КАМЕННАЯ КОЖА","#cfc3aa")}
-if(/Удар крыла|Пике с высоты|Каменный кулак/.test(text)){addTemp(E,"lungeL",420);slashAt(P,"#d8c8b0","35deg");ambient("stone",4)}
-if(/Стойка стража/.test(text)){st.shield=1;ringAt(E,"#9aa0b8");ambient("bones",4)}
-if(/Удар алебарды|Рассекающий удар/.test(text)){addTemp(E,"lungeL",420);slashAt(P,"#cfd8e8","-35deg")}
-if(/Чужая воля/.test(text)){flashScreen();ambient("soul",8);addTemp(P,"flashW",450);banner("ЧУЖАЯ ВОЛЯ","#b66cff")}
-if(/Юркнула в щель/.test(text)){addTemp(E,"burrow",1000);ambient("ash",3)}
-if(/Пепельный огонь|Огненный шар/.test(text)){ambient("fire",/шар/.test(text)?10:6);ringAt(P,"#ff7a22");addTemp(P,"flashR",450)}
-if(/Заклинание пепла/.test(text)){ambient("ash",8);banner("ПЕПЕЛ","#d8b090");st.weak=2}
-if(/Рассеивается пеплом/.test(text)){addTemp(E,"fadeOut",1000);ambient("ash",6)}
-if(/Призыв прислужников/.test(text)){st.shield=1;ringAt(E,"#ff8a3a");ambient("dark",9);banner("ПРИСЛУЖНИКИ","#ff8a3a")}
-if(/Кара культа|Жертвенный нож|Гнев культа/.test(text)){addTemp(E,"lungeL",420);slashAt(P,"#ff5d5d","-30deg");ringAt(P,"#ff7a3a")}
-if(/Проклятие культа/.test(text)){ambient("dark",8);banner("ПРОКЛЯТИЕ","#b86bff");st.weak=2;st.poison=3}
-if(/Алтарь жертвы/.test(text)){st.shield=1;ringAt(E,"#ff4a4a");banner("АЛТАРЬ","#ff4a4a");ambient("necro",8)}
-if(/Высасывание жертвы/.test(text)){ambient("soul",6);addTemp(E,"healGlow",900)}
-if(/оцепенел/.test(text)){st.sleep=1;banner("ОЦЕПЕНЕНИЕ","#7aa8ff")}
-if(/яд \d×\d|кислота|☠-\d/.test(text)){st.poison=3;addTemp(P,"poison",1000)}
-if(/урон −25%/.test(text))st.weak=2;
-if(/увернулся/.test(text))floatNum(E,"МИМО","heal");
-if(/Регенерация/.test(text))addTemp(E,"healGlow",800);
-if(/💚\+/.test(text)){addTemp(E,"healGlow",900)}
-if(/Спит|В ловушке/.test(text))ringAt(E,"#7aa8ff");
-if(!setsShield&&st.shield>0&&/Удар|Рассекающий|Кара|Нож|Гнев|Кулак|Пике|Выпад|Бросок|Крыла/.test(text))st.shield=0;
-drawChips();
-}
-
-function unwrap(value){
-for(let i=0;i<3;i++){if(value&&value.result&&typeof value.result==="object")value=value.result;else break}
-return value;
-}
-function setStatus(text,kind=""){
-const el=$("statusPill");el.textContent=text;el.className="statusPill"+(kind?" "+kind:"");
-}
-function setMessage(text,title="ХОД СРАЖЕНИЯ",icon="📜"){
-$("battleMessage").classList.remove("hidden");
-const el=$("battleText");
-el.textContent=text||"Туман скрывает дальнейшие события.";
-el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");
-$("messageTitle").textContent=title;$("messageIcon").textContent=icon;
-}
-function showError(text){
-$("errorText").textContent=text||"Не удалось связаться с игровой системой.";
-$("errorBox").classList.remove("hidden");
-}
+function showError(text){$("errorText").textContent=text||"Не удалось связаться с игровой системой.";$("errorBox").classList.remove("hidden")}
 function hideError(){$("errorBox").classList.add("hidden")}
 function setBusy(value,label){
-busy=value;document.body.classList.toggle("loading",value);
-if(value)setStatus(label||"Обработка…","busy");
-else if(!ended)setStatus("В бою","live");
-document.querySelectorAll("#battleSkills button").forEach(b=>{b.disabled=value||ended||b.dataset.cooldown==="true"});
-$("exploreAgainBtn").disabled=value;
-}
-function safePercent(value,max){
-const n=Number(value),m=Number(max);
-if(!Number.isFinite(n)||!Number.isFinite(m)||m<=0)return 0;
-return Math.max(0,Math.min(100,n/m*100));
-}
-function setHealth(side,hp,maxHp){
-const player=side==="player";
-const hpEl=$(player?"playerHp":"enemyHp"),bar=$(player?"playerHpBar":"enemyHpBar");
-const percent=$(player?"playerHpPercent":"enemyHpPercent"),state=$(player?"playerHpState":"enemyHpState");
-const current=Number(hp),maximum=Number(maxHp);
-if(hp==null||maxHp==null||!Number.isFinite(current)||!Number.isFinite(maximum)||maximum<=0){
-hpEl.textContent="—";bar.style.width="0%";percent.textContent="—";state.textContent="Неизвестно";return;
-}
-hpEl.textContent=current+"/"+maximum;
-const pc=safePercent(current,maximum);
-const oldPc=parseFloat(bar.style.width)||0;
-const barBox=bar.parentElement;
-let ghost=barBox.querySelector(".ghost");
-if(!ghost){ghost=document.createElement("b");ghost.className="ghost";barBox.prepend(ghost)}
-ghost.style.transition=pc<oldPc?"width .9s ease .45s":"none";
-ghost.style.width=pc+"%";
-bar.style.width=pc+"%";percent.textContent=Math.round(pc)+"%";
-state.textContent=current<=0?(player?"Пал":"Повержен"):pc<=25?"Критически мало":pc<=55?"Ранен":player?"В строю":"Опасен";
-const old=prevHp[side];prevHp[side]=current;
-if(old!=null&&current!==old)hpFx(side,current-old,maximum);
-}
-function setEnemyLevel(level,boss,phase){
-const parts=[];
-if(level)parts.push("Ур. "+level);
-if(boss)parts.push("Фаза "+(Number(phase)||1));
-parts.push(boss?"Босс":(ROLE[curEnemy]||"Враждебная сущность"));
-const p2=!!boss&&Number(phase)>=2;
-$("arena").classList.toggle("phase2",p2);
-if(curEnemy==="Верховный жрец")setImageForEnemy(curEnemy);
-const role=$("enemyRole");
-role.textContent=parts.join(" · ");
-role.classList.toggle("boss",!!boss);
-$("arena").classList.toggle("boss",!!boss);sndMusic(boss?"boss":"battle");
+ busy=value;
+ if(value)setStatus(label||"Обработка…","busy");else if(!ended)setStatus("В бою","live");
+ refreshSkillState();$("exploreAgainBtn").disabled=value;
 }
 function cleanBattleText(value){
-const text=String(value??"").trim();
-const messages={
-no_battle:"Сражение завершено. Если не атаковать больше 3 минут, бой прерывается сам.",
-cooldown:"Способность ещё восстанавливается.",
-dead:"Персонаж не может продолжать бой."
-};
-return messages[text]||text;
+ const text=String(value??"").trim();
+ const messages={no_battle:"Сражение завершено. Если не атаковать больше 3 минут, бой прерывается сам.",cooldown:"Способность ещё восстанавливается.",dead:"Персонаж не может продолжать бой."};
+ return messages[text]||text;
 }
 function addLog(text,kind="info"){
-text=cleanBattleText(text);
-if(!text||!text.trim())return;
-logEntries.unshift({text,kind});if(logEntries.length>30)logEntries.length=30;
-const log=$("battleLog");log.replaceChildren();
-logEntries.forEach(entry=>{
-const div=document.createElement("div");div.className="logEntry "+entry.kind;
-div.textContent=entry.text;log.appendChild(div);
-});
-const count=logEntries.length;
-$("logCount").textContent=count+" "+(count===1?"запись":count>=2&&count<=4?"записи":"записей");
-$("logSummarySub").textContent=count?"Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":""):"Хроника пуста";
+ text=cleanBattleText(text);if(!text||!text.trim())return;
+ logEntries.unshift({text,kind});if(logEntries.length>30)logEntries.length=30;
+ const log=$("battleLog");log.replaceChildren();
+ logEntries.forEach(e=>{const d=document.createElement("div");d.className="logEntry "+e.kind;d.textContent=e.text;log.appendChild(d)});
+ const n=logEntries.length;
+ $("logCount").textContent=n+" "+(n===1?"запись":n>=2&&n<=4?"записи":"записей");
+ $("logSummarySub").textContent="Последнее: "+logEntries[0].text.slice(0,48)+(logEntries[0].text.length>48?"…":"");
 }
-function setImageForEnemy(enemy){
-const img=$("enemyImg"),emo=$("enemyEmo");
-emo.textContent=EMO[enemy]||"💀";
-const src=(enemy==="Верховный жрец"&&$("arena").classList.contains("phase2"))?"../img/priest2.webp":pics[enemy];
-if(src){
-img.onload=()=>{img.classList.remove("hidden");emo.classList.add("hidden")};
-img.onerror=()=>{img.classList.add("hidden");emo.classList.remove("hidden")};
-img.src=src;
-}else{img.classList.add("hidden");emo.classList.remove("hidden")}
+function banner(text,color){
+ snd("banner");
+ const b=document.createElement("div");b.className="banner";b.textContent=text;if(color)b.style.setProperty("--c",color);
+ $("fx").appendChild(b);setTimeout(()=>b.remove(),1750);
 }
-function cemUrl(){
-const params=new URLSearchParams(location.search);
-params.delete("enemy");params.delete("event_data");
-const query=params.toString();return "../index.html"+(query?"?"+query:"");
+function sparks(box){
+ const colors=["#e4ca91","#d6b779","#fff3c4","#b28c4d"];
+ for(let i=0;i<24;i++){
+  const s=document.createElement("i");s.className="spark";s.style.left=(Math.random()*100)+"%";
+  s.style.setProperty("--c",colors[i%colors.length]);s.style.setProperty("--t",(1.6+Math.random()*1.6).toFixed(2)+"s");
+  s.style.animationDelay=(Math.random()*.7).toFixed(2)+"s";box.appendChild(s);setTimeout(()=>s.remove(),3800);
+ }
 }
-function goCem(){location.href=cemUrl()}
-function openEvent(data){
-const params=new URLSearchParams(location.search);
-params.delete("enemy");params.set("event_data",JSON.stringify(data));
-location.href="../event/index.html?"+params.toString();
+
+/* ===== ЗДОРОВЬЕ (без эффектов: эффекты рисует сцена) ===== */
+function safePercent(v,m){const n=Number(v),x=Number(m);if(!Number.isFinite(n)||!Number.isFinite(x)||x<=0)return 0;return Math.max(0,Math.min(100,n/x*100))}
+function setHealth(side,hp,maxHp){
+ const player=side==="player";
+ const hpEl=$(player?"playerHp":"enemyHp"),bar=$(player?"playerHpBar":"enemyHpBar");
+ const c=Number(hp),m=Number(maxHp);
+ if(hp==null||maxHp==null||!Number.isFinite(c)||!Number.isFinite(m)||m<=0){hpEl.textContent="—";bar.style.width="0%";return}
+ hpEl.textContent=c+"/"+m;
+ const pc=safePercent(c,m),old=parseFloat(bar.style.width)||0,box=bar.parentElement;
+ let ghost=box.querySelector(".ghost");if(!ghost){ghost=document.createElement("b");ghost.className="ghost";box.prepend(ghost)}
+ ghost.style.transition=pc<old?"width .9s ease .35s":"none";ghost.style.width=pc+"%";bar.style.width=pc+"%";
+ if(player){cur.hero=c;cur.heroMax=m}else{cur.foe=c;cur.foeMax=m}
 }
-async function ensure(){
-if(PROFILE_URL&&ACTION_URL)return true;
-if(handshakePromise)return handshakePromise;
-handshakePromise=(async()=>{
-const response=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
-if(!response.ok)throw new Error("Не удалось подключиться к игровой системе (HTTP "+response.status+").");
-const data=unwrap(await response.json());
-const profile=data?.profile_url||data?.PROFILE_URL,action=data?.action_url||data?.ACTION_URL;
-if(typeof profile!=="string"||!profile||typeof action!=="string"||!action)throw new Error("Сервер не вернул адреса профиля и действий.");
-const profileUrl=new URL(profile),actionUrl=new URL(action);
-if(profileUrl.protocol!=="https:"||actionUrl.protocol!=="https:")throw new Error("Некорректные адреса API.");
-PROFILE_URL=profileUrl.href;ACTION_URL=actionUrl.href;return true;
-})();
-try{return await handshakePromise}finally{handshakePromise=null}
+function setEnemyLevel(level,boss,phase){
+ curBoss=!!boss;const p=Number(phase)||1;
+ const parts=[];if(level)parts.push("Ур. "+level);if(boss)parts.push("Фаза "+p);
+ parts.push(boss?"Босс":(ROLE[curEnemy]||"Враждебная сущность"));
+ const role=$("enemyRole");role.textContent=parts.join(" · ");role.classList.toggle("boss",!!boss);
+ $("stage").classList.toggle("arenaBoss",!!boss);sndMusic(boss?"boss":"battle");
+ const p2=!!boss&&p>=2,was2=$("stage").classList.contains("arenaP2");
+ $("stage").classList.toggle("arenaP2",p2);
+ if(P2[curMob]&&p2!==was2){B.setFoe(p2?P2[curMob]:curMob);B.swapFoe()}
+ curPhase=p;
 }
-async function api(payload){
-await ensure();
-const response=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
-if(!response.ok)throw new Error("Ошибка игрового сервера (HTTP "+response.status+").");
-const data=unwrap(await response.json());
-if(!data||typeof data!=="object")throw new Error("Сервер вернул некорректный ответ.");
-return data;
+
+/* ===== СТАТУСЫ ===== */
+const st={sleep:0,weak:0,poison:0,shield:0};
+function drawChips(){
+ const fc=$("chips"),hc=$("heroChips");fc.replaceChildren();hc.replaceChildren();
+ const add=(box,text,cls)=>{const c=document.createElement("span");c.className="chip "+cls;c.textContent=text;box.appendChild(c)};
+ if(st.sleep>0)add(hc,"😵 Оцепенение","warn");
+ if(st.weak>0)add(hc,"🔻 Слабость ×"+st.weak,"warn");
+ if(st.poison>0)add(hc,"☠ Яд ×"+st.poison,"bad");
+ if(st.shield>0)add(fc,"🛡 Щит","good");
+ Object.values(eff.hero).forEach(e=>add(hc,e[1],e[3]));
+ Object.values(eff.foe).forEach(e=>add(fc,e[1],e[3]));
+ $("enemyFrame").classList.toggle("shielded",st.shield>0);
+ B.status("hero",st.sleep>0?"😵":null);
 }
-async function loadProfile(){
-await ensure();
-const response=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"profile"}),cache:"no-store"});
-if(!response.ok)throw new Error("Не удалось загрузить профиль (HTTP "+response.status+").");
-const data=unwrap(await response.json());
-if(!data||typeof data!=="object")throw new Error("Профиль игрока не получен.");
-return data;
+function applyBuff(move){
+ const b=BUFF[move];if(!b)return;
+ eff[b[0]][move]=[b[0],b[1],b[2],b[3]];
 }
-function getEnemyName(serverEnemy){
-let enemy=serverEnemy||qs.get("enemy")||"Фанатик с кинжалом";
-return enemy;
+function tickEffects(){
+ for(const side of ["hero","foe"])for(const k of Object.keys(eff[side])){
+  eff[side][k][2]--;if(eff[side][k][2]<=0)delete eff[side][k];
+ }
 }
-let skBuilt="";
+
+/* ===== СЦЕНА ===== */
+function enemyIsDown(){return false}
+
+/* ===== НАВЫКИ ===== */
+let skBuilt="",tipTimer=0,tipShown=false;
+function showTip(info){
+ hideTip();tipShown=true;
+ const t=document.createElement("div");t.className="skTip";t.id="skTip";
+ const b=document.createElement("b");b.textContent=info.name+(info.tag?" · "+info.tag:"");
+ t.append(b,document.createElement("br"),document.createTextNode(info.desc||""));
+ document.body.appendChild(t);
+}
+function hideTip(){const t=$("skTip");if(t)t.remove()}
 function renderSkills(cds={}){
-lastCds=cds||{};
-const pk=LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");
-if(skBuilt!==pk||!box.children.length){
-box.replaceChildren();skBuilt=pk;
-$("skillPathLabel").textContent=LOTM_SKILLS.PATHNAME[pk][0];
-LOTM_SKILLS.list(pk).forEach(s=>addSkill(s.key,s.cd,""));
-addSkill("basic","basic","basic");addSkill("flee",null,"escape");
+ lastCds=cds||{};
+ const pk=LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");
+ if(skBuilt!==pk||!box.children.length){
+  box.replaceChildren();skBuilt=pk;
+  $("skillPathLabel").textContent=LOTM_SKILLS.PATHNAME[pk][0];
+  LOTM_SKILLS.list(pk).forEach(s=>addSkill(s.key,s.cd,""));
+  addSkill("basic","basic","basic");addSkill("flee",null,"escape");
+ }
+ refreshSkillState();
 }
-box.querySelectorAll("button.skill").forEach(b=>{
-const cd=b.dataset.cdk?Number(lastCds[b.dataset.cdk]||0):0;
-b.dataset.cooldown=cd>0?"true":"false";
-b.disabled=busy||ended||cd>0;
-let bd=b.querySelector(".cooldown");
-if(cd>0){if(!bd){bd=document.createElement("span");bd.className="cooldown";b.appendChild(bd)}if(bd.textContent!==String(cd))bd.textContent=cd}
-else if(bd)bd.remove();
-});
+function refreshSkillState(){
+ $("battleSkills").querySelectorAll("button.sk").forEach(b=>{
+  const cd=b.dataset.cdk?Number(lastCds[b.dataset.cdk]||0):0;
+  b.dataset.cooldown=cd>0?"true":"false";b.disabled=busy||ended||cd>0;
+  let bd=b.querySelector(".cd");
+  if(cd>0){if(!bd){bd=document.createElement("span");bd.className="cd";b.appendChild(bd)}if(bd.textContent!==String(cd))bd.textContent=cd}
+  else if(bd)bd.remove();
+ });
 }
-function addSkill(key,cdk,className){
-const info=skillInfo[key],button=document.createElement("button");
-button.type="button";button.className="skill "+className;
-if(cdk)button.dataset.cdk=cdk;
-button.dataset.cooldown="false";
-const name=document.createElement("div");name.className="skillName";name.textContent=(info?.name||key);if(info?.icon){const ic=document.createElement("span");ic.className="skIc";ic.textContent=info.icon+" ";name.prepend(ic)}LOTM_SKILLS.decorate(button,key);if(info?.tag){const tg=document.createElement("span");tg.className="skTag";tg.textContent=info.tag;button.appendChild(tg)}
-const desc=document.createElement("div");desc.className="skillDesc";desc.textContent=info?.desc||"";
-button.append(name,desc);try{const _fm=LOTM_SKILLS.formula(key);if(_fm)button.appendChild(_fm)}catch(e){}
-button.addEventListener("click",()=>{if(button.dataset.cooldown!=="true")doBattle(key)});
-$("battleSkills").appendChild(button);
+function addSkill(key,cdk,cls){
+ const info=skillInfo[key]||{name:key,desc:""},b=document.createElement("button");
+ b.type="button";b.className="sk "+cls;b.dataset.key=key;if(cdk)b.dataset.cdk=cdk;b.dataset.cooldown="false";
+ b.style.setProperty("--sk",info.c||"#d6b779");
+ const ic=document.createElement("span");ic.className="skIc";ic.textContent=info.icon||"•";
+ const nm=document.createElement("span");nm.className="skN";nm.textContent=info.name||key;
+ b.append(ic,nm);
+ if(info.tag){const t=document.createElement("span");t.className="skT";t.textContent=info.tag;b.appendChild(t)}
+ const start=()=>{tipShown=false;clearTimeout(tipTimer);tipTimer=setTimeout(()=>showTip(info),420)};
+ const stop=()=>{clearTimeout(tipTimer);if(tipShown)setTimeout(hideTip,60)};
+ b.addEventListener("pointerdown",start);b.addEventListener("pointerup",stop);b.addEventListener("pointerleave",stop);b.addEventListener("pointercancel",stop);
+ b.addEventListener("contextmenu",e=>e.preventDefault());
+ b.addEventListener("click",()=>{if(tipShown){tipShown=false;return}if(b.dataset.cooldown!=="true")doBattle(key)});
+ $("battleSkills").appendChild(b);
 }
+
+/* ===== ОКОНЧАНИЕ ===== */
 function showVictory(data){
-sndStop();snd("win");
-ended=true;setStatus("Победа");$("roundLabel").textContent="✦ Противник повержен";
-$("vTenge").textContent=data.tenge==null?"—":Number(data.tenge);
-$("vExp").textContent=data.exp_add==null?"—":Number(data.exp_add);
-try{const m=String(data.text||"").match(/🧪\s*(.+)$/m),b=$("vIngBox");if(m){$("vIng").textContent=m[1].replace(/^Найдено:\s*/,"");b.classList.remove("hidden");setTimeout(()=>snd("dew"),700)}else b.classList.add("hidden")}catch(e){}
-$("victoryCard").classList.remove("hidden");$("defeatCard").classList.add("hidden");
-$("skillCard").classList.add("hidden");hideError();
-setMessage("Сражение завершено. Награда обработана игровой системой.","ИСХОД СРАЖЕНИЯ","✦");
-addLog("Победа! Пепел оседает на камни.","good");
-sparks($("victoryCard"));
+ sndStop();snd("win");
+ ended=true;setStatus("Победа");setTurn("Победа","");
+ $("vTenge").textContent=data.tenge==null?"—":Number(data.tenge);
+ $("vExp").textContent=data.exp_add==null?"—":Number(data.exp_add);
+ try{const m=String(data.text||"").match(/🧪\s*(.+)$/m),b=$("vIngBox");if(m){$("vIng").textContent=m[1].replace(/^Найдено:\s*/,"");b.classList.remove("hidden");setTimeout(()=>snd("dew"),700)}else b.classList.add("hidden")}catch(e){}
+ $("victoryCard").classList.remove("hidden");$("defeatCard").classList.add("hidden");
+ $("skillCard").classList.add("hidden");hideError();
+ setMessage("Сражение завершено. Награда обработана игровой системой.","","✦");
+ addLog("Победа! Сражение завершено.","good");
+ sparks($("victoryCard"));
 }
 function showDefeat(data){
-sndStop();snd("lose");
-ended=true;setStatus("Поражение");$("roundLabel").textContent="☠ Силы иссякли";
-$("defeatCard").classList.remove("hidden");$("victoryCard").classList.add("hidden");
-$("skillCard").classList.add("hidden");hideError();
-if(data?.text)$("defeatText").textContent=cleanBattleText(data.text);
-setMessage(cleanBattleText(data?.text||"Ты больше не можешь продолжать бой."),"ИСХОД СРАЖЕНИЯ","☠");
-addLog("Поражение. Сражение окончено.","bad");
-document.body.classList.add("defeatFx");
+ sndStop();snd("lose");
+ ended=true;setStatus("Поражение");setTurn("Поражение","foe");
+ $("defeatCard").classList.remove("hidden");$("victoryCard").classList.add("hidden");
+ $("skillCard").classList.add("hidden");hideError();
+ if(data?.text)$("defeatText").textContent=cleanBattleText(data.text);
+ setMessage(cleanBattleText(data?.text||"Ты больше не можешь продолжать бой."),"","☠");
+ addLog("Поражение. Сражение окончено.","bad");
+ document.body.classList.add("defeatFx");
 }
+
+/* ===== СВЯЗЬ ===== */
+function ruinsUrl(){const p=new URLSearchParams(location.search);p.delete("enemy");p.delete("event_data");const q=p.toString();return "../index.html"+(q?"?"+q:"")}
+function goRuins(){location.href=ruinsUrl()}
+function openEvent(data){const p=new URLSearchParams(location.search);p.delete("enemy");p.set("event_data",JSON.stringify(data));location.href="../event/index.html?"+p.toString()}
+async function ensure(){
+ if(PROFILE_URL&&ACTION_URL)return true;
+ if(handshakePromise)return handshakePromise;
+ handshakePromise=(async()=>{
+  const response=await needStart({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:uid}),cache:"no-store"});
+  if(!response.ok)throw new Error("Не удалось подключиться к игровой системе (HTTP "+response.status+").");
+  const data=unwrap(await response.json());
+  const profile=data?.profile_url||data?.PROFILE_URL,action=data?.action_url||data?.ACTION_URL;
+  if(typeof profile!=="string"||!profile||typeof action!=="string"||!action)throw new Error("Сервер не вернул адреса профиля и действий.");
+  const pu=new URL(profile),au=new URL(action);
+  if(pu.protocol!=="https:"||au.protocol!=="https:")throw new Error("Некорректные адреса API.");
+  PROFILE_URL=pu.href;ACTION_URL=au.href;return true;
+ })();
+ try{return await handshakePromise}finally{handshakePromise=null}
+}
+async function api(payload){
+ await ensure();
+ const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
+ if(!r.ok)throw new Error("Ошибка игрового сервера (HTTP "+r.status+").");
+ const data=unwrap(await r.json());
+ if(!data||typeof data!=="object")throw new Error("Сервер вернул некорректный ответ.");
+ return data;
+}
+async function loadProfile(){
+ await ensure();
+ const r=await fetch(PROFILE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"profile"}),cache:"no-store"});
+ if(!r.ok)throw new Error("Не удалось загрузить профиль (HTTP "+r.status+").");
+ const data=unwrap(await r.json());
+ if(!data||typeof data!=="object")throw new Error("Профиль игрока не получен.");
+ return data;
+}
+function getEnemyName(s){return s||qs.get("enemy")||"Фанатик с кинжалом"}
 async function refreshBattleState(){
-const state=await api({action:"battle_state"});
-if(state?.enemy_hp!=null&&state.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
-if(state?.hp!=null&&state.max_hp!=null)setHealth("player",state.hp,state.max_hp);
-if(state?.enemy_level)setEnemyLevel(state.enemy_level,state.boss,state.phase);
-if(state?.cds)renderSkills(state.cds);
-return state;
+ const s=await api({action:"battle_state"});
+ if(s?.enemy_hp!=null&&s.enemy_max!=null)setHealth("enemy",s.enemy_hp,s.enemy_max);
+ if(s?.hp!=null&&s.max_hp!=null)setHealth("player",s.hp,s.max_hp);
+ if(s?.enemy_level)setEnemyLevel(s.enemy_level,s.boss,s.phase);
+ if(s?.cds)renderSkills(s.cds);
+ return s;
 }
+function pickEnemy(name){
+ curEnemy=name;$("enemyLabel").textContent=name;
+ curMob=MOB[name]||"fanatic";
+ B.setFoe((curBoss&&curPhase>=2&&P2[curMob])?P2[curMob]:curMob);
+}
+
 async function load(){
-if(busy)return;
-document.body.classList.remove("defeatFx");
-setBusy(true,"Загрузка…");hideError();
-try{
-const stP=api({action:"battle_state"}).catch(e=>({__err:e}));const profile=await loadProfile();
-PLAYER_PATH=profile.path||"";window.LOTM_STATS=profile;try{const _pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path);if(_pk&&profile.gender)$("playerImg").src="../../avatars/"+(profile.gender==="female"?"f":"m")+"_"+_pk+((profile.sequence|0)&&(profile.sequence|0)<=8?"8":"")+".svg"}catch(e){}
-$("playerName").textContent=profile.nickname||"Путешественник";
-$("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
-setHealth("player",profile.hp,profile.max_hp);
-let state=null;
-try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
-catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"СОСТОЯНИЕ БОЯ","⚠️")}
-const enemy=getEnemyName(state?.enemy);curEnemy=enemy;
-$("enemyLabel").textContent=enemy;setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);setImageForEnemy(enemy);
-if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
-else setHealth("enemy",null,null);
-renderSkills(state?.cds||{});
-if(!initialized){
-setTimeout(()=>{try{snd(INTRO_SND[enemy]||"banner",.9)}catch(_){}},450);
-addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
-if(state?.boss){
-setMessage("В главном зале, под рухнувшим куполом, горит алтарь. Верховный жрец стоит спиной к тебе и дочитывает последнюю строку обряда. Он знает, что ты здесь.","БОСС РУИН","💀");
-setTimeout(()=>{banner("БОСС: ВЕРХОВНЫЙ ЖРЕЦ","#ff8a3a");shakeScreen()},500);
+ if(busy)return;
+ document.body.classList.remove("defeatFx");
+ setBusy(true,"Загрузка…");hideError();setTurn("Загрузка","wait");
+ try{
+  const stP=api({action:"battle_state"}).catch(e=>({__err:e}));
+  const profile=await loadProfile();
+  PLAYER_PATH=profile.path||"";window.LOTM_STATS=profile;
+  const pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path)||"seer";
+  B.revive();B.setHero(pk,profile.gender);
+  $("playerName").textContent=profile.nickname||"Путешественник";
+  $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
+  setHealth("player",profile.hp,profile.max_hp);
+  let state=null;
+  try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
+  catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"","⚠️")}
+  curBoss=!!state?.boss;curPhase=Number(state?.phase)||1;
+  const enemy=getEnemyName(state?.enemy);
+  pickEnemy(enemy);
+  setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);
+  if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
+  else setHealth("enemy",null,null);
+  renderSkills(state?.cds||{});
+  if(!initialized){
+   B.enter();
+   const sn=MOBSND[enemy];if(sn)setTimeout(()=>snd(sn),500);
+   addLog("Ты столкнулся с противником: "+enemy+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
+   if(state?.boss){
+    setMessage("В главном зале, под рухнувшим куполом, горит алтарь. Верховный жрец стоит спиной к тебе и дочитывает последнюю строку обряда. Он знает, что ты здесь.","","💀");
+    setTimeout(()=>{banner("БОСС: ВЕРХОВНЫЙ ЖРЕЦ","#ff8a3a");B.shake(2)},700);
+   }else setMessage("Из темноты под сводами выходит противник: "+enemy+".","","🌫");
+   initialized=true;
+  }
+  if(state?.error==="no_battle"||state?.type==="no_battle"){
+   setMessage(state?.idle?"Бой прерван: ты не атаковал больше 3 минут. Вернись в руины и начни столкновение заново.":"Сервер не обнаружил активное сражение.","","⚠️");
+   addLog("Активное сражение не найдено на сервере.","info");
+  }else if(state?.ok===false&&state?.error){setMessage(cleanBattleText(state.error),"","⚠️")}
+  $("backHome").href=ruinsUrl();setStatus("В бою","live");setTurn("Твой ход","");drawChips();
+ }catch(error){
+  showError(error.message);setStatus("Нет связи");setTurn("Нет связи","wait");
+  setMessage("Не удалось получить данные сражения.","","⚠️");
+ }finally{setBusy(false)}
 }
-initialized=true;
-}
-if(state?.error==="no_battle"||state?.type==="no_battle"){
-setMessage(state?.idle?"Бой прерван: ты не атаковал больше 3 минут. Вернись в руины и начни столкновение заново.":"Сервер не обнаружил активное сражение. Вернись в руины и начни столкновение заново.",state?.idle?"БОЙ ПРЕРВАН":"БОЙ НЕ НАЙДЕН","⏳");
-addLog("Активное сражение не найдено на сервере.","info");
-}else if(state?.ok===false&&state?.error){
-setMessage(cleanBattleText(state.error),"СОСТОЯНИЕ БОЯ","⚠️");
-}
-$("backHome").href=cemUrl();setStatus("В бою","live");
-}catch(error){
-showError(error.message);setStatus("Нет связи");
-setMessage("Не удалось получить данные сражения.","ОШИБКА СОЕДИНЕНИЯ","⚠️");
-}finally{setBusy(false)}
-}
+
+/* ===== ТЕКСТЫ ВРАГА ===== */
 function normalizeBattleText(value){
-if(value==null)return "";
-if(typeof value==="string")return cleanBattleText(value);
-if(Array.isArray(value))return value.map(normalizeBattleText).filter(Boolean).join("\n");
-if(typeof value==="object"){
-for(const key of ["text","message","detail","log","player_log","playerLog","player_text","playerText","enemy_log","enemyLog","e_log","enemy_message","enemyText","enemy_text","attack_log","battle_log"]){
-const text=normalizeBattleText(value[key]);if(text)return text;
+ if(value==null)return "";
+ if(typeof value==="string")return cleanBattleText(value);
+ if(Array.isArray(value))return value.map(normalizeBattleText).filter(Boolean).join("\n");
+ if(typeof value==="object"){
+  for(const key of ["text","message","detail","log","player_log","playerLog","player_text","playerText","enemy_log","enemyLog","e_log","enemy_message","enemyText","enemy_text","attack_log","battle_log"]){
+   const t=normalizeBattleText(value[key]);if(t)return t;
+  }
+  return "";
+ }
+ return cleanBattleText(value);
 }
-return "";
+function getBattleLogs(d){
+ return{
+  player:normalizeBattleText(d.log??d.player_log??d.playerLog??d.player_text??d.playerText??d.text??""),
+  enemy:normalizeBattleText(d.e_log??d.enemy_log??d.enemyLog??d.enemy_text??d.enemyText??d.enemy_message??d.attack_log??"")
+ };
 }
-return cleanBattleText(value);
+const RX_MISS=/промах|уклон|мимо|избег|увернул/i;
+const RX_SKIP=/спит|усып|оглуш|пропуска|не может действ|скован|обездвиж|в ловушке/i;
+const RX_CAST=/Молитва рвения|Каменная кожа|Стойка стража|Юркнула в щель|Заклинание пепла|Рассеивается пеплом|Призыв прислужников|Проклятие культа|Алтарь жертвы|Высасывание жертвы|Регенерация/;
+
+/* приёмы руин → баннеры, статусы, сильный удар */
+function bossFx(text){
+ if(!text)return{heavy:0};
+ let heavy=0;
+ st.weak=Math.max(0,st.weak-1);if(st.poison>0)st.poison--;st.sleep=0;
+ const E=$("enemyFrame");
+ const setsShield=/Каменная кожа|Стойка стража|Призыв прислужников|Алтарь жертвы/.test(text);
+ if(/ЧЁРНАЯ ЛИТУРГИЯ/.test(text)){B.flash("#ff7a3a");banner("ЧЁРНАЯ ЛИТУРГИЯ","#ff7a3a");B.shake(2);snd("phase");curPhase=2;$("stage").classList.add("arenaP2");if(P2[curMob]){B.setFoe(P2[curMob]);B.swapFoe()}}
+ if(/Молитва рвения/.test(text)){B.aura("foe","#ff8a3a",900);banner("МОЛИТВА","#ff8a3a")}
+ if(/Жертвенный удар|Выпад|Бросок из тьмы|Бросок из темноты/.test(text))heavy=1;
+ if(/Отравленный кинжал|Гнилой укус/.test(text))B.aura("hero","#9bff6a",800);
+ if(/Каменная кожа/.test(text)){st.shield=1;B.aura("foe","#cfc3aa",900);banner("КАМЕННАЯ КОЖА","#cfc3aa")}
+ if(/Каменный кулак/.test(text))heavy=2;
+ if(/Удар крыла|Пике с высоты/.test(text))heavy=1;
+ if(/Стойка стража/.test(text)){st.shield=1;B.aura("foe","#9aa0b8",900)}
+ if(/Рассекающий удар/.test(text))heavy=1;
+ if(/Чужая воля/.test(text)){B.flash("#b66cff");B.aura("hero","#b66cff",800);banner("ЧУЖАЯ ВОЛЯ","#b66cff")}
+ E.classList.toggle("burrow",/Юркнула в щель/.test(text));
+ E.classList.toggle("fadeOut",/Рассеивается пеплом/.test(text));
+ if(/Пепельный огонь|Огненный шар/.test(text))B.aura("hero","#ff7a22",800);
+ if(/Заклинание пепла/.test(text)){banner("ПЕПЕЛ","#d8b090");st.weak=2}
+ if(/Призыв прислужников/.test(text)){st.shield=1;B.aura("foe","#ff8a3a",1000);banner("ПРИСЛУЖНИКИ","#ff8a3a")}
+ if(/Кара культа|Жертвенный нож|Гнев культа/.test(text))heavy=Math.max(heavy,/нож/.test(text)?2:1);
+ if(/Проклятие культа/.test(text)){banner("ПРОКЛЯТИЕ","#b86bff");st.weak=2;st.poison=3}
+ if(/Алтарь жертвы/.test(text)){st.shield=1;B.aura("foe","#ff4a4a",1000);banner("АЛТАРЬ","#ff4a4a")}
+ if(/Высасывание жертвы|Регенерация/.test(text)||/💚\+/.test(text))B.aura("foe","#7be3a0",900);
+ if(/оцепенел/.test(text)){st.sleep=1;banner("ОЦЕПЕНЕНИЕ","#7aa8ff")}
+ if(/яд \d×\d|кислота|☠-\d/.test(text)){st.poison=3;B.aura("hero","#6dff7a",800)}
+ if(/урон −25%/.test(text))st.weak=2;
+ if(/увернулся/.test(text))B.floatNum("foe","Мимо","miss");
+ if(!setsShield&&st.shield>0&&/Удар|Рассекающий|Кара|Нож|Гнев|Кулак|Пике|Выпад|Бросок|Крыла/.test(text))st.shield=0;
+ return{heavy};
 }
-function getBattleLogs(data){
-return{
-player:normalizeBattleText(data.log??data.player_log??data.playerLog??data.player_text??data.playerText??data.text??""),
-enemy:normalizeBattleText(data.e_log??data.enemy_log??data.enemyLog??data.enemy_text??data.enemyText??data.enemy_message??data.attack_log??"")
-};
-}
+
+/* ===== ХОД БОЯ ===== */
 async function doBattle(move){
-if(busy||ended)return;
-hideError();setBusy(true,"Ход…");
-playSkillFx(move);
-try{
-const data=await api({action:"battle",move});
-if(data.error==="cooldown"){
-if(data.cds)renderSkills(data.cds);
-setMessage("Эта способность ещё восстанавливается.","ПЕРЕЗАРЯДКА","⌛");
-addLog("Способность ещё восстанавливается.","info");return;
+ if(busy||ended)return;
+ hideError();hideTip();setBusy(true,"Ход…");setTurn("Твой ход","");
+ try{
+  if(move==="flee"){
+   const d=await api({action:"battle",move});
+   if(d.error){setMessage(cleanBattleText(d.text||d.error),"","⚠️");return}
+   setMessage("Ты отступаешь с поля боя.","","🏃");snd("bmiss");goRuins();return;
+  }
+  const data=await api({action:"battle",move});
+  if(data.error==="cooldown"){
+   if(data.cds)renderSkills(data.cds);
+   setMessage("Эта способность ещё восстанавливается.","","⌛");addLog("Способность ещё восстанавливается.","info");return;
+  }
+  if(data.error==="dead"){showDefeat(data);return}
+  if(data.error){
+   const t=cleanBattleText(data.text||data.error);setMessage(t,"","⚠️");addLog(t,"bad");
+   if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
+   if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
+   if(data.cds)renderSkills(data.cds);
+   return;
+  }
+  if(data.type==="event"||data.type==="battle_event"||data.type==="event_choice"){openEvent(data);return}
+  if(data.type==="flee"){setMessage("Ты покидаешь поле боя.","","🏃");goRuins();return}
+  const known=data.type==="battle"||data.type==="victory"||data.type==="defeat";
+  if(!known){
+   if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
+   if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
+   const m=cleanBattleText(data.text||data.message||data.error||"Сервер вернул неизвестный результат.");
+   setMessage(m,"","❔");addLog(m,"info");return;
+  }
+  await playTurn(move,data);
+ }catch(error){
+  showError(error.message||"Ошибка связи при выполнении хода.");
+  setMessage("Не удалось получить подтверждение хода.","","⚠️");
+ }finally{setBusy(false);if(!ended)setTurn("Твой ход","")}
 }
-if(data.error==="dead"){showDefeat(data);return}
-if(data.error){
-const errorText=cleanBattleText(data.text||data.error);
-setMessage(errorText,"ДЕЙСТВИЕ НЕ ВЫПОЛНЕНО","⚠️");
-addLog(errorText,"bad");
-if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
-if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
-if(data.cds)renderSkills(data.cds);
-return;
+
+async function playTurn(move,data){
+ const logs=getBattleLogs(data);
+ const prev={hero:cur.hero,foe:cur.foe};
+ const newHero=data.hp!=null?Number(data.hp):prev.hero,newFoe=data.enemy_hp!=null?Number(data.enemy_hp):prev.foe;
+ const heroMax=Number(data.max_hp??cur.heroMax),foeMax=Number(data.enemy_max??cur.foeMax);
+ const dmgFoe=prev.foe!=null?prev.foe-newFoe:0,dmgHero=prev.hero!=null?prev.hero-newHero:0;
+ const victory=data.type==="victory",defeat=data.type==="defeat";
+
+ /* 1. ход героя */
+ const asleep=st.sleep>0;
+ if(logs.player){setMessage(logs.player,"","⚔️");addLog(logs.player,"good")}
+ if(asleep){B.floatNum("hero","Оцепенение","miss");snd("bmiss");await sleep(600)}
+ else await B.act(move,{impact:()=>{
+  if(data.enemy_hp!=null||victory){
+   const f=victory?0:newFoe;
+   if(dmgFoe>0){
+    const crit=foeMax>0&&dmgFoe>=foeMax*0.25;
+    B.floatNum("foe","−"+dmgFoe,crit?"crit":"dmg");if(crit){B.shake(1);snd("crit")}
+   }else if(dmgFoe<0)B.floatNum("foe","+"+(-dmgFoe),"heal");
+   setHealth("enemy",victory?0:f,foeMax);
+  }
+ }});
+ applyBuff(move);
+ if(data.type==="battle"&&data.enemy_hp!=null)setHealth("enemy",newFoe,foeMax);
+ if(data.enemy_level)setEnemyLevel(data.enemy_level,data.boss,data.phase);
+
+ if(victory){
+  await B.die("foe");await sleep(250);showVictory(data);return;
+ }
+
+ /* 2. лечение героя своим навыком (Провокация и т.п.) */
+ if(!defeat&&dmgHero<0&&!logs.enemy){B.floatNum("hero","+"+(-dmgHero),"heal");snd("heal",.4);setHealth("player",newHero,heroMax)}
+
+ /* 3. ход врага */
+ const txt=logs.enemy;
+ if(txt||dmgHero>0||defeat){
+  setTurn("Ход врага","foe");await sleep(380);
+  setMessage(txt||"Враг атакует.","","🩸");if(txt)addLog(txt,"bad");
+  const fx=bossFx(txt);
+  const skip=RX_SKIP.test(txt)&&dmgHero<=0;
+  const miss=!skip&&dmgHero<=0&&!defeat&&(RX_MISS.test(txt)||!!txt)&&!RX_CAST.test(txt);
+  const cast=!skip&&dmgHero<=0&&!defeat&&RX_CAST.test(txt);
+  if(cast){
+   await B.enemyCast({color:/Алтарь|Призыв|Молитва/.test(txt)?"#ff8a3a":/Проклятие/.test(txt)?"#b86bff":/Кожа|Стойка/.test(txt)?"#cfc3aa":"#d8b090",snd:MOBSND[curEnemy]});
+   if(data.hp!=null)setHealth("player",newHero,heroMax);
+  }else if(skip){
+   B.status("foe","💤");snd("bmiss");B.floatNum("foe","Пропуск","miss");
+   if(data.hp!=null)setHealth("player",newHero,heroMax);
+   await sleep(900);B.status("foe",null);
+  }else{
+   await B.enemyAct({heavy:fx.heavy,miss,snd:MOBSND[curEnemy],impact:()=>{
+    if(dmgHero>0){
+     const crit=heroMax>0&&dmgHero>=heroMax*0.25;
+     B.floatNum("hero","−"+dmgHero,crit?"crit":"dmg");
+    }else if(dmgHero<0)B.floatNum("hero","+"+(-dmgHero),"heal");
+    if(data.hp!=null)setHealth("player",defeat?0:newHero,heroMax);
+   }});
+  }
+  if(st.poison>0&&dmgHero>0)B.aura("hero","#6dff7a",700);
+ }else if(data.hp!=null)setHealth("player",newHero,heroMax);
+
+ if(defeat){await B.die("hero");await sleep(300);showDefeat(data);return}
+ tickEffects();drawChips();
+ if(data.cds)renderSkills(data.cds);else{try{await refreshBattleState()}catch(_){}}
+ setTurn("Твой ход","");
 }
-if(data.type==="event"||data.type==="battle_event"||data.type==="event_choice"){openEvent(data);return}
-if(data.type==="victory"){if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);showVictory(data);return}
-if(data.type==="defeat"){if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);showDefeat(data);return}
-if(data.type==="flee"||move==="flee"){setMessage("Ты покидаешь поле боя.","ОТСТУПЛЕНИЕ","🏃");goCem();return}
-if(data.type==="battle"){
-if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
-if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
-if(data.enemy_level)setEnemyLevel(data.enemy_level,data.boss,data.phase);
-const logs=getBattleLogs(data),fullLog=[logs.player,logs.enemy].filter(Boolean).join("\n");
-setMessage(fullLog||"Сервер обработал ход, но не вернул описание события.","РЕЗУЛЬТАТ ХОДА","⚔️");
-if(logs.player)addLog(logs.player,"good");
-if(logs.enemy)addLog(logs.enemy,"bad");
-if(!logs.player&&!logs.enemy&&data.text)addLog(data.text,"info");
-bossFx(fullLog);
-if(data.cds)renderSkills(data.cds);
-else{
-try{await refreshBattleState()}catch(_){}
-}
-$("roundLabel").textContent="⚔ Сражение продолжается";
-return;
-}
-if(data.hp!=null&&data.max_hp!=null)setHealth("player",data.hp,data.max_hp);
-if(data.enemy_hp!=null&&data.enemy_max!=null)setHealth("enemy",data.enemy_hp,data.enemy_max);
-const message=cleanBattleText(data.text||data.message||data.error||"Сервер вернул неизвестный результат.");
-setMessage(message,"РЕЗУЛЬТАТ ХОДА","❔");addLog(message,"info");
-}catch(error){
-showError(error.message||"Ошибка связи при выполнении хода.");
-setMessage("Не удалось получить подтверждение хода.","ОШИБКА СЕТИ","⚠️");
-}finally{setBusy(false)}
-}
+
 async function exploreAgain(){
-if(busy)return;
-hideError();setBusy(true,"Поиск…");
-try{
-const data=await api({action:"explore_ruins"});
-if(data.error==="cooldown"){
-setMessage("Подожди ещё "+(data.left||5)+" сек.","ПОИСК ПРОТИВНИКА","⌛");
-return;
+ if(busy)return;
+ hideError();setBusy(true,"Поиск…");
+ try{
+  const d=await api({action:"explore_ruins"});
+  if(d.error==="cooldown"){setMessage("Подожди ещё "+(d.left||5)+" сек.","","⌛");return}
+  if(d.ok===false||d.error){setMessage(cleanBattleText(d.text||d.error||"Сейчас ничего не найдено."),"","⚠️");return}
+  const p=new URLSearchParams(location.search);
+  if(d.type==="event"){p.delete("enemy");p.set("event_data",JSON.stringify(d));location.href="../event/index.html?"+p.toString();return}
+  p.delete("event_data");if(d.enemy)p.set("enemy",d.enemy);
+  location.href="./index.html?"+p.toString();
+ }catch(error){showError(error.message||"Не удалось начать новый бой.")}
+ finally{setBusy(false)}
 }
-if(data.ok===false||data.error){
-setMessage(cleanBattleText(data.text||data.error||"Сейчас ничего не найдено."),"ПОИСК ПРОТИВНИКА","⚠️");
-return;
-}
-const params=new URLSearchParams(location.search);
-if(data.type==="event"){
-params.delete("enemy");params.set("event_data",JSON.stringify(data));
-location.href="../event/index.html?"+params.toString();
-return;
-}
-params.delete("event_data");
-if(data.enemy)params.set("enemy",data.enemy);
-location.href="./index.html?"+params.toString();
-}catch(error){showError(error.message||"Не удалось начать новый бой.")}
-finally{setBusy(false)}
-}
+
 $("exploreAgainBtn").addEventListener("click",exploreAgain);
-$("victoryCloseBtn").addEventListener("click",goCem);
-$("defeatCloseBtn").addEventListener("click",goCem);
-$("defeatRetryBtn").addEventListener("click",load);
+$("victoryCloseBtn").addEventListener("click",goRuins);
+$("defeatCloseBtn").addEventListener("click",goRuins);
+$("defeatRetryBtn").addEventListener("click",()=>{B.revive();ended=false;load()});
 $("retryBtn").addEventListener("click",load);
-window.addEventListener("DOMContentLoaded",load);
+const spd=$("spd");
+function paintSpd(){spd.classList.toggle("on",B.speed()>1)}
+spd.addEventListener("click",()=>{B.setSpeed(B.speed()>1?1:2);paintSpd();snd("tap")});
+window.addEventListener("DOMContentLoaded",()=>{B.init({stage:$("stage"),fx:$("fx")});paintSpd();load()});
 </script>
 <script src="../../shared/enemyinfo.js"></script>
 <script src="../../shared/icons.js?v=i1"></script>

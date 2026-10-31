@@ -5,7 +5,7 @@
 var SRC=(document.currentScript&&document.currentScript.src)||"";
 var BASE=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"");
 var V="?v=b1";
-var META={"heroes":{"m_seer":{"idle":[288,392],"dash":[387,185],"cast":[256,393],"buff":[357,232]},"m_sailor":{"idle":[144,296],"dash":[346,248],"cast":[304,301],"buff":[303,244]},"m_hunter":{"idle":[160,296],"dash":[344,208],"cast":[369,200],"buff":[336,240]},"f_seer":{"idle":[128,308],"dash":[224,259],"cast":[264,301],"buff":[264,288]},"f_sailor":{"idle":[128,295],"dash":[304,244],"cast":[398,303],"buff":[296,252]},"f_hunter":{"idle":[128,305],"dash":[444,276],"cast":[464,268],"buff":[280,256]}},"mobs":{"drowned":[560,370],"toad":[560,342],"serpent":[560,367],"serpent2":[560,374],"leech":[560,371],"pike":[560,332],"kikimora":[560,374],"vodyanoy":[560,377],"vodyanoy2":[560,377],"mushroom":[511,560],"spider":[560,381],"tree":[560,516],"boar":[560,392],"wolf":[560,385],"kitsune":[560,414],"kitsune2":[560,374],"ghost":[362,560],"ghoul":[560,394],"skeleton":[377,560],"worm":[560,437],"banshee":[353,560],"necro":[360,560],"necro2":[372,560]},"fx":{"hunter_0":[7,186,127],"hunter_1":[8,196,133],"hunter_2":[6,239,117],"hunter_3":[6,230,111],"sailor_0":[6,234,127],"sailor_1":[8,185,133],"sailor_2":[7,257,111],"sailor_3":[7,243,117],"seer_0":[6,197,104],"seer_1":[6,169,115],"seer_2":[6,175,105],"seer_3":[6,210,127]}};
+var META={"heroes":{"m_seer":{"idle":[288,392],"dash":[387,185],"cast":[256,393],"buff":[357,232]},"m_sailor":{"idle":[144,296],"dash":[346,248],"cast":[304,301],"buff":[303,244]},"m_hunter":{"idle":[160,296],"dash":[344,208],"cast":[369,200],"buff":[336,240]},"f_seer":{"idle":[128,308],"dash":[224,259],"cast":[264,301],"buff":[264,288]},"f_sailor":{"idle":[128,295],"dash":[304,244],"cast":[398,303],"buff":[296,252]},"f_hunter":{"idle":[128,305],"dash":[444,276],"cast":[464,268],"buff":[280,256]}},"mobs":{"drowned":[560,370],"toad":[560,342],"serpent":[560,367],"serpent2":[560,374],"leech":[560,371],"pike":[560,332],"kikimora":[560,374],"vodyanoy":[560,377],"vodyanoy2":[560,377],"mushroom":[511,560],"spider":[560,381],"tree":[560,516],"boar":[560,392],"wolf":[560,385],"kitsune":[560,414],"kitsune2":[560,374],"ghost":[362,560],"ghoul":[560,394],"skeleton":[377,560],"worm":[560,437],"banshee":[353,560],"necro":[360,560],"necro2":[372,560],"fanatic":[506,560],"gargoyle":[514,560],"guard":[370,560],"ratmut":[560,373],"cultist":[371,560],"priest":[373,560],"priest2":[372,560]},"fx":{"hunter_0":[7,186,127],"hunter_1":[8,196,133],"hunter_2":[6,239,117],"hunter_3":[6,230,111],"sailor_0":[6,234,127],"sailor_1":[8,185,133],"sailor_2":[7,257,111],"sailor_3":[7,243,117],"seer_0":[6,197,104],"seer_1":[6,169,115],"seer_2":[6,175,105],"seer_3":[6,210,127]}};
 var HM=META.heroes,MM=META.mobs,FM=META.fx;
 var reduce=false;try{reduce=matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){}
 var SPD=1;try{SPD=+localStorage.getItem("lotm_bspd")||1}catch(e){}
@@ -36,11 +36,12 @@ var ACT={
  hunter_trap:{t:"spell",fx:3,on:"foe",s:"bfire",size:0.55},
  hunter_boost:{t:"buff",fx:3,on:"self",s:"bbuff",size:0.5}
 };
+var MOBORB={cultist:"#ff7a22",priest2:"#ff3a3a"};
 var HIT_SND={seer:"bslash",sailor:"bpillar",hunter:"bfirehit"};
 /* высота врага в долях сцены и подъём над землёй */
-var MOBFIT={ghost:[.55,.02],ghoul:[.42,0],skeleton:[.58,0],worm:[.6,0],banshee:[.57,.03],necro:[.57,0],necro2:[.62,0],mushroom:[.58,0],spider:[.44,0],tree:[.66,0],boar:[.44,0],wolf:[.46,0],kitsune:[.46,0],kitsune2:[.56,0],drowned:[.58,0],toad:[.42,0],serpent:[.56,0],serpent2:[.62,0],leech:[.6,0],pike:[.4,.1],kikimora:[.56,0],vodyanoy:[.62,0],vodyanoy2:[.68,0]};
-var MOBIDLE={ghost:"float",ghoul:"breath",skeleton:"breath",worm:"sway",banshee:"float",necro:"breath",necro2:"float",mushroom:"breath",spider:"breath",tree:"sway",boar:"breath",wolf:"breath",kitsune:"breath",kitsune2:"float",pike:"bob",serpent:"sway",serpent2:"sway",leech:"sway",toad:"breath",drowned:"float",kikimora:"breath",vodyanoy:"breath",vodyanoy2:"breath"};
-var MOBATK={ghost:"claw",ghoul:"claw",skeleton:"claw",worm:"bite",banshee:"claw",necro:"bolt",necro2:"bolt",mushroom:"claw",spider:"bite",tree:"claw",boar:"bite",wolf:"bite",kitsune:"claw",kitsune2:"claw",drowned:"claw",kikimora:"claw",vodyanoy:"claw",vodyanoy2:"claw",serpent:"bite",serpent2:"bite",pike:"bite",leech:"bite",toad:"tongue"};
+var MOBFIT={fanatic:[.5,0],gargoyle:[.5,0],guard:[.56,0],ratmut:[.4,0],cultist:[.56,0],priest:[.56,0],priest2:[.62,0],ghost:[.55,.02],ghoul:[.42,0],skeleton:[.58,0],worm:[.6,0],banshee:[.57,.03],necro:[.57,0],necro2:[.62,0],mushroom:[.58,0],spider:[.44,0],tree:[.66,0],boar:[.44,0],wolf:[.46,0],kitsune:[.46,0],kitsune2:[.56,0],drowned:[.58,0],toad:[.42,0],serpent:[.56,0],serpent2:[.62,0],leech:[.6,0],pike:[.4,.1],kikimora:[.56,0],vodyanoy:[.62,0],vodyanoy2:[.68,0]};
+var MOBIDLE={fanatic:"breath",gargoyle:"breath",guard:"breath",ratmut:"breath",cultist:"float",priest:"breath",priest2:"float",ghost:"float",ghoul:"breath",skeleton:"breath",worm:"sway",banshee:"float",necro:"breath",necro2:"float",mushroom:"breath",spider:"breath",tree:"sway",boar:"breath",wolf:"breath",kitsune:"breath",kitsune2:"float",pike:"bob",serpent:"sway",serpent2:"sway",leech:"sway",toad:"breath",drowned:"float",kikimora:"breath",vodyanoy:"breath",vodyanoy2:"breath"};
+var MOBATK={fanatic:"claw",gargoyle:"claw",guard:"claw",ratmut:"bite",cultist:"bolt",priest:"claw",priest2:"bolt",ghost:"claw",ghoul:"claw",skeleton:"claw",worm:"bite",banshee:"claw",necro:"bolt",necro2:"bolt",mushroom:"claw",spider:"bite",tree:"claw",boar:"bite",wolf:"bite",kitsune:"claw",kitsune2:"claw",drowned:"claw",kikimora:"claw",vodyanoy:"claw",vodyanoy2:"claw",serpent:"bite",serpent2:"bite",pike:"bite",leech:"bite",toad:"tongue"};
 /* лицом ли к зрителю повёрнута поза; 1 = надо отзеркалить, чтобы смотрела вправо */
 var HFLIP={"f_seer":{"idle":1},"f_sailor":{"idle":1}};
 
@@ -252,8 +253,8 @@ async function enemyAct(o){
  await wapi(S.foe,[{transform:"translateX(0) scale(1)"},{transform:"translateX(12px) scale(.95,1.04)"}],{duration:230,easing:"ease-out",fill:"forwards"});
  if(kind==="bolt"){
   var f0=foeMid(),t0={x:S.HX+S.hw*0.2,y:S.SH-S.GY-S.hh*0.5};
-  aura("foe","#b86bff",600);snd("bcast");
-  var orb=document.createElement("div");orb.style.cssText="position:absolute;z-index:21;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff,#b86bff 45%,#4a1a7a00 72%);box-shadow:0 0 18px #b86bff;left:"+(f0.x-S.ew*0.25)+"px;top:"+(f0.y-S.eh*0.1)+"px";
+  var oc=MOBORB[S.mob]||"#b86bff";aura("foe",oc,600);snd("bcast");
+  var orb=document.createElement("div");orb.style.cssText="position:absolute;z-index:21;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff,"+oc+" 45%,#00000000 72%);box-shadow:0 0 18px "+oc+";left:"+(f0.x-S.ew*0.25)+"px;top:"+(f0.y-S.eh*0.1)+"px";
   S.fx.appendChild(orb);
   await wapi(orb,[{transform:"translate(0,0) scale(.5)"},{transform:"translate("+(t0.x-f0.x+S.ew*0.25)+"px,"+(t0.y-f0.y+S.eh*0.1)+"px) scale(1.1)"}],{duration:360,easing:"ease-in",fill:"forwards"});
   orb.remove();
