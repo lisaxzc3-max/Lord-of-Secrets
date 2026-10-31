@@ -195,7 +195,6 @@ cmrattle:function(t){for(var i=0;i<9;i++)noise(t+i*0.06+Math.random()*0.04,0.03,
 cmrumble:function(t){noise(t,1.4,0.5,"lowpass",260,70,0.9,{attack:0.15});osc("sine",48,t,1.4,0.4,{to:30});noise(t+0.9,0.5,0.18,"bandpass",600,300,1.5)},
 cmwail:function(t){osc("sawtooth",520,t,1.6,0.14,{to:880,vib:7,vibd:30,wet:0.8,attack:0.08});osc("sine",1040,t+0.05,1.5,0.1,{to:1500,vib:8,vibd:40,wet:0.9});noise(t,1.5,0.14,"bandpass",2500,4500,2.5,{attack:0.1,wet:0.7})},
 cmnecro:function(t){[38,45,50,53].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.1,1.8,0.09,{wet:0.8,attack:0.2,vib:4})});osc("sine",N(26),t,2,0.4,{wet:0.5});noise(t,1.6,0.1,"bandpass",400,1600,2,{attack:0.5,wet:0.6})},
-cmnecro2:function(t){[36,43,48,51,55].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.08,2.6,0.12,{wet:0.85,attack:0.1,vib:6})});osc("sine",N(24),t,3,0.5,{wet:0.5,to:N(22)});noise(t,2.2,0.3,"lowpass",3000,150,1,{attack:0.1,wet:0.7});noise(t+0.3,0.5,0.3,"highpass",2500,7000,0.5)}
 };
 for(var _k4 in CM)SFX[_k4]=CM[_k4];
 /* ===== Кальветуа: морской бог ===== */
@@ -241,8 +240,6 @@ frfox:function(t){[88,91,95,100].forEach(function(m,i){osc("sine",N(m),t+i*0.14,
 };
 /* ---------- звуки боя (сцена с моделями) ---------- */
 var BF={
-bturn:function(t){osc("triangle",660,t,0.16,0.16,{to:990,wet:0.4});osc("sine",1320,t+0.07,0.2,0.08,{wet:0.5})},
-bwoosh:function(t){noise(t,0.26,0.4,"bandpass",600,2800,1.4)},
 bdash:function(t){noise(t,0.3,0.5,"highpass",900,5200,0.7);osc("sine",150,t,0.25,0.3,{to:300})},
 bslash:function(t){noise(t,0.16,0.5,"highpass",6000,1400,0.8);osc("sine",980,t,0.14,0.18,{to:260})},
 bcast:function(t){osc("sine",380,t,0.45,0.14,{to:1250,wet:0.6,attack:0.05});osc("triangle",760,t+0.05,0.4,0.07,{to:1900,wet:0.6})},
