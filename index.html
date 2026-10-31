@@ -472,6 +472,61 @@ body.bgSelMode .ivRow .ck{display:flex}
 .adRow.keep.on .sw{background:#2a6a5a}.adRow.keep.on .sw::after{background:#c8ffee}
 .bgAlchTop{display:none}
 body.bgSelMode .bagWrap{padding-bottom:84px}
+/* ===== Сумка v3: готическая красная тема по арту ===== */
+#bag.bagWrap{padding:0 0 10px;border:1px solid #6a2229;border-radius:18px;background:radial-gradient(120% 50% at 50% 0,#2a0c12,#0d0608 60%,#070304);box-shadow:0 0 0 1px #000,0 0 26px #7a1e2655,inset 0 0 40px #000a}
+#bag.bagWrap::before{background:radial-gradient(ellipse at 30% 0,#c4343e44,transparent 70%)}
+.bagHero{position:relative;display:grid;grid-template-columns:43% 1fr;min-height:218px}
+.bagScene{position:relative;background:url(./shared/art/bag_scene.webp) 50% 6%/cover no-repeat;-webkit-mask-image:linear-gradient(90deg,#000 66%,transparent);mask-image:linear-gradient(90deg,#000 66%,transparent);min-height:218px;animation:bgScene 7s ease-in-out infinite alternate}
+@keyframes bgScene{from{filter:saturate(1) brightness(1)}to{filter:saturate(1.15) brightness(1.12)}}
+.bagHdr{position:relative;padding:14px 14px 4px 0;display:flex;flex-direction:column;justify-content:center}
+#bag .bgHead h3{font:700 29px Philosopher,Georgia,serif;color:#f4e2d2;text-shadow:0 2px 10px #000,0 0 16px #c4343e77;letter-spacing:.5px;margin:0}
+#bag .bgCnt{font:700 13px Philosopher,Georgia,serif;color:#ff9a8c;background:#2a0c1099;border:1px solid #a02a34;border-radius:10px;padding:3px 10px}
+#bag .bgBar{background:#1a0a0e;border:1px solid #5a1f26;margin:9px 0 11px}
+#bag .bgBar i{background:linear-gradient(90deg,#7a1e26,#ff6a5a,#7a1e26);background-size:200% 100%}
+#bag .bgBar.full i{background:linear-gradient(90deg,#ff3a3a,#ffb27a)}
+#bag .bgTabs{display:flex;flex-direction:column;gap:6px;background:none;border:0;padding:0;margin:0}
+#bag .bgTabs button{border:1px solid #4a1d22;border-radius:8px;background:#120a0c;color:#c9a8a0;padding:10px 9px;text-align:left;font:700 12.5px Philosopher,Georgia,serif;letter-spacing:.03em;box-shadow:inset 0 0 0 1px #00000066}
+#bag .bgTabs button.on{background:linear-gradient(135deg,#6a1a22,#34090f);border-color:#d4404c;color:#ffe9e0;box-shadow:0 0 14px #c4343e55,inset 0 0 12px #ff6a5a22}
+#bag .bgTabs button b{color:#ffc27a;font-weight:800}
+#bag #bgPaneGear,#bag #bgPaneAlch{padding:0 12px}
+#bag .bgSub{color:#d9a8a0;margin:10px 0 7px}
+#bag .bgSub b{color:#ffc27a}
+#bag .eqGrid{padding:8px;border:1px solid #4a1d22;border-radius:12px;background:linear-gradient(180deg,#140a0d,#0b0607);box-shadow:inset 0 0 18px #000}
+#bag .eqSlot{border:1px solid #4a1d22;border-style:solid;background:#150a0e;border-radius:9px!important}
+#bag .eqSlot .ic{opacity:.42;filter:grayscale(.4) sepia(.6) hue-rotate(-35deg)}
+#bag .eqSlot .sl{color:#8a5a58}
+#bag .eqSlot.on{border-color:var(--rc);background:linear-gradient(160deg,#2a0f14,#12080b)}
+#bag .setRow{border-color:#4a1d22;background:#140a0d99}
+#bag .bgSubRow{flex-wrap:wrap;gap:8px}
+#bag .bgTools{flex-wrap:wrap;gap:6px}
+#bag .bgTool{border:1px solid #a02a34;background:#1a0a0e;color:#f1d6cc;border-radius:8px;padding:6px 10px;font-family:Philosopher,Georgia,serif;font-size:12px}
+#bag .bgTool.on{background:#c4343e;color:#fff;border-color:#ff6a5a;box-shadow:0 0 12px #c4343e88}
+.bgView{display:inline-flex;border:1px solid #a02a34;border-radius:8px;overflow:hidden}
+.bgView button{border:0;background:#1a0a0e;color:#c9a8a0;padding:5px 10px;font-size:15px;line-height:1;cursor:pointer}
+.bgView button.on{background:#7a1e26;color:#fff}
+#bag .bgChip{background:#140a0d;border-color:#4a1d22;color:#c9a8a0}
+#bag .bgChip.on{background:#c4343e;color:#fff;border-color:#ff6a5a;box-shadow:0 0 10px #c4343e88}
+#bag .ivRow{background:linear-gradient(165deg,#241014,#10080b)}
+#bag .bgMore{border-color:#5a1f26;background:#140a0d;color:#e6c2b8}
+.ivList.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ivList.grid .ivRow{flex-direction:column;justify-content:center;gap:3px;aspect-ratio:1;padding:5px 2px;text-align:center;border-radius:9px;background:linear-gradient(165deg,#241014,#10080b)}
+.ivList.grid .ivRow .ic{flex:none;width:32px;height:32px}
+.ivList.grid .ivRow .mid{flex:none;width:100%;padding:0 1px}
+.ivList.grid .ivRow .nm{font-size:8.5px;line-height:1.1;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center}
+.ivList.grid .ivRow .rr,.ivList.grid .ivRow .sm{display:none}
+.ivList.grid .ivRow .ck{position:absolute;right:3px;top:3px;flex:none;width:16px;height:16px;font-size:11px;border-radius:5px}
+.ivList.grid .bgEmpty{grid-column:1/-1}
+.ivEmpty{aspect-ratio:1;border-radius:9px;border:1px solid #2e1216;background:radial-gradient(circle at 50% 50%,#1a0b0f,#0c0607 70%);box-shadow:inset 0 0 10px #000}
+.ivEmpty::after{content:"✦";display:flex;height:100%;align-items:center;justify-content:center;color:#3a1519;font-size:14px}
+.bagStarB{height:38px;margin:10px auto 0;width:52px;background:url(./shared/art/bag_star_bot.webp) center/contain no-repeat;opacity:.9;filter:drop-shadow(0 0 8px #c4343e99)}
+.bgShBox{background:linear-gradient(180deg,#2a0c12,#0d0608)!important;border-color:#7a1e26!important}
+.bgShGrip{background:#7a1e26!important}
+.bgSelBar{background:#1a0a0ef5!important;border-color:#ff6a5a99!important}
+.bgGhost{border-color:#5a1f26!important;background:#140a0d!important}
+#bag .alCard{border-color:var(--rc,#5a1f26);background:linear-gradient(145deg,#1d0d11,#0d0709)}
+#bag .alH{color:#e6c2b8}
+@media(prefers-reduced-motion:reduce){.bagScene{animation:none}}
+
 @media(prefers-reduced-motion:reduce){.bgSh *,.ivRow{animation:none!important;transition:none!important}}
 .tile.hasNew{border-color:#e2c27a;box-shadow:0 0 16px #e2c27a55}
 #menuBtn.hasNew::after,#sideMenu .smIt.hasNew::after{content:"";position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:#d9443c;box-shadow:0 0 8px #d9443c}
@@ -711,7 +766,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 
   <button type="button" class="cta" id="ctaGo" onclick="goLast()"><span class="ctaIc">⚔</span><span class="ctaTx" id="ctaTx">Отправиться в поход</span><span class="ctaSh"></span></button>
 
-  <div id="buildStamp" style="text-align:center;font-size:9px;letter-spacing:1px;opacity:.4;margin:10px 0 2px">сборка 31.10 · 11:45</div>
+  <div id="buildStamp" style="text-align:center;font-size:9px;letter-spacing:1px;opacity:.4;margin:10px 0 2px">сборка 31.10 · 12:20</div>
   <div class="tip" id="tipBox"><span class="tipIc">🦉</span><span id="tipTxt">…</span></div>
 </div>
 </div>
@@ -783,23 +838,29 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 </div>
 
 <div id="bag" class="card hidden bagWrap">
-  <div class="bgHead"><h3>🎒 Сумка</h3><span id="bagCnt" class="bgCnt"></span></div>
-  <div class="bgBar"><i id="bagBar"></i></div>
-  <div class="bgTabs" id="bgTabs">
-    <button type="button" data-t="gear" class="on">⚔ Снаряжение</button>
-    <button type="button" data-t="alch">⚗ Алхимия <b id="bgAlchN"></b></button>
+  <div class="bagHero">
+    <div class="bagScene" aria-hidden="true"></div>
+    <div class="bagHdr">
+      <div class="bgHead"><h3>Сумка</h3><span id="bagCnt" class="bgCnt"></span></div>
+      <div class="bgBar"><i id="bagBar"></i></div>
+      <div class="bgTabs" id="bgTabs">
+        <button type="button" data-t="gear" class="on">⚔ Снаряжение</button>
+        <button type="button" data-t="alch">⚗ Алхимия <b id="bgAlchN"></b></button>
+      </div>
+    </div>
   </div>
   <div id="bgPaneGear">
     <div class="bgSub">⬢ Надето <span id="eqCnt"></span></div>
     <div id="eqList" class="eqGrid"></div>
     <div id="setBox" class="setBox hidden"></div>
     <div class="bgSub bgSubRow"><span>Предметы <b id="invCnt"></b></span>
-      <span class="bgTools"><button type="button" id="bgSelBtn" class="bgTool">☑ Выбрать</button><button type="button" id="bgAdBtn" class="bgTool">⚙ Авторазбор</button></span></div>
+      <span class="bgTools"><button type="button" id="bgSelBtn" class="bgTool">☑ Выбрать</button><button type="button" id="bgAdBtn" class="bgTool">⚙ Авторазбор</button><span class="bgView"><button type="button" id="bgVGrid" class="on" aria-label="Сетка">▦</button><button type="button" id="bgVList" aria-label="Список">☰</button></span></span></div>
     <div id="bagFilter" class="bgFilter"></div>
     <div id="invList" class="ivList"></div>
     <button type="button" id="invMore" class="bgMore hidden"></button>
   </div>
   <div id="bgPaneAlch" class="hidden"><div id="alchBag"></div></div>
+  <div class="bagStarB" aria-hidden="true"></div>
 </div>
 <div id="bgSelBar" class="bgSelBar hidden"><span id="bgSelTx"></span><button type="button" id="bgSelGo" class="bgDanger">🔨 Разрушить</button><button type="button" id="bgSelX" class="bgGhost">Отмена</button></div>
 <div id="bgSh" class="bgSh"><div class="bgShBk" id="bgShBk"></div><div class="bgShBox"><i class="bgShGrip"></i><div id="bgShBody"></div></div></div>
@@ -1696,6 +1757,8 @@ const AD_VAL = { "обычная": 1, "необычная": 2, "редкая": 5
 const AD_LIST = [["обычная", "Обычная"], ["необычная", "Необычная"], ["редкая", "Редкая"], ["эпическая", "Эпическая"], ["легендарная", "Легендарная"]];
 const BAG_RANK = { "легендарная": 5, "эпическая": 4, "редкая": 3, "необычная": 2, "обычная": 1 };
 let bagShown = 10, bagSel = null, bagTab = "gear";
+let bagView = "grid";
+try { bagView = localStorage.getItem("lotm_bag_view") === "list" ? "list" : "grid"; } catch (_) {}
 G.ad = G.ad || { r: [], keep: true };
 
 function itRar(it) { return String(it?.rarity || "обычная").toLowerCase(); }
@@ -1970,13 +2033,16 @@ function renderBagFromJ(data) {
   // Предметы: компактный список, новые и редкие выше
   const invList = byId("invList");
   invList.replaceChildren();
+  invList.className = "ivList " + bagView;
+  byId("bgVGrid").classList.toggle("on", bagView === "grid");
+  byId("bgVList").classList.toggle("on", bagView === "list");
   const grew = bagPrevCount >= 0 && total > bagPrevCount;
   bagPrevCount = total;
   const list = [];
   G.inv.forEach((item, index) => { if (bagFilter === "all" || item?.slot === bagFilter) list.push({ item, index }); });
   const rank = it => it?.vip_days ? 9 : (it?.quest ? 0 : (BAG_RANK[itRar(it)] || 1));
   list.sort((a, b) => rank(b.item) - rank(a.item) || b.index - a.index);
-  const shownList = list.slice(0, bagShown);
+  const shownList = list.slice(0, bagView === "grid" ? bagShown * 2 : bagShown);
   shownList.forEach(({ item, index }, n) => {
     const [rc, rg, cls] = bagRar(item);
     const row = document.createElement("button");
@@ -2031,6 +2097,10 @@ function renderBagFromJ(data) {
     e.append(big, total ? "Здесь ничего нет" : "Сумка пуста — добудь что-нибудь в походах");
     invList.appendChild(e);
   }
+  if (bagView === "grid" && bagFilter === "all" && rest <= 0) {
+    const target = Math.min(50, Math.max(15, Math.ceil(shownList.length / 5) * 5));
+    for (let k = shownList.length; k < target; k++) { const ph = document.createElement("div"); ph.className = "ivEmpty"; invList.appendChild(ph); }
+  }
   bagSelUpdate();
   try {
     const A = G.alch || data;
@@ -2046,6 +2116,9 @@ function renderBagFromJ(data) {
   byId("invMore").addEventListener("click", () => { bagShown += 10; try { snd("tap"); } catch (e) {} renderBagFromJ({ inventory: G.inv, equipped: G.eq }); });
   byId("bgShBk").addEventListener("click", shClose);
   byId("bgAdBtn").addEventListener("click", adSheet);
+  const setView = v => { bagView = v; try { localStorage.setItem("lotm_bag_view", v); snd("tap"); } catch (e) {} renderBagFromJ({ inventory: G.inv, equipped: G.eq }); };
+  byId("bgVGrid").addEventListener("click", () => setView("grid"));
+  byId("bgVList").addEventListener("click", () => setView("list"));
   byId("bgSelBtn").addEventListener("click", () => {
     try { snd("tap"); } catch (e) {}
     bagSel = bagSel ? null : new Set();
