@@ -154,7 +154,7 @@ function init(){
  var fighters=card&&card.parentElement;
  if(!card||!fighters)return;
  var panel=document.createElement("div");panel.id="enemyInfo";panel.setAttribute("role","region");panel.setAttribute("aria-label","Навыки врага");
- fighters.parentNode.insertBefore(panel,fighters.nextSibling);
+ var anchor=document.getElementById("eiAnchor")||fighters;anchor.parentNode.insertBefore(panel,anchor.nextSibling);
  var badge=document.createElement("i");badge.className="eiBadge";badge.textContent="i";badge.setAttribute("aria-hidden","true");
  frame.style.position=frame.style.position||"relative";frame.appendChild(badge);
  card.style.cursor="pointer";card.setAttribute("role","button");card.setAttribute("tabindex","0");card.setAttribute("aria-expanded","false");
