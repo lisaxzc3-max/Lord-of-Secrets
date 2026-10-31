@@ -132,7 +132,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 /* ===== ИГРОВОЙ ИНТЕРФЕЙС ===== */
-.wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+.wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 /* HUD */
 .top{position:relative;overflow:hidden;border-color:#6b5a8f;background:linear-gradient(145deg,rgba(44,33,68,.95),rgba(18,13,30,.96))}
 .top:before{content:"";position:absolute;left:-30%;top:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff14,transparent);transform:skewX(-20deg);animation:sweep 6s ease-in-out infinite}
@@ -145,13 +145,24 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .floatGain{position:fixed;z-index:60;font-weight:900;font-size:15px;pointer-events:none;text-shadow:0 2px 8px #000,0 0 10px currentColor;animation:gainUp 1.4s ease-out forwards}
 @keyframes gainUp{0%{opacity:0;transform:translateY(6px) scale(.6)}15%{opacity:1;transform:translateY(-6px) scale(1.25)}100%{opacity:0;transform:translateY(-46px) scale(1)}}
 /* нижняя панель-док */
-.nav{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(420px,calc(100% - 20px));z-index:10;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border-radius:22px;background:linear-gradient(180deg,rgba(34,26,52,.97),rgba(14,10,22,.98));border:1px solid #54456f;box-shadow:0 12px 36px #000b,inset 0 1px 0 #ffffff1a}
-.nav:before{content:"";position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/4);border-radius:16px;background:linear-gradient(145deg,#4a3a6a,#2a2040);border:1px solid var(--gold2);box-shadow:0 0 20px #d6b77944;transform:translateX(calc(var(--i,0)*100%));transition:transform .38s cubic-bezier(.3,1.35,.5,1)}
-.nav a{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 6px;font-size:10px;color:#8d869a;text-decoration:none;cursor:pointer;transition:color .3s;background:none}
-.nav a.active{color:#f1e3be;transform:none;text-shadow:none}
-.nav a.active:before{display:none}
-.nav .ic{font-size:21px;line-height:1.1;transition:transform .35s cubic-bezier(.3,1.5,.5,1),filter .3s}
-.nav a.active .ic{transform:translateY(-3px) scale(1.18);filter:drop-shadow(0 0 8px var(--gold))}
+/* нижнее меню: арт с вырезанным фоном, активный раздел подсвечен */
+.nav{position:fixed;left:50%;bottom:calc(4px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(440px,calc(100% - 6px));aspect-ratio:1200/279;z-index:10;--l:13.6%;--r:72.6%;filter:drop-shadow(0 6px 14px #000c)}
+.nav[data-a="hall"]{--l:13.6%;--r:72.6%}
+.nav[data-a="travel"]{--l:27.4%;--r:51.3%}
+.nav[data-a="city"]{--l:48.7%;--r:30%}
+.nav[data-a="bag"]{--l:70%;--r:12.4%}
+.nav .nv{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.nav .nvBase{filter:brightness(.5) saturate(.55)}
+.nav .nvCapL{clip-path:inset(0 86.4% 0 0)}
+.nav .nvCapR{clip-path:inset(0 0 0 87.6%)}
+.nav .nvLit{clip-path:inset(0 var(--r) 0 var(--l));filter:brightness(1.18) saturate(1.1) drop-shadow(0 0 7px #e7c98a99);transition:clip-path .38s cubic-bezier(.3,1.2,.5,1)}
+.nav a{position:absolute;top:8%;bottom:6%;display:block;cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:14px;outline:none}
+.nav a:active{background:#ffffff14}
+.nav a[data-tab="hall"]{left:13.6%;width:13.8%}
+.nav a[data-tab="travel"]{left:27.4%;width:21.3%}
+.nav a[data-tab="city"]{left:48.7%;width:21.3%}
+.nav a[data-tab="bag"]{left:70%;width:17.6%}
+@media(prefers-reduced-motion:reduce){.nav .nvLit{transition:none}}
 /* зал: оформление */
 #hall{background:none;border:0;box-shadow:none;padding:0}
 #hall #startInHall{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:13px;box-shadow:0 8px 28px #0006}
@@ -428,7 +439,7 @@ body.bgSelMode .ivRow .ck{display:flex}
 .ivRow.sel .ck{background:#ff7b6b;border-color:#ff7b6b}
 .ivRow.out{transform:scale(.9);opacity:0}
 .bgMore{width:100%;margin-top:8px;border:1px dashed #4a3f62;background:#120c1e88;color:#cdbf9f;border-radius:12px;padding:10px;font:600 12px inherit;font-family:inherit;cursor:pointer}
-.bgSelBar{position:fixed;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:2147481000;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:14px;background:#1b1226f5;border:1px solid #ff7b6b88;box-shadow:0 6px 24px #000a}
+.bgSelBar{position:fixed;left:10px;right:10px;bottom:calc(108px + env(safe-area-inset-bottom));z-index:2147481000;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:14px;background:#1b1226f5;border:1px solid #ff7b6b88;box-shadow:0 6px 24px #000a}
 .bgSelBar span{flex:1;font-size:12px;color:#e8dcc0;line-height:1.25}
 .bgDanger{border:1px solid #ff7b6b;background:linear-gradient(135deg,#7a2a2a,#4a1a24);color:#ffe0d8;border-radius:11px;padding:9px 12px;font:700 12px inherit;font-family:inherit;cursor:pointer}
 .bgDanger:disabled{opacity:.4}
@@ -700,7 +711,7 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 
   <button type="button" class="cta" id="ctaGo" onclick="goLast()"><span class="ctaIc">⚔</span><span class="ctaTx" id="ctaTx">Отправиться в поход</span><span class="ctaSh"></span></button>
 
-  <div id="buildStamp" style="text-align:center;font-size:9px;letter-spacing:1px;opacity:.4;margin:10px 0 2px">сборка 30.10 · 21:50</div>
+  <div id="buildStamp" style="text-align:center;font-size:9px;letter-spacing:1px;opacity:.4;margin:10px 0 2px">сборка 31.10 · 11:45</div>
   <div class="tip" id="tipBox"><span class="tipIc">🦉</span><span id="tipTxt">…</span></div>
 </div>
 </div>
@@ -800,11 +811,15 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 </div>
 </div>
 
-<nav class="nav" id="nav" style="--i:0">
-  <a data-tab="hall" class="active" onclick="showTab('hall')"><span class="ic">🏰</span>Зал</a>
-  <a data-tab="travel" onclick="showTab('travel')"><span class="ic">🧭</span>Поход</a>
-  <a data-tab="city" onclick="showTab('city')"><span class="ic">🌆</span>Город</a>
-  <a data-tab="bag" onclick="showTab('bag')"><span class="ic">🎒</span>Сумка</a>
+<nav class="nav" id="nav" data-a="hall">
+  <img class="nv nvBase" src="./shared/art/nav.webp?v=1" alt="" draggable="false">
+  <img class="nv nvCapL" src="./shared/art/nav.webp?v=1" alt="" draggable="false">
+  <img class="nv nvCapR" src="./shared/art/nav.webp?v=1" alt="" draggable="false">
+  <img class="nv nvLit" src="./shared/art/nav.webp?v=1" alt="" draggable="false">
+  <a data-tab="hall" class="active" aria-label="Зал" onclick="showTab('hall')"></a>
+  <a data-tab="travel" aria-label="Поход" onclick="showTab('travel')"></a>
+  <a data-tab="city" aria-label="Город" onclick="showTab('city')"></a>
+  <a data-tab="bag" aria-label="Сумка" onclick="showTab('bag')"></a>
 </nav>
 
 <script>
@@ -1224,7 +1239,7 @@ function showTab(id) {
   document.querySelectorAll(".nav a").forEach(a => {
     a.classList.toggle("active", a.dataset.tab === id);
   });
-  byId("nav")?.style.setProperty("--i", allowed.indexOf(id));
+  byId("nav")?.setAttribute("data-a", id);
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 
   allowed.forEach(tab => {
