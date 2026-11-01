@@ -206,6 +206,7 @@ function showResult(r){
  const finish=()=>{
   let i=0;
   if(r.d_hp)chip((r.d_hp>0?"+":"")+r.d_hp+" ❤️",r.d_hp>0?"up":"down",i++);
+  try{window.LOTM_DROPS&&LOTM_DROPS.addFromResult(g,r)}catch(e){}
   if(r.d_pounds)chip((r.d_pounds>0?"+":"")+r.d_pounds+" £",r.d_pounds>0?"up":"down",i++);
   if(r.d_mad)chip((r.d_mad>0?"+":"")+r.d_mad+" 🌀",r.d_mad>0?"mad":"up",i++);
   $("endBtns").classList.remove("hidden");
@@ -235,6 +236,7 @@ $("again").addEventListener("click",async()=>{
  catch(_){$("evTitle").textContent="Не удалось прочитать событие";$("evText").textContent="Данные повреждены. Вернись к озёрам и начни заново.";toForestBtn()}
 })();
 </script>
+<script src="../../shared/drops.js?v=1"></script>
 <script src="../../shared/icons.js?v=i1"></script>
 </body>
 </html>
