@@ -150,14 +150,13 @@ button[aria-label="Звук"]{top:calc(98px + env(safe-area-inset-top))!importan
 </section>
 <section class="dock">
  <div class="inpot" id="inpot"></div>
- <div class="acts"><button class="btn" id="clear" type="button">Очистить</button><button class="btn" id="fill" type="button">По рецепту</button><button class="btn main" id="brew" type="button">⚗ Варить</button></div>
+ <div class="acts"><button class="btn" id="clear" type="button">Очистить</button><button class="btn main" id="brew" type="button">⚗ Варить</button></div>
  <div class="tray" id="ings"></div>
- <div class="tabs"><button class="tab" id="tBook" type="button">📖 Книга рецептов</button><button class="tab" id="tPots" type="button">🧪 Твои зелья <b id="potN"></b></button></div>
+ <div class="tabs"><button class="tab" id="tPots" type="button">🧪 Твои зелья <b id="potN"></b></button></div>
 </section>
 </div>
 
 <div class="shBk" id="shBk"></div>
-<div class="sheet" id="shBook"><div class="grip"></div><h3>Книга рецептов</h3><div id="book"></div></div>
 <div class="sheet" id="shPots"><div class="grip"></div><h3>Твои зелья</h3><div class="pots" id="pots"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -251,7 +250,6 @@ function renderPot(){
  $("potCnt").textContent=potTotal()+"/"+MAX;
  $("brew").disabled=busy||!potTotal();
  $("clear").disabled=busy||!potTotal();
- $("fill").disabled=busy||!S.recipe;
  const lc=potTotal()?LIQ[potTotal()%LIQ.length]:"#c04a8a88";
  const pe=document.querySelector(".fx.pot");if(pe)pe.style.setProperty("--lc",lc);
 }
@@ -287,31 +285,6 @@ function splash(){
  e.style.setProperty("--bd",".7s");e.style.animationIterationCount="1";e.style.animationFillMode="forwards";
  $("fxl").appendChild(e);place();setTimeout(()=>e.remove(),800);
 }
-function renderBook(){
- const b=$("book");b.replaceChildren();
- const R=S.recipe;
- if(R){
-  const d=document.createElement("div");
-  d.innerHTML='<div class="rec" style="--pc:'+A.POT[R.pot].c+'88"><div class="pv">'+A.potion(R.pot)+'</div><div><b>'+R.name+'</b><div class="muted">'+R.info+'</div></div></div>';
-  const nd=document.createElement("div");nd.className="need";
-  Object.keys(R.need).forEach(k=>{
-   const x=document.createElement("span"),ok=(S.ingr[k]|0)>=R.need[k];
-   x.className="nd "+(ok?"ok":"lack");
-   x.innerHTML=A.glyph(k)+A.ING[k].n+" ×"+R.need[k]+' <span class="muted">('+(S.ingr[k]|0)+')</span>';
-   nd.appendChild(x);
-  });
-  d.appendChild(nd);
-  const tip=document.createElement("div");tip.className="muted";tip.style.marginTop="8px";tip.textContent="В скобках — сколько у тебя есть. Все компоненты нужны в точных количествах.";d.appendChild(tip);
-  b.appendChild(d);
- }else{
-  const e=document.createElement("div");e.className="muted";e.textContent="Выбери путь, чтобы открыть рецепт своего зелья.";b.appendChild(e);
- }
- (S.others||[]).forEach(o=>{
-  const d=document.createElement("div");d.className="rec lock";
-  d.innerHTML='<div class="pv">'+A.potion(o.pot)+'</div><div><b>'+o.name+'</b><div class="muted">'+o.info+'</div><div class="muted">Рецепт неизвестен. Котёл подскажет, насколько близко ты был.</div></div>';
-  b.appendChild(d);
- });
-}
 function renderPots(){
  const g=$("pots");g.replaceChildren();
  const ids=Object.keys(S.pots||{}).filter(k=>S.pots[k]>0&&A.POT[k]);
@@ -325,18 +298,10 @@ function render(){renderPot();renderIngs();renderPots()}
 /* шторки */
 function openSheet(id){sfx("open");$("shBk").classList.add("on");$(id).classList.add("on")}
 function closeSheets(){document.querySelectorAll(".sheet.on").forEach(s=>s.classList.remove("on"));$("shBk").classList.remove("on")}
-$("tBook").onclick=()=>{renderBook();openSheet("shBook")};
 $("tPots").onclick=()=>{renderPots();openSheet("shPots")};
 $("shBk").onclick=()=>{sfx("back");closeSheets()};
 
 $("clear").onclick=()=>{if(busy)return;pot={};sfx("back");render()};
-$("fill").onclick=()=>{
- if(busy||!S.recipe)return;
- pot={};let miss=0;
- Object.keys(S.recipe.need).forEach(k=>{const n=Math.min(S.ingr[k]|0,S.recipe.need[k]);if(n)pot[k]=n;miss+=S.recipe.need[k]-n});
- sfx("scroll");render();
- if(miss)toast("Не хватает компонентов: "+miss+" шт.");
-};
 $("brew").onclick=async()=>{
  if(busy||!potTotal())return;
  busy=true;render();
@@ -348,7 +313,7 @@ $("brew").onclick=async()=>{
  busy=false;
  if(err||!d||d.ok===false){toast(String((d&&(d.text||d.error))||(err&&err.message)||"Не удалось сварить."));pot={};await load();return}
  S.ingr=d.ingr||S.ingr;S.pots=d.pots||S.pots;S.recipe=d.recipe||S.recipe;S.others=d.others||S.others;
- pot={};render();renderBook();
+ pot={};render();
  result(d);
 };
 function result(d){
@@ -369,11 +334,11 @@ function result(d){
 async function load(){
  try{
   const d=await api({action:"lab_state"});
-  if(d.ok===false){toast(String(d.text||d.error||"Ошибка"));render();renderBook();return}
+  if(d.ok===false){toast(String(d.text||d.error||"Ошибка"));render();return}
   S.ingr=d.ingr||{};S.pots=d.pots||{};S.recipe=d.recipe||null;S.others=d.others||[];
   Object.keys(pot).forEach(k=>{if((pot[k]|0)>(S.ingr[k]|0)){if(S.ingr[k])pot[k]=S.ingr[k];else delete pot[k]}});
  }catch(e){if(e&&e.message!=="need_start")toast(e.message||"Не удалось загрузить")}
- render();renderBook();
+ render();
 }
 buildFx();
 render();

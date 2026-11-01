@@ -131,7 +131,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .tvA{position:absolute;left:15%;right:15%;top:14%;bottom:16%;border-radius:6px;background:center/cover no-repeat}
 .tvA:after{content:"";position:absolute;inset:0;background:linear-gradient(#0000 45%,#050306e6);border-radius:6px}
 .tvN{position:absolute;left:17%;right:17%;bottom:17.5%;z-index:1;font:700 11px/1.15 Philosopher,Georgia,serif;letter-spacing:.04em;text-align:center;text-shadow:0 1px 6px #000}
-.tvT.lock .tvA{filter:grayscale(.8) brightness(.5)}
+.tvT.lock .tvA{filter:grayscale(1) brightness(.6);opacity:.3}.tvT.lock .tvN{color:#a79bb4;z-index:2}
 .tvDots{display:flex;justify-content:center;gap:5px;margin:2px 0 6px}
 .tvDots i{width:6px;height:6px;border-radius:50%;background:#3a2f44;transition:.25s}.tvDots i.on{background:#a98fd0;box-shadow:0 0 8px #a98fd0;width:16px;border-radius:4px}
 .tvDet{border:solid transparent;border-width:36px 44px;border-image:url(./shared/art/travel/detail.webp) 90 110 90 110 fill/36px 44px stretch;margin:0 -8px 12px;padding:0;animation:cin .4s ease-out backwards}
@@ -808,7 +808,7 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js?v=t2"></script>
 <script src="./shared/alchemy.js"></script>
-<script src="./shared/tutorial.js?v=t4"></script>
+<script src="./shared/tutorial.js?v=t5"></script>
 <script src="./shared/fog.js" defer></script>
 <script>sndMusic("tingen")</script>
 </head>
@@ -1511,21 +1511,22 @@ function bossApply(d) {
 /* ===== Поход: список локаций (новые добавлять сюда) ===== */
 const TV_LOCS=[
  {id:"lake",reg:"Топи",name:"Озёра · Топи",art:"./lake/img/boss_s.webp?v=1",desc:"Жабы, пиявки, щуки, кикиморы и Змей, что просыпается в глубине.",lv:"1–6",sk:1,boss:"Змей, Водяной",go:"openLake"},
- {id:"forest",reg:"Лес",name:"Лес · Чаща",art:"./forest/img/boss_s.webp?v=1",desc:"Споры, паутина и шёпот. Где-то здесь бродит Кицунэ.",lv:"5–10",sk:2,boss:"Кицунэ",go:"openForest"},
- {id:"cemetery",reg:"Кладбище",name:"Кладбище Тингена",art:"./cemetery/img/boss_s.webp?v=1",desc:"Туман, склепы и неупокоенные. Здесь ночует Некромант.",lv:"10–15",sk:3,boss:"Некромант",go:"openCemetery"},
- {id:"ruins",reg:"Руины",name:"Руины Фаркарда",art:"./ruins/img/boss_s.webp?v=1",desc:"Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.",lv:"15–20",sk:4,boss:"Верховный жрец",go:"openRuins"}
+ {id:"forest",min:5,reg:"Лес",name:"Лес · Чаща",art:"./forest/img/boss_s.webp?v=1",desc:"Споры, паутина и шёпот. Где-то здесь бродит Кицунэ.",lv:"5–10",sk:2,boss:"Кицунэ",go:"openForest"},
+ {id:"cemetery",min:10,reg:"Кладбище",name:"Кладбище Тингена",art:"./cemetery/img/boss_s.webp?v=1",desc:"Туман, склепы и неупокоенные. Здесь ночует Некромант.",lv:"10–15",sk:3,boss:"Некромант",go:"openCemetery"},
+ {id:"ruins",min:15,reg:"Руины",name:"Руины Фаркарда",art:"./ruins/img/boss_s.webp?v=1",desc:"Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.",lv:"15–20",sk:4,boss:"Верховный жрец",go:"openRuins"}
 ];
 let tvSel=0,tvReg="";
+function tvLv(){return parseInt((byId('lvl')||{}).textContent)||1}
 function tvList(){return TV_LOCS.filter(l=>!tvReg||l.reg===tvReg)}
 function tvRender(){
  const L=tvList(),rail=byId("tvRail");if(!rail)return;
  if(tvSel>=L.length)tvSel=0;
  const regs=[...new Set(TV_LOCS.map(l=>l.reg))],ch=byId("tvChips");
  ch.innerHTML=TV_LOCS.length>6?['Все'].concat(regs).map(r=>'<button type="button" class="'+((r==="Все"?"":r)===tvReg?"on":"")+'" data-r="'+(r==="Все"?"":r)+'">'+r+'</button>').join(""):"";
- rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+(l.soon?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
+ rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+((l.soon||(l.min||0)>tvLv())?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
  byId("tvDots").innerHTML=L.length>1?L.map((_,i)=>'<i class="'+(i===tvSel?"on":"")+'"></i>').join(""):"";
  const l=L[tvSel];if(!l)return;
- byId("tvDet").innerHTML='<div class="row"><div class="art" style="background-image:url('+l.art+')"></div><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+(l.soon?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":"Отправиться")+'</button>';
+ byId("tvDet").innerHTML='<div class="row"><div class="art" style="background-image:url('+l.art+')"></div><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+((l.soon||(l.min||0)>tvLv())?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":((l.min||0)>tvLv()?"🔒 С "+l.min+" уровня":"Отправиться"))+'</button>';
 }
 function tvPick(i,noScroll){
  tvSel=i;try{snd("tap")}catch(_){}
@@ -1538,6 +1539,7 @@ function tvPick(i,noScroll){
  byId("tvChips").addEventListener("click",e=>{const b=e.target.closest("button");if(b){tvReg=b.dataset.r;tvSel=0;tvRender()}});
  byId("tvDet").addEventListener("click",e=>{const b=e.target.closest(".tvGo");if(b&&!b.disabled){const f=window[b.dataset.go];if(f)f()}});
  tvRender();
+ try{new MutationObserver(function(){tvRender()}).observe(byId('lvl'),{childList:true,characterData:true,subtree:true})}catch(_){}
 })();
 async function bossLoad() {
   try {
