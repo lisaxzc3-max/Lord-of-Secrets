@@ -109,12 +109,13 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 /* ===== Поход: карта локаций ===== */
 .tvBoss{position:relative;aspect-ratio:800/261;margin:0 -4px 4px;background:url(./shared/art/travel/boss.webp) center/100% 100% no-repeat;cursor:pointer}
 .tvBoss.live{animation:bossLive 2.4s ease-in-out infinite}
-.tvBI{position:absolute;left:13%;right:12%;top:30%;bottom:24%;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.tvBoss .bossT{font-size:17px;line-height:1.05}
-.tvBoss .bossT small{font-size:8px;letter-spacing:.8px;line-height:1.2}
+.tvBoss{-webkit-text-size-adjust:none;text-size-adjust:none}
+.tvBI{position:absolute;left:14%;right:13%;top:31%;bottom:25%;display:flex;align-items:center;justify-content:space-between;gap:6px;overflow:hidden}
+.tvBoss .bossT{font-size:14px;line-height:1.1;white-space:nowrap;min-width:0}
+.tvBoss .bossT small{font-size:7px;letter-spacing:.4px;line-height:1.25;white-space:nowrap;margin-top:1px}
 .tvBR{flex:none}
 .tvBoss .bossBtns{flex-direction:column;gap:0}
-.tvBoss .bBtn{padding:6px 9px;font-size:10.5px;white-space:nowrap}
+.tvBoss .bBtn{padding:5px 8px;font-size:9.5px;line-height:1.15;white-space:nowrap;border-radius:8px}
 .tvBC{text-align:center;margin:0 0 10px}
 .tvBC b{display:block;font:700 10px Philosopher,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:#e0b8bc}
 .tvBC .bossS{display:block;font-size:11px;min-height:0}
