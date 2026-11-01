@@ -105,6 +105,40 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .loc .locBody small{color:#e8e2d6;opacity:.85;text-shadow:0 1px 4px #000}
 .loc .locBody b{text-shadow:0 1px 6px #000}
 #travel .loc.bossLoc{background-size:cover;background-position:center 20%;background-image:linear-gradient(90deg,#061520e0 0%,#06152099 40%,#0615201a 100%),url(./boss/img/kalvetua1.jpg)}
+
+/* ===== Поход: карта локаций ===== */
+.tvBoss{position:relative;display:flex;gap:6px;align-items:center;min-height:132px;padding:34px 42px 26px;margin:0 -4px 10px;background:url(./shared/art/travel/boss.webp) center/100% 100% no-repeat;cursor:pointer}
+.tvBoss.live{animation:bossLive 2.4s ease-in-out infinite}
+.tvBL{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tvBK{font:700 9px Philosopher,Georgia,serif;letter-spacing:.08em;white-space:nowrap;text-transform:uppercase;color:#e0b8bc}
+.tvBR{flex:none}
+.tvBoss .bossBtns{flex-direction:column}
+.tvBoss .bBtn{padding:7px 10px;font-size:11px;white-space:nowrap}
+.tvChips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 8px}.tvChips::-webkit-scrollbar{display:none}
+.tvChips:empty{display:none}
+.tvChips button{flex:none;padding:7px 13px;border-radius:999px;border:1px solid #3a2f44;background:#120c16;color:#a79bb4;font:600 12px inherit;font-family:inherit}
+.tvChips button.on{border-color:#a98fd0;color:#eadfc4;background:linear-gradient(#2a1430,#120c16);box-shadow:0 0 12px #a98fd055}
+.tvRail{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x proximity;padding:6px 2px 4px;margin:0 -6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tvRail::-webkit-scrollbar{display:none}
+.tvT{position:relative;flex:0 0 116px;height:170px;scroll-snap-align:center;border:0;padding:0;background:url(./shared/art/travel/tile.webp) center/100% 100% no-repeat;color:#e8dcc0;transition:transform .25s,filter .25s;filter:brightness(.72) saturate(.85);cursor:pointer}
+.tvT.lock{background-image:url(./shared/art/travel/tile_lock.webp)}
+.tvT.on{transform:translateY(-4px) scale(1.04);filter:none;z-index:1}
+.tvT.on:before{content:"";position:absolute;inset:6% 8%;border-radius:12px;box-shadow:0 0 22px #a98fd0aa;pointer-events:none}
+.tvA{position:absolute;left:15%;right:15%;top:14%;bottom:16%;border-radius:6px;background:center/cover no-repeat}
+.tvA:after{content:"";position:absolute;inset:0;background:linear-gradient(#0000 45%,#050306e6);border-radius:6px}
+.tvN{position:absolute;left:17%;right:17%;bottom:17.5%;z-index:1;font:700 11px/1.15 Philosopher,Georgia,serif;letter-spacing:.04em;text-align:center;text-shadow:0 1px 6px #000}
+.tvT.lock .tvA{filter:grayscale(.8) brightness(.5)}
+.tvDots{display:flex;justify-content:center;gap:5px;margin:2px 0 6px}
+.tvDots i{width:6px;height:6px;border-radius:50%;background:#3a2f44;transition:.25s}.tvDots i.on{background:#a98fd0;box-shadow:0 0 8px #a98fd0;width:16px;border-radius:4px}
+.tvDet{border:solid transparent;border-width:36px 44px;border-image:url(./shared/art/travel/detail.webp) 90 110 90 110 fill/36px 44px stretch;margin:0 -8px 12px;padding:0;animation:cin .4s ease-out backwards}
+.tvDet .art{position:relative;height:120px;margin:-10px -6px 0;border-radius:10px;background:center/cover no-repeat;box-shadow:inset 0 0 30px #000a}
+.tvDet .art:after{content:"";position:absolute;inset:0;border-radius:10px;background:linear-gradient(#0000 50%,#0b060ee8)}
+.tvDet h4{margin:10px 0 3px;font:400 21px Philosopher,Georgia,serif;letter-spacing:.05em;color:#eadfc4;text-shadow:0 0 14px #a3262e}
+.tvDet p{margin:0 0 8px;font-size:12px;line-height:1.4;color:#c9bfd8}
+.tvDet .tags{margin:0 0 4px}
+.tvGo{display:block;width:calc(100% + 24px);margin:6px -12px -14px;height:60px;border:0;background:url(./shared/art/travel/btn.webp) center/100% 100% no-repeat;color:#fff0dc;font:700 15px Philosopher,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 1px 6px #000;cursor:pointer}
+.tvGo:active{transform:scale(.97)}
+.tvGo:disabled{filter:grayscale(1) brightness(.6)}
 /* город */
 .district{margin:8px 0;border:1px solid #2f2745;border-radius:14px;overflow:hidden;background:rgba(22,17,34,.6)}
 .districtHead{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;padding:12px 13px;cursor:pointer;background:linear-gradient(145deg,#2e2542,#221a33);font-size:13px;font-weight:700;color:#e0d4b8;transition:background .3s}
@@ -879,36 +913,16 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 </div>
 
 <div id="travel" class="card hidden">
-  <h3>🧭 Куда отправимся?</h3>
-  <div class="loc bossLoc" id="bossCard" role="button" tabindex="0" onclick="openBoss()">
-    <span class="locArt"><img src="./boss/img/kalvetua1_s.jpg?v=1" alt="" loading="lazy"></span>
-    <span class="locBody"><b>🌊 Кальветуа (Морской бог)</b>
-    <small>Еженедельный бой с богом глубин. Здоровье бесконечно, смерч удваивает урон каждый ход. Бейся за место в рейтинге игроков и кланов.</small>
+  <div class="tvBoss" id="bossCard" role="button" tabindex="0" onclick="openBoss()">
+    <span class="tvBL"><span class="tvBK">Босс недели · Кальветуа</span>
     <span class="bossT" id="bossT">…<small>загрузка</small></span>
-    <span class="bossS" id="bossS"></span>
-    <span class="bossBtns" id="bossBtns"></span>
-    <span class="tags"><i class="boss">Босс недели</i><i>3 попытки</i><i>Сб 20:00 МСК</i></span></span>
+    <span class="bossS" id="bossS"></span></span>
+    <span class="tvBR"><span class="bossBtns" id="bossBtns"></span></span>
   </div>
-  <button type="button" class="loc lake" onclick="openLake()">
-    <span class="locArt"><img src="./lake/img/boss_s.webp?v=1" alt="" loading="lazy"></span>
-    <span class="locBody"><b>Озёра · Топи</b><small>Жабы, пиявки, щуки, кикиморы и Змей, что просыпается в глубине.</small>
-    <span class="tags"><i>Ур. 1–6</i><i>💀</i><i class="boss">Босс: Змей, Водяной</i></span></span>
-  </button>
-  <button type="button" class="loc forest" onclick="openForest()">
-    <span class="locArt"><img src="./forest/img/boss_s.webp?v=1" alt="" loading="lazy"></span>
-    <span class="locBody"><b>Лес · Чаща</b><small>Споры, паутина и шёпот. Где-то здесь бродит Кицунэ.</small>
-    <span class="tags"><i>Ур. 5–10</i><i>💀💀</i><i class="boss">Босс: Кицунэ</i></span></span>
-  </button>
-  <button type="button" class="loc cemetery" onclick="openCemetery()">
-    <span class="locArt"><img src="./cemetery/img/boss_s.webp?v=1" alt="" loading="lazy"></span>
-    <span class="locBody"><b>Кладбище Тингена</b><small>Туман, склепы и неупокоенные. Здесь ночует Некромант.</small>
-    <span class="tags"><i>Ур. 10–15</i><i>💀💀💀</i><i class="boss">Босс: Некромант</i></span></span>
-  </button>
-  <button type="button" class="loc ruins" onclick="openRuins()">
-    <span class="locArt"><img src="./ruins/img/boss_s.webp?v=1" alt="" loading="lazy"></span>
-    <span class="locBody"><b>Руины Фаркарда</b><small>Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.</small>
-    <span class="tags"><i>Ур. 15–20</i><i>💀💀💀💀</i><i class="boss">Босс: Верховный жрец</i></span></span>
-  </button>
+  <div class="tvChips" id="tvChips"></div>
+  <div class="tvRail" id="tvRail"></div>
+  <div class="tvDots" id="tvDots"></div>
+  <div class="tvDet" id="tvDet"></div>
   <div class="vitals">
     <div>❤️ <span id="hp2">—</span> · 🌀 <span id="madTxt">—</span>%</div>
     <div class="bar hp"><i id="hpbar2" style="width:0%"></i></div>
@@ -1492,6 +1506,38 @@ function bossApply(d) {
   BOSS.s = d; BOSS.off = (d.now || bossNow()) - Math.floor(Date.now() / 1000); BOSS.last = Date.now();
   return true;
 }
+
+/* ===== Поход: список локаций (новые добавлять сюда) ===== */
+const TV_LOCS=[
+ {id:"lake",reg:"Топи",name:"Озёра · Топи",art:"./lake/img/boss_s.webp?v=1",desc:"Жабы, пиявки, щуки, кикиморы и Змей, что просыпается в глубине.",lv:"1–6",sk:1,boss:"Змей, Водяной",go:"openLake"},
+ {id:"forest",reg:"Лес",name:"Лес · Чаща",art:"./forest/img/boss_s.webp?v=1",desc:"Споры, паутина и шёпот. Где-то здесь бродит Кицунэ.",lv:"5–10",sk:2,boss:"Кицунэ",go:"openForest"},
+ {id:"cemetery",reg:"Кладбище",name:"Кладбище Тингена",art:"./cemetery/img/boss_s.webp?v=1",desc:"Туман, склепы и неупокоенные. Здесь ночует Некромант.",lv:"10–15",sk:3,boss:"Некромант",go:"openCemetery"},
+ {id:"ruins",reg:"Руины",name:"Руины Фаркарда",art:"./ruins/img/boss_s.webp?v=1",desc:"Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.",lv:"15–20",sk:4,boss:"Верховный жрец",go:"openRuins"}
+];
+let tvSel=0,tvReg="";
+function tvList(){return TV_LOCS.filter(l=>!tvReg||l.reg===tvReg)}
+function tvRender(){
+ const L=tvList(),rail=byId("tvRail");if(!rail)return;
+ if(tvSel>=L.length)tvSel=0;
+ const regs=[...new Set(TV_LOCS.map(l=>l.reg))],ch=byId("tvChips");
+ ch.innerHTML=TV_LOCS.length>6?['Все'].concat(regs).map(r=>'<button type="button" class="'+((r==="Все"?"":r)===tvReg?"on":"")+'" data-r="'+(r==="Все"?"":r)+'">'+r+'</button>').join(""):"";
+ rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+(l.soon?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
+ byId("tvDots").innerHTML=L.length>1?L.map((_,i)=>'<i class="'+(i===tvSel?"on":"")+'"></i>').join(""):"";
+ const l=L[tvSel];if(!l)return;
+ byId("tvDet").innerHTML='<div class="art" style="background-image:url('+l.art+')"></div><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div><button type="button" class="tvGo" '+(l.soon?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":"Отправиться")+'</button>';
+}
+function tvPick(i,noScroll){
+ tvSel=i;try{snd("tap")}catch(_){}
+ tvRender();
+ if(!noScroll){const t=byId("tvRail").children[i];if(t)t.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})}
+}
+(function(){
+ const rail=byId("tvRail");if(!rail)return;
+ rail.addEventListener("click",e=>{const b=e.target.closest(".tvT");if(b)tvPick(+b.dataset.i)});
+ byId("tvChips").addEventListener("click",e=>{const b=e.target.closest("button");if(b){tvReg=b.dataset.r;tvSel=0;tvRender()}});
+ byId("tvDet").addEventListener("click",e=>{const b=e.target.closest(".tvGo");if(b&&!b.disabled){const f=window[b.dataset.go];if(f)f()}});
+ tvRender();
+})();
 async function bossLoad() {
   try {
     const d = await bossApi({ action: "boss_state" });
