@@ -294,8 +294,11 @@ async function load(){
  document.body.classList.remove("defeatFx");
  setBusy(true,"Загрузка…");hideError();setTurn("Загрузка","wait");
  try{
+  let pre=null;try{const raw=sessionStorage.getItem("lotm_bs_pre");if(raw){sessionStorage.removeItem("lotm_bs_pre");const o=JSON.parse(raw);if(o&&Date.now()-o.t<20000&&o.d&&o.d.enemy)pre=o.d}}catch(_){}
   const stP=api({action:"battle_state"}).catch(e=>({__err:e}));
-  const profile=await loadProfile();
+  let profile=null;
+  if(pre&&!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile",6*3600*1000)}catch(_){}}
+  if(!profile)profile=await loadProfile();
   PLAYER_PATH=profile.path||"";window.LOTM_STATS=profile;
   const pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path)||"seer";
   B.revive();B.setHero(pk,profile.gender);
@@ -303,7 +306,8 @@ async function load(){
   $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
   setHealth("player",profile.hp,profile.max_hp);
   let state=null;
-  try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
+  if(pre){state=pre;stP.then(function(s){try{if(!s||s.__err)return;if(s.cds)renderSkills(s.cds);if(s.hp!=null&&s.max_hp!=null)setHealth("player",s.hp,s.max_hp);if(s.enemy_hp!=null&&s.enemy_max!=null)setHealth("enemy",s.enemy_hp,s.enemy_max)}catch(_){}})}
+  else try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
   catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"","⚠️")}
   curBoss=!!state?.boss;curPhase=Number(state?.phase)||1;
   const enemy=getEnemyName(state?.enemy);

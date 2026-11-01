@@ -154,7 +154,8 @@ btn.addEventListener("click", async function () {
       if (data.enemy) params.set("enemy", data.enemy);
       params.delete("event_data");
       document.body.classList.add("going");
-      setTimeout(function () { location.href = "./battle/index.html?" + params.toString(); }, 600);
+      try{sessionStorage.setItem("lotm_bs_pre",JSON.stringify({t:Date.now(),d:data}))}catch(_){}
+      setTimeout(function () { location.href = "./battle/index.html?" + params.toString(); }, 200);
       return;
     }
 

@@ -184,7 +184,7 @@ btn.addEventListener("click",async function(){
     if(data.type==="battle"){
       if(data.enemy)params.set("enemy",data.enemy);
       params.delete("event_data");
-      setTimeout(()=>{location.href="./battle/index.html?"+params.toString()},650);
+      try{sessionStorage.setItem("lotm_bs_pre",JSON.stringify({t:Date.now(),d:data}))}catch(_){}setTimeout(()=>{location.href="./battle/index.html?"+params.toString()},200);
       return;
     }
     document.body.classList.remove("going");
