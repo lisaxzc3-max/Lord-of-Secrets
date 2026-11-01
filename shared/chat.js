@@ -336,8 +336,8 @@ function ring(kind){
  if(reduce||!C.shake)return;fab.classList.remove("ring");void fab.offsetWidth;fab.classList.add("ring");
 }
 function pollDelay(){
- if(S.open)return S.idle>6?9000:5000;
- return S.idle>8?90000:(S.idle>3?60000:30000);
+ var b=S.open?(S.idle>6?12000:6000):(S.idle>8?150000:(S.idle>3?90000:45000));
+ return Math.round(b*(0.85+Math.random()*0.3));
 }
 function startPoll(){
  clearTimeout(S.poll);S.tk=(S.tk||0);
