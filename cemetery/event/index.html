@@ -260,6 +260,7 @@ function showResult(r){
  const chip=(txt,cls,i)=>{const c=document.createElement("span");c.className="rchip "+cls;c.textContent=txt;c.style.animationDelay=(i*.12)+"s";g.appendChild(c)};
  let i=0;
  if(r.d_hp)chip((r.d_hp>0?"+":"")+r.d_hp+" ❤️",r.d_hp>0?"up":"down",i++);
+ try{window.LOTM_DROPS&&LOTM_DROPS.addFromResult(g,r)}catch(e){}
  if(r.d_pounds)chip((r.d_pounds>0?"+":"")+r.d_pounds+" £",r.d_pounds>0?"up":"down",i++);
  if(r.d_mad)chip((r.d_mad>0?"+":"")+r.d_mad+" 🌀",r.d_mad>0?"mad":"up",i++);
  if(typeof r.tracks==="number"&&r.tracks>0&&/c_hawk_ask/.test(r.event||""))chip("🐾 "+r.tracks+"/3",r.tracks>=3?"up":"mad",i++);
@@ -288,6 +289,7 @@ $("again").addEventListener("click",async()=>{
   const b=document.createElement("button");b.className="btn primary";b.textContent="← На кладбище";b.onclick=goCem;$("actions").appendChild(b)}
 })();
 </script>
+<script src="../../shared/drops.js?v=1"></script>
 <script src="../../shared/icons.js?v=i1"></script>
 </body>
 </html>

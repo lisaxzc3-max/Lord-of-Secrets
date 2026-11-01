@@ -18,7 +18,7 @@ app.innerHTML='<div class="wrap">'+
 '<div class="msg" id="battleMessage"><div class="mi" id="messageIcon">📜</div><div id="battleText" aria-live="polite">'+CFG.intro+'</div></div>'+
 '</section><div id="eiAnchor"></div>'+
 '<section class="dock" id="skillCard"><div class="dockHead"><span id="skillPathLabel">Способности пути</span><span>Удерживай — описание</span></div><div class="skillGrid" id="battleSkills"></div></section>'+
-'<section class="card resultCard victoryCard hidden" id="victoryCard"><div class="resultSymbol">✦</div><div class="resultTitle">ПОБЕДА</div><div class="resultText">'+CFG.win+'</div><div class="rewardGrid"><div class="reward"><div class="rewardValue">+<span id="vTenge">—</span></div><div class="rewardLabel">£ Фунты</div></div><div class="reward"><div class="rewardValue">+<span id="vExp">—</span></div><div class="rewardLabel">✨ Опыт</div></div><div class="reward ingDrop hidden" id="vIngBox"><div class="rewardValue" id="vIng">—</div><div class="rewardLabel">🧪 Ингредиенты</div></div></div><div class="resultActions"><button class="actionBtn primary" id="exploreAgainBtn" type="button">⌕ Исследовать снова</button><button class="actionBtn" id="victoryCloseBtn" type="button">Закрыть</button></div></section>'+
+'<section class="card resultCard victoryCard hidden" id="victoryCard"><div class="resultSymbol">✦</div><div class="resultTitle">ПОБЕДА</div><div class="resultText">'+CFG.win+'</div><div class="rewardGrid"><div class="reward"><div class="rewardValue">+<span id="vTenge">—</span></div><div class="rewardLabel">£ Фунты</div></div><div class="reward"><div class="rewardValue">+<span id="vExp">—</span></div><div class="rewardLabel">✨ Опыт</div></div><div class="reward ingDrop hidden" id="vIngBox"><div class="rewardValue" id="vIng">—</div><div class="rewardLabel">🧪 Ингредиенты</div></div><div class="reward ingDrop hidden" id="vGearBox"><div class="rewardValue" id="vGear">—</div><div class="rewardLabel">🎒 Снаряжение</div></div></div><div class="resultActions"><button class="actionBtn primary" id="exploreAgainBtn" type="button">⌕ Исследовать снова</button><button class="actionBtn" id="victoryCloseBtn" type="button">Закрыть</button></div></section>'+
 '<section class="card resultCard defeatCard hidden" id="defeatCard"><div class="resultSymbol">☠</div><div class="resultTitle">ПОРАЖЕНИЕ</div><div class="resultText" id="defeatText">Силы иссякли. Дождись воскрешения.</div><div class="resultActions"><button class="actionBtn primary" id="defeatCloseBtn" type="button">'+CFG.backDefeat+'</button><button class="actionBtn" id="defeatRetryBtn" type="button">Обновить данные</button></div></section>'+
 '<section class="card errorBox hidden" id="errorBox" role="alert"><div id="errorText"></div><button class="actionBtn" id="retryBtn" type="button" style="margin-top:10px">Повторить загрузку</button></section>'+
 '<section class="card logCard"><div class="logHead"><div class="logTitle">Хроника сражения</div><div class="logCount" id="logCount">0 записей</div></div><details class="logDisclosure" id="logDisclosure"><summary><span>📜 Показать события боя</span><span class="logSummarySub" id="logSummarySub">Хроника свёрнута</span></summary><div id="battleLog"><div class="logEntry info">'+CFG.intro+'</div></div></details></section>'+
@@ -215,7 +215,13 @@ function showVictory(data){
  ended=true;setStatus("Победа");setTurn("Победа","");
  $("vTenge").textContent=data.tenge==null?"—":Number(data.tenge);
  $("vExp").textContent=data.exp_add==null?"—":Number(data.exp_add);
- try{const m=String(data.text||"").match(/🧪\s*(.+)$/m),b=$("vIngBox");if(m){$("vIng").textContent=m[1].replace(/^Найдено:\s*/,"");b.classList.remove("hidden");setTimeout(()=>snd("dew"),700)}else b.classList.add("hidden")}catch(e){}
+ try{
+  const D=window.LOTM_DROPS,ings=D?D.ingFromText(data.text):[],b=$("vIngBox"),gear=D?D.names(data.drop):(data.drop?[String(data.drop)]:[]),gb=$("vGearBox");
+  if(ings.length){$("vIng").innerHTML=D.rows("ing",ings);b.classList.remove("hidden");setTimeout(()=>snd("dew"),700)}
+  else if(!D){const m=String(data.text||"").match(/🧪\s*(.+)$/m);if(m){$("vIng").textContent=m[1].replace(/^Найдено:\s*/,"");b.classList.remove("hidden")}else b.classList.add("hidden")}
+  else b.classList.add("hidden");
+  if(gear.length&&D){$("vGear").innerHTML=D.rows("gear",gear);gb.classList.remove("hidden");setTimeout(()=>snd("chest"),900)}else gb.classList.add("hidden");
+ }catch(e){}
  $("victoryCard").classList.remove("hidden");$("defeatCard").classList.add("hidden");
  $("skillCard").classList.add("hidden");hideError();
  setMessage("Сражение завершено. Награда обработана игровой системой.","","✦");
