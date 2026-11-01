@@ -325,7 +325,8 @@ const ACHS=[
 function fresh(){const n=Date.now();return{v:1,gold:60,xp:0,lvl:1,plots:[null,null,null],dew:DEW_MAX,dewAt:n,inv:{},pets:{raven:0,spider:0},stor:{raven:{n:0,t:n},spider:{n:0,t:n}},album:{},ach:{},daily:0,orders:[],log:[],harv:0,sacred:0,ords:0,brewed:0,ev:{id:"clear",until:n+120000},sel:"chamomile"}}
 let S;
 function load(){try{const r=localStorage.getItem(SAVE);if(r){const o=JSON.parse(r);if(o&&o.v===1)return Object.assign(fresh(),o)}}catch(_){}return fresh()}
-function save(){try{localStorage.setItem(SAVE,JSON.stringify(S))}catch(_){}}
+let CW=null,dirty=false,bootDone=false;
+function save(){try{S.sv=Date.now();if(CW)S.wg=CW;localStorage.setItem(SAVE,JSON.stringify(S));dirty=true}catch(_){}}
 S=load();
 const evOf=()=>EVENTS.find(e=>e.id===S.ev.id)||EVENTS[0];
 function addLog(t){S.log.unshift(new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"})+" · "+t);S.log=S.log.slice(0,40)}
@@ -720,7 +721,43 @@ function init(){
  setInterval(tick,1000);setInterval(save,10000);setInterval(ravenFly,36000);
  addEventListener("pagehide",save);document.addEventListener("visibilitychange",()=>{if(document.hidden)save()});
 }
-init();
+/* ---------- облачное сохранение (в профиле игрока на сервере бота) ---------- */
+function farmApi(p){
+ if(!_aEnc)return Promise.resolve(null);
+ return fetch("https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(_aEnc),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store",keepalive:true})
+  .then(r=>r.json()).then(d=>{for(let i=0;i<3;i++){if(d&&d.result&&typeof d.result==="object")d=d.result;else break}return d}).catch(()=>null);
+}
+function decide(d){
+ CW=d.wg;let srv=null;try{if(d.farm)srv=JSON.parse(d.farm)}catch(_){}
+ const locOk=(S.wg===CW)||(S.wg===undefined&&/\.0$/.test(CW));
+ let ns=S;
+ if(srv&&srv.v===1&&srv.wg===CW){if(!locOk||(srv.sv||0)>(S.sv||0))ns=Object.assign(fresh(),srv)}
+ else if(!locOk)ns=fresh();
+ ns.wg=CW;return ns;
+}
+function cloudInit(){
+ return farmApi({action:"farm_get"}).then(d=>{
+  if(!d||!d.ok||typeof d.wg!=="string")return;
+  const ns=decide(d);const changed=(ns!==S);S=ns;dirty=true;
+  if(bootDone&&changed){try{localStorage.setItem(SAVE,JSON.stringify(S))}catch(_){}buildPlots();buildScene();renderAll()}
+ });
+}
+function cloudPush(){
+ if(!CW||!dirty||!_aEnc)return;dirty=false;
+ farmApi({action:"farm_put",farm:JSON.stringify(S),wg:CW}).then(d=>{
+  if(d&&d.ok===false&&d.error==="wipe"){S=fresh();CW=d.wg;S.wg=CW;try{localStorage.setItem(SAVE,JSON.stringify(S))}catch(_){}location.reload()}
+  else if(!d)dirty=true;
+ });
+}
+setInterval(cloudPush,8000);
+addEventListener("pagehide",cloudPush);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)cloudPush()});
+async function boot(){
+ const t=cloudInit();
+ await Promise.race([t,new Promise(r=>setTimeout(r,2500))]);
+ init();bootDone=true;
+}
+boot();
 </script>
 <script src="../shared/icons.js?v=i1"></script>
 </body>
