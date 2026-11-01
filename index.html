@@ -320,6 +320,12 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .plc.art-bazaar{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_bazaar.jpg)}
 .plc.art-bureau{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_bureau.jpg)}
 .plc.art-clan{background-image:linear-gradient(0deg,#050308cc 0%,#05030870 34%,#05030800 100%),url(./shared/art/place_clan.jpg)}
+.plc.art-fortune{background-image:linear-gradient(0deg,#050308d9 0%,#05030880 38%,#05030810 100%),url(./shared/art/place_fortune.webp?v=1)}
+.plc.art-pier{background-image:linear-gradient(0deg,#050308d9 0%,#05030880 38%,#05030810 100%),url(./shared/art/place_pier.webp?v=1)}
+.plc.art-home{background-image:linear-gradient(0deg,#050308d9 0%,#05030880 38%,#05030810 100%),url(./shared/art/place_home.webp?v=1)}
+.plc.art-clinic{background-image:linear-gradient(0deg,#050308d9 0%,#05030880 38%,#05030810 100%),url(./shared/art/place_clinic.webp?v=1)}
+.plc.art-boulevard{background-image:linear-gradient(0deg,#050308d9 0%,#05030880 38%,#05030810 100%),url(./shared/art/place_boulevard.webp?v=1)}
+.plc.art-bank{background-image:linear-gradient(0deg,#050308d9 0%,#05030880 38%,#05030810 100%),url(./shared/art/place_bank.webp?v=1)}
 .plc.soon{opacity:.55!important;cursor:default;filter:saturate(.5)}
 .plc.soon .tg{color:#b3a8c8}
 .d0{--dc1:#2a2210;--dc2:#b8984e;--dg:#d6b77955}
@@ -2446,7 +2452,7 @@ function toggleDistrict(district, force) {
   try { window.snd && window.snd(open ? "open" : "back"); } catch (_) {}
 }
 
-const PLACE_ART = { top: 1, arena: 1, bazaar: 1, bureau: 1, clan: 1 };
+const PLACE_ART = { top: 1, arena: 1, bazaar: 1, bureau: 1, clan: 1, fortune: 1, home: 1, pier: 1, clinic: 1, boulevard: 1, bank: 1 };
 const PLACE_URL = { arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html", pier: "./pier/index.html", bank: "./bank/index.html", clinic: "./clinic/index.html", boulevard: "./boulevard/index.html" };
 try { LOTM_FAST.idle(() => Object.keys(PLACE_URL).forEach(k => LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[k])))); } catch (_) {}
 function openPlace(key) {
