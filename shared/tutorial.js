@@ -10,8 +10,11 @@ var st=null,ui=null,ring=null,busy=false,raf=0,target=null,started=false;
 var STEPS=[
  {t:"Твой герой",x:"Вот ты: имя, уровень, здоровье ❤️, фунты 💷 и опыт ⭐. Нажми на карточку — откроется профиль с характеристиками.",sel:"#topCard",btn:"Понятно ›"},
  {t:"Сумка",x:"Вещи и экипировка хранятся в Сумке 🎒. Нажми «Сумка» внизу — загляни внутрь.",sel:'.nav a[data-tab="bag"]'},
+ {t:"Подарок за первый этап",x:"Далия оставила тебе стартовую вещь и 30 💷. Забирай, пригодится в бою.",sel:"#bag .bgHead",btn:"🎁 Забрать подарок",gift:true,needBag:true},
+ {t:"Надень снаряжение",x:"Нажми на новую вещь в списке «Сумка», затем «Надеть». Вещи на тебе добавляют силу в бою.",sel:"#invList .ivRow",eq:true,needBag:true},
  {t:"Город",x:"В Городе 🌆 тебя ждут торговцы, бармен и Ратуша с Залом славы. Открой вкладку «Город».",sel:'.nav a[data-tab="city"]'},
- {t:"Первый бой",x:"Пора в бой! Открой «Поход», выбери локацию (Озёра или Лес) и победи первого врага. Нажми на врага в бою — увидишь его навыки. Здоровье со временем восстанавливается.",sel:'.nav a[data-tab="travel"]',sel2:"#ctaGo"},
+ {t:"Куда драться",x:"Открой «Поход» и выбери локацию: Озёра или Лес. Начни с Озёр, там враги слабее.",sel:'.nav a[data-tab="travel"]',sel2:"#ctaGo"},
+ {t:"В бой!",x:"Зайди в локацию, нажми «Исследовать» и победи врага. В бою я подскажу, что нажимать. После победы вернись сюда за наградой.",sel:'.nav a[data-tab="travel"]',sel2:"#ctaGo"},
  {t:"Победа!",x:"Первый враг повержен — Далия довольна. Забери награду за обучение.",sel:"#ctaGo",btn:"🎁 Забрать +50 💷",claim:true}
 ];
 
@@ -53,7 +56,7 @@ function build(){
  ui.querySelector("#tutGo").addEventListener("click",onGo);
 }
 function api(p){return window.tutApi(p)}
-function idx(){ if(!st||st.done)return -1; if(st.s>=3&&st.win)return 4; return Math.min(st.s,3) }
+function idx(){ if(!st||st.done)return -1; if(st.s>=5&&st.win)return 7; return Math.min(st.s,6) }
 function place(){
  cancelAnimationFrame(raf);
  if(!ring||!target||!st||st.done){if(ring)ring.classList.remove("on");return}
@@ -65,6 +68,12 @@ function place(){
  raf=requestAnimationFrame(place);
 }
 function findTarget(s){
+ if(s.needBag){
+  var bag=document.getElementById("bag");
+  if(bag&&bag.classList.contains("hidden"))return document.querySelector('.nav a[data-tab="bag"]');
+  if(s.eq){var sh=document.querySelector(".shBtns .btn.gold");if(sh&&sh.offsetParent!==null)return sh}
+  var t0=document.querySelector(s.sel);if(t0)return t0;return document.querySelector("#bag .bgHead")
+ }
  var t=document.querySelector(s.sel);
  if(s.sel2){var c=document.querySelector(s.sel2);var travel=document.getElementById("travel");
   if(travel&&!travel.classList.contains("hidden")){var l=document.querySelector("#travel .loc");if(l)return l}
@@ -82,13 +91,37 @@ function render(){
  ui.querySelector("#tutSk").style.display=s.claim?"none":"";
  if(!ui.classList.contains("on")){void ui.offsetWidth;ui.classList.add("on");sfx("scroll")}
  target=findTarget(s);place();
+ flag(i);eqPoll(i);
+}
+var UID=(function(){var q=new URLSearchParams(location.search),tg=window.Telegram&&Telegram.WebApp;return String(q.get("u")||(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id)||"0")})();
+function flag(i){try{if(i>=5&&i<7)localStorage.setItem("lotm_tutf_"+UID,"1");else localStorage.removeItem("lotm_tutf_"+UID)}catch(e){}}
+var eqT=0;
+function eqPoll(i){
+ if(i!==3){if(eqT){clearInterval(eqT);eqT=0}return}
+ if(eqT)return;
+ eqT=setInterval(function(){
+  var e=document.getElementById("eqCnt");
+  if(idx()!==3){clearInterval(eqT);eqT=0;return}
+  if(e&&/^[1-9]/.test((e.textContent||"").trim())){clearInterval(eqT);eqT=0;sfx("good");next()}
+  else{target=findTarget(STEPS[3])}
+ },700);
+}
+function gift(){
+ if(busy)return;busy=true;
+ api({action:"tut_gift"}).then(function(d){busy=false;
+  if(!d||!d.ok)return;
+  sfx("win");celebrate();st=d;
+  try{if(typeof loadProfileWithRetry==="function")loadProfileWithRetry(false)}catch(e){}
+  render();
+  var x=ui.querySelector("#tutX");if(x&&d.item)x.textContent="Получено: "+d.item+" и +30 💷. Нажми на неё в списке и надень.";
+ },function(){busy=false});
 }
 function hide(){if(ui)ui.classList.remove("on");if(ring)ring.classList.remove("on");target=null;cancelAnimationFrame(raf)}
 function apply(d){if(d&&d.ok){st=d;render()}}
 function check(){
  if(busy)return;busy=true;
  api({action:"tut_state"}).then(function(d){busy=false;if(!d||!d.ok)return;var prev=idx();st=d;if(st.done){hide();return}
-  render();if(idx()===4&&prev!==4)sfx("good")},function(){busy=false});
+  render();if(idx()===7&&prev!==7)sfx("good")},function(){busy=false});
 }
 function next(){
  if(busy)return;busy=true;
@@ -97,7 +130,8 @@ function next(){
 function onGo(){
  var i=idx();
  if(i===0){next();return}
- if(i===4)claim();
+ if(i===2){gift();return}
+ if(i===7)claim();
 }
 function claim(){
  if(busy)return;busy=true;
@@ -122,11 +156,13 @@ function skip(){
 function onTab(id){
  if(!st||st.done)return;var i=idx();
  if(i===1&&id==="bag")next();
- else if(i===2&&id==="city")next();
+ else if(i===4&&id==="city")next();
  else setTimeout(function(){if(st&&!st.done)render()},60);
 }
 /* клик по карточке героя — засчитывает шаг 1 */
-document.addEventListener("click",function(e){var i=idx();if(i===0&&e.target.closest&&e.target.closest("#topCard"))setTimeout(next,50)},true);
+document.addEventListener("click",function(e){var i=idx();if(i===0&&e.target.closest&&e.target.closest("#topCard"))setTimeout(next,50);
+ if(i===5&&e.target.closest&&e.target.closest("#travel .loc, #ctaGo")){try{localStorage.setItem("lotm_tutf_"+UID,"1")}catch(_){}next()}
+ if(i===2||i===3)setTimeout(function(){if(st&&!st.done)render()},120)},true);
 window.addEventListener("resize",function(){if(target)place()});
 
 window.LOTM_TUT={check:function(){if(!started){started=true;var o=window.showTab;if(typeof o==="function"){window.showTab=function(id){var r=o.apply(this,arguments);try{onTab(id)}catch(e){}return r}}}check()},state:function(){return st}};
