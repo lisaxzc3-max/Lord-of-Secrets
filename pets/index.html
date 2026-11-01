@@ -8,20 +8,22 @@
 <title>Вольер — Повелитель тайн</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--panel:rgba(22,17,34,.94);--line:#4a3d6a;--text:#eee6d6;--muted:#a99dba;--gold:#e2c27a;--pk:#ff8fb0}
+:root{--panel:rgba(18,13,28,.95);--line:#6b5636;--text:#eee6d6;--muted:#a99dba;--gold:#e2c27a;--pk:#ff8fb0}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{min-height:100%;background:#0b0814}
-body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:radial-gradient(ellipse at 50% -5%,#4a2f7a66,transparent 55%),linear-gradient(#0d0a18,#07050d)}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--text);font:14px/1.45 Inter,system-ui,Arial,sans-serif;overflow-x:hidden;background:url(../shared/art/pets/vine_l.webp?v=1) left top/44px auto repeat-y,url(../shared/art/pets/vine_r.webp?v=1) right top/44px auto repeat-y,radial-gradient(ellipse at 50% 30%,#2a1840aa,transparent 60%),linear-gradient(#0d0a16,#07050c)}
 button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.97)}
-.wrap{position:relative;max-width:480px;margin:auto;padding:10px 12px calc(40px + env(safe-area-inset-bottom))}
+.wrap{position:relative;max-width:480px;margin:auto;padding:0 0 calc(40px + env(safe-area-inset-bottom))}
+main{padding:0 16px}
 .head{display:flex;align-items:center;gap:10px;padding:6px 0 10px}
 .back{flex-shrink:0;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#17122399;font-size:12px}
 .eyebrow{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
 .head h1{font-size:19px;margin:3px 0 0;font-weight:800;background:linear-gradient(90deg,#fff3cf,#e2c27a,#ffb4cf,#e2c27a);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
 @keyframes shine{to{background-position:-250% 0}}
 .hidden{display:none!important}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:11px}
-.card h3{margin:0 0 4px;font-size:14px}
+.card{position:relative;background:linear-gradient(180deg,#191226f2,#0f0b19f2);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:11px;box-shadow:inset 0 0 0 1px #000a,inset 0 0 26px #2a184088,0 8px 22px #000b}
+.card:after{content:"";position:absolute;left:50%;top:-4px;width:9px;height:9px;margin-left:-4px;background:#c9a55a;transform:rotate(45deg);box-shadow:0 0 8px #e2c27a88;border:1px solid #1a1226}
+.card h3{margin:0 0 4px;font-size:15px;font-family:Philosopher,Georgia,serif;color:#f0dcaa;letter-spacing:.04em}
 .muted{color:var(--muted);font-size:12px}
 
 /* выбор питомца */
@@ -34,55 +36,46 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 .nameIn{width:100%;background:#16111f;border:1px solid #4a3f62;border-radius:12px;padding:12px;text-align:center;color:#efe8d8;font-size:16px;outline:none;margin:8px 0}
 .nameIn:focus{border-color:#e2c27a;box-shadow:0 0 12px #e2c27a44}
 .btn{border:1px solid #6a58a0;background:linear-gradient(145deg,#3a2866,#241645);border-radius:12px;padding:12px;font-weight:800;font-size:14px;width:100%}
-.btn.gold{border-color:#a98a4a;background:linear-gradient(145deg,#6a5020,#3a2a10);color:#fff0c4}
+.btn.gold{border-color:#c9a55a;background:linear-gradient(145deg,#6a5020,#3a2a10);color:#fff0c4;font-family:Philosopher,Georgia,serif;letter-spacing:.03em;box-shadow:inset 0 0 0 1px #000a,0 0 14px #e2c27a33}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 
-/* комната */
-.room{position:relative;height:290px;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px #0009;background:linear-gradient(#2a1d3e 0 64%,#3a2a24 64%)}
-.room .wall{position:absolute;inset:0 0 36% 0;background:repeating-linear-gradient(90deg,#ffffff06 0 2px,transparent 2px 26px),linear-gradient(#2a1d3e,#1c1430)}
-.room .floor{position:absolute;inset:64% 0 0 0;background:repeating-linear-gradient(90deg,#00000022 0 2px,transparent 2px 46px),linear-gradient(#4a3428,#2a1c16)}
-.win{position:absolute;right:20px;top:18px;width:84px;height:104px;border-radius:44px 44px 6px 6px;border:5px solid #5a4630;background:linear-gradient(#0e0a24,#1a1244);overflow:hidden;box-shadow:0 0 24px #b9a0ff33}
-.win:before,.win:after{content:"";position:absolute;background:#5a4630}.win:before{left:50%;top:0;bottom:0;width:3px;margin-left:-1px}.win:after{top:55%;left:0;right:0;height:3px}
-.win .moon{position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:#f4ecd0;box-shadow:0 0 18px #f4ecd0aa}
-.win .st{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:tw 2.4s ease-in-out infinite}
-@keyframes tw{50%{opacity:.2}}
-.lamp{position:absolute;left:16px;top:20px;font-size:26px;filter:drop-shadow(0 0 14px #ffc864);animation:lamp 3s ease-in-out infinite}
-@keyframes lamp{50%{filter:drop-shadow(0 0 24px #ffd88a)}}
-.glow{position:absolute;left:0;top:0;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#ffc86455,transparent 70%);pointer-events:none}
-.rug{position:absolute;left:50%;bottom:14px;width:230px;height:58px;margin-left:-115px;border-radius:50%;background:radial-gradient(ellipse,#6a2a4a,#3a1630 70%);border:2px solid #8a4a6a;box-shadow:0 0 0 6px #4a1e38}
-.bowl{position:absolute;left:18px;bottom:16px;width:62px;text-align:center;font-size:12px}
-.bowl .b{font-size:30px;filter:drop-shadow(0 4px 4px #000)}
-.bowl .fill{position:absolute;left:50%;top:2px;transform:translateX(-50%);font-size:15px;transition:.4s}
-.toy{position:absolute;right:20px;bottom:20px;font-size:34px;filter:drop-shadow(0 4px 4px #000);transform-origin:50% 100%}
+/* сцена вольера */
+.scene{position:relative;width:100%;aspect-ratio:1190/462;overflow:hidden;background:#0c0912}
+.scene .art{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;-webkit-user-drag:none}
+.scene .backLink{position:absolute;left:2.1%;top:6%;width:16.8%;height:15.8%;border-radius:10px;z-index:6}
+.scene .backLink:active{background:#ffffff18}
+.fl{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen;transform:translate(-50%,-50%);z-index:2}
+.fl.c{background:radial-gradient(circle,#ffb35acc 0,#ff9a3c55 38%,transparent 70%);animation:flick var(--d,2.6s) ease-in-out var(--l,0s) infinite}
+@keyframes flick{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.92)}20%{opacity:1}35%{opacity:.7;transform:translate(-50%,-50%) scale(1.04)}60%{opacity:.95;transform:translate(-50%,-50%) scale(.98)}80%{opacity:.6}}
+.fl.m{background:radial-gradient(circle,#ff4a4a40 0,#ff2a4a14 45%,transparent 70%);animation:moonP 5s ease-in-out infinite}
+@keyframes moonP{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+.mote{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffd98a;box-shadow:0 0 6px #ffb55a;pointer-events:none;opacity:0;z-index:3;animation:mote var(--t,9s) linear var(--l,0s) infinite}
+@keyframes mote{0%{opacity:0;transform:translate(0,0)}15%{opacity:.85}70%{opacity:.6}100%{opacity:0;transform:translate(var(--x,20px),-70px)}}
+.toy{position:absolute;left:69.4%;top:86.4%;width:4.4%;aspect-ratio:1;z-index:4;transform-origin:50% 100%;filter:drop-shadow(0 4px 3px #000a)}
+.toy img{width:100%;height:100%;display:block}
 .toy.bounce{animation:toyB .5s ease-in-out 6}
-@keyframes toyB{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-62px) rotate(180deg)}}
-.petBox{position:absolute;left:50%;bottom:26px;width:190px;height:190px;margin-left:-95px;transform-origin:50% 100%}
-.petBox svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 6px #0008)}
-.petBox .sh{position:absolute;left:50%;bottom:-6px;width:130px;height:18px;margin-left:-65px;border-radius:50%;background:#0006;filter:blur(3px)}
-.petBox.breathe svg{animation:breathe 3.2s ease-in-out infinite;transform-origin:50% 100%}
-@keyframes breathe{50%{transform:scaleY(1.025) scaleX(.99)}}
+@keyframes toyB{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-300%) rotate(180deg)}}
+.bowlFill{position:absolute;left:30.6%;top:94%;width:2.4%;aspect-ratio:1;transition:opacity .4s}
+.petSlot{position:absolute;inset:0;z-index:5;pointer-events:none}
+.petBox{position:absolute;left:51.4%;bottom:3.4%;height:var(--ph,60%);transform:translateX(-50%);transform-origin:50% 100%;pointer-events:auto;cursor:pointer;aspect-ratio:var(--ar,.6)}
+.petBox img{position:relative;height:100%;width:100%;display:block;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 6px 5px #000a);-webkit-user-drag:none;user-select:none}
+.petBox .sh{position:absolute;left:50%;bottom:-4%;width:92%;height:11%;margin-left:-46%;border-radius:50%;background:#000a;filter:blur(4px)}
+.petBox:before{content:"";position:absolute;left:50%;bottom:6%;width:150%;height:90%;margin-left:-75%;border-radius:50%;pointer-events:none;opacity:0}
+.petBox.aura-cat:before{opacity:1;background:radial-gradient(ellipse,#a46bff55,#7a3aff18 55%,transparent 72%);animation:auraP 3.4s ease-in-out infinite}
+.petBox.aura-dog:before{opacity:1;background:radial-gradient(ellipse,#ffc86a40,#ffb04a14 55%,transparent 72%);animation:auraP 3.8s ease-in-out infinite}
+@keyframes auraP{50%{opacity:.5;transform:scale(1.08)}}
+.petBox.breathe img{animation:breathe 3.4s ease-in-out infinite,look 11s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.028)}}
+@keyframes look{0%,40%,100%{rotate:0deg}46%,56%{rotate:-2.2deg}62%,76%{rotate:1.8deg}}
 .petBox.jump{animation:jumpP .5s ease-out 4}
-@keyframes jumpP{0%,100%{transform:translateY(0)}40%{transform:translateY(-46px)}}
-.petBox.eat svg{animation:eatP .35s ease-in-out 8}
-@keyframes eatP{50%{transform:translateY(5px) rotate(3deg)}}
-.petBox.happy svg{animation:happyP .6s ease-in-out 3}
+@keyframes jumpP{0%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-34%)}}
+.petBox.eat img{animation:eatP .35s ease-in-out 8}
+@keyframes eatP{50%{transform:translateY(5%) rotate(3deg)}}
+.petBox.happy img{animation:happyP .6s ease-in-out 3}
 @keyframes happyP{25%{transform:rotate(-4deg) scale(1.04)}75%{transform:rotate(4deg) scale(1.04)}}
 .petBox.grow{animation:growP 1.6s ease-out}
-@keyframes growP{0%{transform:scale(.6);filter:brightness(3)}50%{transform:scale(1.25);filter:brightness(2)}100%{transform:none;filter:none}}
-/* части питомца */
-.eyes{animation:blink 4.6s infinite;transform-origin:center}
-@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
-.tail{transform-origin:var(--tx,110px) var(--ty,150px);animation:wag var(--ts,2.4s) ease-in-out infinite}
-@keyframes wag{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(14deg)}}
-.ear{transform-origin:center bottom;animation:ear 5s ease-in-out infinite}
-.ear.r{animation-delay:-2s}
-@keyframes ear{0%,90%,100%{transform:rotate(0)}94%{transform:rotate(-9deg)}}
-.aura{animation:aura 3s ease-in-out infinite;transform-origin:center}
-@keyframes aura{50%{opacity:.35;transform:scale(1.08)}}
-.mark{animation:mark 2.6s ease-in-out infinite}
-@keyframes mark{50%{opacity:.4}}
-.tongue{animation:tng .8s ease-in-out infinite;transform-origin:top center}
-@keyframes tng{50%{transform:scaleY(1.25)}}
+@keyframes growP{0%{transform:translateX(-50%) scale(.6);filter:brightness(3)}50%{transform:translateX(-50%) scale(1.25);filter:brightness(2)}100%{transform:translateX(-50%);filter:none}}
+.pc img.pimg{width:100%;height:150px;object-fit:contain;display:block;filter:drop-shadow(0 6px 5px #000a)}
 
 .fp{position:fixed;z-index:200;pointer-events:none;font-weight:900;font-size:17px;color:#ffe9a8;text-shadow:0 0 8px #000,0 0 14px #e2c27a;animation:fp 1.4s ease-out forwards;white-space:nowrap}
 @keyframes fp{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-70px)}}
@@ -98,7 +91,10 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 /* карточка питомца */
 .pinfo{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .pinfo .nm{flex:1;min-width:0}
-.pinfo .nm b{font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pinfo .nm span{font-size:10px!important;letter-spacing:1.2px!important}
+.pinfo .stg{flex:none}
+.petBox img{filter:drop-shadow(0 6px 5px #000a) brightness(1.18) contrast(1.04)}
+.pinfo .nm b{font:700 22px Philosopher,Georgia,serif;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f7ecd2}
 .pinfo .nm span{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
 .pinfo .edit{border:1px solid var(--line);background:#1a1330;border-radius:10px;padding:8px 10px;font-size:13px}
 .stg{display:flex;gap:5px}
@@ -111,7 +107,7 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 .sat.low i{box-shadow:0 0 10px #ff5a5a}
 .warn{margin-bottom:10px;padding:9px 11px;border:1px solid #8a4a54;border-radius:12px;background:#2a1519;color:#f0c8cc;font-size:12px}
 .acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.act{position:relative;border:1px solid #6a58a0;background:linear-gradient(160deg,#3a2866,#241645);border-radius:14px;padding:11px 4px;text-align:center;overflow:hidden}
+.act{position:relative;border:1px solid #8a7348;background:linear-gradient(160deg,#2c2040,#17102a);border-radius:12px;padding:11px 4px;text-align:center;overflow:hidden;box-shadow:inset 0 0 0 1px #000a,inset 0 0 14px #3a2860aa}
 .act .i{font-size:24px;display:block}.act b{display:block;font-size:12px;margin-top:2px}.act small{display:block;font-size:10px;color:#cbbfe6;margin-top:1px;font-variant-numeric:tabular-nums}
 .act:disabled{opacity:.5;filter:grayscale(.5);cursor:not-allowed}
 .act:not(:disabled){animation:rdy 2s ease-in-out infinite}
@@ -138,8 +134,22 @@ button{font:inherit;color:inherit;cursor:pointer}button:active{transform:scale(.
 </head>
 <body>
 <div class="wrap">
-<header class="head"><a class="back" id="back" href="../home/index.html">← Дом</a><div><div class="eyebrow">ДОМ · ВОЛЬЕР</div><h1>Комната питомцев</h1></div></div>
-
+<div class="scene" id="room">
+<img class="art" src="../shared/art/pets/room.webp?v=1" alt="" draggable="false">
+<i class="fl m" style="left:71.5%;top:41%;width:20%;aspect-ratio:1"></i>
+<i class="fl c" style="left:6.1%;top:61%;width:8%;aspect-ratio:1;--d:2.4s"></i>
+<i class="fl c" style="left:8.5%;top:64%;width:6%;aspect-ratio:1;--d:3s;--l:-1s"></i>
+<i class="fl c" style="left:29%;top:66%;width:5%;aspect-ratio:1;--d:2.9s;--l:-.5s"></i>
+<i class="fl c" style="left:38%;top:67.5%;width:5%;aspect-ratio:1;--d:3.3s;--l:-1.8s"></i>
+<i class="fl c" style="left:90.5%;top:72%;width:6%;aspect-ratio:1;--d:2.7s;--l:-.9s"></i>
+<i class="fl c" style="left:92.5%;top:71%;width:5%;aspect-ratio:1;--d:3.1s;--l:-2s"></i>
+<i class="fl c" style="left:78.8%;top:86%;width:4.5%;aspect-ratio:1;--d:2.5s;--l:-1.3s"></i>
+<div id="motes"></div>
+<div class="toy" id="toy"><img src="../shared/art/pets/ball.webp?v=1" alt="" draggable="false"></div>
+<i class="bowlFill" id="bowlFill"></i>
+<div class="petSlot" id="petSlot"></div>
+<a class="backLink" id="back" href="../home/index.html" aria-label="Назад в дом"></a>
+</div>
 <main id="main"><div class="card"><div class="muted">Загрузка…</div></div></main>
 </div>
 <div class="toast" id="toast"></div>
@@ -172,54 +182,11 @@ function floatTx(t,x,y){if(reduce)return;const d=document.createElement("div");d
 function flash(c){if(reduce)return;const d=document.createElement("div");d.className="flash";d.style.background="radial-gradient(circle,"+c+"88,transparent 70%)";document.body.appendChild(d);setTimeout(()=>d.remove(),1050)}
 function pulseAt(el){const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/3]}
 
-/* ---------- рисунки питомцев ---------- */
-function catSVG(stage){
- const adult=stage===3,teen=stage>=2;
- const sc=[.74,.9,1][stage-1],head=[1.18,1.06,1][stage-1];
- return '<svg viewBox="0 0 200 200" aria-hidden="true">'+
- (adult?'<ellipse class="aura" cx="100" cy="120" rx="86" ry="78" fill="#b48cff" opacity=".18"/>':'')+
- '<g transform="translate(100 200) scale('+sc+') translate(-100 -200)">'+
- '<path class="tail" style="--tx:128px;--ty:168px" d="M128 168 C176 160 186 118 164 96 C158 90 150 98 156 104 C170 122 160 150 126 156 Z" fill="#2c2440"/>'+
- '<ellipse cx="100" cy="150" rx="46" ry="38" fill="#352a50"/>'+
- '<ellipse cx="100" cy="162" rx="26" ry="20" fill="#43375f"/>'+
- '<rect x="66" y="170" width="20" height="26" rx="10" fill="#2c2440"/><rect x="114" y="170" width="20" height="26" rx="10" fill="#2c2440"/>'+
- '<g transform="translate(100 104) scale('+head+') translate(-100 -104)">'+
- '<path class="ear" d="M60 78 L66 42 L90 68 Z" fill="#352a50"/><path class="ear r" d="M140 78 L134 42 L110 68 Z" fill="#352a50"/>'+
- '<path d="M66 70 L68 52 L82 66 Z" fill="#ff9ab8" opacity=".7"/><path d="M134 70 L132 52 L118 66 Z" fill="#ff9ab8" opacity=".7"/>'+
- '<ellipse cx="100" cy="98" rx="46" ry="40" fill="#3f3260"/>'+
- '<g class="eyes"><ellipse cx="82" cy="96" rx="'+(stage===1?9.5:8)+'" ry="'+(stage===1?11:9)+'" fill="#ffe36a"/><ellipse cx="118" cy="96" rx="'+(stage===1?9.5:8)+'" ry="'+(stage===1?11:9)+'" fill="#ffe36a"/><ellipse cx="82" cy="96" rx="3" ry="8" fill="#14101c"/><ellipse cx="118" cy="96" rx="3" ry="8" fill="#14101c"/><circle cx="85" cy="92" r="2.4" fill="#fff"/><circle cx="121" cy="92" r="2.4" fill="#fff"/></g>'+
- '<path d="M96 108 L104 108 L100 113 Z" fill="#ff9ab8"/><path d="M100 113 Q94 120 88 116 M100 113 Q106 120 112 116" stroke="#14101c" stroke-width="2" fill="none" stroke-linecap="round"/>'+
- '<path d="M70 108 L40 102 M70 112 L40 114 M130 108 L160 102 M130 112 L160 114" stroke="#cfc4e8" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>'+
- (teen?'<path class="mark" d="M100 64 L103 72 L100 80 L97 72 Z" fill="#b48cff"/>':'')+
- (adult?'<g class="mark"><path d="M82 70 L84 76 L82 82 L80 76Z" fill="#ffd56a"/><path d="M118 70 L120 76 L118 82 L116 76Z" fill="#ffd56a"/><circle cx="100" cy="62" r="3" fill="#ffd56a"/></g>':'')+
- '</g>'+(teen?'<path d="M70 132 Q100 146 130 132" stroke="#b48cff" stroke-width="3" fill="none" opacity=".6"/>':'')+
- '</g></svg>';
-}
-function dogSVG(stage){
- const adult=stage===3,teen=stage>=2;
- const sc=[.74,.9,1][stage-1],head=[1.2,1.08,1][stage-1];
- return '<svg viewBox="0 0 200 200" aria-hidden="true">'+
- (adult?'<ellipse class="aura" cx="100" cy="120" rx="86" ry="78" fill="#ffc864" opacity=".16"/>':'')+
- '<g transform="translate(100 200) scale('+sc+') translate(-100 -200)">'+
- '<path class="tail" style="--tx:132px;--ty:158px;--ts:.9s" d="M132 160 C166 140 172 108 160 96 C152 90 146 98 150 106 C158 122 150 140 128 150 Z" fill="#a8703c"/>'+
- '<ellipse cx="100" cy="150" rx="48" ry="38" fill="#b57a42"/>'+
- '<ellipse cx="100" cy="164" rx="28" ry="20" fill="#f0d8b0"/>'+
- '<rect x="64" y="170" width="22" height="26" rx="11" fill="#a8703c"/><rect x="114" y="170" width="22" height="26" rx="11" fill="#a8703c"/>'+
- '<g transform="translate(100 104) scale('+head+') translate(-100 -104)">'+
- '<path class="ear" d="M58 70 C40 74 36 118 56 124 C68 122 70 90 66 72 Z" fill="#8a5a2c"/><path class="ear r" d="M142 70 C160 74 164 118 144 124 C132 122 130 90 134 72 Z" fill="#8a5a2c"/>'+
- '<ellipse cx="100" cy="96" rx="44" ry="40" fill="#c2884e"/>'+
- '<ellipse cx="100" cy="112" rx="26" ry="20" fill="#f0d8b0"/>'+
- '<g class="eyes"><circle cx="82" cy="92" r="'+(stage===1?8:7)+'" fill="#2a1a12"/><circle cx="118" cy="92" r="'+(stage===1?8:7)+'" fill="#2a1a12"/><circle cx="84.5" cy="89.5" r="2.6" fill="#fff"/><circle cx="120.5" cy="89.5" r="2.6" fill="#fff"/></g>'+
- '<ellipse cx="100" cy="104" rx="8" ry="6" fill="#1a0f0c"/><path d="M100 110 L100 118 M100 118 Q92 126 85 119 M100 118 Q108 126 115 119" stroke="#1a0f0c" stroke-width="2" fill="none" stroke-linecap="round"/>'+
- '<path class="tongue" d="M95 122 Q100 138 105 122 Z" fill="#ff7a9a"/>'+
- (stage===1?'<circle cx="68" cy="102" r="5" fill="#ff9a9a" opacity=".35"/><circle cx="132" cy="102" r="5" fill="#ff9a9a" opacity=".35"/>':'')+
- (teen?'<path class="mark" d="M100 58 L103 66 L100 74 L97 66 Z" fill="#ffd56a"/>':'')+
- '</g>'+
- (stage>=1?'<path d="M64 132 Q100 148 136 132" stroke="'+(adult?"#e2c27a":teen?"#d05a6a":"#6a9ad0")+'" stroke-width="'+(adult?7:5)+'" fill="none" stroke-linecap="round"/>':'')+
- (adult?'<circle cx="100" cy="146" r="6" fill="#ffd56a" class="mark"/>':'')+
- '</g></svg>';
-}
-const petSVG=(t,s)=>t==="cat"?catSVG(s):dogSVG(s);
+/* ---------- модели питомцев ---------- */
+const PET_AR={cat1:.78,cat2:.55,cat3:.65,dog1:.82,dog2:.63,dog3:.65};
+const PET_H={cat1:.5,cat2:.62,cat3:.68,dog1:.5,dog2:.62,dog3:.68};
+const petSrc=(t,s)=>"../shared/art/pets/"+t+s+".webp?v=1";
+const petImg=(t,s)=>'<img class="pimg" src="'+petSrc(t,s)+'" alt="" draggable="false">';
 const STAGE_N={cat:["Котёнок","Молодая кошка","Сумеречная кошка"],dog:["Щенок","Молодой пёс","Верный страж"]};
 const BF={
  cat:{luck:{i:"🍀",n:"Кошачья удача",d:v=>"+"+v+" 💷 за победу"},distract:{i:"🎯",n:"Отвлечь врага",d:v=>v+"% шанс снизить урон врага на 60%"},expb:{i:"👁",n:"Острое чутьё",d:v=>"+"+v+"% опыта за победу"}},
@@ -234,15 +201,19 @@ const INTRO={
 let P=null,busy=false,tickH=null,chosen="cat";
 const fmt=s=>{s=Math.max(0,s|0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h?h+"ч "+String(m).padStart(2,"0")+"м":m+":"+String(c).padStart(2,"0")}
 
-function roomHTML(type,stage){
- let stars="";for(let i=0;i<9;i++)stars+='<i class="st" style="left:'+rnd(6,76)+'px;top:'+rnd(26,80)+'px;animation-delay:'+(-rnd(0,2))+'s"></i>';
- return '<div class="room" id="room"><div class="wall"></div><div class="floor"></div><div class="glow"></div><div class="lamp">🕯️</div><div class="win"><i class="moon"></i>'+stars+'</div><div class="rug"></div>'+
- '<div class="bowl" id="bowl"><span class="fill" id="bowlFill">🍖</span><div class="b">🥣</div></div><div class="toy" id="toy">'+(type==="cat"?"🧶":"🎾")+'</div>'+
- '<div class="petBox breathe" id="petBox"><div class="sh"></div>'+petSVG(type,stage)+'</div></div>';
+function petHTML(type,stage){
+ const k=type+stage,aura=stage===3?" aura-"+type:"";
+ return '<div class="petBox breathe'+aura+'" id="petBox" style="--ph:'+((PET_H[k]||.6)*100)+'%;--ar:'+(PET_AR[k]||.6)+'"><div class="sh"></div><img src="'+petSrc(type,stage)+'" alt="" draggable="false"></div>';
+}
+function setPet(html){$("petSlot").innerHTML=html}
+function motes(){
+ const box=$("motes");if(!box||box.children.length||reduce)return;
+ for(let i=0;i<14;i++){const d=document.createElement("i");d.className="mote";d.style.left=rnd(8,92)+"%";d.style.top=rnd(35,90)+"%";d.style.setProperty("--t",rnd(7,13)+"s");d.style.setProperty("--l",-rnd(0,12)+"s");d.style.setProperty("--x",rnd(-24,24)+"px");box.appendChild(d)}
 }
 function render(){
  const m=$("main");
- if(!P.has_pet){renderPick();return}
+ if(!P.has_pet){setPet('');renderPick();return}
+ setPet(petHTML(P.type,P.stage));motes();
  const t=P.type,st=P.stage;
  const xpPct=P.xp_next?Math.round((P.xp-P.xp_prev)/(P.xp_next-P.xp_prev)*100):100;
  let bf="";
@@ -250,8 +221,8 @@ function render(){
   const meta=BF[t][b.key];
   bf+='<div class="bf"><div class="ic">'+meta.i+'</div><div class="t"><b>'+meta.n+'</b><div>'+meta.d(P.hungry?b.eff:b.cur)+(P.hungry?" · ослаблено голодом":"")+'</div><div class="lv">'+b.vals.map((v,i)=>'<span class="'+(i+1===st?"cur":i+1<st?"past":"")+'">'+["I","II","III"][i]+' · '+v+'</span>').join("")+'</div></div></div>';
  });
- m.innerHTML=roomHTML(t,st)+
- '<div class="card" style="margin-top:11px"><div class="pinfo"><div class="nm"><span>'+STAGE_N[t][st-1]+' · стадия '+st+'/3</span><b>'+esc(P.name)+'</b></div><div class="stg"><i class="'+(st>=1?"on":"")+'"></i><i class="'+(st>=2?"on":"")+'"></i><i class="'+(st>=3?"on":"")+'"></i></div><button class="edit" id="bRen" aria-label="Переименовать">✎</button></div>'+
+ m.innerHTML=
+ '<div class="card" style="margin-top:14px"><div class="pinfo"><div class="nm"><span>'+STAGE_N[t][st-1]+' · стадия '+st+'/3</span><b>'+esc(P.name)+'</b></div><div class="stg"><i class="'+(st>=1?"on":"")+'"></i><i class="'+(st>=2?"on":"")+'"></i><i class="'+(st>=3?"on":"")+'"></i></div><button class="edit" id="bRen" aria-label="Переименовать">✎</button></div>'+
  (P.hungry?'<div class="warn">🍖 Питомец голоден — бафы вдвое слабее. Накорми его!</div>':'')+
  '<div class="bars"><div class="br xp"><div class="lab"><span>💞 Привязанность</span><span>'+(P.xp_next?P.xp+" / "+P.xp_next:"максимум")+'</span></div><div class="bar"><i data-w="'+xpPct+'"></i></div></div>'+
  '<div class="br sat'+(P.hungry?" low":"")+'"><div class="lab"><span>🍖 Сытость</span><span>'+P.sat+"%"+'</span></div><div class="bar"><i data-w="'+P.sat+'"></i></div></div></div>'+
@@ -277,7 +248,7 @@ function renderPick(){
  chosen=chosen||"cat";
  const m=$("main");
  m.innerHTML='<div class="card"><h3>🐾 Добро пожаловать в вольер</h3><div class="muted">Здесь можно приютить питомца. Он вырастет в три стадии и даст пассивные бафы для боёв. Выбор сделать можно один раз — подумай хорошо.</div>'+
- '<div class="pick"><button class="pc" id="pcCat" type="button">'+catSVG(2)+'<b>🐈 Кошка</b><small>Удача, чутьё на опыт и отвлечение врагов</small></button><button class="pc" id="pcDog" type="button">'+dogSVG(2)+'<b>🐕 Собака</b><small>Лечение, защита и спокойствие разума</small></button></div>'+
+ '<div class="pick"><button class="pc" id="pcCat" type="button">'+petImg('cat',2)+'<b>🐈 Кошка</b><small>Удача, чутьё на опыт и отвлечение врагов</small></button><button class="pc" id="pcDog" type="button">'+petImg('dog',2)+'<b>🐕 Собака</b><small>Лечение, защита и спокойствие разума</small></button></div>'+
  '<div class="muted" id="pickInfo" style="text-align:center"></div>'+
  '<input class="nameIn" id="nameIn" maxlength="14" placeholder="Имя питомца (необязательно)" autocomplete="off">'+
  '<button class="btn gold" id="bChoose">Приютить питомца</button></div>';
