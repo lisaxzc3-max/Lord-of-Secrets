@@ -60,7 +60,7 @@ function pend(b){
 })();
 /* --- мини-аватары путей (анимированные svg; для длинных списков и чатов — статичные копии) --- */
 (function(){
- var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}
+ var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js?v=a2"))}catch(e){}
  var MAP={seer:"seer",sailor:"sailor",hunter:"hunter","Провидец":"seer","Матрос":"sailor","Охотник":"hunter"};
  function src(pk,g,st){return BASE+"avatars/"+(g==="f"||g==="female"?"f":"m")+"_"+pk+".webp"}
  try{var cs=document.createElement("style");cs.textContent=".avMini{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}.avWrap:has(.avMini),.chAv:has(.avMini),.pav:has(.avMini),.row .av:has(.avMini),.fr .av:has(.avMini),.ch:has(.avMini){overflow:hidden}";document.head.appendChild(cs)}catch(e){}
@@ -72,7 +72,7 @@ function pend(b){
 })();
 /* --- ссылка «назад» из места города/похода ведёт на нужную вкладку главной (а не всегда в Зал) --- */
 (function(){
- var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}if(!BASE)return;
+ var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js?v=a2"))}catch(e){}if(!BASE)return;
  var CITY="top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins";
  function tabFor(){var seg=location.href.slice(BASE.length).split("/")[0];return(" "+CITY+" ").indexOf(" "+seg+" ")>=0?"city":((" "+TRAVEL+" ").indexOf(" "+seg+" ")>=0?"travel":"")}
  document.addEventListener("click",function(e){
