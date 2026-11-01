@@ -251,7 +251,7 @@ $("b2").addEventListener("click",async()=>{
 $("k3").addEventListener("click",()=>{sfx("back");go(2)});
 
 /* ---- облик ---- */
-function setAv(){$("im").src="../avatars/m_"+S.path+".svg";$("if").src="../avatars/f_"+S.path+".svg";pcol()}
+function setAv(){$("im").src="../avatars/m_"+S.path+".webp";$("if").src="../avatars/f_"+S.path+".webp";pcol()}
 function pickG(g){S.gender=g;sfx("good");$("gm").classList.toggle("sel",g==="male");$("gf").classList.toggle("sel",g==="female");$("b3").disabled=false;const r=$(g==="male"?"gm":"gf").getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,["✦","✨"],8)}
 $("gm").addEventListener("click",()=>pickG("male"));$("gf").addEventListener("click",()=>pickG("female"));
 $("b3").addEventListener("click",async()=>{
@@ -266,7 +266,7 @@ $("b3").addEventListener("click",async()=>{
 /* ---- финал ---- */
 function finale(){
  pcol();const p=PATHS.find(x=>x.k===S.path)||PATHS[0];
- $("himg").src="../avatars/"+(S.gender==="female"?"f":"m")+"_"+S.path+".svg";
+ $("himg").src="../avatars/"+(S.gender==="female"?"f":"m")+"_"+S.path+".webp";
  $("hnick").textContent=S.nick;$("hpath").textContent=p.t+" · "+p.s;
  setTimeout(()=>{sfx("win");flash(p.c);burst(innerWidth/2,innerHeight/2,["✦","✨",p.e,"💫"],26)},350);
 }

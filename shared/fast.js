@@ -62,7 +62,7 @@ function pend(b){
 (function(){
  var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}
  var MAP={seer:"seer",sailor:"sailor",hunter:"hunter","Провидец":"seer","Матрос":"sailor","Охотник":"hunter"};
- function src(pk,g,st){return BASE+"avatars/"+(st?"st/":"")+(g==="f"||g==="female"?"f":"m")+"_"+pk+".svg"}
+ function src(pk,g,st){return BASE+"avatars/"+(g==="f"||g==="female"?"f":"m")+"_"+pk+".webp"}
  try{var cs=document.createElement("style");cs.textContent=".avMini{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}.avWrap:has(.avMini),.chAv:has(.avMini),.pav:has(.avMini),.row .av:has(.avMini),.fr .av:has(.avMini),.ch:has(.avMini){overflow:hidden}";document.head.appendChild(cs)}catch(e){}
  window.LOTM_AV={
   key:function(p){return MAP[p]||null},

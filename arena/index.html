@@ -152,7 +152,7 @@ async function api(p){
  const d=unwrap(await r.json());if(!d||typeof d!=="object")throw new Error("Некорректный ответ.");return d;
 }
 function toast(t,bad){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("show"),2800);if(bad)sfx("deny")}
-const avSrc=(g,pk,sq)=>"../avatars/"+(g==="f"?"f":"m")+"_"+(pk||"seer")+(sq<=8?"8":"")+".svg";
+const avSrc=(g,pk,sq)=>"../avatars/"+(g==="f"?"f":"m")+"_"+(pk||"seer")+(sq<=8?"8":"")+".webp";
 const LGC=["#8f8798","#8fb3a6","#a98fd0","#d6b779","#d4343f","#ffd98a"];
 const PATHN={seer:"Провидец",sailor:"Матрос",hunter:"Охотник"};
 let S=null,tab="duel",F=null,prevF=null,busy=false,seenEnd="",poll=null,tmr=null;

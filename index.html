@@ -1706,7 +1706,7 @@ function setHudAvatar(data) {
   const box = byId("hudAv");
   let img = box.querySelector("img");
   if (!img) { box.replaceChildren(); img = document.createElement("img"); img.alt = ""; box.appendChild(img); }
-  const src = "./avatars/" + g + "_" + pk + ((data.sequence|0) && (data.sequence|0) <= 8 ? "8" : "") + ".svg";
+  const src = "./avatars/" + g + "_" + pk + ((data.sequence|0) && (data.sequence|0) <= 8 ? "8" : "") + ".webp";
   if (!img.src.endsWith(src.slice(1))) img.src = src;
 }
 
@@ -2620,7 +2620,7 @@ function seqFxRun(){
 }
 function seqShowDone(d){
   var g=d.gender==="female"?"f":"m",pk=LOTM_SKILLS.pathKey(d.path_key||d.path);
-  if(pk)byId("sdImg").src="./avatars/"+g+"_"+pk+"8.svg";
+  if(pk)byId("sdImg").src="./avatars/"+g+"_"+pk+"8.webp";
   byId("sdH").textContent=(d.sequence_name||"Новая ступень").toUpperCase();
   byId("sdP").textContent="Последовательность 8. Ты проснулся другим.";
   byId("seqDone").classList.add("on");
