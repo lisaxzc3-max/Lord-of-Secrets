@@ -42,7 +42,8 @@ window.BATTLE_CFG={
  p2:{serpent:"serpent2",vodyanoy:"vodyanoy2"},
  role:{"Утопленница":"Утонувшая путница","Утопленник":"Утонувший путник","Жаба":"Болотная тварь","Лягушка":"Болотная тварь","Пиявка-великанша":"Болотная тварь","Зубастая щука":"Речной хищник","Кикимора":"Болотная ведьма","Водяной":"Хозяин вод","Змей":"Змей озёр"},
  mobsnd:{"Утопленница":"lkgurgle","Утопленник":"lkgurgle","Жаба":"frog","Лягушка":"frog","Змей":"lkhiss","Пиявка-великанша":"lksquelch","Зубастая щука":"lksplash","Кикимора":"lkcackle","Водяной":"lkroar"},
- skipRx:/спит|усып|оглуш|пропуска|не может действ|оцепен|скован|обездвиж/i,
+ skipRx:/спит|усып|оглуш|пропуска|не может действ|оцепен|скован|обездвиж|в ловушке/i,
+ castRx:/Тина липнет|Растворяется в камышах|Скользит в тину|уходит на глубину|Водяной щит|Волна поднимается|переводит дух/,
  bossFx:function(text,X){const {st,B,banner,snd,$,P2}=X;
   if(!text)return{heavy:0};
   let heavy=0;
@@ -56,7 +57,7 @@ window.BATTLE_CFG={
  }
 };
 </script>
-<script src="../../shared/battle/page.js?v=p3"></script>
+<script src="../../shared/battle/page.js?v=p4"></script>
 <script src="../../shared/enemyinfo.js"></script>
 <script src="../../shared/icons.js?v=i1"></script>
 </body>
