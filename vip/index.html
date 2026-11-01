@@ -328,6 +328,12 @@ async function ritual(t){
 async function load(){
  try{
   const [s,p]=await Promise.all([api({action:"vip_state"}),PROFILE_URL?post(PROFILE_URL,{}).catch(()=>null):null]);
+  if(!s||!s.tiers){
+   const m=(s&&(s.text||s.error))||"Не удалось загрузить круг";
+   $("tiers").innerHTML='<div class="own">'+esc(String(m))+'</div><button type="button" class="buy" id="vRetry" style="margin-top:12px"><span>Повторить</span></button>';
+   const rb=$("vRetry");if(rb)rb.onclick=()=>{$("tiers").innerHTML="";load()};
+   return;
+  }
   D=s;
   if(p&&p.ok){ME.nick=p.nickname||"Странник";ME.g=p.gender==="female"?"female":"male";ME.pk=p.path_key||"seer";ME.sq=(p.sequence==null?9:p.sequence)}
   render();
