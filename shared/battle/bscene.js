@@ -4,7 +4,7 @@
 "use strict";
 var SRC=(document.currentScript&&document.currentScript.src)||"";
 var BASE=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"");
-var V="?v=b3";
+var V="?v=b4";
 var META={"heroes":{"m_seer":{"idle":[288,392],"dash":[387,185],"cast":[256,393],"buff":[357,232]},"m_sailor":{"idle":[144,296],"dash":[346,248],"cast":[304,301],"buff":[303,244]},"m_hunter":{"idle":[160,296],"dash":[344,208],"cast":[369,200],"buff":[336,240]},"f_seer":{"idle":[128,308],"dash":[224,259],"cast":[264,301],"buff":[264,288]},"f_sailor":{"idle":[128,295],"dash":[304,244],"cast":[398,303],"buff":[296,252]},"f_hunter":{"idle":[128,305],"dash":[444,276],"cast":[464,268],"buff":[280,256]}},"mobs":{"drowned":[560,370],"toad":[560,342],"serpent":[560,367],"serpent2":[560,374],"leech":[560,371],"pike":[560,332],"kikimora":[560,374],"vodyanoy":[560,377],"vodyanoy2":[560,377],"mushroom":[511,560],"spider":[560,381],"tree":[560,516],"boar":[560,392],"wolf":[560,385],"kitsune":[560,414],"kitsune2":[560,374],"ghost":[362,560],"ghoul":[560,394],"skeleton":[377,560],"worm":[560,437],"banshee":[353,560],"necro":[360,560],"necro2":[372,560],"fanatic":[506,560],"gargoyle":[514,560],"guard":[370,560],"ratmut":[560,373],"cultist":[371,560],"priest":[373,560],"priest2":[372,560]},"fx":{"hunter_0":[7,186,127],"hunter_1":[8,196,133],"hunter_2":[6,239,117],"hunter_3":[6,230,111],"sailor_0":[6,234,127],"sailor_1":[8,185,133],"sailor_2":[7,257,111],"sailor_3":[7,243,117],"seer_0":[6,197,104],"seer_1":[6,169,115],"seer_2":[6,175,105],"seer_3":[6,210,127]}};
 var HM=META.heroes,MM=META.mobs,FM=META.fx;
 var reduce=false;try{reduce=matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){}
