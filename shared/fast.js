@@ -39,9 +39,16 @@ function barOn(){
 }
 function barOff(){if(!bar)return;bar.style.width="100%";setTimeout(function(){if(inflight===0&&bar){bar.style.opacity="0";setTimeout(function(){if(inflight===0)bar.style.width="0"},300)}},200)}
 /* --- запоминаем, по какой кнопке нажали --- */
-var last=null,lastT=0;
+var last=null,lastT=0,tbB=null,tbT=0,tbA=0;
 document.addEventListener("click",function(e){
  var t=e.target;if(!t||!t.closest)return;
+ /* защита от частых нажатий: одну и ту же кнопку не чаще 0,45 с, любые кнопки не чаще 0,2 с */
+ var cb=t.closest("button,.btn,[role=button],.tab,.plc,.pcard");
+ if(cb&&!cb.closest("input,textarea,select,label,[data-free],.nav,#ltNet,#chPanel,#chFab")&&e.isTrusted!==false){
+  var nw=Date.now();
+  if((cb===tbB&&nw-tbT<450)||nw-tbA<200){e.stopImmediatePropagation();e.preventDefault();return}
+  tbB=cb;tbT=nw;tbA=nw;
+ }
  if(t.closest(".lt-pend")){e.stopImmediatePropagation();e.preventDefault();return}
  var b=t.closest("button,.btn,[role=button],.plc,.pcard,.tab,a.back");
  if(b&&!b.disabled){last=b;lastT=Date.now()}
