@@ -56,18 +56,6 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .btn{width:100%;margin-top:14px;padding:14px;border-radius:14px;font-weight:800;font-size:14px;letter-spacing:.5px;border:1px solid var(--gold2);background:linear-gradient(145deg,#6a5420,#2e220e);color:#fff0c4;position:relative;overflow:hidden}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.45}
-.rd{width:100%;max-width:380px;padding:20px 18px;border-radius:16px;background:linear-gradient(160deg,#211832f2,#110b1cf2);border:1px solid #6a58a0;}
-.rd h3{margin:0 0 10px;font:700 11px Philosopher,Georgia,serif;letter-spacing:3px;color:var(--gold);text-align:center;text-transform:uppercase}
-.rd .rq{font:16px/1.6 Philosopher,Georgia,serif;text-align:center;color:#ece2cb;margin-bottom:12px}
-.rd .rq p{margin:0 0 6px;opacity:0;transition:opacity 1.1s}
-.rd .rq p.on{opacity:1}
-.rd input{width:100%;padding:13px;border-radius:12px;border:1px solid #5a4a80;background:#0f0919;color:#fff;font:700 17px Philosopher,Georgia,serif;text-align:center;outline:none}
-.rd input.bad{border-color:#b2505a}
-.rd input.ok{border-color:#7bbf93}
-.rd .hn{min-height:36px;margin-top:8px;text-align:center;font-size:12px;color:#b8a9d6;font-style:italic}
-.rd .at{display:flex;justify-content:center;gap:6px;margin-top:6px}
-.rd .at i{width:7px;height:7px;transform:rotate(45deg);background:var(--gold);transition:.5s}
-.rd .at i.off{background:#2a2238}
 .rw{width:100%;max-width:380px;padding:22px 18px;border-radius:18px;background:linear-gradient(160deg,#241a38f5,#120b1ff5);border:1px solid var(--gold2);text-align:center}
 .rw h2{margin:0 0 4px;font:900 20px Philosopher,Georgia,serif;color:#f3e6bd;letter-spacing:1px}
 .rw .sb{font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
@@ -93,15 +81,6 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
   <svg class="seal" id="seal" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#6b1f2a" stroke="#a3434f" stroke-width="2"/><circle cx="32" cy="32" r="21" fill="none" stroke="#a3434f88" stroke-width="1"/><path d="M14 32q18-17 36 0q-18 17-36 0z" fill="none" stroke="#e0b3b8" stroke-width="2"/><circle cx="32" cy="32" r="5" fill="#e0b3b8"/></svg>
   <div id="lns"></div><div class="sig" id="sig"></div>
   <button class="btn" id="lbtn" type="button" disabled>Дальше</button>
-</div></div>
-
-<div class="ov" id="ovRiddle"><div class="rd">
-  <h3>Загадка Привратника</h3>
-  <div class="rq" id="rq"></div>
-  <input id="ri" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Твой ответ">
-  <div class="at" id="at"></div>
-  <div class="hn" id="hn"></div>
-  <button class="btn" id="rb" type="button">Назвать</button>
 </div></div>
 
 <div class="ov" id="ovReward"><div class="rw">
@@ -198,14 +177,11 @@ const SC={
       {t:"«Чего ты хочешь?»",nx:"toll",pre:[{w:"g",t:"Мне ничего не нужно. Платы требует мост."}]}]},
  toll:{bg:"bridge",step:4,beats:[
   {w:"g",t:"Каждый, кто хочет пройти, оставляет мосту одну вещь. Что оставишь ты?"}],
-  ch:[{t:"Своё имя",nx:"riddle",set:{mark:"name"},mind:-1,pre:[{w:"n",t:"Имя повисает над водой и медленно тонет. Ты чувствуешь, как оно становится чуть меньше твоим.",fx:()=>sfx("whisper")}]},
-      {t:"Своё лицо",nx:"riddle",set:{mark:"mask"},pre:[{w:"g",t:"Привратник кивает. Маска ложится на лицо так, словно всегда там была."}]},
-      {t:"Ничего. Просто промолчать",nx:"riddle",set:{mark:"silence"},pre:[{w:"g",t:"Он долго смотрит. «Тишину берут охотнее всего», — говорит он. Вода под мостом на миг замирает."}]}]},
- riddle:{bg:"bridge",step:5,beats:[
-  {w:"g",t:"Дверь открывается тому, кто назовёт её. Слушай внимательно.",fx:()=>sfx("scroll")},
-  {riddle:true}],nx:"final"},
- final:{bg:"door",step:6,beats:[
-  {w:"g",t:()=>S.solved?"Верно. Дверь признаёт тебя.":"Ты не назвал её, но "+gv("дошёл","дошла")+" до конца. Этого достаточно. Ответ был — тайна.",fx:()=>{sfx("qdoor");setTimeout(()=>sfx("divine"),1200)}},
+  ch:[{t:"Своё имя",nx:"final",set:{mark:"name"},mind:-1,pre:[{w:"n",t:"Имя повисает над водой и медленно тонет. Ты чувствуешь, как оно становится чуть меньше твоим.",fx:()=>sfx("whisper")}]},
+      {t:"Своё лицо",nx:"final",set:{mark:"mask"},pre:[{w:"g",t:"Привратник кивает. Маска ложится на лицо так, словно всегда там была."}]},
+      {t:"Ничего. Просто промолчать",nx:"final",set:{mark:"silence"},pre:[{w:"g",t:"Он долго смотрит. «Тишину берут охотнее всего», — говорит он. Вода под мостом на миг замирает."}]}]},
+ final:{bg:"door",step:5,beats:[
+  {w:"g",t:()=>"Дверь признаёт тебя. Ты "+gv("дошёл","дошла")+" до конца.",fx:()=>{sfx("qdoor");setTimeout(()=>sfx("divine"),1200)}},
   {w:"n",t:"Привратник поднимает руки к капюшону и снимает его. Под ним нет лица. Там зеркало, и в нём стоишь ты. Только глаза другие."},
   {w:"d",if:()=>S.dal,t:"Не смотри долго. Зеркала в этом городе привыкают к тем, кто в них смотрит."},
   {w:"g",t:()=>MARKS[S.mark][1]+" Возьми то, что оставили для тебя.",fx:()=>sfx("stamp")},
@@ -240,7 +216,7 @@ function loseMind(n){
   renderMind();
 }
 function renderMind(){const m=$("mind");m.innerHTML="<span>Рассудок</span>"+[0,1,2,3,4].map(i=>'<i class="'+(i<S.mind?"":"off")+'"></i>').join("");Q.mind(S.mind)}
-function dots(n){const d=$("dots");d.replaceChildren();for(let i=1;i<=6;i++){const e=document.createElement("i");e.className="dot"+(i===n?" on":i<n?" done":"");d.appendChild(e)}}
+function dots(n){const d=$("dots");d.replaceChildren();for(let i=1;i<=5;i++){const e=document.createElement("i");e.className="dot"+(i===n?" on":i<n?" done":"");d.appendChild(e)}}
 function choose(list){
   return new Promise(res=>{
     const box=$("choices");box.replaceChildren();$("who").textContent="";$("whoIc").style.visibility="hidden";TX.textContent="";
@@ -253,7 +229,6 @@ async function runScene(id){
   await sleep(450);
   for(const b of sc.beats){
     if(b.letter){await showLetter(b.letter);continue}
-    if(b.riddle){await showRiddle();continue}
     if(b.reward){await showReward();return}
     await say(b);
   }
@@ -293,37 +268,6 @@ async function showLetter(kind){
   ov.classList.remove("show");await sleep(600);ov.classList.remove("on");sig.classList.remove("hand");
 }
 
-/* загадка */
-const RIDDLE=["Я не имею веса, но тяну на дно.","Меня хранят все, а показывают лишь единицы.","Чем больше обо мне говорят, тем меньше меня остаётся.","Я живу в этом городе, и я же даю ему имя."];
-const HINTS=["Подумай, чей титул вынесен в название этой игры.","Это слово из пяти букв. Оно начинается на «Т».","Привратник шепчет: «Тайна. Назови её».", ""];
-async function showRiddle(){
-  const ov=$("ovRiddle"),rq=$("rq"),ri=$("ri"),hn=$("hn"),at=$("at"),rb=$("rb");
-  rq.replaceChildren();hn.textContent="";ri.value="";ri.className="";S.tries=0;
-  RIDDLE.forEach(t=>{const p=document.createElement("p");p.textContent=t;rq.appendChild(p)});
-  const drawAt=()=>{at.innerHTML=[0,1,2].map(i=>'<i class="'+(i<3-S.tries?"":"off")+'"></i>').join("")};drawAt();
-  $("tx").textContent="";$("who").textContent="";$("whoIc").style.visibility="hidden";
-  ov.classList.add("on");requestAnimationFrame(()=>ov.classList.add("show"));
-  for(const p of rq.children){p.classList.add("on");sfx("whisper",.05);await sleep(1100)}
-  setTimeout(()=>{try{ri.focus();ri.scrollIntoView({block:"center"})}catch(_){}},300);
-  await new Promise(res=>{
-    let lock=false;
-    const go=async()=>{
-      if(lock)return;const v=ri.value.trim();if(!v){ri.classList.add("bad");return}
-      lock=true;rb.disabled=true;sfx("tap");
-      try{
-        const d=await api({action:"intro_ans",ans:v});
-        if(d.right){S.solved=true;S.ans=v;ri.className="ok";sfx("divine");hn.textContent="Дверь слышит тебя.";flash("#7bbf93");await sleep(1400);rb.onclick=null;ri.onkeydown=null;res();return}
-        S.tries++;ri.className="bad";sfx("bad");drawAt();hn.textContent=HINTS[Math.min(S.tries-1,2)];
-        if(S.tries>=3){await sleep(1800);rb.onclick=null;ri.onkeydown=null;res();return}
-        ri.value="";
-      }catch(e){toast(e.message||"Нет связи")}
-      lock=false;rb.disabled=false;
-    };
-    rb.onclick=go;ri.onkeydown=e=>{if(e.key==="Enter")go()};
-  });
-  ov.classList.remove("show");await sleep(600);ov.classList.remove("on");
-}
-
 /* награда */
 const GL={
  gold:'<svg class="e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h4.5a1.8 1.8 0 0 1 0 3.5H9"/></svg>',
@@ -339,7 +283,7 @@ async function showReward(){
   async function claim(){
     go.disabled=true;go.textContent="Получаем награду…";
     let d=null,err="";
-    try{d=await api({action:"intro_done",mark:S.mark,ans:S.solved?S.ans:""})}catch(e){err=e.message==="need_start"?"Открой игру через бота командой /start":(e.message||"Нет связи")}
+    try{d=await api({action:"intro_done",mark:S.mark,ans:""})}catch(e){err=e.message==="need_start"?"Открой игру через бота командой /start":(e.message||"Нет связи")}
     list.replaceChildren();let i=0;
     const add=(g,t,s2)=>{const r=document.createElement("div");r.className="rwi";r.style.animationDelay=(.4+i++*.35)+"s";r.innerHTML=GL[g]+"<div><b></b><small></small></div>";r.querySelector("b").textContent=t;r.querySelector("small").textContent=s2;list.appendChild(r)};
     go.disabled=false;
@@ -352,7 +296,7 @@ async function showReward(){
       $("rwSub").textContent="За путь до двери";
       add("gold","+"+d.gold+" фунтов","Лежат в твоём кошельке");
       if(d.art)add("art",d.art.name,"Реликвия Серого Тумана · "+d.art.bonus);
-      if(d.thread)add("thr","Нить судьбы","Редкий ингредиент за верный ответ");
+      if(d.thread)add("thr","Нить судьбы","Редкий ингредиент");
       add("mark",m[0],"Знак того, что ты оставил мосту");
     }
     sfx("win");sfx("qchime",.4);
