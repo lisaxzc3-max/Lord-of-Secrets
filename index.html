@@ -136,12 +136,12 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .tvDots{display:flex;justify-content:center;gap:5px;margin:2px 0 6px}
 .tvDots i{width:6px;height:6px;border-radius:50%;background:#3a2f44;transition:.25s}.tvDots i.on{background:#a98fd0;box-shadow:0 0 8px #a98fd0;width:16px;border-radius:4px}
 .tvDet{border:solid transparent;border-width:36px 44px;border-image:url(./shared/art/travel/detail.webp) 90 110 90 110 fill/36px 44px stretch;margin:0 -8px 12px;padding:0;animation:cin .4s ease-out backwards}
-.tvDet .row{display:flex;gap:8px;align-items:center;margin:8px 14px 0 14px}
+.tvDet .row{display:block;text-align:center;margin:6px 12px 0 12px}
 .tvDet .art{flex:0 0 46px;aspect-ratio:4/5;border-radius:10px;background:center/cover no-repeat;box-shadow:0 0 0 1px #5a3a4a,0 6px 18px #000a}
 .tvDet .info{flex:1;min-width:0}
-.tvDet h4{margin:0 0 2px;font:400 12.5px Philosopher,Georgia,serif;letter-spacing:.05em;color:#eadfc4;text-shadow:0 0 14px #a3262e}
-.tvDet p{margin:0 0 4px;font-size:9px;line-height:1.4;color:#c9bfd8}
-.tvDet .tags{margin:0;gap:3px}.tvDet .tags i{font-size:7.5px;padding:1px 5px}
+.tvDet h4{margin:0 0 4px;font:400 16px Philosopher,Georgia,serif;letter-spacing:.05em;color:#eadfc4;text-shadow:0 0 14px #a3262e}
+.tvDet p{margin:0 0 8px;font-size:10.5px;line-height:1.4;color:#c9bfd8}
+.tvDet .tags{margin:0;gap:4px;justify-content:center}.tvDet .tags i{font-size:8.5px;padding:2px 6px}
 .tvGo{display:block;width:calc(100% + 20px);margin:6px -10px -10px;height:46px;border:0;background:url(./shared/art/travel/btn.webp) center/100% 100% no-repeat;color:#fff0dc;font:700 11.5px Philosopher,Georgia,serif;letter-spacing:.12em;text-transform:uppercase;text-shadow:0 1px 6px #000;cursor:pointer}
 .tvGo:active{transform:scale(.97)}
 .tvGo:disabled{filter:grayscale(1) brightness(.6)}
@@ -1527,7 +1527,7 @@ function tvRender(){
  rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+((l.soon||(l.min||0)>tvLv())?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
  byId("tvDots").innerHTML=L.length>1?L.map((_,i)=>'<i class="'+(i===tvSel?"on":"")+'"></i>').join(""):"";
  const l=L[tvSel];if(!l)return;
- byId("tvDet").innerHTML='<div class="row"><div class="art" style="background-image:url('+l.art+')"></div><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+((l.soon||(l.min||0)>tvLv())?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":((l.min||0)>tvLv()?"🔒 С "+l.min+" уровня":"Отправиться"))+'</button>';
+ byId("tvDet").innerHTML='<div class="row"><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+((l.soon||(l.min||0)>tvLv())?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":((l.min||0)>tvLv()?"🔒 С "+l.min+" уровня":"Отправиться"))+'</button>';
 }
 function tvPick(i,noScroll){
  tvSel=i;try{snd("tap")}catch(_){}
