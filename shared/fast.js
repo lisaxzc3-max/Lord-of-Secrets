@@ -60,7 +60,7 @@ function pend(b){
 })();
 /* --- мини-аватары путей (анимированные svg; для длинных списков и чатов — статичные копии) --- */
 (function(){
- var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js?v=a2"))}catch(e){}
+ var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}
  var MAP={seer:"seer",sailor:"sailor",hunter:"hunter","Провидец":"seer","Матрос":"sailor","Охотник":"hunter"};
  function src(pk,g,st){return BASE+"avatars/"+(g==="f"||g==="female"?"f":"m")+"_"+pk+".webp"}
  try{var cs=document.createElement("style");cs.textContent=".avMini{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}.avWrap:has(.avMini),.chAv:has(.avMini),.pav:has(.avMini),.row .av:has(.avMini),.fr .av:has(.avMini),.ch:has(.avMini){overflow:hidden}";document.head.appendChild(cs)}catch(e){}
@@ -72,7 +72,7 @@ function pend(b){
 })();
 /* --- ссылка «назад» из места города/похода ведёт на нужную вкладку главной (а не всегда в Зал) --- */
 (function(){
- var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js?v=a2"))}catch(e){}if(!BASE)return;
+ var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}if(!BASE)return;
  var CITY="top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins";
  function tabFor(){var seg=location.href.slice(BASE.length).split("/")[0];return(" "+CITY+" ").indexOf(" "+seg+" ")>=0?"city":((" "+TRAVEL+" ").indexOf(" "+seg+" ")>=0?"travel":"")}
  document.addEventListener("click",function(e){
@@ -99,12 +99,41 @@ if(of){
   for(var k in (o||{}))o2[k]=o[k];o2.signal=ctl.signal;
   return of.call(self,u,o2).then(function(r){clearTimeout(tm);return r},function(e){clearTimeout(tm);throw e});
  };
+ /* --- статистика ответов сервера (чтобы видеть реальные задержки) и плашка «нет связи» --- */
+ var PF={n:0,sum:0,slow:0,fail:0,max:0,by:{},url:"",at:0};
+ var pfFlush=function(force){
+  if(!PF.url||PF.n<(force?3:20)||Date.now()-PF.at<60000)return;
+  var b={action:"perf",n:PF.n,sum:PF.sum,slow:PF.slow,fail:PF.fail,max:PF.max,by:PF.by},url=PF.url;
+  PF={n:0,sum:0,slow:0,fail:0,max:0,by:{},url:url,at:Date.now()};
+  try{of.call(window,url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b),cache:"no-store",keepalive:true}).catch(function(){})}catch(e){}
+ };
+ var pfAdd=function(act,ms,failed,u){
+  if(!act||act==="perf"||act==="ping")return;
+  if(typeof u==="string")PF.url=u;
+  PF.n++;PF.sum+=ms;if(ms>5000)PF.slow++;if(failed)PF.fail++;if(ms>PF.max)PF.max=ms;
+  var e=PF.by[act]||(PF.by[act]={n:0,sum:0,max:0});e.n++;e.sum+=ms;if(ms>e.max)e.max=ms;
+  pfFlush(false);
+ };
+ addEventListener("pagehide",function(){pfFlush(true)});
+ var netF=0,netEl=null;
+ var netBad=function(){
+  netF++;if(netF<2||netEl||!document.body)return;
+  netEl=document.createElement("div");netEl.id="ltNet";
+  netEl.style.cssText="position:fixed;left:10px;right:10px;top:calc(8px + env(safe-area-inset-top));z-index:100001;max-width:440px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:14px;border:1px solid #8a4a54;background:#2a1018f2;color:#f5dede;font:13px/1.3 system-ui,sans-serif;box-shadow:0 8px 24px #000a";
+  netEl.innerHTML='<span>Связь с сервером нестабильна</span><button type="button" style="border:1px solid #a98a4a;background:#5a3f16;color:#ffe9b0;border-radius:10px;padding:7px 12px;font:700 13px system-ui;cursor:pointer">Обновить</button>';
+  netEl.querySelector("button").onclick=function(){location.reload()};
+  document.body.appendChild(netEl);
+ };
+ var netOk=function(){netF=0;if(netEl){try{netEl.remove()}catch(e){}netEl=null}};
  var go=function(self,args,read){
-  var u=args[0],o=args[1],run=function(){return send(self,u,o)};
-  if(!read)return run().catch(function(e){throw mkErr(false,e)});
-  return run().then(function(r){if(r&&r.status>=500)throw {name:"HttpError"};return r})
-   .catch(function(){return new Promise(function(res){setTimeout(res,900)}).then(run)})
-   .catch(function(e){throw mkErr(true,e)});
+  var u=args[0],o=args[1],act="";try{act=String(JSON.parse((o&&o.body)||"{}").action||"")}catch(e){}
+  var t0=Date.now(),run=function(){return send(self,u,o)};
+  var ok=function(r){var f=!!(r&&r.status>=500);pfAdd(act,Date.now()-t0,f,u);if(f)netBad();else netOk();return r};
+  var bad=function(e){pfAdd(act,Date.now()-t0,true,u);netBad();throw e};
+  if(!read)return run().then(ok,function(e){bad(mkErr(false,e))});
+  var chk=function(r){if(r&&r.status>=500)throw {name:"HttpError"};return r};
+  var wait=function(ms){return function(){return new Promise(function(res){setTimeout(res,ms)}).then(run).then(chk)}};
+  return run().then(chk).catch(wait(900)).catch(wait(1800)).then(ok,function(e){bad(mkErr(true,e))});
  };
  window.fetch=function(u,o){
   var url=typeof u==="string"?u:(u&&u.url)||"";
