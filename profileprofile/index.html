@@ -410,6 +410,39 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 *:not(.burst):not(.floatPlus):not(.levelBanner):not(.flashOv):not(#veil):not(#veil i):not(.bump):not(.toast):not(.sectionBody):not(#chFab):not(#chPanel):not(#chPanel *),
 *:not(.burst):not(.floatPlus):not(.levelBanner):not(.flashOv):not(#veil):not(#veil i):not(.bump):not(.toast):not(.sectionBody):not(#chFab):not(#chPanel):not(#chPanel *)::before,
 *:not(.burst):not(.floatPlus):not(.levelBanner):not(.flashOv):not(#veil):not(#veil i):not(.bump):not(.toast):not(.sectionBody):not(#chFab):not(#chPanel):not(#chPanel *)::after{animation:none!important}
+
+/* ===== новый герой-экран (вариант B) ===== */
+.hero2{position:relative;overflow:hidden;border:1px solid #6b5636;border-radius:21px;background:#0a0710;box-shadow:0 12px 36px #0006,0 0 30px #e2c27a1a;animation:rise .7s ease .1s backwards}
+.stage2{position:relative;height:460px;overflow:hidden;background:#0a0710}
+.arch2{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.eyebrow2{position:absolute;left:0;right:0;top:12px;text-align:center;color:#e2c27a;font-size:10px;letter-spacing:3px;text-transform:uppercase;text-shadow:0 1px 6px #000;z-index:3}
+.floor2{position:absolute;left:50%;bottom:22px;width:210px;height:38px;margin-left:-105px;border-radius:50%;background:radial-gradient(ellipse,#e2c27a66,#e2c27a00 70%)}
+.heroImg2{position:absolute;left:50%;bottom:34px;height:352px;width:auto;transform:translateX(-50%);filter:drop-shadow(0 8px 14px #000);z-index:2;animation:hFloat 5s ease-in-out infinite}
+@keyframes hFloat{50%{transform:translateX(-50%) translateY(-4px)}}
+.slots2{position:absolute;top:58px;display:flex;flex-direction:column;gap:9px;z-index:4}
+.slots2.l{left:8px}.slots2.r{right:8px}
+.slot2{position:relative;display:block;width:60px;height:60px;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.slot2 .fr{position:absolute;inset:0;width:100%;height:100%}
+.slot2 .ic{position:absolute;left:19%;top:19%;width:62%;height:62%;object-fit:contain;filter:drop-shadow(0 2px 3px #000a)}
+.slot2.empty .ic{opacity:.18;filter:grayscale(1)}
+.slot2:active{transform:scale(.95)}
+.plaque2{position:relative;margin:-40px 6px 0;z-index:5}
+.pl2bg{display:block;width:100%;height:auto}
+.pl2in{position:absolute;inset:0;display:flex;align-items:center;gap:6px;padding:0 15% 0 8%}
+.pl2in .portraitWrap{width:62px;height:62px;flex:none;margin-left:-4px}
+.pl2in .portrait{width:56px;height:56px;border-radius:50%}
+.pl2in .portrait img{border-radius:50%}
+.pl2in .heroName{flex:1;min-width:0;text-align:center;font-size:23px;line-height:1.1}
+.pad2{padding:2px 14px 15px}
+.hero2 .heroLevel{justify-content:center;margin-top:2px}
+.hero2 .heroCaption{text-align:center;margin-top:5px}
+.runes2{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:11px;text-align:center}
+.rune2{padding:4px 0 6px;border:1px solid #3c3252;border-radius:12px;background:#120d18}
+.rune2 img{display:block;width:34px;height:34px;margin:0 auto 1px;object-fit:contain}
+.rune2 b{display:block;font:700 16px Philosopher,Georgia,serif;color:#f3e4bd}
+.rune2 small{display:block;font-size:8px;letter-spacing:1px;color:#a79db4}
+.hero2 .quickStats.q2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(prefers-reduced-motion:reduce){.heroImg2{animation:none}}
 </style>
 <script src="../shared/skills.js"></script>
 <script src="../shared/vip.js?v=a2"></script>
@@ -435,53 +468,66 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </header>
 
 <main>
-  <section class="hero">
-    <div class="sparkle">✧</div>
-    <div class="eyebrow">✦ Личное досье ✦</div>
+  <section class="hero2" id="hero2">
+    <div class="stage2">
+      <img class="arch2" src="../shared/art/profile/arch.webp?v=1" alt="" draggable="false">
+      <div class="eyebrow2">✦ Личное досье ✦</div>
+      <div class="floor2"></div>
+      <img class="heroImg2" id="heroImg" alt="Герой" draggable="false">
+      <div class="slots2 l" id="slotsL"></div>
+      <div class="slots2 r" id="slotsR"></div>
+    </div>
 
-    <div class="heroTop" style="margin-top:13px">
-      <div class="portraitWrap"><div class="portrait" id="portrait"><span>𓂀</span></div></div>
-      <div class="heroInfo">
+    <div class="plaque2">
+      <img class="pl2bg" src="../shared/art/profile/plaque.webp?v=1" alt="" draggable="false">
+      <div class="pl2in">
+        <div class="portraitWrap"><div class="portrait" id="portrait"><span>𓂀</span></div></div>
         <div class="heroName" id="nick">Загрузка…</div>
-        <div class="heroLevel">
-          <span class="levelTag">УРОВЕНЬ <span id="lvl">—</span></span>
-          <span class="pathTag" id="path">Путь неизвестен</span>
+      </div>
+    </div>
+
+    <div class="pad2">
+      <div class="heroLevel">
+        <span class="levelTag">УРОВЕНЬ <span id="lvl">—</span></span>
+        <span class="pathTag" id="path">Путь неизвестен</span>
+      </div>
+      <div class="heroCaption" id="heroCap">Путник · Последователь мистерий</div>
+      <a class="clanChip hidden" id="clanChip" href="../clan/index.html"><span class="ce" id="clanEmb"></span><span class="ct"><b id="clanName">—</b><small id="clanRank">—</small></span><i>›</i></a>
+      <a class="arenaChip hidden" id="arenaChip" href="../arena/index.html"><span class="ce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-1-1-3zM3 21l6-6"/></svg></span><span class="ct"><b id="arLeague">—</b><small id="arSub">—</small></span><i>›</i></a>
+      <a class="profChip hidden" id="profChip" href="../bureau/index.html"><span class="ce" id="pfEmb"></span><span class="ct"><b id="pfName">—</b><small id="pfSub">—</small><span class="pfBar"><i id="pfFill"></i></span></span><i class="ar">›</i></a>
+
+      <div class="resourceRow">
+        <div class="resource" id="hpBox">
+          <div class="resourceHead"><span>❤️ Здоровье</span><span id="hpPercent">—</span></div>
+          <div class="resourceValue" id="hp">— / —</div>
+          <div class="bar hp"><i id="hpbar"></i></div>
         </div>
-        <div class="heroCaption" id="heroCap">Путник · Последователь мистерий</div>
-        <a class="clanChip hidden" id="clanChip" href="../clan/index.html"><span class="ce" id="clanEmb"></span><span class="ct"><b id="clanName">—</b><small id="clanRank">—</small></span><i>›</i></a>
-        <a class="arenaChip hidden" id="arenaChip" href="../arena/index.html"><span class="ce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-1-1-3zM3 21l6-6"/></svg></span><span class="ct"><b id="arLeague">—</b><small id="arSub">—</small></span><i>›</i></a>
-        <a class="profChip hidden" id="profChip" href="../bureau/index.html"><span class="ce" id="pfEmb"></span><span class="ct"><b id="pfName">—</b><small id="pfSub">—</small><span class="pfBar"><i id="pfFill"></i></span></span><i class="ar">›</i></a>
+        <div class="resource">
+          <div class="resourceHead"><span>✦ Опыт</span><span id="expPercent">—</span></div>
+          <div class="resourceValue" id="exp">—</div>
+          <div class="bar exp"><i id="expbar"></i></div>
+        </div>
       </div>
-    </div>
 
-    <div class="resourceRow">
-      <div class="resource" id="hpBox">
-        <div class="resourceHead"><span>❤️ Здоровье</span><span id="hpPercent">—</span></div>
-        <div class="resourceValue" id="hp">— / —</div>
-        <div class="bar hp"><i id="hpbar"></i></div>
+      <div class="runes2">
+        <div class="rune2"><img src="../shared/art/profile/r_str.webp?v=1" alt=""><b id="rn_str">—</b><small>СИЛА</small></div>
+        <div class="rune2"><img src="../shared/art/profile/r_agi.webp?v=1" alt=""><b id="rn_agi">—</b><small>ЛОВК.</small></div>
+        <div class="rune2"><img src="../shared/art/profile/r_int.webp?v=1" alt=""><b id="rn_int">—</b><small>ИНТ.</small></div>
+        <div class="rune2"><img src="../shared/art/profile/r_spi.webp?v=1" alt=""><b id="rn_spi">—</b><small>ДУХ</small></div>
+        <div class="rune2"><img src="../shared/art/profile/r_con.webp?v=1" alt=""><b id="s_con_top">—</b><small>ТЕЛО</small></div>
       </div>
-      <div class="resource">
-        <div class="resourceHead"><span>✦ Опыт</span><span id="expPercent">—</span></div>
-        <div class="resourceValue" id="exp">—</div>
-        <div class="bar exp"><i id="expbar"></i></div>
-      </div>
-    </div>
 
-    <div class="quickStats">
-      <div class="quick">
-        <div class="quickIcon">£</div>
-        <div class="quickValue" id="pounds">—</div>
-        <div class="quickLabel">ФУНТЫ</div>
-      </div>
-      <div class="quick">
-        <div class="quickIcon">🛡️</div>
-        <div class="quickValue" id="s_con_top">—</div>
-        <div class="quickLabel">ТЕЛО</div>
-      </div>
-      <div class="quick" id="ptsQuick">
-        <div class="quickIcon">🎯</div>
-        <div class="quickValue" id="pts_top">0</div>
-        <div class="quickLabel">ОЧКИ СТАТОВ</div>
+      <div class="quickStats q2">
+        <div class="quick">
+          <div class="quickIcon">£</div>
+          <div class="quickValue" id="pounds">—</div>
+          <div class="quickLabel">ФУНТЫ</div>
+        </div>
+        <div class="quick" id="ptsQuick">
+          <div class="quickIcon">🎯</div>
+          <div class="quickValue" id="pts_top">0</div>
+          <div class="quickLabel">ОЧКИ СТАТОВ</div>
+        </div>
       </div>
     </div>
   </section>
@@ -1253,6 +1299,41 @@ function renderExperience(data) {
   setText("expPercent", level < MAX_LEVEL ? Math.floor(percent) + "%" : "MAX");
 }
 
+const SLOTS2 = [["head","Голова"],["face","Лицо"],["body","Тело"],["weapon","Оружие"],["legs","Ноги"],["necklace","Шея"],["ring","Кольцо"]];
+function renderHero(data) {
+  try {
+    const pk = LOTM_SKILLS.pathKey(data.path_key || data.path) || "seer";
+    const g = data.gender === "female" ? "f" : "m";
+    const img = $("heroImg");
+    const src = "../shared/battle/heroes/" + g + "_" + pk + "_idle.webp?v=b4";
+    if (img.getAttribute("src") !== src) img.setAttribute("src", src);
+    const eq = (data.equipped && typeof data.equipped === "object") ? data.equipped : {};
+    const L = $("slotsL"), R = $("slotsR");
+    L.replaceChildren(); R.replaceChildren();
+    SLOTS2.forEach(([slot, label], i) => {
+      const it = eq[slot];
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "slot2" + (it ? "" : " empty");
+      b.setAttribute("aria-label", it ? (label + ": " + it.name) : (label + ": пусто"));
+      const fr = document.createElement("img");
+      fr.className = "fr"; fr.alt = ""; fr.draggable = false;
+      const rare = it && it.rarity && it.rarity !== "Обычная";
+      fr.src = "../shared/art/profile/" + (it ? (rare ? "slot_rare" : "slot_gold") : "slot_empty") + ".webp?v=1";
+      const ic = document.createElement("img");
+      ic.className = "ic"; ic.alt = ""; ic.draggable = false;
+      ic.src = "../shared/art/gear/" + slot + ".webp";
+      b.append(fr, ic);
+      b.addEventListener("click", () => {
+        const p = new URLSearchParams(location.search); p.set("tab", "bag");
+        location.href = "../index.html?" + p.toString();
+      });
+      (i < 4 ? L : R).appendChild(b);
+    });
+    ["str", "agi", "int", "spi"].forEach(k => setNum("rn_" + k, number(data[k])));
+  } catch (e) { console.warn("renderHero", e); }
+}
+
 async function loadProfile() {
   if (!PROFILE_URL) await ensure();
 
@@ -1281,6 +1362,7 @@ async function loadProfile() {
 
   renderExperience(data);
   renderStats(data);
+  renderHero(data);
   setPortrait(data);
   try { renderClan(data); } catch (e) {}
   try { renderArena(data); } catch (e) {}
