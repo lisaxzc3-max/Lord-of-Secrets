@@ -303,13 +303,14 @@ async function load(){
   const enemy=getEnemyName(state?.enemy);
   pickEnemy(enemy);
   setEnemyLevel(state?.enemy_level,state?.boss,state?.phase);
+  if(state?.elite){$("enemyLabel").textContent="⭐ "+($("enemyLabel").textContent||"")}
   if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
   else setHealth("enemy",null,null);
   renderSkills(state?.cds||{});
   if(!initialized){
    B.enter();
    const sn=MOBSND[enemy];if(sn)setTimeout(()=>snd(sn),500);
-   addLog("Ты столкнулся с противником: "+(SHOWN[enemy]||enemy)+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
+   addLog("Ты столкнулся с противником: "+(state?.elite?"⭐ Помеченный ":"")+(SHOWN[enemy]||enemy)+(state?.enemy_level?" (ур. "+state.enemy_level+")":"")+".","info");
    if(state?.boss){
     setMessage(CFG.boss.msg,"",CFG.boss.icon);
     setTimeout(()=>{banner(CFG.boss.banner(enemy),CFG.boss.color);B.shake(2)},700);
