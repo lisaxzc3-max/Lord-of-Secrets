@@ -7,6 +7,9 @@ if(_b)location.replace(_b+"transition/index.html"+location.search)}}catch(e){}
 (function(){
 "use strict";
 var KEY="lotm_snd";
+var MASTER=0.62; /* общая громкость: звуки были слишком громкими */
+var LOWQ=false;try{LOWQ=localStorage.getItem("lotm_q")==="low"}catch(e){}
+var active=0; /* число звучащих голосов: ограничиваем, чтобы не лагало */
 var st={on:1,sfx:0.8,mus:0.45};
 try{var s0=JSON.parse(localStorage.getItem(KEY)||"null");if(s0&&typeof s0==="object"){st.on=s0.on===0?0:1;if(isFinite(s0.sfx))st.sfx=s0.sfx;if(isFinite(s0.mus))st.mus=s0.mus}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
@@ -19,7 +22,7 @@ function init(){
 if(ctx||!AC)return !!ctx;
 try{
 ctx=new AC();
-master=ctx.createGain();master.gain.value=st.on?1:0;var tone=ctx.createBiquadFilter();tone.type="lowpass";tone.frequency.value=3000;tone.Q.value=0.4;var cmp=ctx.createDynamicsCompressor();cmp.threshold.value=-16;cmp.knee.value=18;cmp.ratio.value=6;cmp.attack.value=0.004;cmp.release.value=0.2;master.connect(cmp);cmp.connect(tone);tone.connect(ctx.destination);
+master=ctx.createGain();master.gain.value=st.on?MASTER:0;var tone=ctx.createBiquadFilter();tone.type="lowpass";tone.frequency.value=2500;tone.Q.value=0.3;var cmp=ctx.createDynamicsCompressor();cmp.threshold.value=-22;cmp.knee.value=10;cmp.ratio.value=10;cmp.attack.value=0.002;cmp.release.value=0.25;master.connect(cmp);cmp.connect(tone);tone.connect(ctx.destination);
 sfxG=ctx.createGain();sfxG.gain.value=st.sfx;sfxG.connect(master);
 musG=ctx.createGain();musG.gain.value=st.mus*0.5;musG.connect(master);
 /* простая «пещерная» реверберация: несколько задержек с обратной связью */
@@ -43,7 +46,9 @@ if(opt.vib){var l=ctx.createOscillator(),lg=ctx.createGain();l.frequency.value=o
 var a=opt.attack||0.005;
 g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(0.0002,vol),t+a);
 g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-o.connect(g);g.connect(opt.out||sfxG);if(opt.wet){var w=ctx.createGain();w.gain.value=opt.wet;g.connect(w);w.connect(rev)}
+if(type==="sawtooth"||type==="square"){var lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=Math.min(2200,Math.max(450,f*5));lp.Q.value=0.4;o.connect(lp);lp.connect(g)}else o.connect(g);
+g.connect(opt.out||sfxG);if(opt.wet&&!LOWQ){var w=ctx.createGain();w.gain.value=opt.wet;g.connect(w);w.connect(rev)}
+active++;o.onended=function(){active=Math.max(0,active-1);try{o.disconnect()}catch(e){}};
 o.start(t);o.stop(t+dur+0.05);return o;
 }
 function noise(t,dur,vol,type,f1,f2,q,opt){
@@ -55,7 +60,8 @@ fl.Q.value=q||0.7;
 var g=ctx.createGain();var a=opt.attack||0.004;
 g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(0.0002,vol),t+a);
 g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-s.connect(fl);fl.connect(g);g.connect(opt.out||sfxG);if(opt.wet){var w=ctx.createGain();w.gain.value=opt.wet;g.connect(w);w.connect(rev)}
+s.connect(fl);fl.connect(g);g.connect(opt.out||sfxG);if(opt.wet&&!LOWQ){var w=ctx.createGain();w.gain.value=opt.wet;g.connect(w);w.connect(rev)}
+active++;s.onended=function(){active=Math.max(0,active-1);try{s.disconnect()}catch(e){}};
 s.start(t,Math.random());s.stop(t+dur+0.05);
 }
 function N(m){return 440*Math.pow(2,(m-69)/12)}
@@ -267,11 +273,11 @@ if(!init())return;
 if(ctx.state!=="running"){try{ctx.resume()}catch(e){}return}
 var f=SFX[name];if(!f)return;
 if(!delay){
-var now=performance.now(),gap=(name==="vntick"?70:name==="tap"?45:30);
+var now=performance.now(),gap=(name==="vntick"?70:name==="tap"?60:40);
 if(lastAt[name]&&now-lastAt[name]<gap)return;
 lastAt[name]=now;
 while(recent.length&&now-recent[0]>250)recent.shift();
-if(recent.length>=9&&!KEEP[name])return;
+if((recent.length>=6||active>26)&&!KEEP[name])return;
 recent.push(now);
 }
 try{f(ctx.currentTime+(delay||0)+0.01)}catch(e){}
@@ -301,6 +307,7 @@ function every(ms,fn){fn();timers.push(setInterval(function(){if(ctx&&ctx.state=
 function startScene(name){
 clearMusic();
 var c=SC[name];if(!c||!ctx||!st.on)return;
+if(LOWQ)c=Object.assign({},c,{bell:0,dis:0,whisp:0,heart:0,choir:0,mel:null});
 var out=musG;
 /* дрон */
 [0,0.07].forEach(function(det,i){
@@ -371,7 +378,7 @@ osc("sine",N(m)*2,t,0.8,0.02*c.vol,{out:out,wet:0.6,attack:0.01});
 if(c.drum){
 every(beat,function(){
 var t=ctx.currentTime+0.02;
-osc("sine",95,t,0.22,0.3*c.vol*(step%4===0?1:0.6),{to:42,out:out});
+osc("sine",95,t,0.22,0.2*c.vol*(step%4===0?1:0.6),{to:42,out:out});
 if(c.drum>1||step%2===1)noise(t,0.05,0.08,"highpass",5000,9000,0.4,{out:out});
 if(step%8===6)osc("sawtooth",N(c.root+12+c.scale[(step>>1)%c.scale.length]),t,0.3,0.05,{out:out,wet:0.3});
 step++;
@@ -391,7 +398,7 @@ function stop(){scene="";clearMusic()}
 /* ---------- настройки ---------- */
 function apply(){
 if(!ctx)return;
-master.gain.value=st.on?1:0;sfxG.gain.value=st.sfx;musG.gain.value=st.mus*0.5;
+master.gain.value=st.on?MASTER:0;sfxG.gain.value=st.sfx;musG.gain.value=st.mus*0.5;
 }
 function toggle(v){
 st.on=(v===undefined?(st.on?0:1):(v?1:0));save();
@@ -427,7 +434,7 @@ if(t.tagName==="A"||t.classList.contains("back"))sfx("back");else sfx("tap");
 document.addEventListener("touchend",onGesture,{passive:true,capture:true});
 document.addEventListener("visibilitychange",function(){
 if(!ctx)return;
-if(document.hidden){try{ctx.suspend()}catch(e){}}else if(st.on){try{ctx.resume()}catch(e){}}
+if(document.hidden){try{ctx.suspend()}catch(e){}}else{active=0;if(st.on){try{ctx.resume()}catch(e){}}}
 });
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mkBtn);else mkBtn();
 
