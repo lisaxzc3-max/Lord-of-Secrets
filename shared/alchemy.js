@@ -42,10 +42,13 @@ rage:{n:"Зелье Народа Ярости",p:"sailor",c:"#4f8f94",info:"По
 provoker:{n:"Зелье Провокатора",p:"hunter",c:"#a3262e",info:"Последовательность 8 · Путь Красного Жреца",d:"Густое и красное. Зелье следующей ступени Охотника."}
 };
 var RAR=["","#cdbf9f","#8fb3a6","#d6b779"], RARN=["","Обычный","Необычный","Редкий"];
+var _cs=document.currentScript,ART=(_cs&&_cs.src?_cs.src.replace(/[^\/]*(\?.*)?$/,""):"shared/")+"art/alch/";
 function glyph(id,cls){
+ if(ING[id])return '<svg class="'+(cls||"")+'" viewBox="0 0 24 24" aria-hidden="true"><image href="'+ART+id+'.webp?v=1" width="24" height="24"/></svg>';
  return '<svg class="'+(cls||"")+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'+(G[id]||"")+'</svg>';
 }
 function potion(pid,cls){
+ if(POT[pid])return '<svg class="'+(cls||"")+'" viewBox="0 0 64 80" aria-hidden="true"><image href="'+ART+'pot_'+pid+'.webp?v=1" width="64" height="80" preserveAspectRatio="xMidYMid meet"/></svg>';
  var c=(POT[pid]||{c:"#8a7a58"}).c;
  return '<svg class="'+(cls||"")+'" viewBox="0 0 64 80" fill="none"><defs><linearGradient id="pl'+pid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c+'" stop-opacity=".95"/><stop offset="1" stop-color="#050306" stop-opacity=".95"/></linearGradient></defs>'+
  '<path d="M26 6h12v4l-2 2v10c9 4 16 12 16 24 0 12-8 22-20 22S12 58 12 46c0-12 7-20 16-24V12l-2-2z" fill="#0b0810" stroke="#8a7a58" stroke-width="1.6"/>'+
