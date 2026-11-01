@@ -41,7 +41,7 @@ function avatar(d){
  var ico=PATH[d.path_key]||"👤";
  if(PATH[d.path_key]){
   var img=new Image();img.alt="";
-  img.src=base+"avatars/"+(d.gender==="female"?"f":"m")+"_"+d.path_key+(d.sequence&&d.sequence<=8?"8":"")+".svg";
+  img.src=base+"avatars/"+(d.gender==="female"?"f":"m")+"_"+d.path_key+(d.sequence&&d.sequence<=8?"8":"")+".webp";
   img.onerror=function(){img.remove();wrap.textContent=ico};
   wrap.appendChild(img);
  }else wrap.textContent=ico;

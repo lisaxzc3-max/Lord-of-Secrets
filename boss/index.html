@@ -223,7 +223,7 @@ body.shakeBig .wrap{animation:shakeBig .8s}
   <section class="card" id="giftCard" hidden></section>
 
   <section class="card pcard" id="playerCard">
-    <div class="pFrame" id="pFrame"><img id="pImg" src="../avatars/m_seer.svg" alt="Игрок"></div>
+    <div class="pFrame" id="pFrame"><img id="pImg" src="../avatars/m_seer.webp" alt="Игрок"></div>
     <div>
       <div class="pName" id="pName">Путешественник</div>
       <div class="pPath" id="pPath">—</div>
@@ -446,7 +446,7 @@ function renderPlayer(){
 if(!PROF)return;
 $("pName").textContent=PROF.nickname||"Путешественник";
 $("pPath").textContent=(LOTM_SKILLS.PATHNAME[PK]?LOTM_SKILLS.PATHNAME[PK][0]+" · "+LOTM_SKILLS.PATHNAME[PK][1]:(PROF.path||"—"));
-try{if(PROF.gender)$("pImg").src="../avatars/"+(PROF.gender==="female"?"f":"m")+"_"+PK+((PROF.sequence|0)&&(PROF.sequence|0)<=8?"8":"")+".svg"}catch(_){}
+try{if(PROF.gender)$("pImg").src="../avatars/"+(PROF.gender==="female"?"f":"m")+"_"+PK+((PROF.sequence|0)&&(PROF.sequence|0)<=8?"8":"")+".webp"}catch(_){}
 const r=runOf();
 if(r)setPlayerHp(r.hp,r.max);
 else{const m=Number(PROF.max_hp)||50;setPlayerHp(m,m)}

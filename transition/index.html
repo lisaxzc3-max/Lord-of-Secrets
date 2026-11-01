@@ -345,7 +345,7 @@ async function finish(){
  if(d&&d.seq_done&&d.seq_done.name)nm=d.seq_done.name;
  $("endH").textContent=nm;
  var gnd=d&&d.gender==="female"?"f":"m";
- var im=new Image();im.onload=function(){$("endAv").replaceChildren(im)};im.src="../avatars/"+gnd+"_"+pk+"8.svg";
+ var im=new Image();im.onload=function(){$("endAv").replaceChildren(im)};im.src="../avatars/"+gnd+"_"+pk+"8.webp";
  $("end").classList.add("on");setTimeout(function(){$("end").classList.add("show")},60);
  $("vn").style.display="none";$("hud").style.opacity=0;$("prog").style.opacity=0;$("chName").style.opacity=0;
 }

@@ -1158,7 +1158,7 @@ function setPortrait(data) {
   const box = $("portrait");
   let img = box.querySelector("img");
   if (!img) { box.replaceChildren(); img = document.createElement("img"); img.alt = ""; box.appendChild(img); }
-  img.src = "../avatars/" + g + "_" + pk + ((data.sequence|0) && (data.sequence|0) <= 8 ? "8" : "") + ".svg";
+  img.src = "../avatars/" + g + "_" + pk + ((data.sequence|0) && (data.sequence|0) <= 8 ? "8" : "") + ".webp";
 }
 
 

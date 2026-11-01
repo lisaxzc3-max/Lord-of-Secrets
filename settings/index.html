@@ -222,7 +222,7 @@ function burst(){const c=["#d6b779","#8b6bff","#fff3c4","#ff8a4a"];const b=$("bu
 
 const NAMES={seer:"Путь Шута",sailor:"Путь Тирана",hunter:"Путь Красного Жреца"};
 let cur={gender:"",pk:"",path:""},selG="",selP="";
-const av=(g,pk)=>"../avatars/"+(g==="female"?"f":"m")+"_"+(pk||"seer")+".svg";
+const av=(g,pk)=>"../avatars/"+(g==="female"?"f":"m")+"_"+(pk||"seer")+".webp";
 function paintGender(){
   const pk=cur.pk||selP||"seer";
   $("gi-male").src=av("male",pk);$("gi-female").src=av("female",pk);
