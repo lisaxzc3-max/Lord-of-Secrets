@@ -20,6 +20,8 @@ var STEPS=[
 
 var css=document.createElement("style");
 css.textContent=
+"#tutBox.top{bottom:auto;top:calc(8px + env(safe-area-inset-top))}"+
+"#tutBox.min .tx,#tutBox.min .bar,#tutBox.min .ac{display:none}"+
 "#tutBox{position:fixed;left:10px;right:56px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:8500;max-width:420px;margin:0;padding:11px 12px;border-radius:18px;border:1px solid #e2c27a99;background:linear-gradient(160deg,#2a2044f7,#150e28f7);box-shadow:0 8px 30px #000a,0 0 24px #8a5cff44;transform:translateY(160%);opacity:0;transition:transform .5s cubic-bezier(.2,.9,.25,1.1),opacity .3s;font-family:system-ui,-apple-system,sans-serif;color:#eee6d6}"+
 "#tutBox.on{transform:none;opacity:1}"+
 "#tutBox .tr{display:flex;gap:10px;align-items:flex-start}"+
@@ -27,7 +29,7 @@ css.textContent=
 "@keyframes tutFl{50%{transform:translateY(-3px)}}"+
 "#tutBox .hd{display:flex;justify-content:space-between;align-items:baseline;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#e2c27a}"+
 "#tutBox .hd i{font-style:normal;color:#a99dba;letter-spacing:1px}"+
-"#tutBox .tx{font-size:13px;line-height:1.4;margin-top:3px;color:#f1e8d3}"+
+"#tutBox .tx{font-size:12.5px;line-height:1.35;margin-top:3px;color:#f1e8d3}"+
 "#tutBox .bar{display:flex;gap:5px;margin:9px 0 0}"+
 "#tutBox .bar b{flex:1;height:4px;border-radius:9px;background:#2a2040;transition:.5s}"+
 "#tutBox .bar b.on{background:linear-gradient(90deg,#e2c27a,#fff3cf);box-shadow:0 0 8px #e2c27a}"+
@@ -53,6 +55,7 @@ function build(){
  document.body.appendChild(ui);
  ring=el("div");ring.id="tutRing";document.body.appendChild(ring);
  ui.querySelector("#tutSk").addEventListener("click",skip);
+ ui.querySelector(".ow").addEventListener("click",function(){ui.classList.toggle("min")});
  ui.querySelector("#tutGo").addEventListener("click",onGo);
 }
 function api(p){return window.tutApi(p)}
@@ -64,6 +67,7 @@ function place(){
  if(r.width>0){
   ring.style.left=(r.left-5)+"px";ring.style.top=(r.top-5)+"px";ring.style.width=(r.width+10)+"px";ring.style.height=(r.height+10)+"px";
   ring.classList.toggle("up",r.top>innerHeight*0.55);ring.classList.add("on");
+  if(ui)ui.classList.toggle("top",(r.top+r.height/2)>innerHeight*0.42);
  }else ring.classList.remove("on");
  raf=requestAnimationFrame(place);
 }
@@ -94,7 +98,7 @@ function render(){
  flag(i);eqPoll(i);
 }
 var UID=(function(){var q=new URLSearchParams(location.search),tg=window.Telegram&&Telegram.WebApp;return String(q.get("u")||(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id)||"0")})();
-function flag(i){try{if(i>=5&&i<7)localStorage.setItem("lotm_tutf_"+UID,"1");else localStorage.removeItem("lotm_tutf_"+UID)}catch(e){}}
+function flag(i){try{if(i>=5&&i<7)localStorage.setItem("lotm_tutf_"+UID,"1");else{localStorage.removeItem("lotm_tutf_"+UID);localStorage.removeItem("lotm_tutw_"+UID)}}catch(e){}}
 var eqT=0;
 function eqPoll(i){
  if(i!==3){if(eqT){clearInterval(eqT);eqT=0}return}
