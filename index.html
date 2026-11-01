@@ -713,6 +713,7 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 
 /* модели снаряжения */
 .gearIc{padding:0}
+.gearFog img{filter:drop-shadow(0 0 6px #5fbfa8aa) drop-shadow(0 2px 4px #000a)!important}
 .gearIc img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;filter:drop-shadow(0 2px 4px #000a)}
 .eqSlot .ic.gearIc{flex:1 1 0;min-height:0;width:100%;font-size:0}
 .eqSlot:not(.on) .ic.gearIc img{filter:grayscale(1) brightness(.7)}
@@ -1771,12 +1772,14 @@ function gearImg(slot) {
   return '<img src="./shared/art/gear/' + slot + '.webp?v=1" alt="" draggable="false" loading="lazy">';
 }
 function bagIcon(el, item, fallback) {
-  el.classList.remove("gearIc");
-  const art = item && item.set === "fog" ? FOG_ART[item.name] : null;
-  if (!art) {
-    if (item && !item.quest && !item.vip_days && GEAR_ART[item.slot]) { el.classList.add("gearIc"); el.innerHTML = gearImg(item.slot); return; }
-    el.textContent = fallback; return;
+  el.classList.remove("gearIc", "gearFog");
+  if (item && !item.quest && !item.vip_days && GEAR_ART[item.slot]) {
+    el.classList.add("gearIc");
+    if (item.set === "fog") el.classList.add("gearFog");
+    el.innerHTML = gearImg(item.slot); return;
   }
+  const art = item && item.set === "fog" ? FOG_ART[item.name] : null;
+  if (!art) { el.textContent = fallback; return; }
   el.classList.add("fogIc");
   el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + art + "</svg>";
 }
