@@ -20,8 +20,16 @@ var css=
 "#ltBar{position:fixed;left:0;top:0;height:2px;width:0;z-index:100000;background:linear-gradient(90deg,transparent,#ffd98a,#a98fd0);box-shadow:0 0 8px #ffd98a;opacity:0;pointer-events:none;transition:width .4s ease-out,opacity .3s}"+
 "a,button,[role=button],.btn,label,select,summary,input[type=checkbox],input[type=radio]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}"+
 "html{-webkit-text-size-adjust:100%;text-size-adjust:100%}"+
+"img,svg,canvas,video,a{-webkit-touch-callout:none}img,svg,canvas,video{-webkit-user-select:none;user-select:none}"+
 "@media(prefers-reduced-motion:reduce){.lt-sp{animation-duration:2s}}";
 try{var st=document.createElement("style");st.textContent=css;document.head.appendChild(st)}catch(e){}
+/* --- без системного меню при долгом нажатии на картинки и ссылки (оно показывает адрес сайта) --- */
+document.addEventListener("contextmenu",function(e){
+ var t=e.target;if(!t||!t.closest)return;
+ if(t.closest("input,textarea,[contenteditable=true]"))return;
+ if(t.closest("img,svg,canvas,video,a,button,[role=button]"))e.preventDefault();
+},true);
+document.addEventListener("dragstart",function(e){var t=e.target;if(t&&t.tagName==="IMG")e.preventDefault()},true);
 /* --- верхняя полоска загрузки --- */
 var inflight=0,barT=null,bar=null;
 function barOn(){
