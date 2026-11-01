@@ -13,7 +13,7 @@ var STEPS=[
  {t:"Подарок за первый этап",x:"Далия оставила тебе стартовую вещь и 30 💷. Забирай, пригодится в бою.",sel:"#bag .bgHead",btn:"🎁 Забрать подарок",gift:true,needBag:true},
  {t:"Надень снаряжение",x:"Нажми на новую вещь в списке «Сумка», затем «Надеть». Вещи на тебе добавляют силу в бою.",sel:"#invList .ivRow",eq:true,needBag:true},
  {t:"Город",x:"В Городе 🌆 тебя ждут торговцы, бармен и Ратуша с Залом славы. Открой вкладку «Город».",sel:'.nav a[data-tab="city"]'},
- {t:"Куда драться",x:"Открой «Поход» и выбери локацию: Озёра или Лес. Начни с Озёр, там враги слабее.",sel:'.nav a[data-tab="travel"]',sel2:"#ctaGo"},
+ {t:"Куда драться",x:"Открой «Поход» и выбери «Озёра · Топи» и нажми «Отправиться». Остальные локации откроются с ростом уровня.",sel:'.nav a[data-tab="travel"]',sel2:"#ctaGo"},
  {t:"В бой!",x:"Зайди в локацию, нажми «Исследовать» и победи врага. В бою я подскажу, что нажимать. После победы вернись сюда за наградой.",sel:'.nav a[data-tab="travel"]',sel2:"#ctaGo"},
  {t:"Победа!",x:"Первый враг повержен — Далия довольна. Забери награду за обучение.",sel:"#ctaGo",btn:"🎁 Забрать +50 💷",claim:true}
 ];
@@ -80,7 +80,7 @@ function findTarget(s){
  }
  var t=document.querySelector(s.sel);
  if(s.sel2){var c=document.querySelector(s.sel2);var travel=document.getElementById("travel");
-  if(travel&&!travel.classList.contains("hidden")){var l=document.querySelector("#travel .loc");if(l)return l}
+  if(travel&&!travel.classList.contains("hidden")){var l=document.querySelector("#travel .tvGo:not([disabled])");if(l)return l}
   if(c&&c.offsetParent!==null&&!document.getElementById("hall").classList.contains("hidden"))return c}
  return t;
 }
@@ -166,7 +166,7 @@ function onTab(id){
 }
 /* клик по карточке героя — засчитывает шаг 1 */
 document.addEventListener("click",function(e){var i=idx();if(i===0&&e.target.closest&&e.target.closest("#topCard"))setTimeout(next,50);
- if(i===5&&e.target.closest&&e.target.closest("#travel .loc, #ctaGo")){try{localStorage.setItem("lotm_tutf_"+UID,"1")}catch(_){}next()}
+ if(i===5&&e.target.closest&&e.target.closest("#travel .tvGo, #ctaGo")){try{localStorage.setItem("lotm_tutf_"+UID,"1")}catch(_){}next()}
  if(i===2||i===3)setTimeout(function(){if(st&&!st.done)render()},120)},true);
 window.addEventListener("resize",function(){if(target)place()});
 
