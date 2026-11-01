@@ -33,7 +33,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 #start p{margin:0;opacity:.8;font-size:14px}
 #start button{margin-top:8px;padding:14px 40px;border-radius:30px;border:2px solid var(--gold);background:rgba(10,7,8,.8);color:var(--gold);font:18px Georgia,serif;letter-spacing:.1em}
 </style>
-<style>img,svg,canvas,video,a{-webkit-touch-callout:none}img,svg,canvas,video{-webkit-user-select:none;user-select:none}</style>
+<style>img,svg,canvas,video,a{-webkit-touch-callout:none}img,svg,canvas,video{-webkit-user-select:none;user-select:none}img,video{pointer-events:none}</style>
 <script>document.addEventListener("contextmenu",function(e){var t=e.target;if(!t||!t.closest||t.closest("input,textarea,[contenteditable=true]"))return;if(t.closest("img,svg,canvas,video,a,button,[role=button]"))e.preventDefault()},true);</script>
 </head>
 <body>
