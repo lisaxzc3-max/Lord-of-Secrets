@@ -122,7 +122,8 @@ function gift(){
 }
 function hide(){if(ui)ui.classList.remove("on");if(ring)ring.classList.remove("on");target=null;cancelAnimationFrame(raf)}
 function apply(d){if(d&&d.ok){st=d;render()}}
-function check(){
+function check(pre){
+ if(pre&&pre.tut&&pre.tut.ok){var prev0=idx();st=pre.tut;if(st.done){hide();return}render();if(idx()===7&&prev0!==7)sfx("good");return}
  if(busy)return;busy=true;
  api({action:"tut_state"}).then(function(d){busy=false;if(!d||!d.ok)return;var prev=idx();st=d;if(st.done){hide();return}
   render();if(idx()===7&&prev!==7)sfx("good")},function(){busy=false});
@@ -169,5 +170,5 @@ document.addEventListener("click",function(e){var i=idx();if(i===0&&e.target.clo
  if(i===2||i===3)setTimeout(function(){if(st&&!st.done)render()},120)},true);
 window.addEventListener("resize",function(){if(target)place()});
 
-window.LOTM_TUT={check:function(){if(!started){started=true;var o=window.showTab;if(typeof o==="function"){window.showTab=function(id){var r=o.apply(this,arguments);try{onTab(id)}catch(e){}return r}}}check()},state:function(){return st}};
+window.LOTM_TUT={check:function(pre){if(!started){started=true;var o=window.showTab;if(typeof o==="function"){window.showTab=function(id){var r=o.apply(this,arguments);try{onTab(id)}catch(e){}return r}}}check(pre)},state:function(){return st}};
 })();

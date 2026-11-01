@@ -765,11 +765,11 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 #sideMenu .smIt.hasNew::after{content:"";position:absolute;left:calc(var(--u)*676);top:calc(var(--u)*28);right:auto;margin:0;width:calc(var(--u)*24);height:calc(var(--u)*24);border-radius:50%;background:#e0423a;box-shadow:0 0 calc(var(--u)*14) #ff3b30,0 0 0 calc(var(--u)*3) #0006}
 </style>
 <script src="./shared/vip.js?v=a2"></script>
-<script src="./shared/fast.js?v=a2"></script>
+<script src="./shared/fast.js?v=a5"></script>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js?v=t2"></script>
 <script src="./shared/alchemy.js"></script>
-<script src="./shared/tutorial.js?v=t3"></script>
+<script src="./shared/tutorial.js?v=t4"></script>
 <script src="./shared/fog.js" defer></script>
 <script>sndMusic("tingen")</script>
 </head>
@@ -1269,10 +1269,8 @@ async function loadProfile() {
       throw new Error("Не удалось подключиться к игровому серверу");
     }
 
-    let data;
-    if (bootData) { data = bootData; bootData = null; }
-    else data = await fetchJson(PROFILE_URL, {});
-
+    /* показать сохранённый профиль сразу, а свежий подтянуть следом (нет пустого экрана при медленном сервере) */
+    const applyProfile = (data, cached) => {
     const hp = Number(data.hp);
     const maxHp = Number(data.max_hp);
 
@@ -1321,14 +1319,30 @@ async function loadProfile() {
       setRegenUI(data.regen_left || 0, hp, maxHp);
     }
 
-    if (maybeShowStart(data)) return data;
+    if (!cached && maybeShowStart(data)) return data;
     renderBagFromJ(data);
     try { renderBuffs(data); } catch (_) {}
-    checkDaily();
-    try { window.LOTM_TUT && LOTM_TUT.check(); } catch (_) {}
-    clearLoadError();
+    if (!cached) {
+      checkDaily();
+      try { window.LOTM_TUT && LOTM_TUT.check(data); } catch (_) {}
+    }
+      clearLoadError();
+      return data;
+    };
 
-    return data;
+    let data;
+    if (bootData) { data = bootData; bootData = null; }
+    else {
+      if (!window.__pcShown && window.LOTM_FAST) {
+        try {
+          const c = LOTM_FAST.get("profile", 6 * 3600 * 1000);
+          if (c && c.hp != null && c.max_hp != null && !c.dead) { window.__pcShown = true; applyProfile(c, true); }
+        } catch (e) {}
+      }
+      data = await fetchJson(PROFILE_URL, {});
+      try { window.LOTM_FAST && LOTM_FAST.set("profile", data); } catch (e) {}
+    }
+    return applyProfile(data, false);
   })();
 
   try {
