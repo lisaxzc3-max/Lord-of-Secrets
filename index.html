@@ -107,13 +107,17 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 #travel .loc.bossLoc{background-size:cover;background-position:center 20%;background-image:linear-gradient(90deg,#061520e0 0%,#06152099 40%,#0615201a 100%),url(./boss/img/kalvetua1.jpg)}
 
 /* ===== Поход: карта локаций ===== */
-.tvBoss{position:relative;display:flex;gap:6px;align-items:center;min-height:132px;padding:34px 42px 26px;margin:0 -4px 10px;background:url(./shared/art/travel/boss.webp) center/100% 100% no-repeat;cursor:pointer}
+.tvBoss{position:relative;aspect-ratio:800/261;margin:0 -4px 4px;background:url(./shared/art/travel/boss.webp) center/100% 100% no-repeat;cursor:pointer}
 .tvBoss.live{animation:bossLive 2.4s ease-in-out infinite}
-.tvBL{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.tvBK{font:700 9px Philosopher,Georgia,serif;letter-spacing:.08em;white-space:nowrap;text-transform:uppercase;color:#e0b8bc}
+.tvBI{position:absolute;left:13%;right:12%;top:30%;bottom:24%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tvBoss .bossT{font-size:17px;line-height:1.05}
+.tvBoss .bossT small{font-size:8px;letter-spacing:.8px;line-height:1.2}
 .tvBR{flex:none}
-.tvBoss .bossBtns{flex-direction:column}
-.tvBoss .bBtn{padding:7px 10px;font-size:11px;white-space:nowrap}
+.tvBoss .bossBtns{flex-direction:column;gap:0}
+.tvBoss .bBtn{padding:6px 9px;font-size:10.5px;white-space:nowrap}
+.tvBC{text-align:center;margin:0 0 10px}
+.tvBC b{display:block;font:700 10px Philosopher,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:#e0b8bc}
+.tvBC .bossS{display:block;font-size:11px;min-height:0}
 .tvChips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 8px}.tvChips::-webkit-scrollbar{display:none}
 .tvChips:empty{display:none}
 .tvChips button{flex:none;padding:7px 13px;border-radius:999px;border:1px solid #3a2f44;background:#120c16;color:#a79bb4;font:600 12px inherit;font-family:inherit}
@@ -131,11 +135,12 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .tvDots{display:flex;justify-content:center;gap:5px;margin:2px 0 6px}
 .tvDots i{width:6px;height:6px;border-radius:50%;background:#3a2f44;transition:.25s}.tvDots i.on{background:#a98fd0;box-shadow:0 0 8px #a98fd0;width:16px;border-radius:4px}
 .tvDet{border:solid transparent;border-width:36px 44px;border-image:url(./shared/art/travel/detail.webp) 90 110 90 110 fill/36px 44px stretch;margin:0 -8px 12px;padding:0;animation:cin .4s ease-out backwards}
-.tvDet .art{position:relative;height:120px;margin:-10px -6px 0;border-radius:10px;background:center/cover no-repeat;box-shadow:inset 0 0 30px #000a}
-.tvDet .art:after{content:"";position:absolute;inset:0;border-radius:10px;background:linear-gradient(#0000 50%,#0b060ee8)}
-.tvDet h4{margin:10px 0 3px;font:400 21px Philosopher,Georgia,serif;letter-spacing:.05em;color:#eadfc4;text-shadow:0 0 14px #a3262e}
-.tvDet p{margin:0 0 8px;font-size:12px;line-height:1.4;color:#c9bfd8}
-.tvDet .tags{margin:0 0 4px}
+.tvDet .row{display:flex;gap:12px;align-items:flex-start;margin:-8px -4px 0}
+.tvDet .art{flex:0 0 112px;aspect-ratio:4/5;border-radius:10px;background:center/cover no-repeat;box-shadow:0 0 0 1px #5a3a4a,0 6px 18px #000a}
+.tvDet .info{flex:1;min-width:0}
+.tvDet h4{margin:0 0 4px;font:400 18px Philosopher,Georgia,serif;letter-spacing:.05em;color:#eadfc4;text-shadow:0 0 14px #a3262e}
+.tvDet p{margin:0 0 8px;font-size:11.5px;line-height:1.4;color:#c9bfd8}
+.tvDet .tags{margin:0}
 .tvGo{display:block;width:calc(100% + 24px);margin:6px -12px -14px;height:60px;border:0;background:url(./shared/art/travel/btn.webp) center/100% 100% no-repeat;color:#fff0dc;font:700 15px Philosopher,Georgia,serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 1px 6px #000;cursor:pointer}
 .tvGo:active{transform:scale(.97)}
 .tvGo:disabled{filter:grayscale(1) brightness(.6)}
@@ -913,12 +918,8 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 </div>
 
 <div id="travel" class="card hidden">
-  <div class="tvBoss" id="bossCard" role="button" tabindex="0" onclick="openBoss()">
-    <span class="tvBL"><span class="tvBK">Босс недели · Кальветуа</span>
-    <span class="bossT" id="bossT">…<small>загрузка</small></span>
-    <span class="bossS" id="bossS"></span></span>
-    <span class="tvBR"><span class="bossBtns" id="bossBtns"></span></span>
-  </div>
+  <div class="tvBoss" id="bossCard" role="button" tabindex="0" onclick="openBoss()"><span class="tvBI"><span class="bossT" id="bossT">…<small>загрузка</small></span><span class="tvBR"><span class="bossBtns" id="bossBtns"></span></span></span></div>
+  <div class="tvBC"><b>Босс недели · Кальветуа</b><span class="bossS" id="bossS"></span></div>
   <div class="tvChips" id="tvChips"></div>
   <div class="tvRail" id="tvRail"></div>
   <div class="tvDots" id="tvDots"></div>
@@ -1524,7 +1525,7 @@ function tvRender(){
  rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+(l.soon?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
  byId("tvDots").innerHTML=L.length>1?L.map((_,i)=>'<i class="'+(i===tvSel?"on":"")+'"></i>').join(""):"";
  const l=L[tvSel];if(!l)return;
- byId("tvDet").innerHTML='<div class="art" style="background-image:url('+l.art+')"></div><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div><button type="button" class="tvGo" '+(l.soon?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":"Отправиться")+'</button>';
+ byId("tvDet").innerHTML='<div class="row"><div class="art" style="background-image:url('+l.art+')"></div><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+(l.soon?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":"Отправиться")+'</button>';
 }
 function tvPick(i,noScroll){
  tvSel=i;try{snd("tap")}catch(_){}
