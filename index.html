@@ -7,9 +7,10 @@
 <meta name="theme-color" content="#0b0912">
 <title>Повелитель Тайн</title>
 <script>
-/* Без анимаций: главная всегда работает в облегчённом режиме (как при «уменьшить движение» в системе) */
-window.LOTM_NO_ANIM=true;
-(function(){var mm=window.matchMedia&&window.matchMedia.bind(window);if(!mm)return;window.__mm=mm;
+/* Главная без анимаций при низком и среднем качестве; при высоком анимации включены (настройки → Качество) */
+window.LOTM_NO_ANIM=true;try{var _q=localStorage.getItem("lotm_q");if(_q==="high"||(!_q&&!/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"")))window.LOTM_NO_ANIM=false}catch(e){}
+document.documentElement.classList.toggle("noAnim",!!window.LOTM_NO_ANIM);
+(function(){var mm=window.matchMedia&&window.matchMedia.bind(window);if(!mm||!window.LOTM_NO_ANIM)return;window.__mm=mm;
 window.matchMedia=function(q){if(/prefers-reduced-motion\s*:\s*reduce/.test(String(q))){return{matches:true,media:String(q),onchange:null,addListener:function(){},removeListener:function(){},addEventListener:function(){},removeEventListener:function(){},dispatchEvent:function(){return false}}}return mm(q)}})();
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -637,9 +638,9 @@ body.seqOn .wrap{animation:wrapTw 9s infinite}
 #sideMenu .smFoot{margin-top:auto;position:relative;z-index:2;text-align:center;font:italic 12px Philosopher,Georgia,serif;color:#7f7494;padding-top:14px}
 @media(prefers-reduced-motion:reduce){#sideMenu *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 /* ===== Без анимаций ===== */
-*,*:before,*:after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
-.dist,.plc,#sideMenu .smIt{opacity:1!important;transform:none!important}
-#fx,.raven,.shoot,.ripple,.floatGain,.bgSpark,.seqWh,.lvlUp,.hg .stream,.hg .mote{display:none!important}
+html.noAnim *,html.noAnim *:before,html.noAnim *:after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
+html.noAnim .dist,html.noAnim .plc,html.noAnim #sideMenu .smIt{opacity:1!important;transform:none!important}
+html.noAnim #fx,html.noAnim .raven,html.noAnim .shoot,html.noAnim .ripple,html.noAnim .floatGain,html.noAnim .bgSpark,html.noAnim .seqWh,html.noAnim .lvlUp,html.noAnim .hg .stream,html.noAnim .hg .mote{display:none!important}
 
 /* ===== карточка профиля: арка ===== */
 .top{gap:14px;align-items:stretch;padding:12px;border-radius:20px;border-color:#d6b779aa;background:linear-gradient(135deg,rgba(29,16,48,.95),rgba(14,9,24,.96));box-shadow:0 0 0 3px #0b0912,0 0 0 4px #d6b77955,0 8px 28px #000a}
