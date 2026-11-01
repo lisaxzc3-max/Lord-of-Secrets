@@ -10,9 +10,10 @@ if(!on)return;
 function $(s){return document.querySelector(s)}
 var css=document.createElement("style");
 css.textContent=
-"#tfBox{position:fixed;left:10px;right:10px;top:calc(66px + env(safe-area-inset-top));z-index:9000;max-width:440px;margin:0 auto;padding:10px 12px;border-radius:16px;border:1px solid #e2c27a99;background:linear-gradient(160deg,#2a2044f7,#150e28f7);box-shadow:0 10px 28px #000c;color:#f1e8d3;font:13px/1.4 system-ui,sans-serif;opacity:0;transform:translateY(-10px);transition:.35s;pointer-events:none}"+
+"#tfBox{position:fixed;left:10px;right:10px;top:calc(66px + env(safe-area-inset-top));z-index:9000;max-width:440px;margin:0 auto;padding:10px 12px;border-radius:16px;border:1px solid #e2c27a99;background:linear-gradient(160deg,#2a2044f7,#150e28f7);box-shadow:0 10px 28px #000c;color:#f1e8d3;font:12.5px/1.35 system-ui,sans-serif;opacity:0;transform:translateY(-10px);transition:.35s;pointer-events:none}"+
 "#tfBox.on{opacity:1;transform:none;pointer-events:auto}"+
 "#tfBox.low{top:auto;bottom:calc(16px + env(safe-area-inset-bottom))}"+
+"#tfBox.min #tfX,#tfBox.min .ac{display:none}"+
 "#tfBox .hd{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#e2c27a;margin-bottom:3px}"+
 "#tfBox .ac{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px}"+
 "#tfBox button{border:0;background:none;color:#8f84a6;font-size:11px;text-decoration:underline;cursor:pointer;padding:4px 0}"+
@@ -33,6 +34,7 @@ function place(){
  var r=target.getBoundingClientRect();
  if(r.width>0&&r.height>0){ring.style.left=(r.left-4)+"px";ring.style.top=(r.top-4)+"px";ring.style.width=(r.width+8)+"px";ring.style.height=(r.height+8)+"px";ring.classList.add("on")}
  else ring.classList.remove("on");
+ if(isBattle)box.classList.toggle("low",(r.top+r.height/2)<innerHeight*0.3);
  raf=requestAnimationFrame(place);
 }
 function show(t,x,tg2,go){
@@ -50,27 +52,37 @@ document.addEventListener("click",function(e){
 function wait(fn,cb,ms){var t=setInterval(function(){var v=fn();if(v){clearInterval(t);cb(v)}},ms||400)}
 
 var isBattle=/\/battle\//.test(location.pathname);
+var wkey="lotm_tutw_"+uid;
+function won(){try{return localStorage.getItem(wkey)==="1"}catch(e){return false}}
 if(!isBattle){
  box.classList.add("low");
- wait(function(){return $("#exploreBtn")},function(btn){
-  show("Куда драться","Ты на месте. Нажми «Исследовать» — на берегу, в лесу, на кладбище или в руинах тебя встретит враг. Победи его и вернись на главную за наградой.",btn);
-  btn.addEventListener("click",hide,{once:true});
- });
+ if(won()){
+  wait(function(){return $(".back")},function(bk){
+   show("Бой выигран","Первая победа есть! Вернись на главную (кнопка «Зал» вверху) — там ждёт награда за обучение.",bk,"Понятно ›");
+   onGo=function(){hide()};
+  });
+ }else{
+  wait(function(){return $("#exploreBtn")},function(btn){
+   show("Куда драться","Ты на месте. Нажми «Исследовать» — тебя встретит враг. Победи его и вернись на главную за наградой.",btn);
+   btn.addEventListener("click",hide,{once:true});
+  });
+ }
 }else{
  wait(function(){var b=$("#battleSkills");return b&&b.querySelector(".sk")?b:null},function(sk){
-  show("Твои навыки","Это способности твоего пути. Нажми любую — враг получит урон. После использования навык уходит на перезарядку. Удерживай навык — увидишь описание.",sk);
+  show("Твои навыки","Нажми любой навык — враг получит урон. После использования он уходит на перезарядку. Удерживай навык — увидишь описание.",sk);
   var started=false;
   sk.addEventListener("click",function(){
    if(started)return;started=true;
    setTimeout(function(){
     var en=$("#enemyFrame");
-    show("Враг","Нажми на врага — увидишь его навыки. Следи за здоровьем: твоё слева ❤, врага справа 🩸. Если плохо — используй лечащий навык или беги.",en,"Понятно ›");
+    show("Враг","Нажми на врага — увидишь его навыки. Здоровье: твоё слева ❤, врага справа 🩸. Если плохо — лечись или беги.",en,"Понятно ›");
     onGo=function(){hide()};
    },2600);
   },true);
  });
  wait(function(){var v=$("#victoryCard");return v&&!v.classList.contains("hidden")?v:null},function(v){
-  show("Победа!","Первый враг повержен. Вернись на главную (кнопка «Назад» сверху) — Далия ждёт тебя с наградой за обучение.",$("#backHome"),"Понятно ›");
+  try{localStorage.setItem(wkey,"1")}catch(e){}
+  show("Победа!","Первый враг повержен. Вернись на главную (кнопка «Назад» сверху) — Далия ждёт с наградой.",$("#backHome"),"Понятно ›");
   onGo=function(){hide()};
  },600);
 }
