@@ -41,7 +41,7 @@ const aEnc=qs.get("a_enc")||qs.get("a")||"";
 /* вход только по личным ссылкам бота */
 let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
-let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
+let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",PLAYER_PK="",logEntries=[],lastCds={};
 let curEnemy="",curBoss=false,curPhase=1,curMob="",lastMove="",rageDone=false,gaugeV=0;
 const ULTN={seer:"Игра теней",sailor:"Гнев бури",hunter:"Охота"};
 const ULTD={seer:"Три удара подряд и уклонение на 1 ход.",sailor:"Один удар втрое сильнее Удара шторма.",hunter:"Гарантированный крит и кровотечение на 3 хода."};
@@ -188,7 +188,7 @@ function showTip(info){
 function hideTip(){const t=$("skTip");if(t)t.remove()}
 function renderSkills(cds={}){
  lastCds=cds||{};
- const pk=LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");
+ const pk=PLAYER_PK||LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer",box=$("battleSkills");
  if(skBuilt!==pk||!box.children.length){
   box.replaceChildren();skBuilt=pk;
   $("skillPathLabel").textContent=LOTM_SKILLS.PATHNAME[pk][0];
@@ -219,7 +219,7 @@ function addSkill(key,cdk,cls){
  b.type="button";b.className="sk "+cls;b.dataset.key=key;if(cdk)b.dataset.cdk=cdk;b.dataset.cooldown="false";
  b.style.setProperty("--sk",info.c||"#d6b779");
  const ic=document.createElement("span");ic.className="skIc";
- const ik=SKICON[key==="basic"||key==="ult"?key+"_"+(LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer"):key];
+ const ik=SKICON[key==="basic"||key==="ult"?key+"_"+(PLAYER_PK||LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer"):key];
  if(ik){const g=document.createElement("i");g.style.backgroundImage='url("'+window.LOTM_ART+'bt/ski_'+ik[0]+'.webp")';g.style.backgroundPosition=(ik[1]%3*50)+"% "+(Math.floor(ik[1]/3)*100)+"%";ic.appendChild(g)}else ic.textContent=info.icon||"•";
  const nm=document.createElement("span");nm.className="skN";nm.textContent=info.name||key;
  b.append(ic,nm);
@@ -328,11 +328,23 @@ async function load(){
   const fresh=!!pre&&pre.enemy_hp!=null&&Number(pre.enemy_hp)===Number(pre.enemy_max)&&!initialized;
   const stP=fresh?Promise.resolve(null):api({action:"battle_state"}).catch(e=>({__err:e}));
   let profile=null;
-  if(pre&&!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile",6*3600*1000)}catch(_){}}
+  if(pre&&!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile",20*60*1000)}catch(_){}}
+  let cachedProf=!!profile;
   if(!profile)profile=await loadProfile();
-  PLAYER_PATH=profile.path||"";window.LOTM_STATS=profile;
-  const pk=LOTM_SKILLS.pathKey(profile.path_key||profile.path)||"seer";
+  PLAYER_PATH=profile.path||"";PLAYER_PK=LOTM_SKILLS.pathKey(profile.path_key||profile.path)||"seer";window.LOTM_STATS=profile;
+  const pk=PLAYER_PK;
   B.revive();B.setHero(pk,profile.gender);
+  if(cachedProf)loadProfile().then(function(fp){ /* кэш мог устареть (смена пути): сверяем и обновляем */
+   try{
+    if(window.LOTM_FAST)LOTM_FAST.set("profile",fp);
+    const nk=LOTM_SKILLS.pathKey(fp.path_key||fp.path)||"seer";
+    if(nk!==PLAYER_PK||fp.gender!==profile.gender){
+     PLAYER_PATH=fp.path||"";PLAYER_PK=nk;window.LOTM_STATS=fp;
+     B.setHero(nk,fp.gender);$("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
+     renderSkills(lastCds);setPortraits();
+    }
+   }catch(_){}
+  }).catch(function(){});
   $("playerName").textContent=profile.nickname||"Путешественник";
   $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
   setHealth("player",profile.hp,profile.max_hp);
