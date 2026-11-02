@@ -4,15 +4,15 @@
 (function(){
 var CFG=window.BATTLE_CFG;
 var SRC=(document.currentScript&&document.currentScript.src)||"";
-var ART=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"")+"../art/";
+var ART=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"")+"../art/";window.LOTM_ART=ART;
 document.title=CFG.title+" · Сражение";
 var app=document.getElementById("app");
 app.innerHTML='<div class="wrap">'+
 '<section class="stage" id="stage">'+
 '<div class="mist a"></div><div class="mist b"></div>'+
 '<div class="top"><a class="back" id="backHome" href="../index.html">'+CFG.back+'</a><div class="turn wait" id="turn">Загрузка</div><button class="spd" id="spd" type="button" aria-label="Скорость боя">⏩</button><div class="statusPill" id="statusPill">Загрузка</div></div>'+
-'<div class="hud l"><div class="nm" id="playerName">Путешественник</div><div class="rl" id="playerPath">Путь неизвестен</div><div class="bar hp"><i id="playerHpBar"></i></div><div class="num">❤ <span id="playerHp">—</span></div><div class="chips" id="heroChips"></div></div>'+
-'<div class="hud r"><div class="nm" id="enemyLabel">Противник</div><div class="rl" id="enemyRole">Враждебная сущность</div><div class="bar enemyHp"><i id="enemyHpBar"></i></div><div class="num">🩸 <span id="enemyHp">—</span></div><div class="chips" id="chips"></div></div>'+
+'<div class="hud l"><div class="plate"><span class="pc" id="playerPc"></span><div class="pbar"><div class="bar hp"><i id="playerHpBar"></i></div><div class="nm" id="playerName">Путешественник</div></div></div><div class="rl" id="playerPath">Путь неизвестен</div><div class="num">❤ <span id="playerHp">—</span></div><div class="chips" id="heroChips"></div></div>'+
+'<div class="hud r"><div class="plate"><span class="pc" id="enemyPc"></span><div class="pbar"><div class="bar enemyHp"><i id="enemyHpBar"></i></div><div class="nm" id="enemyLabel">Противник</div></div></div><div class="rl" id="enemyRole">Враждебная сущность</div><div class="num">🩸 <span id="enemyHp">—</span></div><div class="chips" id="chips"></div></div>'+
 '<div class="fighters" id="fighters"><div class="fighter heroSlot"><div class="unit hero" id="playerFrame" style="position:absolute"><div class="fl"><img id="playerImg" alt="Герой" draggable="false"></div></div></div><div class="fighter foeSlot"><div class="unit foe" id="enemyFrame" style="position:absolute"><div class="fl"><img id="enemyImg" alt="Противник" draggable="false"></div></div></div></div>'+
 '<div class="fxl" id="fx"></div>'+
 '<div class="msg" id="battleMessage"><div class="mi" id="messageIcon">📜</div><div id="battleText" aria-live="polite">'+CFG.intro+'</div></div>'+
@@ -193,11 +193,16 @@ function refreshSkillState(){
   else if(bd)bd.remove();
  });
 }
+var SKICON={divination:["seer",4],seer_bullet:["seer",3],boomerang:["seer",2],acting:["seer",1],basic_seer:["seer",0],
+ sailor_hit:["sailor",0],sailor_wave:["sailor",1],sailor_drink:["sailor",4],sailor_pray:["sailor",5],basic_sailor:["sailor",3],
+ hunter_shot:["hunter",0],hunter_dagger:["hunter",5],hunter_trap:["hunter",2],hunter_boost:["hunter",4],basic_hunter:["hunter",1]};
 function addSkill(key,cdk,cls){
  const info=skillInfo[key]||{name:key,desc:""},b=document.createElement("button");
  b.type="button";b.className="sk "+cls;b.dataset.key=key;if(cdk)b.dataset.cdk=cdk;b.dataset.cooldown="false";
  b.style.setProperty("--sk",info.c||"#d6b779");
- const ic=document.createElement("span");ic.className="skIc";ic.textContent=info.icon||"•";
+ const ic=document.createElement("span");ic.className="skIc";
+ const ik=SKICON[key==="basic"?"basic_"+(LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer"):key];
+ if(ik){const g=document.createElement("i");g.style.backgroundImage='url("'+window.LOTM_ART+'bt/ski_'+ik[0]+'.webp")';g.style.backgroundPosition=(ik[1]%3*50)+"% "+(Math.floor(ik[1]/3)*100)+"%";ic.appendChild(g)}else ic.textContent=info.icon||"•";
  const nm=document.createElement("span");nm.className="skN";nm.textContent=info.name||key;
  b.append(ic,nm);
  if(info.tag){const t=document.createElement("span");t.className="skT";t.textContent=info.tag;b.appendChild(t)}
@@ -289,6 +294,10 @@ function pickEnemy(name){
  B.setFoe((curBoss&&curPhase>=2&&P2[curMob])?P2[curMob]:curMob);
 }
 
+function setPortraits(){
+ try{[["playerImg","playerPc"],["enemyImg","enemyPc"]].forEach(function(p){var i=$(p[0]),c=$(p[1]);if(i&&c&&i.src)c.style.backgroundImage='url("'+i.src+'")'})}catch(e){}
+}
+(function(){try{["playerImg","enemyImg"].forEach(function(id){var i=$(id);if(i)new MutationObserver(setPortraits).observe(i,{attributes:true,attributeFilter:["src"]})});setPortraits()}catch(e){}})();
 async function load(){
  if(busy)return;
  document.body.classList.remove("defeatFx");
