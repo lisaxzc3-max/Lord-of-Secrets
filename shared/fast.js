@@ -70,8 +70,8 @@ function pend(b){
   window.fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"ping"}),cache:"no-store",signal:ctl?ctl.signal:undefined})
    .then(function(r){return r.text()}).catch(function(){}).then(function(){busy=false;clearTimeout(tm)});
  }
- setTimeout(ping,1500);setInterval(ping,180000);
- document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-lastW>150000)ping()});
+ setTimeout(ping,1500);setInterval(ping,100000);
+ document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-lastW>90000)ping()});
 })();
 /* --- мини-аватары путей (анимированные svg; для длинных списков и чатов — статичные копии) --- */
 (function(){

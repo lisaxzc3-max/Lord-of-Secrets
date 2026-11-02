@@ -325,7 +325,8 @@ async function load(){
  setBusy(true,"Загрузка…");hideError();setTurn("Загрузка","wait");
  try{
   let pre=null;try{const raw=sessionStorage.getItem("lotm_bs_pre");if(raw){sessionStorage.removeItem("lotm_bs_pre");const o=JSON.parse(raw);if(o&&Date.now()-o.t<20000&&o.d&&o.d.enemy)pre=o.d}}catch(_){}
-  const stP=api({action:"battle_state"}).catch(e=>({__err:e}));
+  const fresh=!!pre&&pre.enemy_hp!=null&&Number(pre.enemy_hp)===Number(pre.enemy_max)&&!initialized;
+  const stP=fresh?Promise.resolve(null):api({action:"battle_state"}).catch(e=>({__err:e}));
   let profile=null;
   if(pre&&!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile",6*3600*1000)}catch(_){}}
   if(!profile)profile=await loadProfile();
@@ -336,7 +337,7 @@ async function load(){
   $("playerPath").textContent=PLAYER_PATH||"Путь неизвестен";
   setHealth("player",profile.hp,profile.max_hp);
   let state=null;
-  if(pre){state=pre;stP.then(function(s){try{if(!s||s.__err)return;if(s.cds)renderSkills(s.cds);if(s.hp!=null&&s.max_hp!=null)setHealth("player",s.hp,s.max_hp);if(s.enemy_hp!=null&&s.enemy_max!=null)setHealth("enemy",s.enemy_hp,s.enemy_max)}catch(_){}})}
+  if(pre){state=pre;if(pre.hp!=null&&pre.max_hp!=null)setHealth("player",pre.hp,pre.max_hp);stP.then(function(s){try{if(!s||s.__err)return;if(s.cds)renderSkills(s.cds);if(s.hp!=null&&s.max_hp!=null)setHealth("player",s.hp,s.max_hp);if(s.enemy_hp!=null&&s.enemy_max!=null)setHealth("enemy",s.enemy_hp,s.enemy_max)}catch(_){}})}
   else try{state=await stP;if(state&&state.__err){const e=state.__err;state=null;throw e}}
   catch(error){if(!qs.get("enemy"))throw error;setMessage(cleanBattleText(error.message),"","⚠️")}
   curBoss=!!state?.boss;curPhase=Number(state?.phase)||1;
