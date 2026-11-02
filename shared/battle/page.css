@@ -228,3 +228,11 @@ html[data-q="low"] .gauge.full i,html[data-q="low"] .sk.ult.ready{animation:none
 .sk .skIc{flex-basis:34px;width:34px;height:34px}
 .sk .skN{font-size:10px;letter-spacing:-.1px;word-break:normal;overflow-wrap:normal;hyphens:none;text-overflow:clip}
 .sk .skT{font-size:8.5px}
+
+/* скелетная анимация */
+.unit .rig{contain:layout style}
+.unit .rig .rp,.unit .rig .ri{will-change:transform}
+.unit .rig .rp{transition:transform .2s cubic-bezier(.2,.8,.3,1)}
+.unit .rig img{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:fill!important;object-position:center!important;filter:none!important;animation:none!important;transform:none!important;display:block;max-width:none;-webkit-user-drag:none;user-select:none}
+.unit.hero .rig{filter:none}
+.unit .rig .rx img{position:absolute!important}
