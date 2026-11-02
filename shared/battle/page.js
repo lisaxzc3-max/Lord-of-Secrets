@@ -42,7 +42,9 @@ const aEnc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
-let curEnemy="",curBoss=false,curPhase=1,curMob="";
+let curEnemy="",curBoss=false,curPhase=1,curMob="",lastMove="",rageDone=false;
+/* цепочки навыков: «предыдущий>следующий» → бонус к урону (должно совпадать с сервером) */
+const CHAIN={"divination>seer_bullet":30,"acting>boomerang":30,"boomerang>seer_bullet":20,"sailor_drink>sailor_hit":50,"sailor_pray>sailor_wave":30,"sailor_hit>sailor_wave":20,"hunter_trap>hunter_shot":40,"hunter_boost>hunter_dagger":30,"hunter_dagger>hunter_shot":20};
 const cur={hero:null,heroMax:null,foe:null,foeMax:null};
 
 const $=id=>document.getElementById(id);
@@ -107,6 +109,10 @@ function sparks(box){
 
 /* ===== ЗДОРОВЬЕ (без эффектов: эффекты рисует сцена) ===== */
 function safePercent(v,m){const n=Number(v),x=Number(m);if(!Number.isFinite(n)||!Number.isFinite(x)||x<=0)return 0;return Math.max(0,Math.min(100,n/x*100))}
+function triggerRage(){
+ if(rageDone||ended)return;rageDone=true;
+ try{$("stage").classList.add("rage");snd("banner");banner("ЯРОСТЬ: "+($("enemyLabel").textContent||"босс"),"#ff3a3a");B.shake(2);B.flash("#ff2a2a");sndMusic("boss2");addLog("Босс впадает в ярость!","info")}catch(e){}
+}
 function setHealth(side,hp,maxHp){
  const player=side==="player";
  const hpEl=$(player?"playerHp":"enemyHp"),bar=$(player?"playerHpBar":"enemyHpBar");
@@ -116,14 +122,14 @@ function setHealth(side,hp,maxHp){
  const pc=safePercent(c,m),old=parseFloat(bar.style.width)||0,box=bar.parentElement;
  let ghost=box.querySelector(".ghost");if(!ghost){ghost=document.createElement("b");ghost.className="ghost";box.prepend(ghost)}
  ghost.style.transition=pc<old?"width .9s ease .35s":"none";ghost.style.width=pc+"%";bar.style.width=pc+"%";
- if(player){cur.hero=c;cur.heroMax=m}else{cur.foe=c;cur.foeMax=m}
+ if(player){cur.hero=c;cur.heroMax=m}else{cur.foe=c;cur.foeMax=m;if(curBoss&&!rageDone&&c>0&&pc<=50)setTimeout(triggerRage,500)}
 }
 function setEnemyLevel(level,boss,phase){
  curBoss=!!boss;const p=Number(phase)||1;
  const parts=[];if(level)parts.push("Ур. "+level);if(boss)parts.push("Фаза "+p);
  parts.push(boss?"Босс":(ROLE[curEnemy]||"Враждебная сущность"));
  const role=$("enemyRole");role.textContent=parts.join(" · ");role.classList.toggle("boss",!!boss);
- $("stage").classList.toggle("arenaBoss",!!boss);sndMusic(boss?"boss":"battle");
+ $("stage").classList.toggle("arenaBoss",!!boss);sndMusic(boss?(rageDone?"boss2":"boss"):"battle");
  const p2=!!boss&&p>=2,was2=$("stage").classList.contains("arenaP2");
  $("stage").classList.toggle("arenaP2",p2);
  if(P2[curMob]&&p2!==was2){B.setFoe(p2?P2[curMob]:curMob);B.swapFoe()}
@@ -186,6 +192,8 @@ function renderSkills(cds={}){
 }
 function refreshSkillState(){
  $("battleSkills").querySelectorAll("button.sk").forEach(b=>{
+  const ch=lastMove?CHAIN[lastMove+">"+b.dataset.key]:0;let cb=b.querySelector(".chn");
+  if(ch){if(!cb){cb=document.createElement("span");cb.className="chn";b.appendChild(cb)}cb.textContent="🔗+"+ch+"%"}else if(cb)cb.remove();
   const cd=b.dataset.cdk?Number(lastCds[b.dataset.cdk]||0):0;
   b.dataset.cooldown=cd>0?"true":"false";b.disabled=busy||ended||cd>0;
   let bd=b.querySelector(".cd");
@@ -289,6 +297,7 @@ async function refreshBattleState(){
  return s;
 }
 function pickEnemy(name){
+ rageDone=false;$("stage").classList.remove("rage");
  curEnemy=name;$("enemyLabel").textContent=SHOWN[name]||name;
  curMob=MOB[name]||CFG.mobDefault;
  B.setFoe((curBoss&&curPhase>=2&&P2[curMob])?P2[curMob]:curMob);
@@ -300,6 +309,7 @@ function setPortraits(){
 (function(){try{["playerImg","enemyImg"].forEach(function(id){var i=$(id);if(i)new MutationObserver(setPortraits).observe(i,{attributes:true,attributeFilter:["src"]})});setPortraits()}catch(e){}})();
 async function load(){
  if(busy)return;
+ lastMove="";
  document.body.classList.remove("defeatFx");
  setBusy(true,"Загрузка…");hideError();setTurn("Загрузка","wait");
  try{
@@ -410,6 +420,7 @@ async function doBattle(move){
    const m=cleanBattleText(data.text||data.message||data.error||"Сервер вернул неизвестный результат.");
    setMessage(m,"","❔");addLog(m,"info");return;
   }
+  lastMove=move;
   await playTurn(move,data);
  }catch(error){
   showError(error.message||"Ошибка связи при выполнении хода.");

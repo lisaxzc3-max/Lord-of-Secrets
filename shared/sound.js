@@ -297,7 +297,8 @@ cemetery:{root:33,scale:[0,1,3,5,6,8],pad:[[0,6,12],[-4,3,8],[1,8,13]],bpm:20,be
 ruins:{root:31,scale:[0,1,4,5,7,8],pad:[[0,7,12],[-5,2,7],[1,8,13]],bpm:22,bell:0.35,heart:0.3,whisp:0.3,dis:0.5,wind:1,water:0,drum:0.15,vol:1},
 battle:{root:33,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,8]],bpm:78,bell:0.1,heart:0,whisp:0,dis:0.3,wind:0,water:0,drum:1,vol:1},
 kalvetua:{root:27,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,7],[-3,4]],bpm:74,bell:0.16,heart:0.2,whisp:0.2,dis:0.45,wind:1,water:1,drum:2,vol:1.1},
-boss:{root:29,scale:[0,1,3,6,7,10],pad:[[0,6],[1,7],[-1,5]],bpm:96,bell:0.1,heart:0,whisp:0,dis:0.5,wind:0,water:0,drum:2,vol:1.1}
+boss:{root:29,scale:[0,1,3,6,7,10],pad:[[0,6],[1,7],[-1,5]],bpm:96,bell:0.1,heart:0,whisp:0,dis:0.5,wind:0,water:0,drum:2,vol:1.1},
+boss2:{root:29,scale:[0,1,3,6,7,10],pad:[[0,6],[1,7],[-1,5]],bpm:118,bell:0.12,heart:0.25,whisp:0,dis:0.85,wind:0,water:0,drum:3,vol:1.15}
 };
 function clearMusic(){
 timers.forEach(function(t){clearTimeout(t);clearInterval(t)});timers=[];
