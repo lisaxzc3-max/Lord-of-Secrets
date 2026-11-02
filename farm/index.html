@@ -185,7 +185,7 @@ img{-webkit-user-drag:none;user-select:none}
 @keyframes pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
-<script src="../shared/fast.js?v=a9"></script>
+<script src="../shared/fast.js?v=b1"></script>
 <script src="../shared/sound.js?v=a7"></script>
 <script>sndMusic("garden")</script>
 </head>
@@ -326,7 +326,7 @@ function fresh(){const n=Date.now();return{v:1,gold:60,xp:0,lvl:1,plots:[null,nu
 let S;
 function load(){try{const r=localStorage.getItem(SAVE);if(r){const o=JSON.parse(r);if(o&&o.v===1)return Object.assign(fresh(),o)}}catch(_){}return fresh()}
 let CW=null,dirty=false,bootDone=false;
-function save(){try{S.sv=Date.now();if(CW)S.wg=CW;localStorage.setItem(SAVE,JSON.stringify(S));dirty=true}catch(_){}}
+function save(q){try{S.sv=Date.now();if(CW)S.wg=CW;localStorage.setItem(SAVE,JSON.stringify(S));if(!q)dirty=true}catch(_){}}
 S=load();
 const evOf=()=>EVENTS.find(e=>e.id===S.ev.id)||EVENTS[0];
 function addLog(t){S.log.unshift(new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"})+" · "+t);S.log=S.log.slice(0,40)}
@@ -718,7 +718,7 @@ function init(){
  rollEvent();petTick(Date.now());
  const iv=60000;const add=Math.floor((Date.now()-S.dewAt)/iv);if(add>0){S.dew=Math.min(DEW_MAX,S.dew+add);S.dewAt=Date.now()}
  renderAll();place();
- setInterval(tick,1000);setInterval(save,10000);setInterval(ravenFly,36000);
+ setInterval(tick,1000);setInterval(function(){save(true)},10000);setInterval(ravenFly,36000);
  addEventListener("pagehide",save);document.addEventListener("visibilitychange",()=>{if(document.hidden)save()});
 }
 /* ---------- облачное сохранение (в профиле игрока на сервере бота) ---------- */
@@ -749,7 +749,7 @@ function cloudPush(){
   else if(!d)dirty=true;
  });
 }
-setInterval(cloudPush,8000);
+setInterval(cloudPush,20000);
 addEventListener("pagehide",cloudPush);
 document.addEventListener("visibilitychange",()=>{if(document.hidden)cloudPush()});
 async function boot(){

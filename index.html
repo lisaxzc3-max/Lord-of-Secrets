@@ -805,7 +805,7 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 #sideMenu .smIt.hasNew::after{content:"";position:absolute;left:calc(var(--u)*676);top:calc(var(--u)*28);right:auto;margin:0;width:calc(var(--u)*24);height:calc(var(--u)*24);border-radius:50%;background:#e0423a;box-shadow:0 0 calc(var(--u)*14) #ff3b30,0 0 0 calc(var(--u)*3) #0006}
 </style>
 <script src="./shared/vip.js?v=a2"></script>
-<script src="./shared/fast.js?v=a9"></script>
+<script src="./shared/fast.js?v=b1"></script>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js?v=a7"></script>
 <script src="./shared/alchemy.js"></script>
@@ -1542,10 +1542,11 @@ function tvPick(i,noScroll){
  tvRender();
  try{new MutationObserver(function(){tvRender()}).observe(byId('lvl'),{childList:true,characterData:true,subtree:true})}catch(_){}
 })();
-async function bossLoad() {
+async function bossLoad(force) {
+  if (!force && BOSS.s && BOSS.t && Date.now() - BOSS.t < 45000) { bossRender(true); return; }
   try {
     const d = await bossApi({ action: "boss_state" });
-    if (bossApply(d)) bossRender(true);
+    if (bossApply(d)) { BOSS.t = Date.now(); bossRender(true); }
     else if (d && d.error === "dead") { BOSS.s = null; byId("bossS").textContent = "💀 Ты мёртв. Бой доступен после воскрешения"; byId("bossBtns").replaceChildren(); }
   } catch (e) {}
 }
@@ -1589,7 +1590,7 @@ async function bossReg(btn) {
   try {
     const d = await bossApi({ action: "boss_reg" });
     if (d && d.ok) { bossApply(d); try { snd("good"); } catch (_) {} bagToast("Ты записан на бой с Кальветуа"); bossRender(true); }
-    else { bagToast((d && d.text) || "Не удалось зарегистрироваться"); if (btn) btn.disabled = false; bossLoad(); }
+    else { bagToast((d && d.text) || "Не удалось зарегистрироваться"); if (btn) btn.disabled = false; bossLoad(true); }
   } catch (e) { bagToast(e.message || "Нет связи"); if (btn) btn.disabled = false; }
   BOSS.busy = false;
 }
