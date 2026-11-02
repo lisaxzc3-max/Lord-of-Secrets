@@ -220,3 +220,11 @@ html[data-q="low"] .stage.rage:after{animation:none}
 .sk.ult .skN{font-size:12.5px;color:#ffe9b0}
 @keyframes ultReady{50%{box-shadow:0 0 24px #ffd98aaa}}
 html[data-q="low"] .gauge.full i,html[data-q="low"] .sk.ult.ready{animation:none}
+/* аккуратнее на телефонах с крупным шрифтом */
+.hud.l .rl{display:none}
+.hud .gauge{width:62%;margin:3px 0 1px 4%}
+.hud .num{margin-top:1px}
+.sk{gap:5px;padding:5px 5px 5px 4px}
+.sk .skIc{flex-basis:34px;width:34px;height:34px}
+.sk .skN{font-size:10px;letter-spacing:-.1px;word-break:normal;overflow-wrap:normal;hyphens:none;text-overflow:clip}
+.sk .skT{font-size:8.5px}
