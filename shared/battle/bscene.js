@@ -46,6 +46,32 @@ var MOBIDLE={fanatic:"breath",gargoyle:"breath",guard:"breath",ratmut:"breath",c
 var MOBATK={fanatic:"claw",gargoyle:"claw",guard:"claw",ratmut:"bite",cultist:"bolt",priest:"claw",priest2:"bolt",ghost:"claw",ghoul:"claw",skeleton:"claw",worm:"bite",banshee:"claw",necro:"bolt",necro2:"bolt",mushroom:"claw",spider:"bite",tree:"claw",boar:"bite",wolf:"bite",kitsune:"claw",kitsune2:"claw",drowned:"claw",kikimora:"claw",vodyanoy:"claw",vodyanoy2:"claw",serpent:"bite",serpent2:"bite",pike:"bite",leech:"bite",toad:"tongue"};
 /* лицом ли к зрителю повёрнута поза; 1 = надо отзеркалить, чтобы смотрела вправо */
 var HFLIP={"f_seer":{"idle":1},"f_sailor":{"idle":1}};
+/* покадровая анимация: имя модели -> размеры холста, размеры кадра покоя, число кадров */
+var FR={"m_seer":{w:483,h:455,ax:205,iw:281,ih:444,n:{idle:4,atk:4,hit:2}},"toad":{w:557,h:391,ax:557,iw:489,ih:365,n:{idle:4,atk:4,hit:2}}};
+var FT={hero:{t:0,id:0},foe:{t:0,id:0}};
+function frUrl(k,a,i){return BASE+"frames/"+k+"_"+a+"_"+i+".webp"+V}
+function frPre(k,first){var f=FR[k];if(!f)return;pre(frUrl(k,"idle",0));var go=function(){for(var a in f.n)for(var i=0;i<f.n[a];i++)pre(frUrl(k,a,i))};if(first)setTimeout(go,0);else go()}
+function fkey(side){return side==="hero"?S.hk:S.mob}
+function fimg(side){return side==="hero"?S.hImg:S.eImg}
+function fon(side){return !!FR[fkey(side)]}
+function fstop(side){var o=FT[side];if(o.t)clearInterval(o.t);o.t=0;o.id++}
+function fshow(side,a,i){var k=fkey(side);if(!FR[k])return;var u=frUrl(k,a,i),im=fimg(side);if(im.getAttribute("src")!==u)im.src=u}
+function fidle(side){
+ fstop(side);if(!fon(side)||S.dead[side])return;
+ var seq=[0,1,2,3,2,1],j=0;fshow(side,"idle",0);
+ FT[side].t=setInterval(function(){j=(j+1)%seq.length;fshow(side,"idle",seq[j])},260/SPD);
+}
+function fonce(side,a,seq,ms,idleAfter){
+ fstop(side);var id=FT[side].id;
+ return new Promise(function(res){
+  var j=0;(function step(){
+   if(FT[side].id!==id)return res();
+   fshow(side,a,seq[j]);var d=ms[j]/SPD;
+   if(++j>=seq.length)return setTimeout(function(){if(FT[side].id===id&&idleAfter)fidle(side);res()},d);
+   setTimeout(step,d);
+  })();
+ });
+}
 
 var S=null; /* состояние сцены */
 function $(i){return document.getElementById(i)}
@@ -67,13 +93,26 @@ function layout(){if(S.hk)setPose(S.pose,true);if(S.mob)placeFoe()}
 /* ---- герой ---- */
 function setHero(path,gender){
  S.pk=path||"seer";S.hk=(gender==="female"?"f":"m")+"_"+S.pk;
- pre(BASE+"heroes/"+S.hk+"_idle.webp"+V);
+ if(FR[S.hk]){S.hero.classList.add("fr");frPre(S.hk,1)}else{S.hero.classList.remove("fr");fstop("hero");pre(BASE+"heroes/"+S.hk+"_idle.webp"+V)}
  /* остальные позы и эффекты подгружаем чуть позже, чтобы бой открылся быстрее */
  var hk=S.hk,pk=S.pk,later=function(){["dash","cast","buff"].forEach(function(p){pre(BASE+"heroes/"+hk+"_"+p+".webp"+V)});for(var i=0;i<4;i++)pre(BASE+"fx/"+pk+"_"+i+".webp"+V)};
  if(window.requestIdleCallback)requestIdleCallback(later,{timeout:1500});else setTimeout(later,700);
  setPose("idle",true);
 }
 function setPose(p,keep){
+ if(FR[S.hk]){
+  var f=FR[S.hk],k=Math.min((S.SH*0.5)/f.ih,S.SW*0.8/f.w);
+  S.k=k;S.hw=Math.round(f.iw*k);S.hh=Math.round(f.ih*k);
+  var u=S.hero;u.style.width=Math.round(f.w*k)+"px";u.style.height=Math.round(f.h*k)+"px";u.style.left=Math.round(S.HX-f.ax*k)+"px";u.style.bottom=S.GY+"px";
+  u.querySelector(".fl").style.setProperty("--f",1);
+  if(keep&&S.pose===p&&FT.hero.t)return;
+  S.pose=p;
+  if(S.dead.hero)return;
+  if(p==="cast")fonce("hero","atk",[0,1,2,3],[100,130,140,1]);
+  else if(p==="dash")fonce("hero","atk",[0,1,2],[70,120,1]);
+  else fidle("hero");
+  return;
+ }
  var m=HM[S.hk]&&HM[S.hk][p];if(!m)return;
  S.pose=p;
  var idle=HM[S.hk].idle;
@@ -91,7 +130,9 @@ function setPose(p,keep){
 
 /* ---- враг ---- */
 function setFoe(key){
- S.mob=key;pre(BASE+"mobs/"+key+".webp"+V);
+ S.mob=key;fstop("foe");
+ if(FR[key]){frPre(key,1);S.foe.className="unit foe fr";S.eImg.onload=null;fidle("foe");placeFoe();return}
+ pre(BASE+"mobs/"+key+".webp"+V);
  S.eImg.onload=function(){ /* запасной размер, если модели нет в списке */
   if(!MM[key]&&S.eImg.naturalWidth){MM[key]=[S.eImg.naturalWidth,S.eImg.naturalHeight];if(S.mob===key)placeFoe()}
  };
@@ -100,6 +141,16 @@ function setFoe(key){
  placeFoe();
 }
 function placeFoe(){
+ var fm0=FR[S.mob];
+ if(fm0){
+  var ft=MOBFIT[S.mob]||[.55,0];
+  var k0=Math.min(S.SH*ft[0]/fm0.ih,S.SW*0.56/fm0.iw);
+  S.ew=Math.round(fm0.iw*k0);S.eh=Math.round(fm0.ih*k0);
+  S.EX=Math.min(S.SW*0.745,S.SW-S.ew/2-8);
+  var u0=S.foe;u0.style.width=Math.round(fm0.w*k0)+"px";u0.style.height=Math.round(fm0.h*k0)+"px";
+  u0.style.left=Math.round(S.EX-(fm0.ax-fm0.iw/2)*k0)+"px";u0.style.bottom=Math.round(S.GY+S.SH*ft[1])+"px";
+  return;
+ }
  var m=MM[S.mob];if(!m)return;
  var fit=MOBFIT[S.mob]||[.55,0];
  var k=Math.min(S.SH*fit[0]/m[1],S.SW*0.56/m[0]);
@@ -169,6 +220,7 @@ function hitFx(side,o){
  o=o||{};
  var hero=side==="hero",u=hero?S.hero:S.foe,img=hero?S.hImg:S.eImg;
  flashImg(img,side);knock(u,hero?-14:14,hero?-2:2);
+ if(fon(side)&&!S.dead[side])fonce(side,"hit",[0,1],[190,230],true);
  snd(hero?"hurt":"hit",hero?.5:.25);
  if(o.heavy)shake(o.heavy);
 }
@@ -296,6 +348,9 @@ async function echo(){
 /* ---- ход врага ---- */
 async function enemyAct(o){
  o=o||{};var kind=MOBATK[S.mob]||"claw";
+ var FA=!!FR[S.mob];if(FA&&kind==="tongue")kind="bite";
+ var fa=function(i){if(FA)fshow("foe","atk",i)};
+ if(FA){fstop("foe");fa(0)}
  var impact=function(){try{o.impact&&o.impact()}catch(e){}};
  var dist=Math.round((S.EX-S.HX)*(o.heavy?0.62:0.5));
  snd(o.snd||"benemy");
@@ -322,12 +377,13 @@ async function enemyAct(o){
   await wapi(S.foe,[{transform:"translateX(12px)"},{transform:"translateX(0)"}],{duration:240,fill:"forwards"});S.foe.style.transform="";
   return;
  }
+ fa(1);
  await wapi(S.foe,[{transform:"translateX(12px) scale(.95,1.04)"},{transform:"translateX(-"+dist+"px) scale(1.04)"}],{duration:210,easing:"cubic-bezier(.3,.7,.2,1)",fill:"forwards"});
- snd(kind==="bite"?"bbite":"bclaw");
+ fa(2);snd(kind==="bite"?"bbite":"bclaw");
  if(o.miss)dodge("hero");else{impact();hitFx("hero",o);fxHero(kind)}
- await sleep(240);
+ await sleep(240);fa(3);
  await wapi(S.foe,[{transform:"translateX(-"+dist+"px) scale(1.04)"},{transform:"translateX(0) scale(1)"}],{duration:320,easing:"ease-in-out",fill:"forwards"});
- S.foe.style.transform="";
+ S.foe.style.transform="";if(FA&&!S.dead.foe)fidle("foe");
 }
 async function enemyCast(o){
  o=o||{};var col=o.color||"#c48cff";
@@ -350,6 +406,7 @@ async function dodge(side){
 async function die(side){
  var hero=side==="hero",u=hero?S.hero:S.foe;S.dead[side==="hero"?"hero":"foe"]=true;
  snd("bdie");
+ if(fon(side==="hero"?"hero":"foe")){fstop(hero?"hero":"foe");fshow(hero?"hero":"foe","hit",0)}
  if(hero){
   await wapi(u,[{transform:"rotate(0) translateY(0)",opacity:1,filter:"none"},{transform:"rotate(80deg) translate(8px,6px)",opacity:.55,filter:"grayscale(1)"}],{duration:800,easing:"ease-in",fill:"forwards"});
  }else{
@@ -358,6 +415,7 @@ async function die(side){
 }
 function revive(){
  S.dead={hero:false,foe:false};
+ if(fon("hero"))fidle("hero");if(fon("foe"))fidle("foe");
  [S.hero,S.foe].forEach(function(u){u.style.transform="";u.style.opacity="";u.style.filter="";try{u.getAnimations().forEach(function(a){a.cancel()})}catch(e){}});
 }
 function enter(){
