@@ -6,7 +6,7 @@
 if(window.QFX)return;
 var IW=941,IH=1672,OPY=0.35;
 var reduce=false;try{reduce=matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){}
-var o={base:"./img/",ver:"2"};
+var o={base:"./img/",ver:"2",ext:".jpg"};
 var stage,cam,shk,sceneEl,glowEl,cv,cx,vig;
 var W=0,H=0,DPR=1,T=0,last=0,raf=0,running=false;
 var imgs={},curName="",cur=null,items=[],bursts=[],glows=[],pushT=0,lowMind=false;
@@ -145,7 +145,7 @@ function load(name){
   var r={im:im,ok:null,cb:[]};
   im.onload=function(){r.ok=true;r.cb.forEach(function(f){f()});r.cb=[]};
   im.onerror=function(){r.ok=false;r.cb=[]};
-  im.src=o.base+name+".jpg?v="+o.ver;imgs[name]=r;return r;
+  im.src=o.base+name+o.ext+"?v="+o.ver;imgs[name]=r;return r;
 }
 function reveal(name){
   var r=imgs[name];if(!r||!r.ok||curName!==name)return;
@@ -167,7 +167,7 @@ function push(k){
 
 var Q=window.QFX={
   init:function(el,opt){
-    if(stage)return;opt=opt||{};if(opt.base)o.base=opt.base;if(opt.ver)o.ver=String(opt.ver);
+    if(stage)return;opt=opt||{};if(opt.base)o.base=opt.base;if(opt.ext)o.ext=opt.ext;if(opt.ver)o.ver=String(opt.ver);
     var st=document.createElement("style");st.textContent=CSS;document.head.appendChild(st);
     stage=el;stage.id="stage";
     stage.innerHTML='<div id="qcam"><div id="qshk"><div id="qscene"></div><div id="qglows"></div><canvas id="qfx"></canvas></div></div>';

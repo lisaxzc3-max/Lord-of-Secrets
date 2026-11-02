@@ -94,7 +94,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 <script src="../shared/auth.js"></script>
 <script>document.documentElement.setAttribute("data-nochat","1")</script>
 <script src="../shared/sound.js?v=a7"></script>
-<script src="../shared/qfx.js"></script>
+<script src="../shared/qfx.js?v=3"></script>
 </head>
 <body>
 <div id="stage"></div>
@@ -386,7 +386,7 @@ $("skip").addEventListener("click",()=>{location.href=BACK});
 
 function resetFl(){Object.assign(F,{mind:5,tr:0,truth:0,mercy:0,pact:0,clue:0,fast:0,bit:0})}
 (async function boot(){
-  Q.init($("stage"),{base:"./img/",ver:2});
+  Q.init($("stage"),{base:"./img/",ver:3,ext:".webp"});
   renderMind();dots(1);setBg("mirror");Q.preload(["stairs","archive","reading","heart","dawn","ash"]);
   let st=null;
   try{
