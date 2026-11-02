@@ -199,3 +199,12 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 .sk .skIc{flex-basis:40px;width:40px;height:40px}
 .sk .skN{font-size:10.5px;text-overflow:clip;overflow:hidden;word-break:break-word}
 .sk .cd{left:0;right:auto;width:48px;background:none;text-shadow:0 0 8px #000,0 0 3px #000}
+
+/* цепочки и ярость босса */
+.sk .chn{position:absolute;top:3px;left:auto;right:6px;font-size:9px;font-weight:800;color:#ffe08a;text-shadow:0 0 6px #ff9a2a;animation:chn 1.2s ease-in-out infinite}
+@keyframes chn{50%{opacity:.55}}
+.sk:has(.chn){border-color:#c9a45a;box-shadow:0 0 12px #c9a45a66}
+.stage.rage:before{background:linear-gradient(180deg,#3a0408cc 0%,#3a040833 30%,#3a040800 55%,#2a0206aa 100%)}
+.stage.rage:after{background:radial-gradient(ellipse at 50% 60%,transparent 38%,#7a0a14d0);animation:rageP 2.2s ease-in-out infinite}
+@keyframes rageP{50%{opacity:.6}}
+html[data-q="low"] .stage.rage:after{animation:none}
