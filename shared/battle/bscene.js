@@ -8,6 +8,8 @@ var V="?v=b4";
 var META={"heroes":{"m_seer":{"idle":[288,392],"dash":[387,185],"cast":[256,393],"buff":[357,232]},"m_sailor":{"idle":[144,296],"dash":[346,248],"cast":[304,301],"buff":[303,244]},"m_hunter":{"idle":[160,296],"dash":[344,208],"cast":[369,200],"buff":[336,240]},"f_seer":{"idle":[128,308],"dash":[224,259],"cast":[264,301],"buff":[264,288]},"f_sailor":{"idle":[128,295],"dash":[304,244],"cast":[398,303],"buff":[296,252]},"f_hunter":{"idle":[128,305],"dash":[444,276],"cast":[464,268],"buff":[280,256]}},"mobs":{"drowned":[560,370],"toad":[560,342],"serpent":[560,367],"serpent2":[560,374],"leech":[560,371],"pike":[560,332],"kikimora":[560,374],"vodyanoy":[560,377],"vodyanoy2":[560,377],"mushroom":[511,560],"spider":[560,381],"tree":[560,516],"boar":[560,392],"wolf":[560,385],"kitsune":[560,414],"kitsune2":[560,374],"ghost":[362,560],"ghoul":[560,394],"skeleton":[377,560],"worm":[560,437],"banshee":[353,560],"necro":[360,560],"necro2":[372,560],"fanatic":[506,560],"gargoyle":[514,560],"guard":[370,560],"ratmut":[560,373],"cultist":[371,560],"priest":[373,560],"priest2":[372,560]},"fx":{"hunter_0":[7,186,127],"hunter_1":[8,196,133],"hunter_2":[6,239,117],"hunter_3":[6,230,111],"sailor_0":[6,234,127],"sailor_1":[8,185,133],"sailor_2":[7,257,111],"sailor_3":[7,243,117],"seer_0":[6,197,104],"seer_1":[6,169,115],"seer_2":[6,175,105],"seer_3":[6,210,127]}};
 var HM=META.heroes,MM=META.mobs,FM=META.fx;
 var reduce=false;try{reduce=matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){}
+function qual(){return window.LOTM_Q||"medium"}
+function lowQ(){return qual()==="low"||reduce}
 var SPD=1;try{SPD=+localStorage.getItem("lotm_bspd")||1}catch(e){}
 if(reduce)SPD=3;
 function snd(n,d){try{window.snd&&window.snd(n,d)}catch(e){}}
@@ -168,9 +170,18 @@ function hitFx(side,o){
  snd(hero?"hurt":"hit",hero?.5:.25);
  if(o.heavy)shake(o.heavy);
 }
+function hitStop(ms){ /* короткая заморозка кадра на сильном ударе */
+ try{var an=S.stage.getAnimations({subtree:true}).filter(function(a){return a.playState==="running"});
+  an.forEach(function(a){try{a.pause()}catch(e){}});
+  setTimeout(function(){an.forEach(function(a){try{if(a.playState==="paused")a.play()}catch(e){}})},ms)}catch(e){}
+}
 function shake(n){
- var a=n===2?9:5;
- wapi(S.stage,[{transform:"translate(0,0)"},{transform:"translate(-"+a+"px,"+a/2+"px)"},{transform:"translate("+a+"px,-"+a/2+"px)"},{transform:"translate(-"+a/2+"px,0)"},{transform:"translate(0,0)"}],{duration:380});
+ var a=n===2?9:5,run=function(){
+  var kf=lowQ()?[{transform:"translate(0,0)"},{transform:"translate(-"+a+"px,"+a/2+"px)"},{transform:"translate("+a+"px,-"+a/2+"px)"},{transform:"translate(-"+a/2+"px,0)"},{transform:"translate(0,0)"}]
+   :[{transform:"translate(0,0) scale(1)"},{transform:"translate(-"+a+"px,"+a/2+"px) scale("+(n===2?1.05:1.03)+")",offset:.2},{transform:"translate("+a+"px,-"+a/2+"px) scale(1.02)",offset:.5},{transform:"translate(-"+a/2+"px,0) scale(1.01)",offset:.75},{transform:"translate(0,0) scale(1)"}];
+  wapi(S.stage,kf,{duration:380});
+ };
+ if(lowQ())run();else{hitStop(n===2?90:60);setTimeout(run,n===2?90:60)}
 }
 function screenFlash(col){
  var f=document.createElement("div");f.className="sflash";f.style.background=col||"#fff";S.stage.appendChild(f);
@@ -200,11 +211,35 @@ var COL={seer:"#ffb066",sailor:"#9a8cff",hunter:"#ff5a3a"};
 function handPos(){return{x:S.HX+S.hw*0.38,y:S.SH-S.GY-S.hh*0.55}}
 function foeMid(){return{x:S.EX,y:S.SH-parseFloat(S.foe.style.bottom||S.GY)-S.eh*0.45}}
 function foeBase(){return{x:S.EX,y:S.SH-parseFloat(S.foe.style.bottom||S.GY)}}
+
+/* ---- ультимейт-вставка: затемнение и название навыка перед сильным ударом ---- */
+var ULT={seer_bullet:1,sailor_wave:1,hunter_shot:1};
+async function ultBanner(skill){
+ if(lowQ()||!ULT[skill])return;
+ var d=(window.LOTM_SKILLS&&LOTM_SKILLS.SK&&LOTM_SKILLS.SK[skill])||{};
+ var o=document.createElement("div");o.className="ultB";o.style.setProperty("--c",d.c||"#ffd98a");
+ o.innerHTML="<i></i><b>"+(d.icon||"")+" "+(d.name||"")+"</b>";
+ S.stage.appendChild(o);
+ await wapi(o,[{opacity:0},{opacity:1,offset:.25},{opacity:1,offset:.7},{opacity:0}],{duration:520});
+ o.remove();
+}
+/* ---- атмосфера: лёгкие частицы по локации (только transform и opacity) ---- */
+var AMB={lake:["#bfe8ff","bub"],forest:["#b8e08a","leaf"],cemetery:["#c9b8e8","ash"],ruins:["#ff9a4a","ember"]};
+function ambient(){
+ if(lowQ()||S.amb)return;
+ var loc=(location.pathname.match(/\/(lake|forest|cemetery|ruins)\//)||[])[1];if(!loc)return;
+ var cfg=AMB[loc],n=qual()==="high"?14:7,box=document.createElement("div");box.className="ambB "+cfg[1];box.style.setProperty("--c",cfg[0]);
+ for(var i=0;i<n;i++){var e=document.createElement("i");
+  e.style.left=(Math.random()*96+2)+"%";e.style.animationDuration=(7+Math.random()*7)+"s";e.style.animationDelay=(-Math.random()*12)+"s";
+  e.style.setProperty("--dx",(Math.random()*60-30)+"px");e.style.setProperty("--s",(.5+Math.random()*.9).toFixed(2));box.appendChild(e)}
+ S.stage.appendChild(box);S.amb=box;
+}
 async function act(skill,o){
  o=o||{};var A=ACT[skill]||ACT.basic;
  var pk=(window.LOTM_SKILLS&&LOTM_SKILLS.SK[skill]&&LOTM_SKILLS.SK[skill].path)||S.pk;
  if(!FM[pk+"_0"])pk=S.pk;
  var impact=function(){try{o.impact&&o.impact()}catch(e){}};
+ await ultBanner(skill);
  var fb=foeBase(),fm=foeMid();
  if(A.t==="melee"){
   setPose("dash");snd("bdash");
@@ -322,6 +357,7 @@ function revive(){
  [S.hero,S.foe].forEach(function(u){u.style.transform="";u.style.opacity="";u.style.filter="";try{u.getAnimations().forEach(function(a){a.cancel()})}catch(e){}});
 }
 function enter(){
+ try{ambient()}catch(e){}
  S.hero.style.opacity=0;S.foe.style.opacity=0;
  wapi(S.hero,[{transform:"translateX(-90px)",opacity:0},{transform:"translateX(0)",opacity:1}],{duration:600,easing:"ease-out",fill:"forwards"}).then(function(){S.hero.style.opacity="";S.hero.style.transform=""});
  return sleep(150).then(function(){

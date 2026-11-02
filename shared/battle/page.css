@@ -157,3 +157,16 @@ body.defeatFx:after{content:"";position:fixed;inset:0;pointer-events:none;z-inde
 .unit.foe.fadeOut .fl{opacity:.28;transition:opacity .4s}
 .unit.foe.burrow .fl{transform:scaleX(var(--f,1)) translateY(58%);opacity:.5}
 .eHit.magic b{background:radial-gradient(circle,#fff,#b86bff88 45%,transparent 70%)}
+
+/* ультимейт-вставка и атмосфера */
+.ultB{position:absolute;inset:0;z-index:27;pointer-events:none;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#00000055 20%,#000000cc 85%)}
+.ultB i{position:absolute;left:0;right:0;top:50%;height:46px;margin-top:-23px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--c) 38%,#000) 25%,color-mix(in srgb,var(--c) 38%,#000) 75%,transparent)}
+.ultB b{position:relative;font:900 20px/1 Philosopher,Georgia,serif;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 0 14px var(--c),0 2px 8px #000}
+.ambB{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.ambB i{position:absolute;bottom:-12px;width:7px;height:7px;border-radius:50%;background:var(--c);opacity:0;will-change:transform,opacity;animation:ambUp linear infinite}
+.ambB.leaf i{border-radius:60% 0 60% 0;width:9px;height:6px;animation-name:ambFall;bottom:auto;top:-12px}
+.ambB.ash i{width:5px;height:5px;animation-name:ambFall;bottom:auto;top:-12px;filter:blur(.6px)}
+.ambB.ember i{box-shadow:0 0 8px var(--c)}
+@keyframes ambUp{0%{opacity:0;transform:translate(0,0) scale(var(--s))}15%{opacity:.8}100%{opacity:0;transform:translate(var(--dx),-340px) scale(var(--s))}}
+@keyframes ambFall{0%{opacity:0;transform:translate(0,0) rotate(0) scale(var(--s))}15%{opacity:.7}100%{opacity:0;transform:translate(var(--dx),360px) rotate(240deg) scale(var(--s))}}
+@media(prefers-reduced-motion:reduce){.ambB{display:none}}
