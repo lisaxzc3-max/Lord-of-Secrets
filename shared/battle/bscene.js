@@ -214,9 +214,10 @@ function foeBase(){return{x:S.EX,y:S.SH-parseFloat(S.foe.style.bottom||S.GY)}}
 
 /* ---- ультимейт-вставка: затемнение и название навыка перед сильным ударом ---- */
 var ULT={seer_bullet:1,sailor_wave:1,hunter_shot:1};
-async function ultBanner(skill){
- if(lowQ()||!ULT[skill])return;
- var d=(window.LOTM_SKILLS&&LOTM_SKILLS.SK&&LOTM_SKILLS.SK[skill])||{};
+var ULTT={seer:"Игра теней",sailor:"Гнев бури",hunter:"Охота"};
+async function ultBanner(skill,title){
+ if(lowQ()||(!ULT[skill]&&!title))return;
+ var d=(window.LOTM_SKILLS&&LOTM_SKILLS.SK&&LOTM_SKILLS.SK[skill])||{};if(title){d={c:COL[S.pk],icon:"✦",name:title}}
  var o=document.createElement("div");o.className="ultB";o.style.setProperty("--c",d.c||"#ffd98a");
  o.innerHTML="<i></i><b>"+(d.icon||"")+" "+(d.name||"")+"</b>";
  S.stage.appendChild(o);
@@ -235,11 +236,12 @@ function ambient(){
  S.stage.appendChild(box);S.amb=box;
 }
 async function act(skill,o){
- o=o||{};var A=ACT[skill]||ACT.basic;
+ o=o||{};var isUlt=skill==="ult";
+ if(isUlt)skill={seer:"seer_bullet",sailor:"sailor_hit",hunter:"hunter_shot"}[S.pk]||"basic";var A=ACT[skill]||ACT.basic;
  var pk=(window.LOTM_SKILLS&&LOTM_SKILLS.SK[skill]&&LOTM_SKILLS.SK[skill].path)||S.pk;
  if(!FM[pk+"_0"])pk=S.pk;
- var impact=function(){try{o.impact&&o.impact()}catch(e){}};
- await ultBanner(skill);
+ var impact=function(){try{o.impact&&o.impact()}catch(e){}if(isUlt){shake(2);screenFlash(COL[S.pk]||"#fff")}};
+ await ultBanner(skill,isUlt?"Откровение · "+ULTT[S.pk]:null);
  var fb=foeBase(),fm=foeMid();
  if(A.t==="melee"){
   setPose("dash");snd("bdash");

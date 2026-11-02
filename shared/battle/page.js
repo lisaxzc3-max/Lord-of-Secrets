@@ -11,7 +11,7 @@ app.innerHTML='<div class="wrap">'+
 '<section class="stage" id="stage">'+
 '<div class="mist a"></div><div class="mist b"></div>'+
 '<div class="top"><a class="back" id="backHome" href="../index.html">'+CFG.back+'</a><div class="turn wait" id="turn">Загрузка</div><button class="spd" id="spd" type="button" aria-label="Скорость боя">⏩</button><div class="statusPill" id="statusPill">Загрузка</div></div>'+
-'<div class="hud l"><div class="plate"><span class="pc" id="playerPc"></span><div class="pbar"><div class="bar hp"><i id="playerHpBar"></i></div><div class="nm" id="playerName">Путешественник</div></div></div><div class="rl" id="playerPath">Путь неизвестен</div><div class="num">❤ <span id="playerHp">—</span></div><div class="chips" id="heroChips"></div></div>'+
+'<div class="hud l"><div class="plate"><span class="pc" id="playerPc"></span><div class="pbar"><div class="bar hp"><i id="playerHpBar"></i></div><div class="nm" id="playerName">Путешественник</div></div></div><div class="gauge" id="gauge" title="Шкала тайны"><i id="gaugeFill"></i></div><div class="rl" id="playerPath">Путь неизвестен</div><div class="num">❤ <span id="playerHp">—</span></div><div class="chips" id="heroChips"></div></div>'+
 '<div class="hud r"><div class="plate"><span class="pc" id="enemyPc"></span><div class="pbar"><div class="bar enemyHp"><i id="enemyHpBar"></i></div><div class="nm" id="enemyLabel">Противник</div></div></div><div class="rl" id="enemyRole">Враждебная сущность</div><div class="num">🩸 <span id="enemyHp">—</span></div><div class="chips" id="chips"></div></div>'+
 '<div class="fighters" id="fighters"><div class="fighter heroSlot"><div class="unit hero" id="playerFrame" style="position:absolute"><div class="fl"><img id="playerImg" alt="Герой" draggable="false"></div></div></div><div class="fighter foeSlot"><div class="unit foe" id="enemyFrame" style="position:absolute"><div class="fl"><img id="enemyImg" alt="Противник" draggable="false"></div></div></div></div>'+
 '<div class="fxl" id="fx"></div>'+
@@ -42,7 +42,14 @@ const aEnc=qs.get("a_enc")||qs.get("a")||"";
 let PROFILE_URL=pEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(pEnc):"";
 let ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 let handshakePromise=null,busy=false,ended=false,initialized=false,PLAYER_PATH="",logEntries=[],lastCds={};
-let curEnemy="",curBoss=false,curPhase=1,curMob="",lastMove="",rageDone=false;
+let curEnemy="",curBoss=false,curPhase=1,curMob="",lastMove="",rageDone=false,gaugeV=0;
+const ULTN={seer:"Игра теней",sailor:"Гнев бури",hunter:"Охота"};
+const ULTD={seer:"Три удара подряд и уклонение на 1 ход.",sailor:"Один удар втрое сильнее Удара шторма.",hunter:"Гарантированный крит и кровотечение на 3 хода."};
+function setGauge(v){
+ gaugeV=Math.max(0,Math.min(100,Number(v)||0));
+ const g=$("gauge");if(g){g.firstElementChild.style.width=gaugeV+"%";g.classList.toggle("full",gaugeV>=100)}
+ try{refreshSkillState()}catch(e){}
+}
 /* цепочки навыков: «предыдущий>следующий» → бонус к урону (должно совпадать с сервером) */
 const CHAIN={"divination>seer_bullet":30,"acting>boomerang":30,"boomerang>seer_bullet":20,"sailor_drink>sailor_hit":50,"sailor_pray>sailor_wave":30,"sailor_hit>sailor_wave":20,"hunter_trap>hunter_shot":40,"hunter_boost>hunter_dagger":30,"hunter_dagger>hunter_shot":20};
 const cur={hero:null,heroMax:null,foe:null,foeMax:null};
@@ -187,11 +194,14 @@ function renderSkills(cds={}){
   $("skillPathLabel").textContent=LOTM_SKILLS.PATHNAME[pk][0];
   LOTM_SKILLS.list(pk).forEach(s=>addSkill(s.key,s.cd,""));
   addSkill("basic","basic","basic");addSkill("flee",null,"escape");
+  skillInfo.ult={name:"Откровение: "+(ULTN[pk]||""),icon:"✦",tag:"шкала 100",c:"#ffd98a",desc:(ULTD[pk]||"")+" Копится от ударов: +10 за каждый нанесённый и полученный."};
+  addSkill("ult",null,"ult");
  }
  refreshSkillState();
 }
 function refreshSkillState(){
  $("battleSkills").querySelectorAll("button.sk").forEach(b=>{
+  if(b.dataset.key==="ult"){b.hidden=gaugeV<100;b.classList.toggle("ready",gaugeV>=100)}
   const ch=lastMove?CHAIN[lastMove+">"+b.dataset.key]:0;let cb=b.querySelector(".chn");
   if(ch){if(!cb){cb=document.createElement("span");cb.className="chn";b.appendChild(cb)}cb.textContent="🔗+"+ch+"%"}else if(cb)cb.remove();
   const cd=b.dataset.cdk?Number(lastCds[b.dataset.cdk]||0):0;
@@ -203,13 +213,13 @@ function refreshSkillState(){
 }
 var SKICON={divination:["seer",4],seer_bullet:["seer",3],boomerang:["seer",2],acting:["seer",1],basic_seer:["seer",0],
  sailor_hit:["sailor",0],sailor_wave:["sailor",1],sailor_drink:["sailor",4],sailor_pray:["sailor",5],basic_sailor:["sailor",3],
- hunter_shot:["hunter",0],hunter_dagger:["hunter",5],hunter_trap:["hunter",2],hunter_boost:["hunter",4],basic_hunter:["hunter",1]};
+ hunter_shot:["hunter",0],hunter_dagger:["hunter",5],hunter_trap:["hunter",2],hunter_boost:["hunter",4],basic_hunter:["hunter",1],ult_seer:["ult",0],ult_sailor:["ult",1],ult_hunter:["ult",2]};
 function addSkill(key,cdk,cls){
  const info=skillInfo[key]||{name:key,desc:""},b=document.createElement("button");
  b.type="button";b.className="sk "+cls;b.dataset.key=key;if(cdk)b.dataset.cdk=cdk;b.dataset.cooldown="false";
  b.style.setProperty("--sk",info.c||"#d6b779");
  const ic=document.createElement("span");ic.className="skIc";
- const ik=SKICON[key==="basic"?"basic_"+(LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer"):key];
+ const ik=SKICON[key==="basic"||key==="ult"?key+"_"+(LOTM_SKILLS.pathKey(PLAYER_PATH)||"seer"):key];
  if(ik){const g=document.createElement("i");g.style.backgroundImage='url("'+window.LOTM_ART+'bt/ski_'+ik[0]+'.webp")';g.style.backgroundPosition=(ik[1]%3*50)+"% "+(Math.floor(ik[1]/3)*100)+"%";ic.appendChild(g)}else ic.textContent=info.icon||"•";
  const nm=document.createElement("span");nm.className="skN";nm.textContent=info.name||key;
  b.append(ic,nm);
@@ -293,6 +303,7 @@ async function refreshBattleState(){
  if(s?.enemy_hp!=null&&s.enemy_max!=null)setHealth("enemy",s.enemy_hp,s.enemy_max);
  if(s?.hp!=null&&s.max_hp!=null)setHealth("player",s.hp,s.max_hp);
  if(s?.enemy_level)setEnemyLevel(s.enemy_level,s.boss,s.phase);
+ if(s?.gauge!=null)setGauge(s.gauge);
  if(s?.cds)renderSkills(s.cds);
  return s;
 }
@@ -335,6 +346,7 @@ async function load(){
   if(state?.elite){$("enemyLabel").textContent="⭐ "+($("enemyLabel").textContent||"")}
   if(state?.enemy_hp!=null&&state?.enemy_max!=null)setHealth("enemy",state.enemy_hp,state.enemy_max);
   else setHealth("enemy",null,null);
+  if(state?.gauge!=null)setGauge(state.gauge);
   renderSkills(state?.cds||{});
   if(!initialized){
    B.enter();
@@ -420,7 +432,7 @@ async function doBattle(move){
    const m=cleanBattleText(data.text||data.message||data.error||"Сервер вернул неизвестный результат.");
    setMessage(m,"","❔");addLog(m,"info");return;
   }
-  lastMove=move;
+  lastMove=move;if(data.gauge!=null)setGauge(data.gauge);
   await playTurn(move,data);
  }catch(error){
   showError(error.message||"Ошибка связи при выполнении хода.");
