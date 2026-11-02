@@ -445,7 +445,7 @@ skill:function(fx,delay){sfx(fx,delay)},ready:ready,_master:function(){return ma
 /* общий чат: подключаем на каждой странице рядом с кнопкой звука */
 try{var _ss=document.querySelector('script[src*="sound.js"]');if(_ss&&!document.documentElement.hasAttribute("data-nochat")){var _q=new URLSearchParams(location.search),_vz="?v="+encodeURIComponent(_q.get("_t")||_q.get("v")||"a3");var _ld=function(n,d){var e=document.createElement("script");e.src=_ss.src.replace(/sound\.js(\?.*)?$/,n+".js")+_vz;if(d)e.defer=true;document.head.appendChild(e)};if(!window.VIP)_ld("vip");_ld("pcard");_ld("chat",1)}}catch(e){}
 try{var _ss2=document.querySelector('script[src*="sound.js"]');if(_ss2){var _t=document.createElement("script");_t.src=_ss2.src.replace(/sound\.js(\?.*)?$/,"theme.js?v=a3");document.head.appendChild(_t)}}catch(e){}
-try{var _ss3=document.querySelector('script[src*="sound.js"]');if(_ss3){var _i=document.createElement("script");_i.src=_ss3.src.replace(/sound\.js(\?.*)?$/,"icons.js");document.head.appendChild(_i)}}catch(e){}
+try{var _ss3=document.querySelector('script[src*="sound.js"]');if(_ss3){var _src3=_ss3.src.replace(/sound\.js(\?.*)?$/,"icons.js"),_goI=function(){if(document.querySelector('script[src*="icons.js"]'))return;var _i=document.createElement("script");_i.src=_src3;document.head.appendChild(_i)};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",_goI);else _goI()}}catch(e){}
 })();
 
 /* проверка «ты не бот»: сервер отвечает error:"captcha" на подозрительную активность */

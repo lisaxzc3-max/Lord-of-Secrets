@@ -67,8 +67,10 @@ function layout(){if(S.hk)setPose(S.pose,true);if(S.mob)placeFoe()}
 /* ---- герой ---- */
 function setHero(path,gender){
  S.pk=path||"seer";S.hk=(gender==="female"?"f":"m")+"_"+S.pk;
- ["idle","dash","cast","buff"].forEach(function(p){pre(BASE+"heroes/"+S.hk+"_"+p+".webp"+V)});
- for(var i=0;i<4;i++)pre(BASE+"fx/"+S.pk+"_"+i+".webp"+V);
+ pre(BASE+"heroes/"+S.hk+"_idle.webp"+V);
+ /* остальные позы и эффекты подгружаем чуть позже, чтобы бой открылся быстрее */
+ var hk=S.hk,pk=S.pk,later=function(){["dash","cast","buff"].forEach(function(p){pre(BASE+"heroes/"+hk+"_"+p+".webp"+V)});for(var i=0;i<4;i++)pre(BASE+"fx/"+pk+"_"+i+".webp"+V)};
+ if(window.requestIdleCallback)requestIdleCallback(later,{timeout:1500});else setTimeout(later,700);
  setPose("idle",true);
 }
 function setPose(p,keep){
