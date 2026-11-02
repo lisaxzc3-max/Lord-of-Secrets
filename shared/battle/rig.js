@@ -4,8 +4,8 @@
 "use strict";
 var SRC=(document.currentScript&&document.currentScript.src)||"";
 var BASE=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"")+"rig/";
-var V="?v=r3";
-var DEFS={"m_seer": {"W": 275, "H": 632, "parts": [{"id": "cape", "x": 0, "y": 154, "w": 212, "h": 246, "z": 1, "px": 110, "py": 11}, {"id": "leg_b", "x": 138, "y": 374, "w": 95, "h": 253, "z": 2, "px": 47, "py": 16}, {"id": "arm_b", "x": 91, "y": 179, "w": 77, "h": 257, "z": 3, "px": 38, "py": 22}, {"id": "leg_f", "x": 118, "y": 377, "w": 94, "h": 252, "z": 4, "px": 47, "py": 16}, {"id": "torso", "x": 47, "y": 146, "w": 207, "h": 262, "z": 5, "px": 105, "py": 258}, {"id": "head", "x": 84, "y": 0, "w": 183, "h": 196, "z": 6, "px": 61, "py": 187}, {"id": "arm_f", "x": 113, "y": 179, "w": 104, "h": 249, "z": 7, "px": 52, "py": 22}], "extra": [{"id": "cards", "x": 96, "y": 316, "w": 105, "h": 211}]}, "toad": {"W": 561, "H": 352, "parts": [{"id": "far", "x": 204, "y": 132, "w": 330, "h": 180, "z": 1, "px": 165, "py": 6}, {"id": "leg_b", "x": 374, "y": 105, "w": 202, "h": 242, "z": 2, "px": 99, "py": 16}, {"id": "body", "x": 160, "y": 6, "w": 340, "h": 274, "z": 3, "px": 170, "py": 274}, {"id": "jaw", "x": 33, "y": 132, "w": 218, "h": 151, "z": 4, "px": 94, "py": 11}, {"id": "head", "x": 6, "y": 6, "w": 256, "h": 216, "z": 5, "px": 160, "py": 176}, {"id": "leg_f", "x": 187, "y": 105, "w": 217, "h": 241, "z": 6, "px": 127, "py": 16}], "extra": []}};
+var V="?v=r4";
+var DEFS={"m_seer": {"W": 264, "H": 586, "parts": [{"id": "cape", "x": 6, "y": 110, "w": 212, "h": 246, "z": 1, "px": 99, "py": 11}, {"id": "leg_b", "x": 146, "y": 330, "w": 95, "h": 253, "z": 2, "px": 47, "py": 16}, {"id": "arm_b", "x": 80, "y": 135, "w": 77, "h": 257, "z": 3, "px": 38, "py": 22}, {"id": "leg_f", "x": 127, "y": 333, "w": 94, "h": 252, "z": 4, "px": 47, "py": 16}, {"id": "head", "x": 114, "y": 3, "w": 143, "h": 153, "z": 4.5, "px": 60, "py": 141}, {"id": "torso", "x": 52, "y": 102, "w": 207, "h": 262, "z": 5, "px": 105, "py": 253}, {"id": "arm_f", "x": 99, "y": 135, "w": 104, "h": 249, "z": 7, "px": 52, "py": 22}], "extra": [{"id": "cards", "x": 82, "y": 272, "w": 105, "h": 211}]}, "toad": {"W": 561, "H": 352, "parts": [{"id": "far", "x": 204, "y": 132, "w": 330, "h": 180, "z": 1, "px": 165, "py": 6}, {"id": "leg_b", "x": 374, "y": 105, "w": 202, "h": 242, "z": 2, "px": 99, "py": 16}, {"id": "body", "x": 160, "y": 6, "w": 340, "h": 274, "z": 3, "px": 170, "py": 274}, {"id": "jaw", "x": 33, "y": 132, "w": 218, "h": 151, "z": 4, "px": 94, "py": 11}, {"id": "head", "x": 6, "y": 6, "w": 256, "h": 216, "z": 5, "px": 160, "py": 176}, {"id": "leg_f", "x": 187, "y": 105, "w": 217, "h": 241, "z": 6, "px": 127, "py": 16}], "extra": []}};
 var reduce=false;try{reduce=matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){}
 function lowQ(){return reduce||window.LOTM_Q==="low"}
 function mk(c,css){var e=document.createElement("div");e.className=c;if(css)e.style.cssText=css;return e}
@@ -15,14 +15,14 @@ function T(a){ /* {id:"transform"} */return a}
 var POSES={
  m_seer:{
   idle:{},
-  dash:{torso:"rotate(9deg)",head:"rotate(8deg) translateX(4px)",arm_f:"rotate(-78deg)",arm_b:"rotate(38deg)",cape:"rotate(22deg)",leg_f:"rotate(-26deg)",leg_b:"rotate(30deg)"},
+  dash:{torso:"rotate(9deg)",head:"rotate(5deg)",arm_f:"rotate(-78deg)",arm_b:"rotate(38deg)",cape:"rotate(22deg)",leg_f:"rotate(-26deg)",leg_b:"rotate(30deg)"},
   cast:{torso:"rotate(-3deg)",head:"rotate(-5deg)",arm_f:"rotate(-96deg)",arm_b:"rotate(10deg)",cape:"rotate(9deg)"},
   buff:{torso:"translateY(-8px)",head:"rotate(-9deg)",arm_f:"rotate(-58deg)",arm_b:"rotate(-52deg)",cape:"rotate(14deg)"},
-  hit:{torso:"rotate(-9deg)",head:"rotate(-15deg)",arm_f:"rotate(16deg)",arm_b:"rotate(20deg)",cape:"rotate(16deg)",leg_f:"rotate(5deg)",leg_b:"rotate(-5deg)"}
+  hit:{torso:"rotate(-8deg)",head:"rotate(-10deg)",arm_f:"rotate(16deg)",arm_b:"rotate(20deg)",cape:"rotate(16deg)",leg_f:"rotate(5deg)",leg_b:"rotate(-5deg)"}
  },
  toad:{
   idle:{},
-  attack:{head:"translateX(-28px) rotate(-4deg)",jaw:"rotate(12deg) translateX(-12px)",leg_f:"rotate(-8deg)",body:"translateX(-6px)"},
+  attack:{head:"translateX(-12px) rotate(-5deg)",jaw:"rotate(11deg) translateX(-8px)",leg_f:"rotate(-8deg)",body:"translateX(-4px)"},
   hit:{body:"scale(1.03,.93)",head:"rotate(9deg) translateX(12px)",jaw:"rotate(10deg)",leg_f:"rotate(4deg)"}
  }
 };
@@ -30,14 +30,14 @@ var POSES={
 var IDLE={
  m_seer:[
   ["torso",[{transform:"translateY(0) scale(1)"},{transform:"translateY(-6px) scale(1.008,1.014)"}],2000],
-  ["head",[{transform:"rotate(0deg) translateY(0)"},{transform:"rotate(-1.6deg) translateY(-6px)"}],2200],
+  ["head",[{transform:"rotate(0deg) translateY(0)"},{transform:"rotate(-1.4deg) translateY(-3px)"}],2200],
   ["cape",[{transform:"rotate(0deg)"},{transform:"rotate(3.2deg)"}],2400],
   ["arm_f",[{transform:"rotate(1.5deg)"},{transform:"rotate(-2.6deg)"}],2600],
   ["arm_b",[{transform:"rotate(-1.2deg)"},{transform:"rotate(2.2deg)"}],2800]
  ],
  toad:[
   ["body",[{transform:"scale(1,1)"},{transform:"scale(1.008,1.03)"}],1700],
-  ["head",[{transform:"translateY(0) rotate(0deg)"},{transform:"translateY(-9px) rotate(-1.2deg)"}],2100],
+  ["head",[{transform:"translateY(0) rotate(0deg)"},{transform:"translateY(-3px) rotate(-1deg)"}],2100],
   ["jaw",[{transform:"scaleY(1)"},{transform:"scaleY(1.09)"}],1300],
   ["leg_f",[{transform:"rotate(0deg)"},{transform:"rotate(1.4deg)"}],2300],
   ["far",[{transform:"translateX(0)"},{transform:"translateX(-4px)"}],2500]
