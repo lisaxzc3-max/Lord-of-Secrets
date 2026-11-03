@@ -325,6 +325,11 @@ async function load(){
  setBusy(true,"Загрузка…");hideError();setTurn("Загрузка","wait");
  try{
   let pre=null;try{const raw=sessionStorage.getItem("lotm_bs_pre");if(raw){sessionStorage.removeItem("lotm_bs_pre");const o=JSON.parse(raw);if(o&&Date.now()-o.t<20000&&o.d&&o.d.enemy)pre=o.d}}catch(_){}
+  try{ /* подгрузка кадров заранее, пока идут запросы к серверу */
+   const cp=window.LOTM_FAST&&LOTM_FAST.get("profile");
+   const ek=getEnemyName(pre&&pre.enemy),mk=MOB[ek]||CFG.mobDefault;
+   B.preload((curBoss&&P2[mk]&&curPhase>=2)?P2[mk]:mk,cp&&LOTM_SKILLS.pathKey(cp.path_key||cp.path),cp&&cp.gender);
+  }catch(_){}
   const fresh=!!pre&&pre.enemy_hp!=null&&Number(pre.enemy_hp)===Number(pre.enemy_max)&&!initialized;
   const stP=fresh?Promise.resolve(null):api({action:"battle_state"}).catch(e=>({__err:e}));
   let profile=null;

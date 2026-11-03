@@ -20,7 +20,7 @@ function wapi(el,kf,opt){
  });
 }
 var cache={};
-function pre(url,dec){if(cache[url])return;var i=new Image();i.src=url;cache[url]=i;if(dec&&i.decode)i.decode().catch(function(){})}
+function pre(url,dec){if(cache[url])return cache[url];var i=new Image();i.src=url;cache[url]=i;if(dec&&i.decode)i.decode().catch(function(){});return i}
 
 /* ---- какие позы и эффекты у каких навыков ---- */
 var ACT={
@@ -52,8 +52,15 @@ var FRD={"banshee":[471,503,275.5,269.6,19.1,321,478],"boar":[766,443,476.1,483.
 var FR={};for(var _k in FRD){var _a=FRD[_k];FR[_k]={w:_a[0],h:_a[1],ax:_a[2],cx:_a[3],bp:_a[4],iw:_a[5],ih:_a[6],n:FRN}}
 var FT={hero:{t:0,id:0},foe:{t:0,id:0}};
 function frUrl(k,a,i){return BASE+"frames/"+k+"_"+a+"_"+i+".webp"+V}
-function frPre(k,first){var f=FR[k];if(!f)return;pre(frUrl(k,"idle",0),1);var go=function(){for(var a in f.n)for(var i=0;i<f.n[a];i++)pre(frUrl(k,a,i),1)};if(first)setTimeout(go,0);else go()}
-function frDrop(k){var f=FR[k];if(!f)return;for(var a in f.n)for(var i=0;i<f.n[a];i++)delete cache[frUrl(k,a,i)]}
+function frPre(k,first){
+ var f=FR[k];if(!f)return;var im=pre(frUrl(k,"idle",0),1);
+ if(f.rest)return;f.rest=1;
+ /* остальные кадры качаем после первого, в простое, чтобы не мешать входу в бой */
+ var go=function(){["idle","atk","hit"].forEach(function(a){for(var i=(a==="idle"?1:0);i<f.n[a];i++)pre(frUrl(k,a,i),1)})};
+ var later=function(){if(window.requestIdleCallback)requestIdleCallback(go,{timeout:1500});else setTimeout(go,300)};
+ if(im&&!im.complete){im.addEventListener("load",later,{once:true});im.addEventListener("error",later,{once:true})}else later();
+}
+function frDrop(k){var f=FR[k];if(!f)return;f.rest=0;for(var a in f.n)for(var i=0;i<f.n[a];i++)delete cache[frUrl(k,a,i)]}
 function fkey(side){return side==="hero"?S.hk:S.mob}
 function fimg(side){return side==="hero"?S.hImg:S.eImg}
 function fon(side){return !!FR[fkey(side)]}
@@ -98,7 +105,7 @@ function setHero(path,gender){
  S.pk=path||"seer";S.hk=(gender==="female"?"f":"m")+"_"+S.pk;
  if(FR[S.hk]){S.hero.classList.add("fr");frPre(S.hk,1)}else{S.hero.classList.remove("fr");fstop("hero");pre(BASE+"heroes/"+S.hk+"_idle.webp"+V)}
  /* остальные позы и эффекты подгружаем чуть позже, чтобы бой открылся быстрее */
- var hk=S.hk,pk=S.pk,later=function(){["dash","cast","buff"].forEach(function(p){pre(BASE+"heroes/"+hk+"_"+p+".webp"+V)});for(var i=0;i<4;i++)pre(BASE+"fx/"+pk+"_"+i+".webp"+V)};
+ var hk=S.hk,pk=S.pk,later=function(){if(!FR[hk])["dash","cast","buff"].forEach(function(p){pre(BASE+"heroes/"+hk+"_"+p+".webp"+V)});for(var i=0;i<4;i++)pre(BASE+"fx/"+pk+"_"+i+".webp"+V)};
  if(window.requestIdleCallback)requestIdleCallback(later,{timeout:1500});else setTimeout(later,700);
  setPose("idle",true);
 }
@@ -436,7 +443,8 @@ function enter(){
  }).then(function(){S.foe.style.opacity="";S.foe.style.transform=""});
 }
 function setSpeed(v){SPD=v;try{localStorage.setItem("lotm_bspd",String(v))}catch(e){}}
-window.LOTM_BSCENE={echo:echo,init:init,setHero:setHero,setFoe:setFoe,swapFoe:swapFoe,setPose:setPose,act:act,enemyAct:enemyAct,enemyCast:enemyCast,dodge:dodge,die:die,revive:revive,enter:enter,
+function preload(mob,path,gender){try{if(mob)frPre(mob);if(path)frPre((gender==="female"?"f":"m")+"_"+path)}catch(e){}}
+window.LOTM_BSCENE={preload:preload,echo:echo,init:init,setHero:setHero,setFoe:setFoe,swapFoe:swapFoe,setPose:setPose,act:act,enemyAct:enemyAct,enemyCast:enemyCast,dodge:dodge,die:die,revive:revive,enter:enter,
  floatNum:floatNum,status:status,hitFx:hitFx,shake:shake,flash:screenFlash,aura:aura,measure:measure,layout:layout,sleep:sleep,
  setSpeed:setSpeed,speed:function(){return SPD},mobKey:function(){return S&&S.mob},ACT:ACT};
 })();
