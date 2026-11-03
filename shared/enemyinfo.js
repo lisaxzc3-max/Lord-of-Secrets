@@ -126,9 +126,9 @@ var INFO={
 };
 var css=document.createElement("style");
 css.textContent=
-".eiBadge{position:absolute;right:5px;top:5px;z-index:6;width:20px;height:20px;border-radius:50%;background:#000a;border:1px solid #e2c27a99;color:#e2c27a;font:700 12px/18px Philosopher,Georgia,serif;text-align:center;pointer-events:none;animation:eiPulse 2.4s ease-in-out infinite}"+
+".eiBtn{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-left:8px;width:30px;height:30px;padding:0;border-radius:50%;background:#000b;border:1.5px solid #e2c27acc;color:#e2c27a;font:700 15px/1 Philosopher,Georgia,serif;cursor:pointer;pointer-events:auto;position:relative;z-index:40;animation:eiPulse 2.4s ease-in-out infinite;-webkit-tap-highlight-color:transparent}.eiBtn:before{content:'';position:absolute;inset:-8px}"+
 "@keyframes eiPulse{50%{box-shadow:0 0 10px #e2c27acc;transform:scale(1.12)}}"+
-".eiOn .eiBadge{background:#e2c27a;color:#1a1020;animation:none}"+
+".eiBtn.on{background:#e2c27a;color:#1a1020;animation:none}"+
 "#enemyInfo{position:relative;overflow:hidden;max-height:0;opacity:0;margin:0 0 0;border:1px solid transparent;border-radius:14px;background:linear-gradient(160deg,#241a38f2,#120c1ef2);transition:max-height .45s cubic-bezier(.2,.8,.2,1),opacity .3s,margin .3s,border-color .3s}"+
 "#enemyInfo.open{max-height:900px;opacity:1;margin:10px 0 2px;border-color:#6a58a0;box-shadow:0 0 20px #8a5cff33}"+
 "#enemyInfo .eiIn{padding:11px 12px}"+
@@ -142,7 +142,7 @@ css.textContent=
 "#enemyInfo .eiN{font-weight:800;font-size:12px;color:#f2e6c8}"+
 "#enemyInfo .eiD{font-size:11px;color:#b8accb;line-height:1.4;margin-top:1px}"+
 "#enemyInfo .eiNo{font-size:12px;color:#a99dba;padding:6px 0}"+
-"@media(prefers-reduced-motion:reduce){#enemyInfo,#enemyInfo .eiS,.eiBadge{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}}";
+"@media(prefers-reduced-motion:reduce){#enemyInfo,#enemyInfo .eiS,.eiBtn{transition:none!important;animation:none!important;opacity:1!important;transform:none!important}}";
 document.head.appendChild(css);
 
 function init(){
@@ -155,8 +155,9 @@ function init(){
  if(!card||!fighters)return;
  var panel=document.createElement("div");panel.id="enemyInfo";panel.setAttribute("role","region");panel.setAttribute("aria-label","Навыки врага");
  var anchor=document.getElementById("eiAnchor")||fighters;anchor.parentNode.insertBefore(panel,anchor.nextSibling);
- var badge=document.createElement("i");badge.className="eiBadge";badge.textContent="i";badge.setAttribute("aria-hidden","true");
- frame.style.position=frame.style.position||"relative";frame.appendChild(badge);
+ /* настоящая кнопка «i» в строке здоровья врага (в панели, ничем не перекрыта) */
+ var btn=document.createElement("button");btn.type="button";btn.className="eiBtn";btn.textContent="i";btn.setAttribute("aria-label","Навыки врага");btn.setAttribute("data-nosnd","1");
+ var numEl=document.querySelector(".hud.r .num");if(numEl)numEl.appendChild(btn);else{btn.style.cssText+=";position:absolute;right:6px;top:6px";frame.appendChild(btn)}
  card.style.cursor="pointer";card.setAttribute("role","button");card.setAttribute("tabindex","0");card.setAttribute("aria-expanded","false");
 
  function find(name){
@@ -175,15 +176,16 @@ function init(){
   var open=!panel.classList.contains("open");
   if(open){build();void panel.offsetWidth}
   panel.classList.toggle("open",open);
-  card.classList.toggle("eiOn",open);card.setAttribute("aria-expanded",open?"true":"false");
+  card.classList.toggle("eiOn",open);btn.classList.toggle("on",open);card.setAttribute("aria-expanded",open?"true":"false");
   try{window.snd&&window.snd(open?"open":"back")}catch(e){}
  }
+ btn.addEventListener("click",function(e){e.stopPropagation();toggle()});
  card.addEventListener("click",toggle);
  card.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle()}});
  panel.addEventListener("click",function(){if(panel.classList.contains("open"))toggle()});
  /* новый враг — закрыть панель */
  var lastName=(label.textContent||"").trim();
- try{new MutationObserver(function(){var nn=(label.textContent||"").trim();if(nn===lastName)return;lastName=nn;if(panel.classList.contains("open")){panel.classList.remove("open");card.classList.remove("eiOn");card.setAttribute("aria-expanded","false")}}).observe(label,{childList:true,characterData:true,subtree:true})}catch(e){}
+ try{new MutationObserver(function(){var nn=(label.textContent||"").trim();if(nn===lastName)return;lastName=nn;if(panel.classList.contains("open")){panel.classList.remove("open");card.classList.remove("eiOn");btn.classList.remove("on");card.setAttribute("aria-expanded","false")}}).observe(label,{childList:true,characterData:true,subtree:true})}catch(e){}
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
