@@ -2,11 +2,11 @@
    Подключается на странице map/. API: MAPNPC.start(scene, world, view, speakOk), MAPNPC.stop() */
 (function(){
 "use strict";
-var BASE="npc/",V="?v=n1";
+var BASE="npc/",V="?v=n2";
 /* размеры ячейки кадра [ширина, высота]; лист: 6 столбцов x 2 ряда.
    кадры 0-5 ходьба, 6-8 машет, 9-11 говорит */
-var CELL={guard:[190,183],merchant:[170,183],woman:[162,180],clerk:[168,188],priestess:[152,185],fisherman:[178,191],newsboy:[132,140],lady:[140,192],lamplighter:[188,186],gentleman:[150,183],alchemist:[152,187],doctor:[152,188],banker:[160,189],musician:[152,186],dog:[146,102],cat:[110,85],raven:[124,61]};
-var SPEED={guard:32,merchant:30,woman:28,clerk:40,priestess:28,fisherman:30,newsboy:44,lady:26,lamplighter:30,gentleman:34,alchemist:34,doctor:30,banker:30,musician:32,dog:50,cat:40,raven:28};
+var CELL={guard:[190,183],merchant:[170,183],woman:[162,180],clerk:[168,188],priestess:[152,185],fisherman:[178,191],newsboy:[132,140],lady:[140,192],lamplighter:[188,186],gentleman:[150,183],alchemist:[152,187],doctor:[152,188],banker:[160,189],musician:[152,186],dog:[146,102],cat:[110,85],raven:[124,61],zhenya:[134,195]};
+var SPEED={guard:32,merchant:30,woman:28,clerk:40,priestess:28,fisherman:30,newsboy:44,lady:26,lamplighter:30,gentleman:34,alchemist:34,doctor:30,banker:30,musician:32,dog:50,cat:40,raven:28,zhenya:34};
 var ROUTES={
  center:{loop:[[410,640],[430,555],[540,505],[665,555],[760,640],[700,780],[540,830],[380,780],[330,650],[410,640]],south:[[540,830],[540,1000],[525,1150],[520,1300],[520,1425]],church:[[610,1255],[760,1240],[900,1235],[990,1250]],bureau:[[235,1240],[400,1228],[520,1245]]},
  north:{gate:[[540,1275],[535,1150],[520,1060],[470,960],[430,880],[430,805],[470,770]],east:[[525,1055],[650,990],[750,960],[850,930],[950,900]],west:[[440,1160],[330,1170],[220,1150],[100,1100]]},
@@ -15,7 +15,7 @@ var ROUTES={
  city:{loop:[[410,640],[440,580],[500,565],[560,585],[580,640],[550,700],[480,715],[430,695],[410,640]],south:[[500,720],[500,820],[490,900],[500,1000],[510,1090],[520,1180],[580,1215],[560,1270]],dock:[[700,930],[780,900],[860,880],[900,860]],east:[[620,705],[700,700],[780,690],[840,640],[900,610]]}
 };
 var CAST={
- center:[["guard","loop"],["merchant","loop"],["clerk","bureau"],["priestess","church"],["newsboy","loop"],["lamplighter","south"],["gentleman","loop"],["dog","south"]],
+ center:[["zhenya","loop"],["guard","loop"],["merchant","loop"],["clerk","bureau"],["priestess","church"],["newsboy","loop"],["lamplighter","south"],["gentleman","loop"],["dog","south"]],
  north:[["lady","gate"],["woman","east"],["cat","west"],["raven","east"],["musician","gate"]],
  east:[["fisherman","pier"],["alchemist","home"],["doctor","hosp"],["musician","left"],["dog","left"],["newsboy","home"]],
  west:[["banker","bank"],["gentleman","bank"],["lady","fair"],["musician","fair"],["raven","fair"],["newsboy","shore"],["cat","shore"],["clerk","shore"]],
@@ -23,7 +23,11 @@ var CAST={
 };
 /* настроения: h весёлый, l нежный, a злой, q недоумение, m загадочный, c деньги, s грустный, n обычный */
 var EMO={h:"e_note",l:"e_heart",a:"e_excl",q:"e_q",m:"e_star",c:"e_coin"};
+var NAMES={zhenya:"Женя"};
 var L={
+zhenya:{
+ amb:[["h","Мяу!"],["c","Кто видел мои мармеладки? Чёрт, куда я их дела?"],["h","Лисичку бы сюда. Хотя бы одну. Мяу."],["l","Мармеладка рыжая, как лиса. Съем... нет, пожалею."],["a","Кто стащил мой мармелад?! Лиса, что ли? Тогда прощаю."],["m","В лесу живёт лиса с девятью хвостами. Хочу погладить."],["s","Мармелад закончился. Это трагедия, чёрт возьми."],["q","Мяу? А что, я тоже так умею. Мяу-мяу."]],
+ tap:[["h","Привет! Я Женя. Мяу."],["c","Мармеладка есть? Нет? Тогда просто мяу."],["l","Обожаю лис. Рыжие, хитрые, красивые. Как мармелад."],["q","Ты видел кицунэ? Рыжая, хвостов куча. Хочу такую!"],["a","Не трогай мой пояс! Там лиса, она спит."],["h","Мяу-мяу! Это значит: ты мне нравишься."],["s","Без мармеладок жизнь серая. Вот честно."],["m","Лиса на поясе мой талисман. Приносит удачу. И мармелад."],["n","Мяу."]]},
 guard:{
  amb:[["a","Какого чёрта вы тут шатаетесь после заката?"],["n","Тишина в городе. Пока что. Это меня бесит."],["s","Жена опять ругается, что я дома не бываю. Чёрт."],["h","Вчера поймал карманника. День прошёл не зря!"],["a","Ещё раз услышу «стража спит» — выкину в канал."],["q","Лес с пятого уровня, слышишь? Не лезь раньше, дурень."],["m","Говорят, по ночам фонари шепчут. Я не слушаю. Почти."]],
  tap:[["n","Стой, кто идёт? А, это ты. Проходи."],["a","Руки от алебарды убрал! Это не игрушка, чёрт возьми."],["h","Хороший день для патруля, а? Эй, не пинай голубей!"],["q","Заблудился? Арена в центре, рынок рядом. Не тупи."],["c","Деньги береги. В городе полно ворюг и сволочей."],["q","Босс недели: регистрация в субботу утром. Не проспи."],["s","Двадцать лет на службе, а всё те же сапоги. Паскудство."],["h","Спасибо, что не нарушаешь порядок. Редкость."]]},
@@ -138,6 +142,7 @@ function say(n,mood,text,ms){
  el.style.setProperty("--tip",(B.tip*100).toFixed(1)+"%");
  var tx=document.createElement("div");tx.className="tx";tx.textContent=text;tx.style.bottom=((1-B.body)*100+3)+"%";
  el.appendChild(tx);
+ if(NAMES[n.key]){var nm=document.createElement("b");nm.className="nm";nm.textContent=NAMES[n.key];el.appendChild(nm)}
  var em=EMO[mood];
  if(em){var ic=document.createElement("img");ic.className="se";ic.alt="";ic.src=BASE+em+".webp"+V;el.appendChild(ic)}
  S.say.appendChild(el);
