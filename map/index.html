@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ru" data-nosndbtn data-nochat>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07060c">
+<title>Карта города — Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--ink:#07060c;--gold:#e8d3a0;--bronze:#8a7a58;--line:#3a2f44;--vio:#a98fd0;--sa:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;background:var(--ink);color:#d8cfb8;font:14px/1.4 Inter,system-ui,Arial,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:none;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+img{-webkit-user-drag:none;pointer-events:none;display:block}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+.top{position:relative;z-index:30;display:flex;align-items:center;gap:8px;padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px;background:linear-gradient(#07060cf2,#07060ccc 70%,#07060c00)}
+.back{flex:0 0 auto;color:#cdbf9f;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#120c16cc;font-size:12px}
+.ttl{flex:1;min-width:0;text-align:center}
+.ttl small{display:block;font-size:9px;letter-spacing:.28em;color:var(--bronze);text-transform:uppercase}
+.ttl b{display:block;font:400 17px Philosopher,Georgia,serif;letter-spacing:.1em;color:#e8dcc0;text-shadow:0 0 12px #a3262e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb{flex:0 0 auto;width:38px;height:38px}
+.tb img{width:100%;height:100%;object-fit:contain}
+.tb:active{transform:scale(.92)}
+#vp{position:relative;flex:1;overflow:hidden;touch-action:none;background:radial-gradient(120% 90% at 50% 50%,#14101d,#05040a 75%);cursor:grab}
+#vp:active{cursor:grabbing}
+#layer{position:absolute;inset:0;transition:opacity .22s}
+#layer.out{opacity:0}
+#layer.in{animation:lin .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes lin{from{opacity:0;transform:scale(1.14)}to{opacity:1;transform:none}}
+#world{position:absolute;left:0;top:0;width:1086px;height:1448px;transform-origin:0 0;will-change:transform}
+#bg{position:absolute;inset:0;width:100%;height:100%;-webkit-mask-image:linear-gradient(#0000,#000 3%,#000 97%,#0000);mask-image:linear-gradient(#0000,#000 3%,#000 97%,#0000)}
+.pin{position:absolute;width:46px;transform:translate(-50%,-100%) scale(var(--inv,1));transform-origin:50% 100%;pointer-events:auto;z-index:5;transition:opacity .25s}
+.pin .pf{width:100%;filter:drop-shadow(0 3px 5px #000c)}
+.pin .pe{position:absolute;left:19%;top:15%;width:62%;height:50%;object-fit:contain}
+.pin .pn{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;font:700 10px/1 Philosopher,Georgia,serif;letter-spacing:.05em;color:#f0e2bd;background:#0b0710d9;border:1px solid #5a4a3a;border-radius:8px;padding:3px 7px;text-shadow:0 1px 2px #000}
+.pin.sel{z-index:9;width:56px}
+.pin.sel .pn{display:none!important}
+.pin.sel .pf{filter:drop-shadow(0 0 10px #ffd27a) drop-shadow(0 0 22px #ffb84a99)}
+.pin.lock .pe{filter:grayscale(1) brightness(.45);opacity:.0}
+.pin.lock .pn{color:#a8a3b0}
+.pin.here:before{content:"";position:absolute;left:50%;top:40%;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:2px solid #ffd27acc;animation:pulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes pulse{from{transform:scale(.4);opacity:1}to{transform:scale(1.5);opacity:0}}
+.city .pin:not(.sel){opacity:0;pointer-events:none}
+.city.zin .pin{opacity:1;pointer-events:auto}
+.city.zin .pin .pn{display:none}
+.city.zin2 .pin .pn{display:block}
+.dl{position:absolute;transform:translate(-50%,-50%) scale(var(--inv,1));z-index:6;pointer-events:auto;text-align:center;padding:7px 14px 6px;border-radius:12px;border:1px solid #8a7a58;background:linear-gradient(#2a1636ee,#120a1cee);box-shadow:0 0 18px #000b,inset 0 0 10px #a98fd033;transition:opacity .25s}
+.dl b{display:block;font:700 13px/1.1 Philosopher,Georgia,serif;letter-spacing:.14em;color:#ecd9a8;text-transform:uppercase}
+.dl small{display:block;font-size:9px;color:#a89cb8;margin-top:2px;letter-spacing:.06em}
+.city.zin .dl{opacity:0;pointer-events:none}
+.fog{position:absolute;width:300px;height:300px;margin:-150px 0 0 -150px;pointer-events:none;z-index:4;background:url(img/fog.webp) 0 0/300px 300px;-webkit-mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);opacity:.92;animation:fogm 60s linear infinite}
+@keyframes fogm{to{background-position:300px 150px}}
+html[data-q="low"] .fog{animation:none}
+.ctl{position:absolute;right:8px;top:8px;z-index:20;display:flex;flex-direction:column;gap:6px}
+.ctl button{width:46px;height:46px}
+.ctl button img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px #000a)}
+.ctl button:active{transform:scale(.9)}
+#compass img{transition:transform .4s}
+.crumb{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:20;display:none}
+.crumb.on{display:block}
+.crumb button{padding:8px 14px;border-radius:14px;border:1px solid #8a7a58;background:linear-gradient(#2a1636ee,#120a1cee);color:#ecd9a8;font:700 12px Philosopher,Georgia,serif;letter-spacing:.08em;box-shadow:0 4px 14px #000a}
+.hint{position:absolute;left:50%;bottom:calc(14px + var(--sa));transform:translateX(-50%);z-index:19;max-width:86%;text-align:center;font-size:12px;color:#d8cfb8;background:#0b0710dd;border:1px solid #3a2f44;border-radius:12px;padding:8px 12px;transition:opacity .5s;pointer-events:none}
+.hint.off{opacity:0}
+#sheet{position:absolute;left:0;right:0;bottom:0;z-index:25;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 8px calc(10px + var(--sa));transform:translateY(115%);transition:transform .32s cubic-bezier(.2,.9,.3,1);pointer-events:none}
+#sheet.on{transform:none}
+#sheet>*{pointer-events:auto}
+.card{position:relative;width:min(100%,440px);aspect-ratio:1760/874;background:url(img/card.webp) center/100% 100% no-repeat;filter:drop-shadow(0 8px 18px #000c)}
+.card .rb{position:absolute;left:24%;right:24%;top:9.5%;height:15%;display:flex;align-items:center;justify-content:center;text-align:center;font:700 15px Philosopher,Georgia,serif;letter-spacing:.06em;color:#f2dfb0;text-shadow:0 1px 3px #000,0 0 10px #a3262e;white-space:nowrap}
+.card .bd{position:absolute;left:10%;right:10%;top:29%;bottom:26%;overflow:hidden}
+.card .bd .mt{font-size:11px;color:#c9a8e0;letter-spacing:.04em;margin-bottom:3px}
+.card .bd .ds{font-size:12.5px;line-height:1.35;color:#d8cfb8}
+.card .pl{position:absolute;left:30%;right:30%;bottom:7%;height:14%;display:flex;align-items:center;justify-content:center;font-size:10.5px;letter-spacing:.06em;color:#e8c9d8;white-space:nowrap}
+.enter{position:relative;width:min(66%,300px);aspect-ratio:640/126;background:url(img/btn.webp) center/100% 100% no-repeat;font:700 17px Philosopher,Georgia,serif;letter-spacing:.14em;color:#fff2d0;text-shadow:0 1px 3px #000,0 0 10px #a3262e;filter:drop-shadow(0 4px 10px #000b)}
+.enter:active{transform:scale(.97)}
+.enter.off{background-image:url(img/btn_off.webp);color:#b6adbd;text-shadow:0 1px 2px #000;filter:none}
+.enter.sub{width:min(54%,250px);font-size:13px;letter-spacing:.08em}
+#list{position:absolute;inset:0;z-index:40;background:#07060cf2;display:none;flex-direction:column;padding:calc(8px + env(safe-area-inset-top,0px)) 12px calc(12px + var(--sa))}
+#list.on{display:flex}
+.lh{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.lh input{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid #5a4a3a;background:#140d1a;color:#eadfc2;padding:0 12px;font-size:15px;outline:none;user-select:text;-webkit-user-select:text}
+.lh input:focus{border-color:#a98fd0}
+.lh button{width:42px;height:42px;border-radius:12px;border:1px solid #5a4a3a;background:#140d1a;color:#cdbf9f;font-size:18px}
+.rows{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 10px;margin-bottom:8px;border-radius:14px;border:1px solid #3a2f44;background:linear-gradient(160deg,#1c1226,#0f0a16)}
+.row:active{transform:scale(.985)}
+.row img{width:50px;height:50px;object-fit:contain;flex:0 0 auto}
+.row .t b{display:block;font:700 14px Philosopher,Georgia,serif;letter-spacing:.06em;color:#ecd9a8}
+.row .t small{display:block;font-size:11px;color:#9c93a8}
+.row .t i{font-style:normal;font-size:10px;color:#c9a8e0}
+.empty{text-align:center;color:#8f8798;padding:30px 0}
+.noway{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#07060c;color:#cdbf9f;text-align:center;padding:30px}
+</style>
+</head>
+<body>
+<div id="app">
+ <div class="top">
+  <a class="back" id="back" href="../index.html">← Город</a>
+  <div class="ttl"><small id="ttS">Тинген</small><b id="ttB">Карта города</b></div>
+  <button class="tb" id="bSearch" aria-label="Поиск"><img src="img/b_search.webp" alt=""></button>
+  <button class="tb" id="bList" aria-label="Список мест"><img src="img/b_list.webp" alt=""></button>
+ </div>
+ <div id="vp">
+  <div id="layer"><div id="world"><img id="bg" alt="" draggable="false"></div></div>
+  <div class="crumb" id="crumb"><button id="toCity" type="button">← Весь город</button></div>
+  <div class="ctl">
+   <button id="zin" aria-label="Приблизить"><img src="img/b_zin.webp" alt=""></button>
+   <button id="zout" aria-label="Отдалить"><img src="img/b_zout.webp" alt=""></button>
+   <button id="compass" aria-label="Сбросить вид"><img src="img/b_compass.webp" alt=""></button>
+   <button id="locate" aria-label="Где я"><img src="img/b_locate.webp" alt=""></button>
+  </div>
+  <div class="hint" id="hint">Нажми на район или приблизь карту пальцами</div>
+  <div id="sheet">
+   <div class="card"><div class="rb" id="sName"></div><div class="bd"><div class="mt" id="sMeta"></div><div class="ds" id="sDesc"></div></div><div class="pl" id="sTag"></div></div>
+   <button class="enter" id="sGo" type="button">Войти</button>
+   <button class="enter sub" id="sGo2" type="button" style="display:none">К боссу недели</button>
+  </div>
+ </div>
+ <div id="list">
+  <div class="lh"><input id="q" type="search" placeholder="Найти место" autocomplete="off"><button id="lx" aria-label="Закрыть">✕</button></div>
+  <div class="rows" id="rows"></div>
+ </div>
+</div>
+<script src="../shared/fast.js?v=b2"></script>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js?v=a7"></script>
+<script>
+"use strict";
+const tg=window.Telegram&&window.Telegram.WebApp;
+try{tg&&tg.ready();tg&&tg.expand()}catch(_){}
+const $=id=>document.getElementById(id);
+const qs=new URLSearchParams(location.search);
+const uid=String(qs.get("u")||(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id)||"0");
+const aEnc=qs.get("a_enc")||qs.get("a")||"";
+const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
+const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
+const buzz=()=>{try{tg&&tg.HapticFeedback&&tg.HapticFeedback.selectionChanged()}catch(_){}};
+{const bp=new URLSearchParams(location.search);bp.set("tab","city");$("back").href="../index.html?"+bp.toString()}
+const SW=1086,SH=1448,IMG="img/";
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+/* ---------- данные ---------- */
+const DIST={
+ north:{n:"Север",s:"Клуб гадалок",img:"north",lab:[590,250],c:[543,520]},
+ center:{n:"Центр",s:"Сердце города",img:"center",lab:[480,585],c:[543,640]},
+ west:{n:"Запад",s:"Бульвар и банк",img:"west",lab:[175,745],c:[543,640]},
+ east:{n:"Восток",s:"Дома и пристань",img:"east",lab:[835,780],c:[543,640]}
+};
+const REG={ /* области района на общем виде (для нажатия) */
+ west:[[0,540],[270,620],[270,1010],[0,1070]],
+ east:[[790,380],[1086,330],[1086,1110],[760,1110],[680,900],[780,820],[790,600]],
+ north:[[40,40],[920,30],[920,240],[700,300],[450,300],[130,290]],
+ center:[[10,320],[880,300],[860,730],[760,910],[450,890],[250,770],[10,570]]
+};
+const PL={
+ top:{n:"Ратуша",e:"top",d:"center",m:"Зал славы · топ игроков",t:"Центр",ds:"Главное здание города. В зале славы собраны лучшие игроки и рейтинги.",url:"../top/index.html",p:{city:[440,345],center:[545,255]}},
+ arena:{n:"Арена Теней",e:"arena",d:"center",m:"Дуэли · Рейтинг",t:"Центр",ds:"Дуэли с другими игроками и рейтинг арены. Побеждай в тени и поднимайся выше.",url:"../arena/index.html",p:{city:[135,445],center:[205,535]}},
+ bazaar:{n:"Рынок Безликих",e:"bazaar",d:"center",m:"Торговля · Обмен",t:"Центр",ds:"Здесь продают всё на свете, но лиц не показывают. Торгуй и меняйся с игроками.",url:"../market/index.html",p:{city:[430,775],center:[880,535]}},
+ bureau:{n:"Бюро Безымянных",e:"bureau",d:"center",m:"Ремёсла · Заказы",t:"Центр",ds:"Ремёсла и заказы для тех, кто умеет работать руками. Архив никогда не спит.",url:"../bureau/index.html",p:{city:[690,555],center:[235,1010]}},
+ clan:{n:"Церковь Ночи",e:"clan",d:"center",m:"Кланы · Братства",t:"Центр",ds:"Найди своих или создай клан. Под луной братства сильнее одиночек.",url:"../clan/index.html",p:{city:[765,320],center:[845,975]}},
+ fortune:{n:"Гадательный клуб",e:"fortune",d:"north",m:"Мадам Нира",t:"Север",ds:"Тёплый клуб среди снегов. Мадам Нира раскинет карты и подскажет судьбу.",url:"../fortune/index.html",p:{city:[372,165],north:[455,415]}},
+ home:{n:"Твой дом",e:"home",d:"east",m:"Вольер · Сад · Лаборатория",t:"Восток",ds:"Твой уголок города: питомцы в вольере, сад и тихие вечера.",url:"../home/index.html",p:{city:[905,495],east:[480,590]}},
+ lab:{n:"Лаборатория",e:"lab",d:"east",m:"Зелья · Ингредиенты",t:"Восток",ds:"Алхимическая лаборатория при доме. Здесь варят зелья и собирают рецепты.",url:"../lab/index.html",p:{east:[810,610]}},
+ pier:{n:"Пристань",e:"pier",d:"east",m:"Рыбалка · Улов · Рекорды",t:"Восток",ds:"Причал у тёмной воды. Закинь удочку и попробуй побить рекорд рыбаков.",url:"../pier/index.html",p:{city:[880,945],east:[700,1105]}},
+ clinic:{n:"Лечебница",e:"clinic",d:"east",m:"Лечение · Палата тишины",t:"Восток",ds:"Здесь лечат раны и тишиной. Палата тишины поможет прийти в себя.",url:"../clinic/index.html",p:{city:[975,650],east:[335,235]}},
+ boulevard:{n:"Бульвар",e:"boulevard",d:"west",m:"Ярмарка · Игры · Загадка дня",t:"Запад",ds:"Ярмарка, игры и загадка дня под фонарями старого бульвара.",url:"../boulevard/index.html",p:{city:[150,865],west:[420,905]}},
+ bank:{n:"Банк",e:"bank",d:"west",m:"Вклады · Хранилище",t:"Запад",ds:"Тяжёлые двери и ещё более тяжёлые замки. Вклады и хранилище.",url:"../bank/index.html",p:{city:[110,635],west:[370,255]}},
+ soon1:{n:"Свободный участок",e:"top",d:"north",soon:true,m:"Скоро",t:"Север",ds:"Здесь скоро появится новое место. Следи за обновлениями.",p:{north:[800,800]}},
+ soon2:{n:"Свободный участок",e:"top",d:"north",soon:true,m:"Скоро",t:"Север",ds:"Здесь скоро появится новое место. Следи за обновлениями.",p:{north:[860,1050]}}
+};
+const LAST_KEY="lotm_map_last_"+uid;
+let last=null;try{last=localStorage.getItem(LAST_KEY)}catch(_){}
+
+/* ---------- состояние ---------- */
+const vp=$("vp"),layer=$("layer"),world=$("world"),bg=$("bg");
+const S={scene:"city",s:1,tx:0,ty:0,min:1,max:4,sel:null,busy:false};
+const hr=new Date().getHours();
+const CITYIMG=(hr>=22||hr<6)?"night":"overview";
+function sceneImg(n){return IMG+(n==="city"?CITYIMG:DIST[n].img)+".webp"}
+function vsz(){return{w:vp.clientWidth,h:vp.clientHeight}}
+function limits(){const{w,h}=vsz();S.min=Math.max(Math.min(w/SW,h/SH),Math.max(w/SW,h/SH)*0.88);S.max=Math.max(S.min*2.4,Math.min(S.min*3.4,0.9))}
+function clampT(slack){
+ const{w,h}=vsz(),cw=SW*S.s,ch=SH*S.s,k=slack||0;
+ S.tx=cw<=w?(w-cw)/2:Math.min(k,Math.max(w-cw-k,S.tx));
+ S.ty=ch<=h?(h-ch)/2:Math.min(k,Math.max(h-ch-k,S.ty));
+}
+function apply(){
+ world.style.transform="translate3d("+S.tx+"px,"+S.ty+"px,0) scale("+S.s+")";
+ world.style.setProperty("--inv",(1/S.s).toFixed(4));
+ const z=S.s/S.min;
+ world.classList.toggle("zin",z>=1.45);world.classList.toggle("zin2",z>=1.7);
+}
+function focusOn(x,y,s){
+ const{w,h}=vsz();S.s=Math.min(S.max,Math.max(S.min,s||S.min));
+ S.tx=w/2-x*S.s;S.ty=h/2-y*S.s;clampT();apply();
+}
+let anim=0;
+function animTo(s,tx,ty,ms){
+ cancelAnimationFrame(anim);
+ const s0=S.s,x0=S.tx,y0=S.ty,t0=performance.now();ms=reduce?1:(ms||280);
+ (function f(now){
+  const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3);
+  S.s=s0+(s-s0)*e;S.tx=x0+(tx-x0)*e;S.ty=y0+(ty-y0)*e;clampT();apply();
+  if(k<1)anim=requestAnimationFrame(f);
+ })(t0);
+}
+function zoomAt(cx,cy,ns,ms){
+ ns=Math.min(S.max,Math.max(S.min,ns));
+ const wx=(cx-S.tx)/S.s,wy=(cy-S.ty)/S.s;
+ let tx=cx-wx*ns,ty=cy-wy*ns;
+ const{w,h}=vsz(),cw=SW*ns,ch=SH*ns;
+ tx=cw<=w?(w-cw)/2:Math.min(0,Math.max(w-cw,tx));ty=ch<=h?(h-ch)/2:Math.min(0,Math.max(h-ch,ty));
+ animTo(ns,tx,ty,ms);
+}
+function flyTo(x,y,s,ms){
+ const{w,h}=vsz();s=Math.min(S.max,Math.max(S.min,s));
+ let tx=w/2-x*s,ty=h/2-y*s;const cw=SW*s,ch=SH*s;
+ tx=cw<=w?(w-cw)/2:Math.min(0,Math.max(w-cw,tx));ty=ch<=h?(h-ch)/2:Math.min(0,Math.max(h-ch,ty));
+ animTo(s,tx,ty,ms||420);
+}
+
+/* ---------- сцены ---------- */
+function pinEl(k){
+ const P=PL[k],b=document.createElement("button");
+ b.type="button";b.className="pin"+(P.soon?" lock":"");b.dataset.k=k;
+ b.innerHTML='<img class="pf" alt=""><img class="pe" alt=""><span class="pn"></span>';
+ b.querySelector(".pn").textContent=P.n;
+ b.querySelector(".pe").src=IMG+"e_"+P.e+".webp";
+ setPinState(b,k);
+ return b;
+}
+const EV={}; /* события по ключу: boss | ev | rw */
+function pinFrame(k,sel){
+ if(PL[k].soon)return "pin_lock";
+ if(sel)return "pin_sel";
+ const e=EV[k];return e==="boss"?"pin_boss":e==="ev"?"pin_ev":e==="rw"?"pin_rw":"pin";
+}
+function setPinState(b,k){
+ b.querySelector(".pf").src=IMG+pinFrame(k,b.classList.contains("sel"))+".webp";
+ b.classList.toggle("here",last===k&&!b.classList.contains("sel"));
+}
+function build(name){
+ world.className=name==="city"?"city":"";
+ world.querySelectorAll(".pin,.dl,.fog").forEach(n=>n.remove());
+ bg.src=sceneImg(name);
+ const add=(el,x,y)=>{el.style.left=x+"px";el.style.top=y+"px";world.appendChild(el)};
+ if(name==="city"){
+  Object.keys(DIST).forEach(d=>{
+   const l=document.createElement("button");l.type="button";l.className="dl";l.dataset.d=d;
+   l.innerHTML="<b>"+DIST[d].n+"</b><small>"+DIST[d].s+"</small>";add(l,DIST[d].lab[0],DIST[d].lab[1]);
+  });
+ }
+ Object.keys(PL).forEach(k=>{
+  const P=PL[k],pos=P.p[name];if(!pos)return;
+  add(pinEl(k),pos[0],pos[1]);
+  if(P.soon){const f=document.createElement("div");f.className="fog";add(f,pos[0],pos[1]-18)}
+ });
+ world.classList.add(name==="city"?"city":"dist");
+ if(name==="city")world.classList.add("city");
+ $("ttS").textContent=name==="city"?"Тинген":"Тинген · район";
+ $("ttB").textContent=name==="city"?"Карта города":DIST[name].n;
+ $("crumb").classList.toggle("on",name!=="city");
+}
+function preload(){
+ const go=()=>["center","north","east","west"].forEach(d=>{const i=new Image();i.src=sceneImg(d)});
+ window.requestIdleCallback?requestIdleCallback(go,{timeout:2500}):setTimeout(go,900);
+}
+function goScene(name,focus,keepSel){
+ if(S.busy)return;S.busy=true;
+ closeSheet();
+ const doIt=()=>{
+  S.scene=name;build(name);limits();
+  if(focus){const f=PL[focus];const pos=f&&f.p[name];S.s=S.min;focusOn(pos?pos[0]:SW/2,pos?pos[1]:SH/2,name==="city"?S.min*1.0:S.min*2.0)}
+  else{S.s=S.min;focusOn(name==="city"?SW/2:SW/2,name==="city"?SH/2:SH/2,S.min)}
+  layer.classList.remove("out");
+  if(!reduce){layer.classList.remove("in");void layer.offsetWidth;layer.classList.add("in")}
+  S.busy=false;
+  if(focus&&keepSel)select(focus,true);
+ };
+ if(reduce){doIt();return}
+ layer.classList.add("out");
+ const im=new Image();im.src=sceneImg(name);
+ setTimeout(()=>{(im.complete?Promise.resolve():new Promise(r=>{im.onload=im.onerror=r})).then(doIt)},230);
+}
+
+/* ---------- карточка ---------- */
+function closeSheet(){
+ $("sheet").classList.remove("on");
+ if(S.sel){const b=world.querySelector('.pin[data-k="'+S.sel+'"]');if(b){b.classList.remove("sel");setPinState(b,S.sel)}}
+ S.sel=null;
+}
+function select(k,fly){
+ const P=PL[k];if(!P)return;
+ if(S.sel&&S.sel!==k)closeSheet();
+ S.sel=k;
+ const b=world.querySelector('.pin[data-k="'+k+'"]');
+ if(b){b.classList.add("sel");setPinState(b,k)}
+ $("sName").textContent=P.n;$("sMeta").textContent=P.m;$("sDesc").textContent=EV[k]==="boss"&&k==="arena"?P.ds+" На этой неделе открыт босс недели.":P.ds;
+ $("sTag").textContent=P.t+(P.soon?" · скоро":"");
+ const go=$("sGo");go.classList.toggle("off",!!P.soon);go.textContent=P.soon?"Скоро":"Войти";go.disabled=!!P.soon;
+ $("sGo2").style.display=(k==="arena"&&EV.arena==="boss")?"":"none";
+ $("sheet").classList.add("on");
+ sfx("tap");buzz();
+ if(fly){const pos=P.p[S.scene];if(pos){const{h}=vsz();const sc=Math.max(S.s,S.min*(S.scene==="city"?2.4:1.9));flyToOffset(pos[0],pos[1],sc)}}
+}
+function flyToOffset(x,y,s){ /* точка чуть выше центра, чтобы карточка её не закрывала */
+ const{w,h}=vsz();s=Math.min(S.max,Math.max(S.min,s));
+ let tx=w/2-x*s,ty=h*0.36-y*s;const cw=SW*s,ch=SH*s;
+ tx=cw<=w?(w-cw)/2:Math.min(0,Math.max(w-cw,tx));ty=ch<=h?(h-ch)/2:Math.min(0,Math.max(h-ch,ty));
+ animTo(s,tx,ty,420);
+}
+function enter(url){
+ sfx("open");
+ try{localStorage.setItem(LAST_KEY,S.sel||"")}catch(_){}
+ const p=new URLSearchParams(location.search);p.set("_t",String(Date.now()));
+ location.href=url+"?"+p.toString();
+}
+$("sGo").addEventListener("click",()=>{const P=PL[S.sel];if(P&&!P.soon)enter(P.url)});
+$("sGo2").addEventListener("click",()=>{sfx("open");const p=new URLSearchParams(location.search);p.set("_t",String(Date.now()));location.href="../boss/index.html?"+p.toString()});
+$("toCity").addEventListener("click",()=>{sfx("back");const d=S.scene;goScene("city");setTimeout(()=>{const c=DIST[d]&&DIST[d].lab;if(c)flyTo(c[0],c[1],S.min*1.0,1)},500)});
+
+/* ---------- жесты ---------- */
+const ptr=new Map();let g=null,vel={x:0,y:0,t:0},inertia=0,lastTap={t:0,x:0,y:0};
+function inPoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function distAt(x,y){for(const d of["west","east","north","center"])if(inPoly(x,y,REG[d]))return d;return null}
+function toWorld(cx,cy){const r=vp.getBoundingClientRect();return[(cx-r.left-S.tx)/S.s,(cy-r.top-S.ty)/S.s]}
+vp.addEventListener("pointerdown",e=>{
+ if(e.target.closest("#sheet,.ctl,.crumb"))return;
+ cancelAnimationFrame(anim);cancelAnimationFrame(inertia);$("hint").classList.add("off");
+ try{vp.setPointerCapture(e.pointerId)}catch(_){}
+ ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(ptr.size===1)g={mode:"pan",x0:e.clientX,y0:e.clientY,t0:performance.now(),moved:0,sx:e.clientX,sy:e.clientY};
+ else if(ptr.size===2){
+  const[a,b]=[...ptr.values()];
+  g={mode:"pinch",d0:Math.hypot(a.x-b.x,a.y-b.y)||1,s0:S.s,moved:99};
+  const r=vp.getBoundingClientRect(),cx=(a.x+b.x)/2-r.left,cy=(a.y+b.y)/2-r.top;
+  g.wx=(cx-S.tx)/S.s;g.wy=(cy-S.ty)/S.s;
+ }
+});
+vp.addEventListener("pointermove",e=>{
+ if(!ptr.has(e.pointerId))return;
+ const p=ptr.get(e.pointerId),dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+ if(!g)return;
+ if(g.mode==="pan"&&ptr.size===1){
+  g.moved+=Math.abs(dx)+Math.abs(dy);
+  if(g.moved<6)return;
+  S.tx+=dx;S.ty+=dy;clampT(30);apply();
+  const now=performance.now(),dt=Math.max(1,now-vel.t);vel={x:dx/dt*16,y:dy/dt*16,t:now};
+ }else if(g.mode==="pinch"&&ptr.size>=2){
+  const[a,b]=[...ptr.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1;
+  const r=vp.getBoundingClientRect(),cx=(a.x+b.x)/2-r.left,cy=(a.y+b.y)/2-r.top;
+  let ns=g.s0*d/g.d0;ns=Math.min(S.max*1.05,Math.max(S.min*(S.scene==="city"?0.9:0.7),ns));
+  S.s=ns;S.tx=cx-g.wx*ns;S.ty=cy-g.wy*ns;clampT(40);apply();
+ }
+});
+function endPtr(e){
+ if(!ptr.has(e.pointerId))return;
+ ptr.delete(e.pointerId);
+ if(!g)return;
+ if(g.mode==="pinch"){
+  if(ptr.size<2){
+   g=null;
+   if(S.scene!=="city"&&S.s<S.min*0.86){goScene("city");return}
+   zoomAt(vsz().w/2,vsz().h/2,Math.max(S.s,S.min),160);
+   ptr.clear();
+  }
+  return;
+ }
+ const g0=g;g=null;
+ if(e.type==="pointercancel")return;
+ const dt=performance.now()-g0.t0;
+ if(g0.moved<8&&dt<420){tap(e.clientX,e.clientY);return}
+ if(performance.now()-vel.t<80&&!reduce){ /* инерция */
+  let vx=vel.x,vy=vel.y;
+  (function f(){vx*=0.93;vy*=0.93;if(Math.abs(vx)+Math.abs(vy)<.4)return;S.tx+=vx;S.ty+=vy;clampT(0);apply();inertia=requestAnimationFrame(f)})();
+ }else{zoomAt(vsz().w/2,vsz().h/2,S.s,1);clampT(0);apply()}
+ clampT(0);apply();
+}
+vp.addEventListener("pointerup",endPtr);vp.addEventListener("pointercancel",endPtr);
+vp.addEventListener("wheel",e=>{e.preventDefault();const r=vp.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,S.s*(e.deltaY<0?1.25:0.8),180)},{passive:false});
+function tap(cx,cy){
+ const el=document.elementFromPoint(cx,cy);
+ const pin=el&&el.closest&&el.closest(".pin"),dl=el&&el.closest&&el.closest(".dl");
+ const now=performance.now(),dbl=now-lastTap.t<320&&Math.hypot(cx-lastTap.x,cy-lastTap.y)<30;lastTap={t:now,x:cx,y:cy};
+ if(pin){
+  const k=pin.dataset.k;
+  if(S.sel===k&&!PL[k].soon){return}
+  select(k,false);return;
+ }
+ if(dl){sfx("open");const d=dl.dataset.d;goScene(d);return}
+ if(dbl){
+  const r=vp.getBoundingClientRect();
+  if(S.s>S.min*1.6)zoomAt(cx-r.left,cy-r.top,S.min,260);else zoomAt(cx-r.left,cy-r.top,S.s*2.2,260);
+  return;
+ }
+ if(S.sel){closeSheet();return}
+ if(S.scene==="city"){
+  const[x,y]=toWorld(cx,cy),d=distAt(x,y);
+  if(d){sfx("open");goScene(d)}
+ }
+}
+/* ---------- кнопки ---------- */
+const mid=()=>({x:vsz().w/2,y:vsz().h/2});
+$("zin").addEventListener("click",()=>{const m=mid();zoomAt(m.x,m.y,S.s*1.6,240);sfx("tap")});
+$("zout").addEventListener("click",()=>{const m=mid();if(S.scene!=="city"&&S.s<=S.min*1.05){goScene("city");return}zoomAt(m.x,m.y,S.s/1.6,240);sfx("tap")});
+$("compass").addEventListener("click",()=>{closeSheet();const c=S.scene==="city"?[SW/2,SH/2]:[SW/2,SH/2];flyTo(c[0],c[1],S.min,380);sfx("tap")});
+$("locate").addEventListener("click",()=>{
+ const k=(last&&PL[last])?last:"top";sfx("tap");buzz();
+ const P=PL[k];
+ if(P.p[S.scene]){select(k,true);return}
+ goScene(P.d,k,true);
+});
+/* ---------- список и поиск ---------- */
+function renderList(){
+ const q=$("q").value.trim().toLowerCase(),box=$("rows");box.replaceChildren();
+ let n=0;
+ Object.keys(PL).forEach(k=>{
+  const P=PL[k];if(P.soon)return;
+  if(q&&(P.n+" "+P.m+" "+P.t+" "+P.ds).toLowerCase().indexOf(q)<0)return;
+  n++;
+  const r=document.createElement("button");r.type="button";r.className="row";
+  r.innerHTML='<img alt="" src="'+IMG+'e_'+P.e+'.webp"><span class="t"><b></b><small></small><i></i></span>';
+  r.querySelector("b").textContent=P.n;r.querySelector("small").textContent=P.m;r.querySelector("i").textContent=P.t;
+  r.addEventListener("click",()=>{closeList();sfx("open");if(P.p[S.scene]&&S.scene!=="city"&&S.scene===P.d){select(k,true)}else goScene(P.d,k,true)});
+  box.appendChild(r);
+ });
+ if(!n){const d=document.createElement("div");d.className="empty";d.textContent="Ничего не нашлось";box.appendChild(d)}
+}
+function openList(focus){$("list").classList.add("on");$("q").value="";renderList();if(focus)setTimeout(()=>$("q").focus(),60);sfx("open")}
+function closeList(){$("list").classList.remove("on");$("q").blur()}
+$("bSearch").addEventListener("click",()=>openList(true));
+$("bList").addEventListener("click",()=>openList(false));
+$("lx").addEventListener("click",()=>{closeList();sfx("back")});
+$("q").addEventListener("input",renderList);
+
+/* ---------- события: босс недели ---------- */
+async function loadEvents(){
+ if(!ACTION_URL)return;
+ try{
+  const r=await fetch(ACTION_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"boss_state"}),cache:"no-store"});
+  if(!r.ok)return;
+  let d=await r.json();for(let i=0;i<3;i++){if(d&&d.result&&typeof d.result==="object")d=d.result;else break}
+  if(d&&d.ok===true&&(d.ph==="reg"||d.ph==="battle")){
+   EV.arena="boss";
+   const b=world.querySelector('.pin[data-k="arena"]');if(b)setPinState(b,"arena");
+   if(S.sel==="arena")select("arena",false);
+  }
+ }catch(_){}
+}
+
+/* ---------- старт ---------- */
+function start(){
+ limits();S.scene="city";build("city");
+ S.s=S.min;focusOn(SW/2,SH*0.46,S.min);
+ layer.classList.add("in");
+ preload();loadEvents();
+ setTimeout(()=>$("hint").classList.add("off"),4200);
+ const deep=qs.get("go");if(deep&&PL[deep])setTimeout(()=>goScene(PL[deep].d,deep,true),400);
+}
+addEventListener("resize",()=>{const z=S.s/S.min;limits();S.s=Math.max(S.min,Math.min(S.max,z*S.min));clampT();apply()});
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("gesturestart",e=>e.preventDefault());
+bg.addEventListener("load",()=>{if(!bg.dataset.ok){bg.dataset.ok=1}});
+if(document.readyState==="loading")addEventListener("DOMContentLoaded",start);else start();
+</script>
+</body>
+</html>

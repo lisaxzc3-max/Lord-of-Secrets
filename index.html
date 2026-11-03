@@ -323,6 +323,12 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .ctyName{font-size:22px;font-weight:900;letter-spacing:9px;color:var(--gold);text-shadow:0 0 20px #d6b779aa,0 2px 6px #000;animation:ctyName 6s ease-in-out infinite}
 @keyframes ctyName{50%{text-shadow:0 0 30px #ffe9a8cc,0 2px 6px #000}}
 .ctySub{font-size:10px;letter-spacing:1.4px;color:#d3c6ea;text-shadow:0 1px 4px #000;margin-top:2px;font-variant-numeric:tabular-nums}
+.mapBan{display:block;position:relative;width:100%;height:112px;margin:2px 0 6px;border-radius:18px;border:1px solid #8a7a58;overflow:hidden;background:#0a0710 url(./map/img/overview.webp) 50% 38%/cover no-repeat;box-shadow:0 8px 24px #0009,0 0 22px #a98fd033;text-align:left;padding:0}
+.mapBan:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#07060cf0 0,#07060c99 55%,#07060c22)}
+.mapBan:active{transform:scale(.985)}
+.mapBan .mb{position:absolute;left:16px;top:50%;transform:translateY(-50%);max-width:68%}
+.mapBan b{display:block;font:700 18px Philosopher,Georgia,serif;letter-spacing:.1em;color:#ecd9a8;text-shadow:0 0 14px #a3262e}
+.mapBan small{display:block;font-size:11px;color:#bdb3c9;margin-top:4px;line-height:1.35}
 .ctyHint{font-size:11px;color:var(--muted);text-align:center;margin:10px 0 4px;letter-spacing:.5px}
 .dist{position:relative;margin:10px 0;border-radius:18px;border:1px solid var(--dc2);background:linear-gradient(160deg,var(--dc1),#0f0a1a);overflow:hidden;box-shadow:0 8px 24px #0007;opacity:0;transform:translateY(18px);animation:ctyIn .6s cubic-bezier(.2,.9,.3,1.1) forwards;animation-delay:calc(var(--n)*.12s + .1s)}
 @keyframes ctyIn{to{opacity:1;transform:none}}
@@ -933,6 +939,7 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 </div>
 
 <div id="city" class="card hidden">
+  <button type="button" id="mapBan" class="mapBan" onclick="openCityMap()"><span class="mb"><b>Карта города</b><small>Приближай, смотри места и заходи прямо с карты</small></span></button>
   <div class="ctyHint">Выбери район и войди в место ›</div>
   <div id="cityBtns"></div>
   <div id="locInfo"></div>
@@ -1593,6 +1600,10 @@ async function bossReg(btn) {
     else { bagToast((d && d.text) || "Не удалось зарегистрироваться"); if (btn) btn.disabled = false; bossLoad(true); }
   } catch (e) { bagToast(e.message || "Нет связи"); if (btn) btn.disabled = false; }
   BOSS.busy = false;
+}
+function openCityMap() {
+  try { window.snd && window.snd("open"); } catch (_) {}
+  location.href = buildPageUrl("./map/index.html");
 }
 function openBoss() { location.href = buildPageUrl("./boss/index.html"); }
 setInterval(() => {
@@ -2505,7 +2516,7 @@ function toggleDistrict(district, force) {
 }
 
 const PLACE_ART = { top: 1, arena: 1, bazaar: 1, bureau: 1, clan: 1, fortune: 1, home: 1, pier: 1, clinic: 1, boulevard: 1, bank: 1 };
-const PLACE_URL = { arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html", pier: "./pier/index.html", bank: "./bank/index.html", clinic: "./clinic/index.html", boulevard: "./boulevard/index.html" };
+const PLACE_URL = { map: "./map/index.html", arena: "./arena/index.html", bureau: "./bureau/index.html", bazaar: "./market/index.html", clan: "./clan/index.html", home: "./home/index.html", pier: "./pier/index.html", bank: "./bank/index.html", clinic: "./clinic/index.html", boulevard: "./boulevard/index.html" };
 try { LOTM_FAST.idle(() => Object.keys(PLACE_URL).forEach(k => LOTM_FAST.prefetch(buildPageUrl(PLACE_URL[k])))); } catch (_) {}
 function openPlace(key) {
   try { window.snd && window.snd("tap"); } catch (_) {}
