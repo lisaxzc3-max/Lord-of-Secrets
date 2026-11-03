@@ -323,12 +323,6 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .ctyName{font-size:22px;font-weight:900;letter-spacing:9px;color:var(--gold);text-shadow:0 0 20px #d6b779aa,0 2px 6px #000;animation:ctyName 6s ease-in-out infinite}
 @keyframes ctyName{50%{text-shadow:0 0 30px #ffe9a8cc,0 2px 6px #000}}
 .ctySub{font-size:10px;letter-spacing:1.4px;color:#d3c6ea;text-shadow:0 1px 4px #000;margin-top:2px;font-variant-numeric:tabular-nums}
-.mapBan{display:block;position:relative;width:100%;height:112px;margin:2px 0 6px;border-radius:18px;border:1px solid #8a7a58;overflow:hidden;background:#0a0710 url(./map/img/overview.webp) 50% 38%/cover no-repeat;box-shadow:0 8px 24px #0009,0 0 22px #a98fd033;text-align:left;padding:0}
-.mapBan:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#07060cf0 0,#07060c99 55%,#07060c22)}
-.mapBan:active{transform:scale(.985)}
-.mapBan .mb{position:absolute;left:16px;top:50%;transform:translateY(-50%);max-width:68%}
-.mapBan b{display:block;font:700 18px Philosopher,Georgia,serif;letter-spacing:.1em;color:#ecd9a8;text-shadow:0 0 14px #a3262e}
-.mapBan small{display:block;font-size:11px;color:#bdb3c9;margin-top:4px;line-height:1.35}
 .ctyHint{font-size:11px;color:var(--muted);text-align:center;margin:10px 0 4px;letter-spacing:.5px}
 .dist{position:relative;margin:10px 0;border-radius:18px;border:1px solid var(--dc2);background:linear-gradient(160deg,var(--dc1),#0f0a1a);overflow:hidden;box-shadow:0 8px 24px #0007;opacity:0;transform:translateY(18px);animation:ctyIn .6s cubic-bezier(.2,.9,.3,1.1) forwards;animation-delay:calc(var(--n)*.12s + .1s)}
 @keyframes ctyIn{to{opacity:1;transform:none}}
@@ -939,11 +933,9 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 </div>
 
 <div id="city" class="card hidden">
-  <button type="button" id="mapBan" class="mapBan" onclick="openCityMap()"><span class="mb"><b>Карта города</b><small>Приближай, смотри места и заходи прямо с карты</small></span></button>
-  <div class="ctyHint">Выбери район и войди в место ›</div>
-  <div id="cityBtns"></div>
   <div id="locInfo"></div>
   <div id="locBtns"></div>
+</div>
 </div>
 
 <div id="bag" class="card hidden bagWrap">
@@ -1419,6 +1411,7 @@ async function loadProfileWithRetry(showError = true) {
 function showTab(id) {
   const allowed = ["hall", "travel", "city", "bag"];
   if (!allowed.includes(id)) return;
+  if (id === "city") { openCityMap(); return; }
 
   document.querySelectorAll(".nav a").forEach(a => {
     a.classList.toggle("active", a.dataset.tab === id);
@@ -2393,7 +2386,7 @@ async function api(payload) {
 }
 
 window.tutApi = async function (payload) {
-  const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), cache: "no-store" });
+  const r = await fetch(ACTION_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), cache: "no-store", keepalive: true });
   let d = await r.json();
   for (let i = 0; i < 3 && d && d.result && typeof d.result === "object"; i++) d = d.result;
   return d;

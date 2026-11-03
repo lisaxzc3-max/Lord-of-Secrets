@@ -88,7 +88,7 @@ function pend(b){
 /* --- ссылка «назад» из места города/похода ведёт на нужную вкладку главной (а не всегда в Зал) --- */
 (function(){
  var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}if(!BASE)return;
- var CITY="map top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins";
+ var CITY="top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins";
  function tabFor(){var seg=location.href.slice(BASE.length).split("/")[0];return(" "+CITY+" ").indexOf(" "+seg+" ")>=0?"city":((" "+TRAVEL+" ").indexOf(" "+seg+" ")>=0?"travel":"")}
  document.addEventListener("click",function(e){
   var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
