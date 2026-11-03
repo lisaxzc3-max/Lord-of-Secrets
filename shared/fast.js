@@ -145,16 +145,35 @@ if(of){
   var t0=Date.now(),run=function(){return send(self,u,o)};
   var ok=function(r){var f=!!(r&&r.status>=500);pfAdd(act,Date.now()-t0,f,u);if(f)netBad();else netOk();return r};
   var bad=function(e){pfAdd(act,Date.now()-t0,true,u);netBad();throw e};
-  if(!read)return run().then(ok,function(e){bad(mkErr(false,e))});
-  var chk=function(r){if(r&&r.status>=500)throw {name:"HttpError"};return r};
-  var wait=function(ms){return function(){return new Promise(function(res){setTimeout(res,ms)}).then(run).then(chk)}};
-  return run().then(chk).catch(wait(900)).catch(wait(1800)).then(ok,function(e){bad(mkErr(true,e))});
+  var rid=false;try{rid=!!JSON.parse((o&&o.body)||"{}").rid}catch(e){}
+  if(!read&&!rid)return run().then(ok,function(e){bad(mkErr(false,e))});
+  /* страховочный повтор: если ответа нет за несколько секунд, тот же запрос уходит ещё раз,
+     берётся первый пришедший ответ. Для действий сервер по номеру rid не выполняет их дважды. */
+  return new Promise(function(res,rej){
+   var done=false,pend=0,n=0,MAX=4,lastErr=null,hT=0;
+   var fail=function(e){lastErr=e;if(done)return;if(pend===0){if(n<MAX)setTimeout(fire,n<2?700:1500);else{done=true;rej(lastErr)}}};
+   var win=function(r){if(done)return;done=true;clearTimeout(hT);res(r)};
+   var fire=function(){
+    if(done)return;n++;pend++;
+    run().then(function(r){
+     pend--;if(done)return;
+     if(r&&r.status>=500){fail({name:"HttpError"});return}
+     if(!rid){win(r);return}
+     r.clone().json().then(function(j){var x=j&&j.result&&typeof j.result==="object"?j.result:j;
+      if(x&&x.error==="dup_pending"){fail({name:"Pending"});return}win(r)},function(){win(r)});
+    },function(e){pend--;fail(e)});
+    if(n===1&&!done)hT=setTimeout(function(){if(!done&&n<MAX)fire()},read?4000:5000);
+   };
+   fire();
+  }).then(ok,function(e){bad(mkErr(read,e))});
  };
+ var RIDA=/^(explore_(lake|forest|cemetery|ruins)|battle|event_choice|attack)$/;
  window.fetch=function(u,o){
   var url=typeof u==="string"?u:(u&&u.url)||"";
   if(url.indexOf("new-webhook")<0)return of.apply(this,arguments);
-  var self=this,action="";try{action=String(JSON.parse((o&&o.body)||"{}").action||"")}catch(e){}
-  var read=READ.test(action);
+  var self=this,action="",isProf=false;try{var _b=JSON.parse((o&&o.body)||"{}");action=String(_b.action||"");isProf=_b.type==="profile";
+   if(RIDA.test(action)&&!_b.rid){_b.rid=Date.now().toString(36)+Math.random().toString(36).slice(2,8);var o3={};for(var k3 in o)o3[k3]=o[k3];o3.body=JSON.stringify(_b);o=o3;arguments[1]=o3}}catch(e){}
+  var read=READ.test(action)||isProf;
   var quiet=!action||/chat_|_state$|^profile|poll|_view$|^arena_fight$|^ping$/.test(action);
   var release=function(){};
   if(last&&Date.now()-lastT<1200&&!quiet){release=pend(last);last=null}
