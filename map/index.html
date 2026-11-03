@@ -52,6 +52,28 @@ img{-webkit-user-drag:none;pointer-events:none;display:block}
 .fog{position:absolute;width:300px;height:300px;margin:-150px 0 0 -150px;pointer-events:none;z-index:4;background:url(img/fog.webp) 0 0/300px 300px;-webkit-mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);opacity:.92;animation:fogm 60s linear infinite}
 @keyframes fogm{to{background-position:300px 150px}}
 html[data-q="low"] .fog{animation:none}
+.npcL,.sayL{position:absolute;left:0;top:0;width:0;height:0}
+.npcL{z-index:3}
+.sayL{z-index:40;pointer-events:none}
+.npc{position:absolute;left:0;top:0;pointer-events:auto;opacity:0;transition:opacity .5s;will-change:transform}
+.npc.ready{opacity:1}
+.npc:before{content:"";position:absolute;left:16%;right:16%;bottom:-3px;height:9%;border-radius:50%;background:radial-gradient(ellipse,#000b,#0000 70%)}
+.npc:after{content:"";position:absolute;inset:-14px -8px -4px}
+.nf{position:absolute;inset:0;background-size:600% 200%;background-repeat:no-repeat;filter:drop-shadow(0 2px 3px #0009)}
+.city:not(.zin) .npc{pointer-events:none}
+.say{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;animation:sayIn .2s ease-out;filter:drop-shadow(0 4px 6px #000b)}
+.say.out{opacity:0;transition:opacity .2s}
+.say:before{content:"";position:absolute;inset:0;background-size:100% 100%;background-repeat:no-repeat}
+.say.wide:before{background-image:url(npc/b_wide.webp)}
+.say.sq:before{background-image:url(npc/b_sq.webp)}
+.say.m-s:before{filter:hue-rotate(190deg) saturate(.55) brightness(.9)}
+.say.m-a:before{filter:hue-rotate(-18deg) saturate(2.4) brightness(.95)}
+.say.m-m:before{filter:hue-rotate(255deg) saturate(1.2)}
+.say .tx{position:absolute;left:11%;right:11%;top:15%;display:flex;align-items:center;justify-content:center;text-align:center;font:600 10.5px/1.25 Inter,system-ui,Arial,sans-serif;color:#efe3c4;text-shadow:0 1px 2px #000}
+.say .se{position:absolute;right:-8px;top:-13px;width:22px}
+.emo{position:absolute;left:0;top:0;width:22px;transform-origin:0 0;animation:sayIn .25s ease-out;pointer-events:none;filter:drop-shadow(0 3px 4px #000a)}
+@keyframes sayIn{from{opacity:0}to{opacity:1}}
+html[data-q="low"] .npc:before{display:none}
 .ctl{position:absolute;right:8px;top:8px;z-index:20;display:flex;flex-direction:column;gap:6px}
 .ctl button{width:46px;height:46px}
 .ctl button img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px #000a)}
@@ -109,7 +131,7 @@ html[data-q="low"] .fog{animation:none}
    <button id="compass" aria-label="Сбросить вид"><img src="img/b_compass.webp" alt=""></button>
    <button id="locate" aria-label="Где я"><img src="img/b_locate.webp" alt=""></button>
   </div>
-  <div class="hint" id="hint">Нажми на район или приблизь карту пальцами</div>
+  <div class="hint" id="hint">Нажми на район, приблизь карту пальцами или поболтай с жителями</div>
   <div id="sheet">
    <div class="card"><div class="rb" id="sName"></div><div class="bd"><div class="mt" id="sMeta"></div><div class="ds" id="sDesc"></div></div><div class="pl" id="sTag"></div></div>
    <button class="enter" id="sGo" type="button">Войти</button>
@@ -122,6 +144,7 @@ html[data-q="low"] .fog{animation:none}
  </div>
 </div>
 <script src="../shared/fast.js?v=b3"></script>
+<script src="npc.js?v=n1"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js?v=a7"></script>
 <script>
@@ -240,6 +263,7 @@ function setPinState(b,k){
  b.classList.toggle("here",last===k&&!b.classList.contains("sel"));
 }
 function build(name){
+ try{window.MAPNPC&&MAPNPC.stop()}catch(_){}
  world.className=name==="city"?"city":"";
  world.querySelectorAll(".pin,.dl,.fog").forEach(n=>n.remove());
  bg.src=sceneImg(name);
@@ -260,6 +284,7 @@ function build(name){
  $("ttS").textContent=name==="city"?"Тинген":"Тинген · район";
  $("ttB").textContent=name==="city"?"Карта города":DIST[name].n;
  $("crumb").classList.toggle("on",name!=="city");
+ try{window.MAPNPC&&MAPNPC.start(name,world,()=>({s:S.s,tx:S.tx,ty:S.ty,w:vp.clientWidth,h:vp.clientHeight}),()=>name!=="city"||world.classList.contains("zin"))}catch(_){}
 }
 function preload(){
  const go=()=>["center","north","east","west"].forEach(d=>{const i=new Image();i.src=sceneImg(d)});
@@ -388,6 +413,7 @@ function tap(cx,cy){
   select(k,false);return;
  }
  if(dl){sfx("open");const d=dl.dataset.d;goScene(d);return}
+ if(el&&el.closest&&el.closest(".npc")&&window.MAPNPC&&MAPNPC.tap(el)){sfx("tap");buzz();return}
  if(dbl){
   const r=vp.getBoundingClientRect();
   if(S.s>S.min*1.6)zoomAt(cx-r.left,cy-r.top,S.min,260);else zoomAt(cx-r.left,cy-r.top,S.s*2.2,260);
