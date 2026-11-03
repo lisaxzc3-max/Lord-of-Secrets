@@ -136,7 +136,7 @@ function typeText(txt,after){
  if(reduce||!txt){fin();return}
  /* невидимый хвост держит высоту блока, текст не прыгает */
  const a=document.createElement("span"),b=document.createElement("span");b.className="ghost";
- el.replaceChildren(a,b);let i=0;const step=Math.max(1,Math.ceil(txt.length/110));
+ el.replaceChildren(a,b);let i=0;const step=Math.max(1,Math.ceil(txt.length/60));
  a.textContent="";b.textContent=txt;
  typer=setInterval(()=>{i=Math.min(txt.length,i+step);a.textContent=txt.slice(0,i);b.textContent=txt.slice(i);if(i>=txt.length)fin()},26);
  typeDone=fin;$("tap").classList.remove("hidden");
@@ -176,7 +176,7 @@ function renderEvent(d){
   });
   setTimeout(()=>box.lastElementChild?.scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),60);
  };
- typeText(d.text||"Ты замечаешь движение между деревьями.",build);
+ build();typeText(d.text||"Ты замечаешь движение между деревьями.");
 }
 function setBtns(dis){document.querySelectorAll("#actions button").forEach(b=>b.disabled=dis)}
 async function choose(id){
@@ -212,7 +212,7 @@ function showResult(r){
   $("endBtns").classList.remove("hidden");
   setTimeout(()=>$("endBtns").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),80);
  };
- typeText(r.text||"Твой выбор изменил ход событий.",finish);
+ finish();typeText(r.text||"Твой выбор изменил ход событий.");
 }
 $("toForest").addEventListener("click",goForest);
 $("errBack").addEventListener("click",goForest);
