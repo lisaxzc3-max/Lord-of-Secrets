@@ -146,7 +146,7 @@ btn.addEventListener("click", async function () {
     if (data.type === "event") {
       params.set("event_data", JSON.stringify(data));
       document.body.classList.add("going");
-      setTimeout(function () { location.href = "./event/index.html?" + params.toString(); }, 600);
+      setTimeout(function () { location.href = "./event/index.html?" + params.toString(); }, 250);
       return;
     }
 

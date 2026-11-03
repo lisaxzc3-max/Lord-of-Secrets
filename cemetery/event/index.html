@@ -199,7 +199,7 @@ function typeText(node,txt,cb){
  clearInterval(twTimer);twNode=node;twFull=txt;twDone=cb;
  if(reduce){node.textContent=txt;cb&&cb();return}
  node.textContent="";node.classList.add("typing");let i=0;
- twTimer=setInterval(()=>{i+=2;if(i%6===0){try{snd("vntick")}catch(_){}}node.textContent=txt.slice(0,i);if(i>=txt.length)finishType()},22);
+ const stp=Math.max(2,Math.ceil(txt.length/70));twTimer=setInterval(()=>{i+=stp;if(i%6===0){try{snd("vntick")}catch(_){}}node.textContent=txt.slice(0,i);if(i>=txt.length)finishType()},22);
 }
 function finishType(){
  if(!twNode)return;clearInterval(twTimer);twNode.textContent=twFull;twNode.classList.remove("typing");
@@ -221,7 +221,7 @@ function renderEvent(d){
  buildScene(evKey);setImage(evKey);startAmbient(evKey);
  const box=$("actions");box.replaceChildren();
  const acts=Array.isArray(d.actions)?d.actions:[];
- box.classList.add("hidden");typeText($("evText"),d.text||"Туман шевелится между надгробиями.",()=>box.classList.remove("hidden"));
+ typeText($("evText"),d.text||"Туман шевелится между надгробиями.");
  if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← На кладбище";b.onclick=goCem;box.appendChild(b);return}
  acts.forEach(a=>{
   const b=document.createElement("button");b.type="button";b.className="action";
@@ -254,7 +254,7 @@ function showResult(r){
  try{tg?.HapticFeedback?.notificationOccurred(fx==="hurt"||fx==="poison"?"error":"success")}catch(_){}
  $("actions").replaceChildren();
  const rc=$("resultCard");rc.classList.add("hidden");
- typeText($("evText"),r.text||"Твой выбор изменил ход событий.",()=>{rc.classList.remove("hidden");setTimeout(()=>rc.scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),80)});
+ rc.classList.remove("hidden");setTimeout(()=>rc.scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}),80);typeText($("evText"),r.text||"Твой выбор изменил ход событий.");
  $("resText").textContent="";
  const g=$("rgrid");g.replaceChildren();
  const chip=(txt,cls,i)=>{const c=document.createElement("span");c.className="rchip "+cls;c.textContent=txt;c.style.animationDelay=(i*.12)+"s";g.appendChild(c)};

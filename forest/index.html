@@ -176,7 +176,7 @@ btn.addEventListener("click",async function(){
     if(data.type==="event"){
       try{sessionStorage.setItem("forest_tracks",String(data.tracks||0))}catch(_){}
       params.set("event_data",JSON.stringify(data));
-      setTimeout(()=>{location.href="./event/index.html?"+params.toString()},650);
+      setTimeout(()=>{location.href="./event/index.html?"+params.toString()},250);
       return;
     }
     if(data.type==="battle"){

@@ -267,7 +267,7 @@ function typeText(el,txt,onDone){
  if(reduce){el.textContent=txt;onDone&&onDone();return}
  let i=0;el.textContent="";const cur=document.createElement("span");cur.className="cur";
  typeT=setInterval(()=>{
-  i=Math.min(txt.length,i+2);el.textContent=txt.slice(0,i);el.appendChild(cur);
+  i=Math.min(txt.length,i+Math.max(2,Math.ceil(txt.length/70)));el.textContent=txt.slice(0,i);el.appendChild(cur);
   if(i%6<2)try{snd("vntick",.5)}catch(_){}
   if(i>=txt.length){clearInterval(typeT);typeT=null;cur.remove();onDone&&onDone()}
  },28);
@@ -294,9 +294,9 @@ function renderEvent(d){
  $("symbol").textContent=m.s;
  buildScene(evKey);setImage(evKey);
  try{setTimeout(()=>snd({altar:"cmritual",bell:"cmtoll",mural:"whisper",cache:"chest",hermit:"cmcreak",well:"cmwail"}[evKey]||"event",.8),500)}catch(_){}
- const box=$("actions");box.replaceChildren();box.style.visibility="hidden";
+ const box=$("actions");box.replaceChildren();
  const acts=Array.isArray(d.actions)?d.actions:[];
- setTimeout(()=>typeText($("evText"),d.text||"Пепел шевелится между колоннами.",()=>{box.style.visibility="visible";box.style.animation="none";void box.offsetWidth;box.style.animation=""}),700);
+ setTimeout(()=>typeText($("evText"),d.text||"Пепел шевелится между колоннами."),150);
  if(!acts.length){const b=document.createElement("button");b.className="btn primary";b.textContent="← В руины";b.onclick=goCem;box.appendChild(b);return}
  acts.forEach(a=>{
   const b=document.createElement("button");b.type="button";b.className="action";
