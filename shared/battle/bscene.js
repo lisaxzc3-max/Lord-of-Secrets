@@ -4,7 +4,7 @@
 "use strict";
 var SRC=(document.currentScript&&document.currentScript.src)||"";
 var BASE=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"");
-var V="?v=b4";
+var V="?v=f2";
 var META={"heroes":{"m_seer":{"idle":[288,392],"dash":[387,185],"cast":[256,393],"buff":[357,232]},"m_sailor":{"idle":[144,296],"dash":[346,248],"cast":[304,301],"buff":[303,244]},"m_hunter":{"idle":[160,296],"dash":[344,208],"cast":[369,200],"buff":[336,240]},"f_seer":{"idle":[128,308],"dash":[224,259],"cast":[264,301],"buff":[264,288]},"f_sailor":{"idle":[128,295],"dash":[304,244],"cast":[398,303],"buff":[296,252]},"f_hunter":{"idle":[128,305],"dash":[444,276],"cast":[464,268],"buff":[280,256]}},"mobs":{"drowned":[560,370],"toad":[560,342],"serpent":[560,367],"serpent2":[560,374],"leech":[560,371],"pike":[560,332],"kikimora":[560,374],"vodyanoy":[560,377],"vodyanoy2":[560,377],"mushroom":[511,560],"spider":[560,381],"tree":[560,516],"boar":[560,392],"wolf":[560,385],"kitsune":[560,414],"kitsune2":[560,374],"ghost":[362,560],"ghoul":[560,394],"skeleton":[377,560],"worm":[560,437],"banshee":[353,560],"necro":[360,560],"necro2":[372,560],"fanatic":[506,560],"gargoyle":[514,560],"guard":[370,560],"ratmut":[560,373],"cultist":[371,560],"priest":[373,560],"priest2":[372,560]},"fx":{"hunter_0":[7,186,127],"hunter_1":[8,196,133],"hunter_2":[6,239,117],"hunter_3":[6,230,111],"sailor_0":[6,234,127],"sailor_1":[8,185,133],"sailor_2":[7,257,111],"sailor_3":[7,243,117],"seer_0":[6,197,104],"seer_1":[6,169,115],"seer_2":[6,175,105],"seer_3":[6,210,127]}};
 var HM=META.heroes,MM=META.mobs,FM=META.fx;
 var reduce=false;try{reduce=matchMedia("(prefers-reduced-motion:reduce)").matches}catch(e){}
@@ -20,7 +20,7 @@ function wapi(el,kf,opt){
  });
 }
 var cache={};
-function pre(url){if(cache[url])return;var i=new Image();i.src=url;cache[url]=i}
+function pre(url,dec){if(cache[url])return;var i=new Image();i.src=url;cache[url]=i;if(dec&&i.decode)i.decode().catch(function(){})}
 
 /* ---- какие позы и эффекты у каких навыков ---- */
 var ACT={
@@ -47,10 +47,13 @@ var MOBATK={fanatic:"claw",gargoyle:"claw",guard:"claw",ratmut:"bite",cultist:"b
 /* лицом ли к зрителю повёрнута поза; 1 = надо отзеркалить, чтобы смотрела вправо */
 var HFLIP={"f_seer":{"idle":1},"f_sailor":{"idle":1}};
 /* покадровая анимация: имя модели -> размеры холста, размеры кадра покоя, число кадров */
-var FR={"m_seer":{w:483,h:455,ax:205,iw:281,ih:444,n:{idle:4,atk:4,hit:2}},"toad":{w:557,h:391,ax:557,iw:489,ih:365,n:{idle:4,atk:4,hit:2}}};
+var FRN={idle:4,atk:4,hit:2};
+var FRD={"banshee":[471,503,275.5,269.6,19.1,321,478],"boar":[766,443,476.1,483.4,1,483,379],"cultist":[520,521,236.2,233.9,1,326,480],"drowned":[719,510,502.8,403.1,1,480,436],"f_hunter":[478,422,271.1,263.4,1.0,222,420],"f_sailor":[528,450,240.7,231.4,1,270,420],"f_seer":[436,422,227.4,216.2,1.0,201,420],"fanatic":[597,500,335.2,342.7,1,370,479],"gargoyle":[598,533,302.2,359.8,1,404,486],"ghost":[483,502,261.6,251.8,14.0,355,481],"ghoul":[825,542,509.4,531.0,1,484,471],"guard":[681,523,384.8,378.1,1,326,483],"kikimora":[736,483,525.6,428.0,1,476,429],"kitsune":[824,438,433.0,512.4,1,480,376],"kitsune2":[588,444,270.2,340.9,1,477,402],"leech":[659,405,388.3,360.0,1,479,355],"m_hunter":[369,423,196.3,186.9,1.0,189,421],"m_sailor":[468,423,218.6,204.0,1.0,244,421],"m_seer":[483,455,205,205,0,281,444],"mushroom":[642,505,382.3,358.5,1,428,478],"necro":[516,498,228.7,253.9,1,317,480],"necro2":[431,520,188.4,190.1,1,329,480],"pike":[527,371,287.1,247.1,10.4,485,341],"priest":[494,496,288.3,288.3,1,327,480],"priest2":[440,493,220.8,226.6,1,334,480],"ratmut":[735,391,389.0,449.9,1,478,347],"serpent":[603,475,387.1,356.0,1,477,401],"serpent2":[553,480,348.3,308.2,1,484,383],"skeleton":[631,525,399.8,397.8,1,345,480],"spider":[634,420,288.5,257.7,1,482,404],"toad":[557,391,557,312.5,0,489,365],"tree":[634,504,345.0,326.3,1,436,479],"vodyanoy":[701,490,414.3,359.3,1,483,427],"vodyanoy2":[661,457,391.0,354.2,1,480,395],"wolf":[791,435,401.0,443.3,1,473,360],"worm":[573,509,298.5,300.4,1,486,471]};
+var FR={};for(var _k in FRD){var _a=FRD[_k];FR[_k]={w:_a[0],h:_a[1],ax:_a[2],cx:_a[3],bp:_a[4],iw:_a[5],ih:_a[6],n:FRN}}
 var FT={hero:{t:0,id:0},foe:{t:0,id:0}};
 function frUrl(k,a,i){return BASE+"frames/"+k+"_"+a+"_"+i+".webp"+V}
-function frPre(k,first){var f=FR[k];if(!f)return;pre(frUrl(k,"idle",0));var go=function(){for(var a in f.n)for(var i=0;i<f.n[a];i++)pre(frUrl(k,a,i))};if(first)setTimeout(go,0);else go()}
+function frPre(k,first){var f=FR[k];if(!f)return;pre(frUrl(k,"idle",0),1);var go=function(){for(var a in f.n)for(var i=0;i<f.n[a];i++)pre(frUrl(k,a,i),1)};if(first)setTimeout(go,0);else go()}
+function frDrop(k){var f=FR[k];if(!f)return;for(var a in f.n)for(var i=0;i<f.n[a];i++)delete cache[frUrl(k,a,i)]}
 function fkey(side){return side==="hero"?S.hk:S.mob}
 function fimg(side){return side==="hero"?S.hImg:S.eImg}
 function fon(side){return !!FR[fkey(side)]}
@@ -103,7 +106,7 @@ function setPose(p,keep){
  if(FR[S.hk]){
   var f=FR[S.hk],k=Math.min((S.SH*0.5)/f.ih,S.SW*0.8/f.w);
   S.k=k;S.hw=Math.round(f.iw*k);S.hh=Math.round(f.ih*k);
-  var u=S.hero;u.style.width=Math.round(f.w*k)+"px";u.style.height=Math.round(f.h*k)+"px";u.style.left=Math.round(S.HX-f.ax*k)+"px";u.style.bottom=S.GY+"px";
+  var u=S.hero;u.style.width=Math.round(f.w*k)+"px";u.style.height=Math.round(f.h*k)+"px";u.style.left=Math.round(S.HX-f.ax*k)+"px";u.style.bottom=Math.round(S.GY-(f.bp||0)*k)+"px";
   u.querySelector(".fl").style.setProperty("--f",1);
   if(keep&&S.pose===p&&FT.hero.t)return;
   S.pose=p;
@@ -130,6 +133,7 @@ function setPose(p,keep){
 
 /* ---- враг ---- */
 function setFoe(key){
+ if(S.mob&&S.mob!==key&&FR[S.mob])frDrop(S.mob);
  S.mob=key;fstop("foe");
  if(FR[key]){frPre(key,1);S.foe.className="unit foe fr";S.eImg.onload=null;fidle("foe");placeFoe();return}
  pre(BASE+"mobs/"+key+".webp"+V);
@@ -148,7 +152,7 @@ function placeFoe(){
   S.ew=Math.round(fm0.iw*k0);S.eh=Math.round(fm0.ih*k0);
   S.EX=Math.min(S.SW*0.745,S.SW-S.ew/2-8);
   var u0=S.foe;u0.style.width=Math.round(fm0.w*k0)+"px";u0.style.height=Math.round(fm0.h*k0)+"px";
-  u0.style.left=Math.round(S.EX-(fm0.ax-fm0.iw/2)*k0)+"px";u0.style.bottom=Math.round(S.GY+S.SH*ft[1])+"px";
+  u0.style.left=Math.round(S.EX-fm0.cx*k0)+"px";u0.style.bottom=Math.round(S.GY+S.SH*ft[1]-(fm0.bp||0)*k0)+"px";
   return;
  }
  var m=MM[S.mob];if(!m)return;
@@ -352,18 +356,21 @@ async function enemyAct(o){
  var fa=function(i){if(FA)fshow("foe","atk",i)};
  if(FA){fstop("foe");fa(0)}
  var impact=function(){try{o.impact&&o.impact()}catch(e){}};
- var dist=Math.round((S.EX-S.HX)*(o.heavy?0.62:0.5));
+ var dist=Math.round((S.EX-S.HX)*(o.heavy?0.62:0.5)*(FA?0.75:1));
  snd(o.snd||"benemy");
  await wapi(S.foe,[{transform:"translateX(0) scale(1)"},{transform:"translateX(12px) scale(.95,1.04)"}],{duration:230,easing:"ease-out",fill:"forwards"});
  if(kind==="bolt"){
   var f0=foeMid(),t0={x:S.HX+S.hw*0.2,y:S.SH-S.GY-S.hh*0.5};
+  fa(1);
   var oc=MOBORB[S.mob]||"#b86bff";aura("foe",oc,600);snd("bcast");
   var orb=document.createElement("div");orb.style.cssText="position:absolute;z-index:21;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff,"+oc+" 45%,#00000000 72%);box-shadow:0 0 18px "+oc+";left:"+(f0.x-S.ew*0.25)+"px;top:"+(f0.y-S.eh*0.1)+"px";
   S.fx.appendChild(orb);
   await wapi(orb,[{transform:"translate(0,0) scale(.5)"},{transform:"translate("+(t0.x-f0.x+S.ew*0.25)+"px,"+(t0.y-f0.y+S.eh*0.1)+"px) scale(1.1)"}],{duration:360,easing:"ease-in",fill:"forwards"});
-  orb.remove();
+  orb.remove();fa(2);
   if(o.miss)dodge("hero");else{impact();hitFx("hero",o);fxHero("magic")}
+  await sleep(120);fa(3);
   await wapi(S.foe,[{transform:"translateX(12px)"},{transform:"translateX(0)"}],{duration:240,fill:"forwards"});S.foe.style.transform="";
+  if(FA&&!S.dead.foe)fidle("foe");
   return;
  }
  if(kind==="tongue"){
@@ -389,7 +396,9 @@ async function enemyCast(o){
  o=o||{};var col=o.color||"#c48cff";
  snd(o.snd||"benemy");snd("bcast",.05);
  aura("foe",col,900);
+ if(fon("foe")&&!S.dead.foe){fstop("foe");fshow("foe","atk",0)}
  await wapi(S.foe,[{transform:"translateY(0) scale(1)"},{transform:"translateY(-10px) scale(1.06,1.08)",offset:.4},{transform:"translateY(0) scale(1)"}],{duration:620,easing:"ease-in-out"});
+ if(fon("foe")&&!S.dead.foe)fidle("foe");
  try{o.impact&&o.impact()}catch(e){}
 }
 function fxHero(kind){
