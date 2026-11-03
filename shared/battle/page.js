@@ -333,12 +333,13 @@ async function load(){
   const fresh=!!pre&&pre.enemy_hp!=null&&Number(pre.enemy_hp)===Number(pre.enemy_max)&&!initialized;
   const stP=fresh?Promise.resolve(null):api({action:"battle_state"}).catch(e=>({__err:e}));
   let profile=null;
-  if(pre&&!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile",20*60*1000)}catch(_){}}
+  if(!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile")}catch(_){}}
   let cachedProf=!!profile;
   if(!profile)profile=await loadProfile();
   PLAYER_PATH=profile.path||"";PLAYER_PK=LOTM_SKILLS.pathKey(profile.path_key||profile.path)||"seer";window.LOTM_STATS=profile;
   const pk=PLAYER_PK;
   B.revive();B.setHero(pk,profile.gender);
+  try{renderSkills(lastCds)}catch(_){} /* кнопки навыков сразу, кулдауны дойдут с состоянием боя */
   if(cachedProf)loadProfile().then(function(fp){ /* кэш мог устареть (смена пути): сверяем и обновляем */
    try{
     if(window.LOTM_FAST)LOTM_FAST.set("profile",fp);

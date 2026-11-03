@@ -66,10 +66,9 @@ function fimg(side){return side==="hero"?S.hImg:S.eImg}
 function fon(side){return !!FR[fkey(side)]}
 function fstop(side){var o=FT[side];if(o.t)clearInterval(o.t);o.t=0;o.id++}
 function fshow(side,a,i){var k=fkey(side);if(!FR[k])return;var u=frUrl(k,a,i),im=fimg(side);if(im.getAttribute("src")!==u)im.src=u}
-function fidle(side){
+function fidle(side){ /* стойка: один неподвижный кадр, без покачивания */
  fstop(side);if(!fon(side)||S.dead[side])return;
- var seq=[0,1,2,3,2,1],j=0;fshow(side,"idle",0);
- FT[side].t=setInterval(function(){j=(j+1)%seq.length;fshow(side,"idle",seq[j])},260/SPD);
+ fshow(side,"idle",0);
 }
 function fonce(side,a,seq,ms,idleAfter){
  fstop(side);var id=FT[side].id;
