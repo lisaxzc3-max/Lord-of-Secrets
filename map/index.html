@@ -95,7 +95,7 @@ html[data-q="low"] .fog{animation:none}
 <body>
 <div id="app">
  <div class="top">
-  <a class="back" id="back" href="../index.html">← Город</a>
+  <a class="back" id="back" href="../index.html">← Назад</a>
   <div class="ttl"><small id="ttS">Тинген</small><b id="ttB">Карта города</b></div>
   <button class="tb" id="bSearch" aria-label="Поиск"><img src="img/b_search.webp" alt=""></button>
   <button class="tb" id="bList" aria-label="Список мест"><img src="img/b_list.webp" alt=""></button>
@@ -135,7 +135,7 @@ const aEnc=qs.get("a_enc")||qs.get("a")||"";
 const ACTION_URL=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
 const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
 const buzz=()=>{try{tg&&tg.HapticFeedback&&tg.HapticFeedback.selectionChanged()}catch(_){}};
-{const bp=new URLSearchParams(location.search);bp.set("tab","city");$("back").href="../index.html?"+bp.toString()}
+{const bp=new URLSearchParams(location.search);bp.delete("tab");const q=bp.toString();$("back").href="../index.html"+(q?"?"+q:"")}
 const SW=1086,SH=1448,IMG="img/";
 const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 
