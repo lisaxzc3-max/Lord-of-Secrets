@@ -80,6 +80,7 @@ body::before{content:"";position:fixed;inset:-3%;z-index:-1;pointer-events:none;
 .scene .moon,.scene .ray,.scene .trees,.scene .stones,.scene .horizon,.scene .glint,.eyes{display:none!important}
 @media(prefers-reduced-motion:reduce){body::before{animation:none}}
 </style>
+<script>try{var _p=new URLSearchParams(location.search);if(_p.get("auto")==="1"){_p.delete("auto");history.replaceState(null,"",location.pathname+"?"+_p.toString());document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){var b=document.getElementById("exploreBtn");if(b&&!b.disabled)b.click()},50)})}}catch(e){}</script>
 </head>
 <body>
 <div class="scene" id="scene" aria-hidden="true">

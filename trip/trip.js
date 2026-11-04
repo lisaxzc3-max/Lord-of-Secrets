@@ -8,7 +8,7 @@ const enc=(k,a)=>{const v=qs.get(k+"_enc")||qs.get(k)||"";return v?"https://api.
 const ACTION_URL=enc("a"),PROFILE_URL=enc("p");
 const sfx=n=>{try{window.snd&&window.snd(n)}catch(_){}};
 const buzz=()=>{try{tg&&tg.HapticFeedback&&tg.HapticFeedback.selectionChanged()}catch(_){}};
-{const bp=new URLSearchParams(location.search);bp.delete("tab");const q=bp.toString();$("back").href="../index.html"+(q?"?"+q:"")}
+{const bp=new URLSearchParams(location.search);bp.delete("tab");bp.delete("auto");const q=bp.toString();$("back").href="../index.html"+(q?"?"+q:"")}
 const SW=1086,SH=1448,IMG="img/";
 const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 
@@ -60,9 +60,10 @@ function clampT(slack){
  S.tx=cw<=w?(w-cw)/2:Math.min(k,Math.max(w-cw-k,S.tx));
  S.ty=ch<=h?(h-ch)/2:Math.min(k,Math.max(h-ch-k,S.ty));
 }
+let invS=0;
 function apply(){
  world.style.transform="translate3d("+S.tx+"px,"+S.ty+"px,0) scale("+S.s+")";
- world.style.setProperty("--inv",(1/S.s).toFixed(4));
+ if(Math.abs(S.s-invS)>0.004){invS=S.s;world.style.setProperty("--inv",(1/S.s).toFixed(4))}
 }
 function focusOn(x,y,s){
  const{w,h}=vsz();S.s=Math.min(S.max,Math.max(S.min,s||S.min));
@@ -122,7 +123,7 @@ function build(name){
  bg.src=sceneImg(name);
  const add=(el,x,y)=>{el.style.left=x+"px";el.style.top=y+"px";world.appendChild(el)};
  Object.keys(PL).forEach(k=>{const pos=PL[k].p[name];if(pos)add(pinEl(k),pos[0],pos[1])});
- if(name==="over")Object.keys(LOC).forEach(k=>{const L=LOC[k];if(L.fog&&L.min>S.lv){const f=document.createElement("div");f.className="fog";f.dataset.f=k;add(f,L.fog[0],L.fog[1])}});
+ if(name==="over")Object.keys(LOC).forEach(k=>{const L=LOC[k];if(L.fog&&L.min>S.lv){const f=document.createElement("img");f.className="fog";f.src=IMG+"fog.webp";f.alt="";f.draggable=false;f.dataset.f=k;add(f,L.fog[0],L.fog[1])}});
  $("ttS").textContent=name==="over"?"Земли за воротами":"Поход";
  $("ttB").textContent=name==="over"?"Карта похода":LOC[name].n;
  $("crumb").classList.toggle("on",name!=="over");
@@ -169,7 +170,7 @@ function select(k,fly){
  const b=world.querySelector('.pin[data-k="'+k+'"]');
  if(b){b.classList.add("sel");setPinState(b,k)}
  const L=locOf(k),lock=!!(L&&L.min>S.lv);
- let meta,ds,tag,go="Отправиться",goOff=false,go2=false;
+ let meta,ds,tag,go="🔍 Исследовать",goOff=false,go2=false;
  if(P.boss){
   meta=EV.boss?"Босс недели открыт":"Босс недели";ds=P.ds;tag="Край света";go=EV.boss?"⚔ К боссу недели":"Локация и рейтинг";
  }else if(P.main){
@@ -187,16 +188,16 @@ function select(k,fly){
  sfx("tap");buzz();
  if(fly){const pos=P.p[S.scene];if(pos)flyTo(pos[0],pos[1],Math.max(S.s,S.min*(S.scene==="over"?2.2:1.7)),420,true)}
 }
-function enter(url,key){
+function enter(url,key,auto){
  sfx("open");
  try{if(key){localStorage.setItem("lotm_last_loc",key);localStorage.setItem("lotm_tutf_"+uid,"1")}}catch(_){}
- const p=new URLSearchParams(location.search);p.set("_t",String(Date.now()));
+ const p=new URLSearchParams(location.search);p.set("_t",String(Date.now()));p.delete("auto");if(auto)p.set("auto","1");
  location.href=url+"?"+p.toString();
 }
 $("sGo").addEventListener("click",()=>{
  const P=PL[S.sel];if(!P||$("sGo").disabled)return;
  if(P.boss){enter(P.url);return}
- const key=P.main?S.sel:(P.lair||P.d);enter(LOC[key].url,key);
+ const key=P.main?S.sel:(P.lair||P.d);enter(LOC[key].url,key,true);
 });
 $("sGo2").addEventListener("click",()=>{const P=PL[S.sel];if(P&&P.main){sfx("open");goScene(P.d,S.sel,true)}});
 $("toOver").addEventListener("click",()=>{sfx("back");const d=S.scene;goScene("over");setTimeout(()=>{const l=LOC[d]&&LOC[d].lab;if(l)flyTo(l[0],l[1],S.min*1.0,1)},500)});
