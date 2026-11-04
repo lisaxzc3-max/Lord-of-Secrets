@@ -12,11 +12,22 @@ var VB=(function(){try{var s=document.currentScript&&document.currentScript.src;
 function sfx(n){try{window.snd&&window.snd(n)}catch(e){}}
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 function unwrap(v){for(var i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
-function call(p){
+function raw(url,p){
  var ac=null,tm=null,o={method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p),cache:"no-store"};
  try{if(window.AbortController){ac=new AbortController();o.signal=ac.signal;tm=setTimeout(function(){try{ac.abort()}catch(e){}},20000)}}catch(e){}
- return fetch(URL_,o)
+ return fetch(url,o)
  .then(function(r){clearTimeout(tm);if(!r.ok)throw new Error("http");return r.json()},function(e){clearTimeout(tm);throw e}).then(function(d){d=unwrap(d);if(!d||typeof d!=="object")throw new Error("bad");return d});
+}
+var CK="lotm_c_enc_"+aEnc.slice(-16),cEnc=ls(CK)||"",cAsk=0;
+var FAST={chat_sync:1,chat_send:1,dm_send:1,dm_find:1,dm_list:1,stk_list:1,stk_get:1};
+function getEnc(){if(cAsk)return;cAsk=1;raw(URL_,{action:"chat_url"}).then(function(d){if(d&&d.ok&&d.c){cEnc=d.c;ls(CK,cEnc)}}).catch(function(){cAsk=0})}
+function call(p){
+ if(!FAST[p.action])return raw(URL_,p);
+ if(!cEnc){getEnc();return raw(URL_,p)}
+ var send=/_send$/.test(p.action);
+ return raw("https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(cEnc),p).then(function(d){
+  if(d&&d.error==="bad_action"){cEnc="";ls(CK,"");cAsk=0;return raw(URL_,p)}return d;
+ },function(e){if(send)throw e;cEnc="";ls(CK,"");cAsk=0;return raw(URL_,p)});
 }
 var CFGK="lotm_chat_cfg";
 function cfg(){var c={world:1,dm:1,snd:1,tone:"bell",shake:1,fab:1};try{var j=JSON.parse(localStorage.getItem(CFGK)||"{}");for(var k in j)c[k]=j[k]}catch(e){}return c}
