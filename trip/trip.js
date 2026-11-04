@@ -127,7 +127,25 @@ function build(name){
  $("ttS").textContent=name==="over"?"Земли за воротами":"Поход";
  $("ttB").textContent=name==="over"?"Карта похода":LOC[name].n;
  $("crumb").classList.toggle("on",name!=="over");
+ tutUpdate();
 }
+/* ---------- подсказка обучения ---------- */
+let tutOn=false,tutHide=false;
+function tutSet(t){tutOn=!!(t&&!t.done&&!t.win&&(parseInt(t.s)||0)>=5);tutUpdate()}
+function tutUpdate(){
+ const b=$("tutB");if(!b)return;
+ const show=tutOn&&!tutHide&&S.lv>=1;
+ b.classList.toggle("on",show);b.classList.toggle("low",S.scene!=="over");
+ world.querySelectorAll(".pin.tutHi").forEach(n=>n.classList.remove("tutHi"));
+ $("sGo").classList.remove("tutHi");
+ if(!show)return;
+ if(S.sel==="lake"&&$("sheet").classList.contains("on")){$("tutBx").textContent="Нажми «Исследовать»: начнётся поиск врага для первого боя.";$("sGo").classList.add("tutHi")}
+ else{
+  $("tutBx").textContent=S.scene==="over"||S.scene==="lake"?"Выбери «Озёра · Топи», затем нажми «Исследовать».":"Вернись на общий вид и выбери «Озёра · Топи».";
+  const p=world.querySelector('.pin[data-k="lake"]');if(p)p.classList.add("tutHi");
+ }
+}
+$("tutBh").addEventListener("click",()=>{tutHide=true;tutUpdate()});
 function refreshLocks(){
  world.querySelectorAll(".pin").forEach(b=>setPinState(b,b.dataset.k));
  if(S.scene==="over"){
@@ -160,7 +178,7 @@ function goScene(name,focus,keepSel){
 function closeSheet(){
  $("sheet").classList.remove("on");
  if(S.sel){const b=world.querySelector('.pin[data-k="'+S.sel+'"]');if(b){b.classList.remove("sel");setPinState(b,S.sel)}}
- S.sel=null;
+ S.sel=null;tutUpdate();
 }
 function locOf(k){const P=PL[k];return LOC[P.main?k:(P.lair||P.d)]||null}
 function select(k,fly){
@@ -185,7 +203,7 @@ function select(k,fly){
  const g=$("sGo");g.classList.toggle("off",goOff);g.textContent=go;g.disabled=goOff;
  const g2=$("sGo2");g2.style.display=go2?"":"none";g2.textContent="Карта локации";
  $("sheet").classList.add("on");
- sfx("tap");buzz();
+ sfx("tap");buzz();tutUpdate();
  if(fly){const pos=P.p[S.scene];if(pos)flyTo(pos[0],pos[1],Math.max(S.s,S.min*(S.scene==="over"?2.2:1.7)),420,true)}
 }
 function enter(url,key,auto){
@@ -312,6 +330,7 @@ $("lx").addEventListener("click",()=>{closeList();sfx("back")});
 function setProfile(d){
  if(!d||typeof d!=="object")return;
  const lv=Math.max(1,parseInt(d.level)||1);
+ tutSet(d.tut);
  if(d.hp!=null&&d.max_hp!=null){$("vHp").textContent=d.hp+"/"+d.max_hp;$("vMad").textContent=Math.round(Number(d.madness)||0);$("vLv").textContent="Ур. "+lv;$("vit").classList.add("on")}
  if(lv!==S.lv){S.lv=lv;refreshLocks()}
 }

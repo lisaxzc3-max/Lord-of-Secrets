@@ -87,6 +87,16 @@ img{-webkit-user-drag:none;pointer-events:none;display:block}
 .vit{position:relative;z-index:29;display:none;align-items:center;justify-content:center;gap:14px;margin:-2px 12px 0;padding:4px 12px;border-radius:12px;border:1px solid #3a2f44;background:#0b0710cc;font-size:12px;color:#d8cfb8}
 .vit.on{display:flex}
 .vit i{font-style:normal;color:#c9a8e0}
+.tutB{position:absolute;left:8px;right:62px;top:8px;z-index:21;display:none;gap:10px;align-items:flex-start;padding:9px 11px;border-radius:16px;border:1px solid #e2c27a99;background:linear-gradient(160deg,#2a2044f7,#150e28f7);box-shadow:0 8px 24px #000a,0 0 20px #8a5cff44;color:#f1e8d3;font-size:12.5px;line-height:1.35}
+.tutB.on{display:flex}.tutB.low{top:58px}
+.tutB .ow{flex:0 0 34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#3a2f52,#1d1530);border:1px solid #9a7c45;display:flex;align-items:center;justify-content:center;font-size:19px}
+.tutB b{display:block;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#e2c27a;margin-bottom:2px}
+.tutB button{display:block;margin-top:4px;color:#8f84a6;font-size:11px;text-decoration:underline;padding:2px 0}
+.pin.tutHi .pf{animation:tutHi 1.3s ease-in-out infinite}
+.enter.tutHi{animation:tutHb 1.3s ease-in-out infinite}
+@keyframes tutHi{50%{filter:drop-shadow(0 0 12px #ffd27a) drop-shadow(0 0 26px #ffb84a)}}
+@keyframes tutHb{50%{filter:drop-shadow(0 0 16px #ffd27a)}}
+@media(prefers-reduced-motion:reduce){.pin.tutHi .pf,.enter.tutHi{animation:none}}
 </style>
 </head>
 <body>
@@ -106,6 +116,7 @@ img{-webkit-user-drag:none;pointer-events:none;display:block}
    <button id="compass" aria-label="Сбросить вид"><img src="img/b_compass.webp" alt=""></button>
    <button id="locate" aria-label="Последняя локация"><img src="img/b_locate.webp" alt=""></button>
   </div>
+  <div class="tutB" id="tutB"><div class="ow">🦉</div><div><b>Обучение</b><span id="tutBx"></span><button type="button" id="tutBh">Скрыть подсказку</button></div></div>
   <div class="hint" id="hint">Нажми на локацию, приблизь карту пальцами или выбери точку</div>
   <div id="sheet">
    <div class="card"><div class="rb" id="sName"></div><div class="bd"><div class="mt" id="sMeta"></div><div class="ds" id="sDesc"></div></div><div class="pl" id="sTag"></div></div>
@@ -121,6 +132,6 @@ img{-webkit-user-drag:none;pointer-events:none;display:block}
 <script src="../shared/fast.js?v=b4"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js?v=a7"></script>
-<script src="trip.js?v=t2"></script>
+<script src="trip.js?v=t3"></script>
 </body>
 </html>
