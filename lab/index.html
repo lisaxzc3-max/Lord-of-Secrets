@@ -108,6 +108,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 .potc svg{width:56px;height:70px;filter:drop-shadow(0 0 12px var(--pc))}
 .potc b{display:block;font-size:13px;color:#f3e4bd;margin-top:2px}
 .potc small{display:block;font-size:10px;color:var(--muted)}
+.jh{margin:12px 0 6px;font:700 13px Philosopher,Georgia,serif;color:#d9b97a;letter-spacing:.05em}
+.jk{border:1px solid #5a4730;border-radius:12px;padding:9px 10px;margin-bottom:8px;background:linear-gradient(160deg,#1c1428,#0d0914)}
+.jk b{display:block;font-size:13px;color:#f3e4bd;margin-bottom:5px}
+.jr{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:4px;font-size:11px;color:var(--muted)}
+.jc{display:inline-flex;align-items:center;gap:3px;height:26px;padding:0 7px 0 2px;border-radius:99px;border:1px solid #5a4730;background:#150f1d;font-size:11px;font-weight:700;color:var(--text)}
+.jc svg{width:20px;height:20px}
+.jc.y{border-color:#4f9a6a;color:#a8e8bf}.jc.n{border-color:#8a4040;color:#e8a8a8;opacity:.8}.jc.n svg{opacity:.5}
+.je{border-left:3px solid #5a4730;padding:6px 8px;margin-bottom:7px;background:#120d1a;border-radius:0 10px 10px 0}
+.je.ok{border-color:#4f9a6a}.je.bad{border-color:#8a4040}
+.je .tt{font-size:12px;color:#f3e4bd;margin-top:4px}
 .bagEmpty{grid-column:1/-1;text-align:center;padding:18px 8px;color:var(--muted);font-size:12px}
 
 /* ===== результат ===== */
@@ -152,12 +162,13 @@ button[aria-label="Звук"]{top:calc(98px + env(safe-area-inset-top))!importan
  <div class="inpot" id="inpot"></div>
  <div class="acts"><button class="btn" id="clear" type="button">Очистить</button><button class="btn main" id="brew" type="button">⚗ Варить</button></div>
  <div class="tray" id="ings"></div>
- <div class="tabs"><button class="tab" id="tPots" type="button">🧪 Твои зелья <b id="potN"></b></button></div>
+ <div class="tabs"><button class="tab" id="tPots" type="button">🧪 Твои зелья <b id="potN"></b></button><button class="tab" id="tJr" type="button">📖 Дневник</button></div>
 </section>
 </div>
 
 <div class="shBk" id="shBk"></div>
 <div class="sheet" id="shPots"><div class="grip"></div><h3>Твои зелья</h3><div class="pots" id="pots"></div></div>
+<div class="sheet" id="shJr"><div class="grip"></div><h3>Дневник алхимика</h3><div id="jr"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -230,7 +241,7 @@ new ResizeObserver(place).observe(scene);
 
 /* ===== состояние ===== */
 const MAX=12;
-let S={ingr:{},pots:{},recipe:null,others:[]};
+let S={ingr:{},pots:{},recipe:null,others:[],journal:[]};
 let pot={};
 let busy=false;
 const potTotal=()=>Object.values(pot).reduce((a,b)=>a+b,0);
@@ -293,11 +304,52 @@ function renderPots(){
  if(!ids.length){const e=document.createElement("div");e.className="bagEmpty";e.textContent="Пока нет сваренных зелий. Они попадают в сумку.";g.appendChild(e);return}
  ids.forEach(k=>{const P=A.POT[k],c=document.createElement("div");c.className="potc";c.style.setProperty("--pc",P.c+"99");c.innerHTML=A.potion(k)+'<b>'+P.n+'</b><small>×'+S.pots[k]+' · '+P.info.replace("Последовательность 8 · ","Посл. 8 · ")+'</small>';g.appendChild(c)});
 }
+function chipsOf(o,cls){return Object.keys(o).filter(k=>A.ING[k]).map(k=>'<span class="jc '+(cls||"")+'">'+A.glyph(k)+(o[k]>1?"×"+o[k]:"")+" "+A.ING[k].n+'</span>').join("")}
+function renderJr(){
+ const box=$("jr"),J=S.journal||[];box.replaceChildren();
+ if(!J.length){box.innerHTML='<div class="bagEmpty">Дневник пуст. Каждая попытка варки будет записана сюда, а вместе с ней и подсказки, какие ингредиенты к какому зелью относятся.</div>';return}
+ const K={};
+ J.forEach(e=>{
+  if(!e.b||!A.POT[e.b])return;
+  const q=K[e.b]||(K[e.b]={yes:{},no:{},full:null});
+  Object.keys(e.m||{}).forEach(k=>{if(e.m[k])q.yes[k]=1;else q.no[k]=1});
+  if(e.p===e.b)q.full=e.i;
+ });
+ Object.values(K).forEach(q=>Object.keys(q.yes).forEach(k=>delete q.no[k]));
+ let h='<div class="jh">Что выяснено</div>';
+ const ids=Object.keys(K);
+ if(!ids.length)h+='<div class="bagEmpty">Пока ничего. Нужна хотя бы одна попытка, в которой совпало что-то с рецептом.</div>';
+ ids.forEach(id=>{
+  const q=K[id],P=A.POT[id];
+  h+='<div class="jk"><b>'+P.n+'</b>';
+  if(q.full)h+='<div class="jr">Рецепт известен:</div><div class="jr">'+chipsOf(q.full,"y")+'</div>';
+  else{
+   const y=Object.keys(q.yes),n=Object.keys(q.no);
+   if(y.length)h+='<div class="jr">Входят в рецепт:</div><div class="jr">'+chipsOf(Object.fromEntries(y.map(k=>[k,1])),"y")+'</div>';
+   if(n.length)h+='<div class="jr">Не входят:</div><div class="jr">'+chipsOf(Object.fromEntries(n.map(k=>[k,1])),"n")+'</div>';
+   h+='<div class="jr">Количество подбирай по счёту «верно X из N».</div>';
+  }
+  h+='</div>';
+ });
+ h+='<div class="jh">Попытки</div>';
+ J.slice().reverse().forEach(e=>{
+  const d=new Date((e.t|0)*1000),ts=d.toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+  const pn=e.b&&A.POT[e.b]?A.POT[e.b].n:"";
+  let t;
+  if(e.p)t="✅ Сварено: "+pn;
+  else if(pn)t="❌ Ближе всего к «"+pn+"»: верно "+e.ok+" из "+e.nd;
+  else t="❌ Мутное варево, ни на что не похоже";
+  const mk={};Object.keys(e.i||{}).forEach(k=>mk[k]=e.i[k]);
+  h+='<div class="je '+(e.p?"ok":"bad")+'"><small style="color:var(--muted)">'+ts+(e.n>1?" · ×"+e.n:"")+'</small><div class="jr">'+Object.keys(e.i||{}).filter(k=>A.ING[k]).map(k=>{const m=(e.m||{})[k];return '<span class="jc '+(m===1?"y":m===0?"n":"")+'">'+A.glyph(k)+(e.i[k]>1?"×"+e.i[k]:"")+" "+A.ING[k].n+'</span>'}).join("")+'</div><div class="tt">'+t+'</div></div>';
+ });
+ box.innerHTML=h;
+}
 function render(){renderPot();renderIngs();renderPots()}
 
 /* шторки */
 function openSheet(id){sfx("open");$("shBk").classList.add("on");$(id).classList.add("on")}
 function closeSheets(){document.querySelectorAll(".sheet.on").forEach(s=>s.classList.remove("on"));$("shBk").classList.remove("on")}
+$("tJr").onclick=()=>{renderJr();openSheet("shJr")};
 $("tPots").onclick=()=>{renderPots();openSheet("shPots")};
 $("shBk").onclick=()=>{sfx("back");closeSheets()};
 
@@ -312,7 +364,7 @@ $("brew").onclick=async()=>{
  scene.classList.remove("boil");
  busy=false;
  if(err||!d||d.ok===false){toast(String((d&&(d.text||d.error))||(err&&err.message)||"Не удалось сварить."));pot={};await load();return}
- S.ingr=d.ingr||S.ingr;S.pots=d.pots||S.pots;S.recipe=d.recipe||S.recipe;S.others=d.others||S.others;
+ S.ingr=d.ingr||S.ingr;S.pots=d.pots||S.pots;S.recipe=d.recipe||S.recipe;S.others=d.others||S.others;S.journal=d.journal||S.journal;
  pot={};render();
  result(d);
 };
@@ -335,7 +387,7 @@ async function load(){
  try{
   const d=await api({action:"lab_state"});
   if(d.ok===false){toast(String(d.text||d.error||"Ошибка"));render();return}
-  S.ingr=d.ingr||{};S.pots=d.pots||{};S.recipe=d.recipe||null;S.others=d.others||[];
+  S.ingr=d.ingr||{};S.pots=d.pots||{};S.recipe=d.recipe||null;S.others=d.others||[];S.journal=d.journal||[];
   Object.keys(pot).forEach(k=>{if((pot[k]|0)>(S.ingr[k]|0)){if(S.ingr[k])pot[k]=S.ingr[k];else delete pot[k]}});
  }catch(e){if(e&&e.message!=="need_start")toast(e.message||"Не удалось загрузить")}
  render();
