@@ -260,7 +260,7 @@ function paint(){
  const L=$("hpL");L.style.width=clamp(hpp,0,100)+"%";L.classList.toggle("ok",hpp>=100);
  $("mdT").textContent=S.mad+" / "+S.madcap;$("mdL").style.width=clamp(S.mad/S.madcap*100,0,100)+"%";
  bpm=Math.round(clamp(58+(1-hpp/100)*52+S.mad*.25,56,130));$("bpm").textContent=bpm;$("bpm").previousElementSibling.style.setProperty("--bt",(60/bpm)+"s");
- $("mdN").innerHTML=S.mad>0?"Переход на новую Последовательность займёт <b>"+Math.round(S.mad)+" мин</b>. Чем меньше безумия, тем короче дорога.":"Разум чист. Переход на новую Последовательность будет быстрым.";
+ $("mdN").innerHTML="Переход на новую Последовательность всегда занимает <b>10 мин</b>. Безумие на его длину не влияет.";
  const h=$("aHeal");
  if(S.battle){h.disabled=true;$("aHealS").textContent="Врач не лечит посреди боя";$("aHealP").textContent="—"}
  else if(S.heal<=0){h.disabled=true;$("aHealS").textContent="Ты полностью здоров";$("aHealP").textContent="—"}
