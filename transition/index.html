@@ -11,7 +11,12 @@
 :root{--a:#a58bff;--b:#5a3fa0;--glow:#cdb8ff;--gold:#e8c987;--sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;font:14px Georgia,"Times New Roman",serif}
-#stage{position:fixed;inset:0;overflow:hidden}
+#stage{position:fixed;inset:0;overflow:hidden;background:#05030a}
+#hall{position:absolute;inset:0;background:#05030a center/cover no-repeat;filter:brightness(.82) saturate(1.05)}
+#circ{position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:screen;opacity:0;transition:opacity 1.6s;will-change:transform}
+#circ.on{opacity:1}
+#circ img{display:block;width:100%;height:100%;animation:cspin 90s linear infinite}
+@keyframes cspin{to{transform:rotate(360deg)}}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 .layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 #flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:#fff;mix-blend-mode:screen}
@@ -33,15 +38,14 @@ html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;
 #chName{position:absolute;left:14px;top:calc(72px + var(--sat));font-size:10px;letter-spacing:.3em;color:var(--a);text-transform:uppercase;pointer-events:none;opacity:0;transition:opacity .8s}
 #chName.on{opacity:.95}
 /* диалог */
-#vn{position:absolute;left:10px;right:10px;bottom:calc(10px + var(--sab));max-width:720px;margin:0 auto;padding:14px 16px 12px;border-radius:16px;border:1px solid #ffffff22;background:linear-gradient(180deg,#0b0710ee,#05030af2);box-shadow:0 0 30px #0009,inset 0 0 40px #0006;min-height:118px}
-#vn:before{content:"";position:absolute;left:14px;right:14px;top:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--a),transparent)}
-#who{position:absolute;left:16px;top:-12px;padding:3px 12px;border-radius:9px;border:1px solid var(--a);background:#0b0710;color:var(--glow);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
-#tx{font-size:15px;line-height:1.55;min-height:70px;color:#f1e8d8}
+#vn{position:absolute;left:6px;right:6px;bottom:calc(4px + var(--sab));max-width:720px;margin:0 auto;aspect-ratio:2/.92;padding:17% 11% 8%;background:center/100% 100% no-repeat;filter:drop-shadow(0 0 14px #000c);display:flex;flex-direction:column;justify-content:center}
+#who{position:absolute;left:50%;transform:translateX(-50%);top:13.5%;width:30%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--gold);font-size:10px;letter-spacing:.18em;text-transform:uppercase;text-shadow:0 0 8px #000}
+#tx{font-size:14px;line-height:1.5;color:#f1e8d8;text-shadow:0 1px 6px #000}
 #tx.dim{color:#b5a9c4;font-style:italic}
-#nx{position:absolute;right:14px;bottom:8px;font-size:11px;color:var(--a);letter-spacing:.14em;opacity:0}
+#nx{position:absolute;right:11%;bottom:9%;font-size:11px;color:var(--a);letter-spacing:.14em;opacity:0}
 #nx.on{opacity:.9;animation:bl 1.1s ease-in-out infinite}
 @keyframes bl{50%{opacity:.25}}
-#lock{position:absolute;left:0;right:0;bottom:calc(138px + var(--sab));text-align:center;font-size:10px;letter-spacing:.22em;color:#8f84a4;text-transform:uppercase;pointer-events:none}
+#lock{position:absolute;left:0;right:0;bottom:calc(var(--lockb,150px) + var(--sab));text-align:center;font-size:10px;letter-spacing:.22em;color:#8f84a4;text-transform:uppercase;pointer-events:none}
 /* всплывающие */
 .wh{position:absolute;font-style:italic;color:#e4d6ff;text-shadow:0 0 12px var(--a);font-size:15px;opacity:0;animation:wh 6s ease-in-out forwards;pointer-events:none;white-space:nowrap}
 @keyframes wh{0%{opacity:0;transform:translateY(10px) scale(.95)}25%,65%{opacity:.85}100%{opacity:0;transform:translateY(-26px) scale(1.04)}}
@@ -58,7 +62,15 @@ html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;
 #end.on{display:flex}
 #end.show{opacity:1}
 #end .k{font-size:10px;letter-spacing:.4em;color:#fff3cf;text-transform:uppercase;text-shadow:0 0 10px #000a}
-#end .av{width:150px;height:150px;margin:16px 0 8px;border-radius:50%;border:2px solid #fff3cf;background:#0b0710 center/cover;box-shadow:0 0 50px #ffe9a8aa,0 0 0 8px #ffffff18;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:64px}
+#end .avw{position:relative;width:210px;height:210px;margin:6px 0 0}
+#end .avw .avi{position:absolute;left:14%;top:14%;width:72%;height:72%;border-radius:50%;overflow:hidden;background:#0b0710;display:flex;align-items:center;justify-content:center;font-size:54px}
+#end .avw .avi img{width:100%;height:100%;object-fit:cover}
+#end .avw .avf{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 0 16px var(--a))}
+#end .rib{position:relative;width:min(330px,92vw);aspect-ratio:1000/302;background:center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center;margin:2px 0 0}
+#end .rib .k{font-size:10px;letter-spacing:.2em;padding:0 14%;margin-top:1%}
+#end .emb{width:104px;height:104px;margin:4px 0 0;filter:drop-shadow(0 0 14px var(--a));animation:embf 3.4s ease-in-out infinite}
+@keyframes embf{50%{transform:translateY(-5px)}}
+#end .av{display:none;width:150px;height:150px;margin:16px 0 8px;border-radius:50%;border:2px solid #fff3cf;background:#0b0710 center/cover;box-shadow:0 0 50px #ffe9a8aa,0 0 0 8px #ffffff18;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:64px}
 #end .av img{width:100%;height:100%;object-fit:cover}
 #end h1{margin:6px 0 4px;font-size:25px;letter-spacing:.12em;color:#fff;text-shadow:0 0 18px #000c,0 0 6px #000;font-weight:400;text-transform:uppercase}
 #end p{margin:0 0 12px;max-width:330px;line-height:1.55;color:#fff6dc;text-shadow:0 1px 8px #000d}
@@ -73,6 +85,7 @@ html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;
 </head>
 <body>
 <div id="stage">
+ <div id="hall"></div><div id="circ"><img id="circI" alt=""></div>
  <canvas id="cv"></canvas>
  <div class="layer" id="fx"></div>
  <div id="red"></div><div id="vig"></div><div id="flash"></div>
@@ -87,9 +100,10 @@ html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;
  <div id="vn"><div id="who">Голос</div><div id="tx"></div><div id="nx">нажми ▼</div></div>
  <div id="end">
   <div class="k">Обряд завершён</div>
-  <div class="av" id="endAv">𓂀</div>
-  <div class="k" id="endK">Последовательность 8</div>
+  <div class="rib" id="endRib"><div class="k" id="endK">Последовательность 8</div></div>
+  <div class="avw"><div class="avi" id="endAv">𓂀</div><img class="avf" id="endAf" alt=""></div>
   <h1 id="endH">Новая ступень</h1>
+  <img class="emb" id="endEm" alt="">
   <p id="endP">Ты проснулся другим. Туман больше не кажется чужим.</p>
   <div class="chips"><span>+10 ко всем характеристикам</span><span>+50 к макс. здоровью</span><span>Безумие утихло</span></div>
   <button id="endBtn">Вернуться в Тинген</button>
@@ -142,27 +156,27 @@ var AMB={
  hunter:["не оглядывайся","он идёт по следу","дым, дым, дым","пахнет кровью","зверь уже рядом","не мигай"]
 };
 var CH=[
- {t:"Глоток",at:0,fx:["flash","shake","pulse"],who:"Ты",L:{
+ {t:"Глоток",at:0,fx:["flash","shake","pulse"],who:"Ты",L7:{seer:["Зелье вспыхивает на языке, как магниевая лента. Склянка исчезает прежде, чем ты успеваешь разжать пальцы.", "Свечи гаснут все разом и зажигаются снова уже без огня. Свет идёт от них, а тепла нет.", "Занавес в твоей голове поднимается сам. Ты знаешь, что сейчас начнётся фокус, и знаешь, что фокусник здесь ты."],sailor:["Зелье бьёт в голову компасной стрелкой. Все стороны света разом показывают на тебя.", "Свечи вытягиваются в струнки, словно паруса при внезапном ветре.", "Пол дрожит и становится тёмной водой. Где-то далеко звонит корабельный колокол."],hunter:["Зелье вспыхивает во рту фитилём. Горло горит, но боли нет: только ровный, жадный жар.", "Свечи раздуваются, как угли в кузне. По стенам ползут тени факелов, которых здесь никто не зажигал.", "Ты чувствуешь запах серы и ещё чего-то сладкого. Так пахнет огонь, который ждал тебя долго."]},L:{
   seer:["Зелье обжигает горло холодом. Склянка в пальцах трескается и рассыпается лунной пылью.","Свечи вспыхивают разом, будто кто-то выдохнул на них.","Ты закрываешь глаза. Мир складывается пополам, как карточный лист."],
   sailor:["Зелье горчит солёной водой и железом. Ты словно проглотил кусок шторма.","Свечи пригибаются от ветра, которого здесь нет.","Пол уходит из-под ног. Палуба. Волна. Гром далеко над головой."],
   hunter:["Зелье жжёт, как свежая кровь на морозе. Во рту вкус дыма и железа.","Свечи вспыхивают алым. Пахнет гарью и далёкой охотой.","Сердце бьёт, как барабан перед облавой. За тобой начинают следить."]}},
- {t:"Голоса",at:.12,fx:["eyes","whisper"],who:"Шёпот",L:{
+ {t:"Голоса",at:.12,fx:["eyes","whisper"],who:"Шёпот",L7:{seer:["«Покажи… покажи…» Шёпот хлопает в ладоши, и от каждого хлопка гаснет одна свеча.", "Из зеркал в тёмных углах выходят твои отражения. Каждое держит в руке по карте, и ни одна не твоя.", "Ты: «Это иллюзия». Шёпот: «Иллюзия тоже начинает верить в себя»."],sailor:["«Курс… назови курс…» Голоса идут не из зала, а из глубины под полом.", "Невидимая карта разворачивается в воздухе. Все точки на ней мигают и указывают на одну: на тебя.", "Ты: «Я не заблужусь». Шёпот: «Заблудиться может только тот, у кого есть дом»."],hunter:["«Горит… горит…» Шёпот трещит, как сухие ветки в костре.", "Из темноты загораются десятки глаз. Они не мигают и не боятся огня, потому что сами из него.", "Ты: «Я не боюсь пламени». Шёпот: «Пламя не боится тебя»."]},L:{
   seer:["«Смейся… смейся… никто не заметит, что это маска».","Из темноты по краям зала складываются шёпоты, и каждый знает твоё имя.","Ты: «Это только сон». Шёпот: «Сон тоже умеет кусаться»."],
   sailor:["«Тише… тише… море помнит каждого, кто тонул».","Волны шепчут за стенами зала. Ты слышишь, как они считают твои вдохи.","Ты: «Я не боюсь воды». Шёпот: «Вода не боится тебя»."],
   hunter:["«Беги… беги… он уже идёт по твоему следу».","Из темноты по краям зала смотрят глаза. Они не мигают.","Ты: «Я охотник». Шёпот: «Сегодня ты добыча»."]}},
- {t:"Лица",at:.28,fx:["faces","shake"],who:"Голос из тумана",L:{
+ {t:"Лица",at:.28,fx:["faces","shake"],who:"Голос из тумана",L7:{seer:["В воздухе повисают карточные лица. Короли смеются, дамы плачут, шуты смотрят молча.", "Тузы выстраиваются в ряд и разворачиваются рубашками к тебе. На каждой рубашке нарисован твой глаз.", "«Угадай, где настоящий, — просит голос. — Или научись не угадывать вовсе»."],sailor:["Над водой всплывают штурвалы без кораблей. Они крутятся сами, и каждый зовёт тебя встать на вахту.", "Из тумана выходит тень со стеклянным компасом вместо сердца. Стрелка бьётся о стекло, как пойманная птица.", "«Курс не выбирают, — шепчет она. — Курс выбирает капитана»."],hunter:["Из дыма поднимаются факелы. Каждый держит рука без тела, обожжённая до кости.", "Тени с рогатыми головами несут горящие ленты и обвязывают ими круг.", "«Горит тот, кто решил гореть, — говорит голос. — Реши, пока тебя не решили»."]},L:{
   seer:["Лица появляются в воздухе одно за другим: смеющиеся, плачущие, пустые.","Каждое твоё. Каждое чужое. Ты не помнишь, какое родилось вместе с тобой.","«Выбери, — просит голос. — Или тебя выберут»."],
   sailor:["Над чёрной водой всплывают лица утонувших. Они улыбаются зубастым ртом шторма.","Ты узнаёшь капитана, которого никогда не встречал. Он указывает на тебя трезубцем молнии.","«Подчиняйся буре, — шепчет вода. — Или стань её пеной»."],
   hunter:["Из дыма выходят силуэты охотников. Вместо лиц у них рогатые черепа.","Они обступают круг и молча считают шаги до тебя.","«Дразни зверя, — говорит старший. — Но помни: зверь тоже умеет дразнить»."]}},
- {t:"Слияние",at:.48,fx:["pulse","flash","whisper"],who:"Ты",L:{
+ {t:"Слияние",at:.48,fx:["pulse","flash","whisper"],who:"Ты",L7:{seer:["Фокус удался: ты исчез и появился снова, но уже в другом теле. Оно твоё и всё же слегка чужое.", "Руки сами знают движения, которым тебя никто не учил. Карты летят между пальцев и складываются в лестницу.", "Ты смеёшься уже не маской, а тем, что под ней. Свечи вздрагивают и вспыхивают золотом."],sailor:["Компас входит в грудь, и стрелка садится на север, на сердце, на тебя.", "Море внутри поднимается и ложится ровной линией горизонта. Ты слышишь каждый ветер по имени.", "Свечи кланяются тебе, как команда капитану. Мачты скрипят где-то под рёбрами."],hunter:["Огонь не обжигает. Он входит и садится внутри, как дома.", "Кровь течёт ровно и горячо, как расплавленное золото. Слова сами превращаются в искры.", "Свечи пригибаются, как трава перед пожаром. Ты ещё не поджёг ничего, но уже можешь."]},L:{
   seer:["Маска прирастает к лицу. Сначала холод, потом кожа, потом ты сам.","Внутри начинает звучать оркестр, и каждый инструмент играет твою роль.","Ты смеёшься и не можешь остановиться. Свечи дрожат от этого смеха."],
   sailor:["Буря входит в грудь. Лёгкие полны ветра, рёбра звенят, как мачты.","Ярость поднимается из глубины и просит имя. Ты даёшь ей своё.","Свечи гнутся к тебе, как команда, что ждёт приказа."],
   hunter:["Огонь вспыхивает под рёбрами. Кровь становится вязкой и горячей, как смола.","Ты слышишь, как зверь внутри делает первый шаг тебе навстречу.","Свечи тянутся пламенем к тебе: добыча и охотник наконец встретились."]}},
- {t:"Разрыв",at:.68,fx:["shake2","crack","red","flash"],who:"Тот, кто смотрит",L:{
+ {t:"Разрыв",at:.68,fx:["shake2","crack","red","flash"],who:"Тот, кто смотрит",L7:{seer:["Что-то огромное разворачивается над залом. Это не взгляд, а целый театр, и ты на его сцене.", "«Занавес не должен падать, — шепчут из тьмы. — Держи его, фокусник».", "Купол раскалывается, и в трещины льётся свет прожекторов. Тишина зала звенит, как аплодисменты."],sailor:["Что-то огромное разворачивается над водой. Это не небо, а карта, на которой ты крохотная точка.", "«Курс держится, — шепчет бездна. — Не сворачивай, штурман».", "Волна поднимается до самых сводов и замирает. Через неё видно все звёзды сразу."],hunter:["Что-то огромное разворачивается над залом. Это не око и не пламя, а нечто, что научило огонь смотреть.", "«Фитиль зажжён, — говорит голос. — Только не гаси его страхом».", "Стены вспыхивают изнутри. Пламя течёт по камню, но камень не плавится: он ждёт тебя."]},L:{
   seer:["Что-то над тобой разворачивает веки. Всё вокруг становится слишком ясным.","«Маска держится. Не снимай: внутри пусто».","Мир трескается, как стекло. Через трещины льётся свет, и в нём нет ни тепла, ни холода."],
   sailor:["Что-то над тобой разворачивает веки. Всё вокруг становится слишком ясным.","«Шторм держится. Не отпускай: ярость зовёт тебя».","Мир трескается, как стекло. Через трещины льётся свет, и в нём нет ни тепла, ни холода."],
   hunter:["Что-то над тобой разворачивает веки. Всё вокруг становится слишком ясным.","«След держится. Не оглядывайся: тебя ведут».","Мир трескается, как стекло. Через трещины льётся свет, и в нём нет ни тепла, ни холода."]}},
- {t:"Рассвет",at:.88,fx:["dawn"],who:"Ты",L:{
+ {t:"Рассвет",at:.88,fx:["dawn"],who:"Ты",L7:{seer:["Аплодисменты стихают. Остаётся только твой пульс и мягкий запах пудры и пыли.", "Карты возвращаются в рукав, свечи снова горят тёплым. Фокус закончен, но зал ещё не расходится.", "Туман расступается. Кто-то неслышно улыбается в темноте: «Браво. Ещё немного…»"],sailor:["Шторм уходит за горизонт. Вода ложится ровно, как стекло, и в нём отражается одна звезда.", "Компас в груди замирает, указывая вперёд. Теперь ты знаешь, куда плыть.", "Туман расступается. Кто-то неслышно выдыхает: «Курс найден. Ещё немного…»"],hunter:["Огонь опадает и уходит под кожу. Остаётся ровное тепло, как у погасшего факела.", "Рогатые силуэты кланяются и исчезают в дыму. Один оборачивается и улыбается.", "Туман расступается. Кто-то неслышно выдыхает: «Горит ровно. Ещё немного…»"]},L:{
   seer:["Шёпот отступает. Лица гаснут одно за другим.","Остаётся твой пульс, ровный, как шаги по мосту.","Туман расступается. Кто-то неслышно выдыхает: «Ещё немного…»"],
   sailor:["Шторм стихает. Волны ложатся у ног, как усталые звери.","Остаётся твой пульс, ровный, как шаги по мосту.","Туман расступается. Кто-то неслышно выдыхает: «Ещё немного…»"],
   hunter:["Дым оседает. Рогатые силуэты уходят в тень, не оглядываясь.","Остаётся твой пульс, ровный, как шаги по мосту.","Туман расступается. Кто-то неслышно выдыхает: «Ещё немного…»"]}}
@@ -172,7 +186,21 @@ var CH=[
 var T0=Date.now();
 var P={path:"seer",dur:0,end:0,left:0,done:false,ended:false,chIdx:-1,li:0,line:"",typed:0,typeT:0,lineDone:true,autoAt:0,lastPulse:0,lastWh:0,lastFace:0,prog:0,gender:"male",name:""};
 function pal(){return PAL[P.path]||PAL.seer}
-function applyPal(){var p=pal(),r=document.documentElement.style;r.setProperty("--a",p.a);r.setProperty("--b",p.b);r.setProperty("--glow",p.glow)}
+var TA="../shared/art/trans/";
+var HALL={seer:{x:.5,y:.73,w:.85,r:.24},sailor:{x:.5,y:.69,w:.9,r:.28},hunter:{x:.5,y:.69,w:.95,r:.24}};
+var HW=720,HH=1280,CI={x:0,y:0,rx:100,ry:30};
+function layoutHall(){
+ var W0=innerWidth,H0=innerHeight,sc=Math.max(W0/HW,H0/HH),ox=(W0-HW*sc)/2,oy=(H0-HH*sc)/2,h=HALL[P.path]||HALL.seer;
+ var cw=HW*sc*h.w,ch=cw*h.r,cx=ox+HW*sc*h.x,cy=oy+HH*sc*h.y,c=$("circ");
+ c.style.width=cw+"px";c.style.height=cw+"px";c.style.transform="translate("+(cx-cw/2)+"px,"+(cy-cw/2)+"px) scale(1,"+h.r+")";
+ CI.x=cx;CI.y=cy;CI.rx=cw/2;CI.ry=ch/2;
+ var vn=$("vn");if(vn){var vh=vn.offsetHeight||150;document.documentElement.style.setProperty("--lockb",(vh+8)+"px")}
+}
+addEventListener("resize",layoutHall);
+function applyPal2(pk){var p=PAL[pk]||PAL.seer,r=document.documentElement.style;r.setProperty("--a",p.a);r.setProperty("--b",p.b);r.setProperty("--glow",p.glow)}
+function applyPal(){var p=pal(),r=document.documentElement.style;
+ try{$("hall").style.backgroundImage="url("+TA+"hall_"+P.path+".webp)";$("circI").src=TA+"circle_"+P.path+".webp";$("vn").style.backgroundImage="url("+TA+"dlg_"+P.path+".webp)";layoutHall();$("circ").classList.add("on")}catch(e){}
+r.setProperty("--a",p.a);r.setProperty("--b",p.b);r.setProperty("--glow",p.glow)}
 function buildProg(){var b=$("prog");b.replaceChildren();CH.forEach(function(){var i=document.createElement("i"),u=document.createElement("u");i.appendChild(u);b.appendChild(i)})}
 function setProg(f){var us=$("prog").querySelectorAll("u");CH.forEach(function(c,i){var s=c.at,e=i<CH.length-1?CH[i+1].at:1,v=Math.max(0,Math.min(1,(f-s)/(e-s)));us[i].style.width=(v*100)+"%"})}
 
@@ -182,8 +210,8 @@ function redPulse(){var r=$("red");r.style.transition="none";r.style.opacity=.7;
 function shake(cls){if(reduce)return;var s=$("stage");s.classList.remove("shake","shake2");void s.offsetWidth;s.classList.add(cls||"shake");setTimeout(function(){s.classList.remove("shake","shake2")},1900)}
 function addFx(el,ms){$("fx").appendChild(el);setTimeout(function(){el.remove()},ms||7000)}
 function whisper(){var d=document.createElement("div");d.className="wh";var a=AMB[P.path]||AMB.seer;d.textContent=a[(Math.random()*a.length)|0];d.style.left=(6+Math.random()*50)+"%";d.style.top=(14+Math.random()*34)+"%";addFx(d,6200)}
-function faces(n){var F=pal().faces;for(var i=0;i<n;i++)(function(i){setTimeout(function(){var d=document.createElement("div");d.className="face";d.textContent=F[(Math.random()*F.length)|0];d.style.left=(6+Math.random()*80)+"%";d.style.top=(22+Math.random()*34)+"%";d.style.fontSize=(34+Math.random()*30)+"px";addFx(d,7200)},i*420)})(i)}
-function eyes(n){for(var i=0;i<n;i++)(function(i){setTimeout(function(){var d=document.createElement("div");d.className="eye";d.style.left=(4+Math.random()*88)+"%";d.style.top=(16+Math.random()*40)+"%";d.style.setProperty("--t",(4+Math.random()*4)+"s");addFx(d,8500)},i*600)})(i)}
+function faces(n){if(P.tq===7)n+=3;var F=pal().faces;for(var i=0;i<n;i++)(function(i){setTimeout(function(){var d=document.createElement("div");d.className="face";d.textContent=F[(Math.random()*F.length)|0];d.style.left=(6+Math.random()*80)+"%";d.style.top=(22+Math.random()*34)+"%";d.style.fontSize=(34+Math.random()*30)+"px";addFx(d,7200)},i*420)})(i)}
+function eyes(n){if(P.tq===7)n+=4;for(var i=0;i<n;i++)(function(i){setTimeout(function(){var d=document.createElement("div");d.className="eye";d.style.left=(4+Math.random()*88)+"%";d.style.top=(16+Math.random()*40)+"%";d.style.setProperty("--t",(4+Math.random()*4)+"s");addFx(d,8500)},i*600)})(i)}
 function cracks(){
  var s=document.createElement("div");s.className="crack";
  var w=innerWidth,h=innerHeight,path="";
@@ -194,7 +222,7 @@ function cracks(){
 var RING=.3,RING_T=.3; // яркость круга
 function runFx(list){
  list.forEach(function(f){
-  if(f==="flash"){flash(f==="flash"?"#fff":"#fff",.75,1100);snd("seqpulse")}
+  if(f==="flash"){flash("#fff",P.tq===7?1:.75,P.tq===7?1500:1100);snd("seqpulse")}
   else if(f==="shake"){shake("shake")}
   else if(f==="shake2"){shake("shake2")}
   else if(f==="pulse"){RING_T=Math.min(1,RING_T+.25);snd("seqpulse")}
@@ -216,7 +244,7 @@ function startChapter(i){
  runFx(c.fx);
  setLine();
 }
-function lines(){return CH[P.chIdx].L[P.path]||CH[P.chIdx].L.seer}
+function lines(){var c=CH[P.chIdx],L=(P.tq===7&&c.L7)?c.L7:c.L;return L[P.path]||L.seer}
 function setLine(){
  P.line=lines()[P.li];P.typed=0;P.typeT=0;P.lineDone=false;tx.classList.remove("dim");nx.classList.remove("on");
  if(P.li>0&&CH[P.chIdx].who==="Ты"&&/^Ты:/.test(P.line))who.textContent="Ты";
@@ -244,37 +272,15 @@ addEventListener("resize",resize);
 function rgba(hex,a){var n=parseInt(hex.slice(1),16);return "rgba("+(n>>16&255)+","+(n>>8&255)+","+(n&255)+","+a+")"}
 function draw(t){
  g.setTransform(DPR,0,0,DPR,0,0);
- var p=pal(),pr=P.prog,cx=W/2,cy=(H<520?H*.5:H*.46),rx=Math.min(W*.42,H*.6),ry=rx*.3;
- RING+=(RING_T-RING)*.02;
+ var p=pal(),pr=P.prog,cx=CI.x||W/2,cy=CI.y||H*.7,rx=(CI.rx||W*.4)*.9,ry=(CI.ry||rx*.25)*.9;
+ RING+=(RING_T-RING)*.02;try{var _ci=$("circ");_ci.style.filter="brightness("+(.55+.9*RING).toFixed(2)+") saturate("+(.9+.4*RING).toFixed(2)+")"}catch(e){}
  // фон
  var bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,"#04020a");bg.addColorStop(.55,"#0d0716");bg.addColorStop(1,"#08040d");
- g.fillStyle=bg;g.fillRect(0,0,W,H);
- // готическая арка-окно
+ g.clearRect(0,0,W,H);
  var ax=cx,aw=Math.min(W*.3,150),ah=H*.5;
- g.save();g.beginPath();g.moveTo(ax-aw,ah);g.lineTo(ax-aw,ah*.45);g.quadraticCurveTo(ax-aw,ah*.1,ax,0);g.quadraticCurveTo(ax+aw,ah*.1,ax+aw,ah*.45);g.lineTo(ax+aw,ah);g.closePath();
- var wg=g.createLinearGradient(0,0,0,ah);wg.addColorStop(0,rgba(p.glow,.10+.12*pr));wg.addColorStop(1,rgba(p.a,.02));g.fillStyle=wg;g.fill();
- g.strokeStyle=rgba(p.glow,.18);g.lineWidth=1.5;g.stroke();
- g.beginPath();g.moveTo(ax,0);g.lineTo(ax,ah);g.moveTo(ax-aw,ah*.55);g.lineTo(ax+aw,ah*.55);g.strokeStyle=rgba(p.glow,.1);g.stroke();g.restore();
- // луч
- g.save();g.globalCompositeOperation="lighter";
- var lb=g.createLinearGradient(0,ah*.3,0,cy);lb.addColorStop(0,rgba(p.glow,.10+.12*pr));lb.addColorStop(1,rgba(p.a,0));
- g.fillStyle=lb;g.beginPath();g.moveTo(ax-aw*.8,ah*.4);g.lineTo(ax+aw*.8,ah*.4);g.lineTo(cx+rx*.55,cy);g.lineTo(cx-rx*.55,cy);g.closePath();g.fill();g.restore();
  // пол
  var fg=g.createRadialGradient(cx,cy,5,cx,cy,rx*1.2);fg.addColorStop(0,rgba(p.b,.35+.25*RING));fg.addColorStop(1,"rgba(0,0,0,0)");
  g.fillStyle=fg;g.beginPath();g.ellipse(cx,cy,rx*1.25,ry*1.5,0,0,6.283);g.fill();
- // круг
- g.save();g.translate(cx,cy);g.scale(1,ry/rx);
- for(var r=0;r<3;r++){
-  var R=rx*(.55+r*.22);g.beginPath();g.arc(0,0,R,0,6.283);g.setLineDash([5+r*5,8+r*4]);g.lineDashOffset=t*18*(r%2?-1:1);
-  g.strokeStyle=rgba(p.a,.35+.5*RING);g.lineWidth=1.6+RING;g.shadowColor=p.a;g.shadowBlur=8+16*RING;g.stroke();
- }
- g.setLineDash([]);g.shadowBlur=0;
- var RU="ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊ";g.font=Math.round(rx*.085)+"px serif";g.textAlign="center";g.fillStyle=rgba(p.glow,.35+.5*RING);
- for(var k=0;k<16;k++){var an=k/16*6.283+t*.15;g.save();g.translate(Math.cos(an)*rx*.99,Math.sin(an)*rx*.99);g.rotate(an+1.5708);g.fillText(RU[k],0,0);g.restore()}
- // звезда
- g.beginPath();for(var s=0;s<5;s++){var a1=s/5*6.283*2-1.5708+t*.05;var x1=Math.cos(a1)*rx*.54,y1=Math.sin(a1)*rx*.54;s?g.lineTo(x1,y1):g.moveTo(x1,y1)}g.closePath();
- g.strokeStyle=rgba(p.glow,.25+.4*RING);g.lineWidth=1.3;g.stroke();
- g.restore();
  // свечи + фигура
  var C=[];for(var i=0;i<7;i++){var an2=i/7*6.283+.4;C.push({x:cx+Math.cos(an2)*rx*1.02,y:cy+Math.sin(an2)*ry*1.02,i:i})}
  function candle(c){
@@ -283,7 +289,6 @@ function draw(t){
   g.save();g.globalCompositeOperation="lighter";var gr=g.createRadialGradient(c.x,c.y-hh-6,1,c.x,c.y-hh-6,70);gr.addColorStop(0,rgba("#ffb85a",.4*fl));gr.addColorStop(1,"rgba(255,120,30,0)");g.fillStyle=gr;g.fillRect(c.x-70,c.y-hh-76,140,140);g.restore();
   g.beginPath();g.moveTo(c.x,c.y-hh-14*fl);g.quadraticCurveTo(c.x+5,c.y-hh-5,c.x,c.y-hh);g.quadraticCurveTo(c.x-5,c.y-hh-5,c.x,c.y-hh-14*fl);g.fillStyle=fl>.95?"#fff2c8":"#ffd27a";g.fill();
  }
- C.filter(function(c){return c.y<cy}).forEach(candle);
  // фигура
  var fh=Math.min(H*.34,190),fy=cy+ry*.2+Math.sin(t*.9)*3;
  g.save();g.translate(cx,fy);
@@ -296,7 +301,6 @@ function draw(t){
  var ea=Math.min(1,pr*6);if(P.chIdx>=0){g.fillStyle=rgba(p.glow,.4+.6*ea*(.7+.3*Math.sin(t*3)));g.shadowColor=p.glow;g.shadowBlur=10;
   g.beginPath();g.arc(-fh*.032,-fh*.75,fh*.011,0,6.283);g.arc(fh*.032,-fh*.75,fh*.011,0,6.283);g.fill();g.shadowBlur=0}
  g.restore();
- C.filter(function(c){return c.y>=cy}).forEach(candle);
  // руны вверх
  PARTS.forEach(function(q){q.y-=q.v;q.x+=Math.sin(t*.8+q.a)*.25;if(q.y<-20){q.y=H+10;q.x=Math.random()*W}
   g.globalAlpha=(.1+.28*Math.abs(Math.sin(t*.7+q.a)))*(.5+RING*.7);g.fillStyle=p.glow;g.font=q.s+"px serif";g.fillText(q.c,q.x,q.y)});g.globalAlpha=1;
@@ -345,8 +349,12 @@ async function finish(){
  if(d&&d.seq_done&&d.seq_done.name)nm=d.seq_done.name;
  if(d&&d.seq_done&&d.seq_done.seq){var ek=$("endK");if(ek)ek.textContent="Последовательность "+d.seq_done.seq}
  $("endH").textContent=nm;
+ var _sq=(d&&d.seq_done&&Number(d.seq_done.seq))||P.tq||8;
+ var _ek=$("endK");if(_ek)_ek.textContent="Последовательность "+_sq;
+ var EM={seer:{8:"clown",7:"magician"},sailor:{8:"fury",7:"navigator"},hunter:{8:"provoc",7:"pyro"}};
+ try{$("endRib").style.backgroundImage="url("+TA+"rib_"+pk+".webp)";$("endAf").src=TA+"af_"+pk+".webp";$("endEm").src=TA+"em_"+((EM[pk]||EM.seer)[_sq]||"clown")+".webp";P.path=pk;applyPal2(pk)}catch(e){}
  var gnd=d&&d.gender==="female"?"f":"m";
- var im=new Image();im.onload=function(){$("endAv").replaceChildren(im)};im.src="../avatars/"+gnd+"_"+pk+"8.webp";
+ var im=new Image();im.onload=function(){$("endAv").replaceChildren(im)};im.src="../avatars/"+gnd+"_"+pk+_sq+".webp";im.onerror=function(){var i2=new Image();i2.onload=function(){$("endAv").replaceChildren(i2)};i2.src="../avatars/"+gnd+"_"+pk+"8.webp"};
  $("end").classList.add("on");setTimeout(function(){$("end").classList.add("show")},60);
  $("vn").style.display="none";$("hud").style.opacity=0;$("prog").style.opacity=0;$("chName").style.opacity=0;
 }
@@ -367,7 +375,7 @@ async function boot(){
   setTimeout(boot,3500);return;
  }
  var pk=String(d.path_key||"");P.path=PAL[pk]?pk:"seer";P.gender=d.gender||"male";applyPal();
- try{var _tq=(Number(d.sequence)||9)>=9?8:7,_ls=$("locSeq");if(_ls)_ls.textContent="Переход · Посл. "+_tq}catch(e){}
+ try{var _tq=(Number(d.sequence)||9)>=9?8:7;P.tq=d.seq_done&&Number(d.seq_done.seq)||(Number(d.seq_left)>0?_tq:_tq);if(DEMO&&qs.get("tq"))P.tq=+qs.get("tq");_tq=P.tq;if(_tq===7){RING_T=RING=.55}var _ls=$("locSeq");if(_ls)_ls.textContent="Переход · Посл. "+_tq}catch(e){}
  var left=Number(d.seq_left)||0;
  if(left>0){
   P.dur=Number(d.seq_dur)||left;P.end=Date.now()+left*1000;ls("lotm_seq_end",String(P.end));
