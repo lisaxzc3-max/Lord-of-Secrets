@@ -4,7 +4,7 @@
 var COL={seer:"#9a7bff",sailor:"#4fb4ff",hunter:"#ff6a3a"};
 var SK={
 /* ПУТЬ ШУТА · Провидец (Клоун) */
-divination:{path:"seer",cd:"divination",icon:"🔮",name:"Гадание",tag:"КД 3",c:"#7aa8ff",desc:"Карты и маятник: враг промахнётся по тебе на следующем ходу.",fx:"divine"},
+divination:{path:"seer",cd:"divination",icon:"🔮",name:"Гадание",tag:"КД 3",c:"#7aa8ff",desc:"Карты и маятник: уклонение в этом и следующем ходу.",fx:"divine"},
 seer_bullet:{path:"seer",cd:"s4",icon:"💨",name:"Воздушная пуля",tag:"КД 2",c:"#bfe6ff",desc:"Сжатый воздух. Урон от Интеллекта.",fx:"airbullet"},
 boomerang:{path:"seer",cd:"boomerang",icon:"📜",name:"Бумажный кинжал",tag:"КД 3",c:"#f1e6c8",desc:"Удар и эхо через ход.",fx:"paper"},
 acting:{path:"seer",cd:"acting",icon:"🎭",name:"Актёрство",tag:"КД 2",c:"#c48cff",desc:"Враг -25% атаки и защиты на 1 ход.",fx:"masks"},
@@ -239,7 +239,7 @@ btn.style.setProperty("--sk",s.c);
 try{if(document.head&&!document.getElementById('sfxCss')){var _s=document.createElement('style');_s.id='sfxCss';_s.textContent=css;document.head.appendChild(_s)}}catch(e){}
 /* ---------- 7 последовательность: усиленные навыки ---------- */
 var SK7={
-divination:{name:"Предвидение",desc:"Враг промахнётся на следующем ходу. Следующий удар на 50% сильнее."},
+divination:{name:"Предвидение",desc:"Уклонение в этом и следующем ходу. Следующий удар на 50% сильнее."},
 seer_bullet:{name:"Две пули",desc:"Два выстрела подряд, вместе около 1,6× урона."},
 boomerang:{name:"Бумажные клинки",desc:"Удар сильнее, а эхо через ход почти втрое мощнее."},
 acting:{name:"Мастер масок",desc:"Враг -40% защиты: следующий удар на 40% сильнее."},
