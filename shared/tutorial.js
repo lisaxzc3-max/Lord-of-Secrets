@@ -99,6 +99,7 @@ function render(){
 }
 var UID=(function(){var q=new URLSearchParams(location.search),tg=window.Telegram&&Telegram.WebApp;return String(q.get("u")||(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id)||"0")})();
 function flag(i){try{if(i>=5&&i<7)localStorage.setItem("lotm_tutf_"+UID,"1");else{localStorage.removeItem("lotm_tutf_"+UID);localStorage.removeItem("lotm_tutw_"+UID)}}catch(e){}}
+function clr(){try{localStorage.removeItem("lotm_tutf_"+UID);localStorage.removeItem("lotm_tutw_"+UID)}catch(e){}}
 var eqT=0;
 function eqPoll(i){
  if(i!==3){if(eqT){clearInterval(eqT);eqT=0}return}
@@ -123,9 +124,9 @@ function gift(){
 function hide(){if(ui)ui.classList.remove("on");if(ring)ring.classList.remove("on");target=null;cancelAnimationFrame(raf)}
 function apply(d){if(d&&d.ok){st=d;render()}}
 function check(pre){
- if(pre&&pre.tut&&pre.tut.ok){var prev0=idx();st=pre.tut;if(st.done){hide();return}render();if(idx()===7&&prev0!==7)sfx("good");return}
+ if(pre&&pre.tut&&pre.tut.ok){var prev0=idx();st=pre.tut;if(st.done){hide();clr();return}render();if(idx()===7&&prev0!==7)sfx("good");return}
  if(busy)return;busy=true;
- api({action:"tut_state"}).then(function(d){busy=false;if(!d||!d.ok)return;var prev=idx();st=d;if(st.done){hide();return}
+ api({action:"tut_state"}).then(function(d){busy=false;if(!d||!d.ok)return;var prev=idx();st=d;if(st.done){hide();clr();return}
   render();if(idx()===7&&prev!==7)sfx("good")},function(){busy=false});
 }
 function next(){
@@ -147,7 +148,7 @@ function claim(){
   celebrate();
   var x=ui.querySelector("#tutX");ui.querySelector("#tutT").textContent="Обучение завершено";x.textContent="+"+d.got+" 💷 — твои. Тинген теперь твой. Удачи, странник!";
   ui.querySelector("#tutGo").style.display="none";ring.classList.remove("on");
-  setTimeout(hide,3500);
+  clr();setTimeout(hide,3500);
  },function(){busy=false});
 }
 function celebrate(){
@@ -156,7 +157,7 @@ function celebrate(){
 }
 function skip(){
  if(busy)return;busy=true;
- api({action:"tut_skip"}).then(function(d){busy=false;sfx("back");st=d&&d.ok?d:{done:true};hide()},function(){busy=false});
+ api({action:"tut_skip"}).then(function(d){busy=false;sfx("back");st=d&&d.ok?d:{done:true};clr();hide()},function(){busy=false});
 }
 function onTab(id){
  if(!st||st.done)return;var i=idx();

@@ -3,7 +3,10 @@
 "use strict";
 var LOCS={forest:"Лес",lake:"Озеро",cemetery:"Кладбище",ruins:"Руины"};
 var loc=(location.pathname.match(/\/(forest|lake|cemetery|ruins)\//)||[])[1];
-if(!loc)return;
+var TRIP=/\/trip\//.test(location.pathname);
+if(!loc&&!TRIP)return;
+if(TRIP)loc=window.__abLoc||null;
+function tip(t){var m=document.getElementById("msg");if(m){m.textContent=t;return}var d=document.getElementById("abToast");if(!d){d=el("div");d.id="abToast";d.style.cssText="position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:9950;max-width:84%;padding:10px 14px;border-radius:12px;background:#140e22f2;border:1px solid #6a58a0;color:#f1e8d3;font:600 13px system-ui;text-align:center;transition:opacity .3s";document.body.appendChild(d)}d.textContent=t;d.style.opacity=1;clearTimeout(tip.t);tip.t=setTimeout(function(){d.style.opacity=0},2600)}
 var qs=new URLSearchParams(location.search);
 var aEnc=qs.get("a_enc")||qs.get("a")||"";
 var URL_=aEnc?"https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc):"";
@@ -22,6 +25,7 @@ var css=document.createElement("style");
 css.textContent=
 ".abBtn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:10px;padding:13px 12px;border-radius:12px;border:1px solid #8a6a3a;background:linear-gradient(135deg,#3a2a14,#2a1a2e);color:#f3dc9c;font:inherit;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 0 18px #c79a4a22;transition:transform .15s,filter .2s}"+
 ".abBtn:active{transform:scale(.98)}"+
+"#sheet .abBtn{margin-top:0;width:100%;max-width:460px;padding:12px}"+
 ".abBtn svg{width:18px;height:18px;flex:none}"+
 ".abBtn small{font-weight:600;font-size:11px;opacity:.8}"+
 ".abBtn.rdy:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffe9a833 50%,transparent 65%);transform:translateX(-120%);animation:abSw 3.8s ease-in-out infinite}"+
@@ -62,7 +66,9 @@ var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 var S=null,btn=null,tick=null,busy=false;
 
 function paint(){
- if(!btn||!S)return;
+ if(!btn)return;
+ if(TRIP){btn.style.display=loc?"":"none";if(!loc)return}
+ if(!S)return;
  btn.className="abBtn";
  if(!S.tier){btn.classList.add("lk");btn.innerHTML=ICON+"<span>Автобой <small>· для посвящённых</small></span>";return}
  var T=S.tiers[S.tier-1];
@@ -116,7 +122,7 @@ function run(){
    if(!d||!d.ok){
     close(o);busy=false;
     if(d&&d.error==="cd"){S.auto_left=d.left;paint()}
-    var tip=document.getElementById("msg");if(tip)tip.textContent=(d&&d.text)||"Не удалось.";
+    tip((d&&d.text)||"Не удалось.");
     return;
    }
    var N=d.fights,i=0,kn=Object.keys(d.kills||{});
@@ -143,19 +149,20 @@ function run(){
 }
 
 function mount(){
- var ex=document.getElementById("exploreBtn");if(!ex||document.getElementById("abBtn"))return;
- btn=el("button","abBtn");btn.id="abBtn";btn.type="button";btn.innerHTML=ICON+"<span>Автобой</span>";
+ var ex=document.getElementById(TRIP?"sGo":"exploreBtn");if(!ex||document.getElementById("abBtn"))return;
+ btn=el("button","abBtn");btn.id="abBtn";btn.type="button";if(TRIP&&!loc)btn.style.display="none";btn.innerHTML=ICON+"<span>Автобой</span>";
  ex.parentNode.insertBefore(btn,ex.nextSibling);
  btn.addEventListener("click",function(){
   if(busy)return;
   if(!S){sfx("deny");return}
   if(!S.tier){sfx("tap");askVip();return}
   var nd=(S.locmin&&S.locmin[loc])||1;
-  if((S.level||1)<nd){sfx("deny");var m0=document.getElementById("msg");if(m0)m0.textContent="Автобой здесь доступен с "+nd+" уровня.";return}
-  if(S.auto_left>0){sfx("deny");var m=document.getElementById("msg");if(m)m.textContent="Автобой восстановится через "+mm(S.auto_left)+".";return}
+  if((S.level||1)<nd){sfx("deny");tip("Автобой здесь доступен с "+nd+" уровня.");return}
+  if(S.auto_left>0){sfx("deny");tip("Автобой восстановится через "+mm(S.auto_left)+".");return}
   run();
  });
  load();
 }
+window.ABsetLoc=function(k){loc=k||null;paint()};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount);else mount();
 })();

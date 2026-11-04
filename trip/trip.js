@@ -131,7 +131,7 @@ function build(name){
 }
 /* ---------- подсказка обучения ---------- */
 let tutOn=false,tutHide=false;
-function tutSet(t){tutOn=!!(t&&!t.done&&!t.win&&(parseInt(t.s)||0)>=5);tutUpdate()}
+function tutSet(t){if(t&&t.done){try{localStorage.removeItem("lotm_tutf_"+uid);localStorage.removeItem("lotm_tutw_"+uid)}catch(_){}}tutOn=!!(t&&!t.done&&!t.win&&(parseInt(t.s)||0)>=5);tutUpdate()}
 function tutUpdate(){
  const b=$("tutB");if(!b)return;
  const show=tutOn&&!tutHide&&S.lv>=1;
@@ -202,13 +202,14 @@ function select(k,fly){
  $("sName").textContent=P.n;$("sMeta").textContent=meta;$("sDesc").textContent=ds;$("sTag").textContent=tag;
  const g=$("sGo");g.classList.toggle("off",goOff);g.textContent=go;g.disabled=goOff;
  const g2=$("sGo2");g2.style.display=go2?"":"none";g2.textContent="Карта локации";
+ try{const ak=(!P.boss&&!P.sh&&!lock)?(P.main?k:(P.lair||P.d)):null;window.__abLoc=ak;window.ABsetLoc&&ABsetLoc(ak)}catch(_){}
  $("sheet").classList.add("on");
  sfx("tap");buzz();tutUpdate();
  if(fly){const pos=P.p[S.scene];if(pos)flyTo(pos[0],pos[1],Math.max(S.s,S.min*(S.scene==="over"?2.2:1.7)),420,true)}
 }
 function enter(url,key,auto){
  sfx("open");
- try{if(key){localStorage.setItem("lotm_last_loc",key);localStorage.setItem("lotm_tutf_"+uid,"1")}}catch(_){}
+ try{if(key){localStorage.setItem("lotm_last_loc",key);if(tutOn)localStorage.setItem("lotm_tutf_"+uid,"1")}}catch(_){}
  const p=new URLSearchParams(location.search);p.set("_t",String(Date.now()));p.delete("auto");if(auto)p.set("auto","1");
  location.href=url+"?"+p.toString();
 }
