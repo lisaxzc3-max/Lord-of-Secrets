@@ -1337,15 +1337,27 @@ function renderHero(data) {
 async function loadProfile() {
   if (!PROFILE_URL) await ensure();
 
-  const data = await fetchApi(PROFILE_URL, {});
+  /* сначала показываем сохранённый профиль, свежий подтягиваем следом */
+  if (!window.__pcShown && window.LOTM_FAST) {
+    try {
+      const c = LOTM_FAST.get("profile", 7 * 24 * 3600 * 1000);
+      if (c && c.hp != null && c.max_hp != null) { window.__pcShown = true; applyProfile(c, true); }
+    } catch (e) { console.warn("cache", e); }
+  }
 
+  const data = await fetchApi(PROFILE_URL, {});
+  try { window.LOTM_FAST && LOTM_FAST.set("profile", data); } catch (e) {}
+  applyProfile(data, false);
+}
+
+function applyProfile(data, cached) {
   setText("nick", data.nickname || "Без имени");
   if (window.VIP) { if (data.vip) $("nick").innerHTML = VIP.n(data.nickname || "Без имени", data.vip, true); VIP.frame($("portrait"), data.vip); }
 
   const level = Math.max(1, Math.floor(number(data.level, 1)));
   setNum("lvl", level);
-  if (prevLevel !== null && level > prevLevel) levelUpFx(level);
-  prevLevel = level;
+  if (!cached && prevLevel !== null && level > prevLevel) levelUpFx(level);
+  if (!cached) prevLevel = level;
 
   setText("path", data.path || "Путь неизвестен");
   setText("hp", number(data.hp) + " / " + number(data.max_hp));
