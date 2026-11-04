@@ -8,6 +8,7 @@ if(!aEnc||/\/loading\//.test(location.pathname))return;
 var URL_=  "https://api.telebotcreator.com/new-webhook?data="+encodeURIComponent(aEnc);
 var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 var PATH={seer:"🔮",sailor:"⚓",hunter:"🏹"};
+var VB=(function(){try{var s=document.currentScript&&document.currentScript.src;if(s)return s.replace(/[^\/]*(\?.*)?$/,"")+"art/vip/"}catch(e){}return "/shared/art/vip/"})();
 function sfx(n){try{window.snd&&window.snd(n)}catch(e){}}
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 function unwrap(v){for(var i=0;i<3;i++){if(v&&v.result&&typeof v.result==="object")v=v.result;else break}return v}
@@ -72,6 +73,12 @@ css.textContent=
 ".chStkP img,.chStk img{width:100%;height:100%;object-fit:contain;display:block}"+
 ".chStkP .chStkE{grid-column:1/-1;text-align:center;color:#8f84a6;font:12px system-ui;padding:10px}"+
 ".chBub.stk{background:none;border:0;padding:2px 4px}"+
+".chBub.vb{border:17px solid transparent;border-image-slice:150;border-image-width:17px;border-image-outset:4px;border-image-repeat:stretch;border-radius:8px!important;padding:0 2px;margin:4px;background-origin:border-box}"+
+".chRow.me .chBub.vb{background-origin:border-box;background-repeat:no-repeat}"+
+".chBub.vb .chNm{flex-wrap:wrap;gap:0 6px}"+
+".chBub.vb1{border-image-source:url("+VB+"b1.webp?v=1)}"+
+".chBub.vb2{border-image-source:url("+VB+"b2.webp?v=1);box-shadow:0 0 12px #b58cff55;animation:chVb 4.5s ease-in-out infinite}"+
+"@keyframes chVb{0%,100%{box-shadow:0 0 8px #ffd98a44}50%{box-shadow:0 0 16px #c9a0ff88}}"+
 ".chStk{width:128px;height:128px}"+
 ".chRpl{flex:0 0 auto;align-self:center;border:0;background:none;color:#8f84a6;font-size:16px;cursor:pointer;padding:4px;opacity:.7}"+
 ".chRpl:active{transform:scale(.85);color:#e2c27a}"+
@@ -113,7 +120,7 @@ css.textContent=
 ".chTh.on{display:flex;animation:chFade .3s}"+
 ".chThH{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #2f2745;font-weight:800;color:#e2c27a;font-size:14px}"+
 ".chThH button{border:1px solid #3a3057;background:#120c1e;color:#d6b779;border-radius:10px;padding:5px 10px;font:700 13px system-ui;cursor:pointer}"+
-"@media(prefers-reduced-motion:reduce){#chPanel,#chBack,.chRow,.chCv,.chPane.on,.chTh.on{transition:none!important;animation:none!important}#chFab,#chFab::after{animation:none!important}}";
+"@media(prefers-reduced-motion:reduce){.chBub.vb2{animation:none!important}#chPanel,#chBack,.chRow,.chCv,.chPane.on,.chTh.on{transition:none!important;animation:none!important}#chFab,#chFab::after{animation:none!important}}";
 document.head.appendChild(css);
 
 var S={open:false,tab:"world",cs:0,cseen:parseInt(ls("lotm_chat_cs")||"0",10)||0,newClan:0,cn:"",fq:0,ci:0,ws:0,wseen:parseInt(ls("lotm_chat_ws")||"0",10)||0,unreadDm:0,newWorld:0,peer:null,peerNick:"",ds:0,me:"",busy:false,poll:null,booted:false};
@@ -268,7 +275,9 @@ function msgRow(m,i,box){
   rq.addEventListener("click",function(e){e.stopPropagation();var t=box&&m.ri?box.querySelector('[data-id="'+m.ri+'"] .chBub'):null;if(t){t.scrollIntoView({block:"center",behavior:reduce?"auto":"smooth"});t.classList.remove("hl");void t.offsetWidth;t.classList.add("hl")}});bub.appendChild(rq)}
  var sm=STKRE.exec(String(m.txt||""));
  if(sm){bub.classList.add("stk");var sd=el("div","chStk");var si=document.createElement("img");si.alt="🖼";sd.appendChild(si);bub.appendChild(sd);STK.fill(si,sm[1])}
- else bub.appendChild(el("div","chTx",m.txt));bub.appendChild(el("div","chTm",hhmm(m.t)));
+ else bub.appendChild(el("div","chTx",m.txt));
+ if(!sm&&window.VIP&&(+m.v===1||+m.v===2))bub.classList.add("vb","vb"+(+m.v));
+ bub.appendChild(el("div","chTm",hhmm(m.t)));
  var rbar=box===wMsgs?BARS.w:box===cMsgs?BARS.c:box===tMsgs?BARS.t:null;
  if(rbar){var rbn=el("button","chRpl","↩");rbn.type="button";rbn.title="Ответить";rbn.addEventListener("click",function(e){e.stopPropagation();sfx("tap");rbar.set(m)});
   bub.addEventListener("dblclick",function(){rbar.set(m)});r.append(av,bub,rbn)}else r.append(av,bub);

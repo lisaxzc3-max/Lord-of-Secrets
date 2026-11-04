@@ -49,6 +49,11 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .pvC{margin-top:12px;display:flex;gap:8px;align-items:flex-end}
 .pvC .ch{flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3d2f63,#150e26);border:1px solid #6a58a0;display:flex;align-items:center;justify-content:center;font-size:15px}
 .pvC .bub{background:linear-gradient(160deg,#2a2044,#1a1230);border:1px solid #3a3057;border-radius:14px 14px 14px 4px;padding:6px 10px}
+.pvC .bub.vb{border:17px solid transparent;border-image-slice:150;border-image-width:17px;border-image-outset:4px;border-radius:8px;padding:0 2px;margin:4px;background-origin:border-box;transition:.25s}
+.pvC .bub.vb1{border-image-source:url(../shared/art/vip/b1.webp?v=1)}
+.pvC .bub.vb2{border-image-source:url(../shared/art/vip/b2.webp?v=1);box-shadow:0 0 12px #b58cff55;animation:pvVb 4.5s ease-in-out infinite}
+@keyframes pvVb{0%,100%{box-shadow:0 0 8px #ffd98a44}50%{box-shadow:0 0 16px #c9a0ff88}}
+@media(prefers-reduced-motion:reduce){.pvC .bub.vb2{animation:none}}
 .pvC .nm{font-size:11px;font-weight:800;color:#e2c27a}
 .pvC .tx{font-size:13px;color:#f0e8d2;margin-top:1px}
 
@@ -164,7 +169,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
   <section class="pv">
     <div class="pvT" id="pvT"></div>
     <div class="pvB"><div class="pvAv" id="pvAv"><img id="pvImg" alt=""></div><div class="pvI"><div class="pvN" id="pvN">…</div><div class="pvS" id="pvS">Так тебя увидят в профиле, рейтинге и боях</div></div></div>
-    <div class="pvC"><div class="ch" id="pvCh">👤</div><div class="bub"><div class="nm" id="pvCn">…</div><div class="tx">Туман сегодня особенно густой…</div></div></div>
+    <div class="pvC"><div class="ch" id="pvCh">👤</div><div class="bub" id="pvBub"><div class="nm" id="pvCn">…</div><div class="tx">Туман сегодня особенно густой…</div></div></div>
   </section>
 
   <main id="tiers"></main>
@@ -228,6 +233,7 @@ function paintPv(){
  VIP.frame($("pvAv"),v);
  $("pvN").innerHTML=VIP.n(ME.nick,v,true);
  $("pvCn").innerHTML=VIP.n(ME.nick,v);
+ $("pvBub").className="bub"+(v?" vb vb"+v:"");
  $("pvCh").className="ch"+VIP.f(v);if(window.LOTM_AV)LOTM_AV.fill($("pvCh"),ME.pk,PATH[ME.pk],ME.g);else $("pvCh").textContent=PATH[ME.pk]||"👤";
 }
 $("pvT").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;pvTier=+b.dataset.v;sfx("tap");paintPv()});
@@ -238,7 +244,7 @@ function perks(t){
  let h=li("xp","<b>+"+T.xp+"%</b> к опыту","за каждую победу в бою")+li("gold","<b>+"+T.gd+"%</b> к фунтам","со всех побед");
  h+=li("auto","<b>Автобой</b> на локациях","опыт и фунты как за "+T.auto+" боёв с бонусом · раз в "+(T.acd/60)+" мин");
  h+=li("time","<b>−"+T.cd+"%</b> ожидания","восстановление здоровья и воскрешение быстрее");
- h+=li("frame",t===2?"<b>Живая рамка</b> и анимированный префикс":"<b>Рамка</b> и префикс «"+VIP.names[t]+"»","в профиле, чате, рейтинге и боях");
+ h+=li("frame",t===2?"<b>Живая рамка</b>, анимированный префикс и рамка сообщений":"<b>Рамка</b>, префикс «"+VIP.names[t]+"» и рамка сообщений","в профиле, чате, рейтинге и боях");
  if(t===2)h+=li("wish","<b>Желание</b>","помолись в Храме и напиши любое желание — оно дойдёт до того, кто точно услышит. Раз в неделю. Но будь скромен: жадные и ломающие баланс желания могут быть наказаны",false,"rbw");
  return '<ul class="pk">'+h+'</ul>';
 }
