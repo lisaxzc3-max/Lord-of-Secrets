@@ -808,7 +808,7 @@ body[data-tab="hall"] .wrap>*{pointer-events:auto}
 <script src="./shared/fast.js?v=b4"></script>
 <script src="./shared/auth.js"></script>
 <script src="./shared/sound.js?v=a7"></script>
-<script src="./shared/alchemy.js"></script>
+<script src="./shared/alchemy.js?v=s7"></script>
 <script src="./shared/tutorial.js?v=t5"></script>
 <script src="./shared/fog.js" defer></script>
 <script>sndMusic("tingen")</script>
@@ -2334,17 +2334,17 @@ function renderAlchBag(data) {
     const P = A.POT[k], c = document.createElement("div");
     c.className = "alCard";
     c.style.setProperty("--rc", P.c);
-    c.innerHTML = '<span class="g pt">' + A.potion(k) + '</span><span><div class="nm">' + P.n + '</div><div class="rr">Посл. 8 · зелье</div></span><span class="cn">×' + pots[k] + "</span>";
+    c.innerHTML = '<span class="g pt">' + A.potion(k) + '</span><span><div class="nm">' + P.n + '</div><div class="rr">Посл. ' + (P.s || 8) + ' · зелье</div></span><span class="cn">×' + pots[k] + "</span>";
     g.appendChild(c);
   });
   try {
     const pc = g.querySelectorAll(".alCard"), pkk = LOTM_SKILLS.pathKey(data.path_key || data.path);
     pids.forEach((k, i) => {
-      if (A.POT[k].p !== pkk || (data.sequence | 0) <= 8 || !pc[i]) return;
+      if (A.POT[k].p !== pkk || ((data.sequence | 0) || 9) !== (A.POT[k].s || 8) + 1 || !pc[i]) return;
       const b = document.createElement("button");
       b.type = "button"; b.className = "alDrink"; b.textContent = "Выпить";
       const need = [];
-      if ((data.level | 0) < 15) need.push("нужен 15 ур.");
+      if ((data.level | 0) < (A.POT[k].lv || 15)) need.push("нужен " + (A.POT[k].lv || 15) + " ур.");
       if ((Number(data.potion) || 0) < 100) need.push("усвоение " + (Number(data.potion) || 0) + "/100%");
       if (need.length) { b.disabled = true; b.title = need.join(", "); b.textContent = "Выпить · " + need.join(", "); }
       if (SEQ.on) b.disabled = true;
@@ -2640,7 +2640,7 @@ function seqUpdate(d){
     try{localStorage.setItem("lotm_seq_end",String(SEQ.end))}catch(e){}
     if(!window.__seqGo){window.__seqGo=1;location.replace(buildPageUrl("./transition/index.html"));return}
     if(!SEQ.on){seqStart(d)}
-    var nm=byId("sqN");if(nm&&d.sequence_name!==undefined)nm.textContent="Путь к последовательности 8";
+    var nm=byId("sqN");if(nm&&d.sequence_name!==undefined)nm.textContent="Путь к последовательности "+(((d.sequence|0)||9)>=9?8:7);
   }else if(SEQ.on&&Date.now()>=SEQ.end){seqStop(true)}
 }
 function seqStart(){
@@ -2685,7 +2685,7 @@ function seqShowDone(d){
   var g=d.gender==="female"?"f":"m",pk=LOTM_SKILLS.pathKey(d.path_key||d.path);
   if(pk)byId("sdImg").src="./avatars/"+g+"_"+pk+"8.webp";
   byId("sdH").textContent=(d.sequence_name||"Новая ступень").toUpperCase();
-  byId("sdP").textContent="Последовательность 8. Ты проснулся другим.";
+  byId("sdP").textContent="Последовательность "+((d.seq_done&&d.seq_done.seq)||8)+". Ты проснулся другим.";
   byId("seqDone").classList.add("on");
   try{snd("seqdone");setTimeout(function(){snd("whisper")},1200);setTimeout(function(){snd("bell")},2400)}catch(e){}
 }
