@@ -1408,10 +1408,15 @@ async function loadProfileWithRetry(showError = true) {
   return false;
 }
 
+function openTripMap() {
+  try { window.snd && window.snd("open"); } catch (_) {}
+  location.href = buildPageUrl("./trip/index.html");
+}
 function showTab(id) {
   const allowed = ["hall", "travel", "city", "bag"];
   if (!allowed.includes(id)) return;
   if (id === "city") { openCityMap(); return; }
+  if (id === "travel") { openTripMap(); return; }
 
   document.querySelectorAll(".nav a").forEach(a => {
     a.classList.toggle("active", a.dataset.tab === id);
@@ -1465,7 +1470,7 @@ function goLast() {
   else if (k === "cemetery") openCemetery();
   else if (k === "ruins") openRuins();
   else if (k === "lake") openLake();
-  else showTab("travel");
+  else openTripMap();
 }
 
 function openLake() {
@@ -2715,7 +2720,7 @@ function arenaBanner(d){
   }else{b.style.display="none";ARB.shown=false}
 }
 </script>
-<script>try{var _q=new URLSearchParams(location.search),_t=_q.get("tab");if(_t&&window.showTab){showTab(_t);_q.delete("tab");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash)}var _g=_q.get("go");if(_g==="boss"&&window.showTab){showTab("travel");_q.delete("go");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash);setTimeout(function(){if(window.openBoss)openBoss()},700)}}catch(e){}</script>
+<script>try{var _q=new URLSearchParams(location.search),_t=_q.get("tab");if(_t&&window.showTab){showTab(_t);_q.delete("tab");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash)}var _g=_q.get("go");if(_g==="boss"&&window.showTab){_q.delete("go");history.replaceState(null,"",location.pathname+(_q.toString()?"?"+_q.toString():"")+location.hash);setTimeout(function(){if(window.openBoss)openBoss()},700)}}catch(e){}</script>
 <script src="./shared/home.js?v=h1"></script>
 <script src="./shared/icons.js?v=i1"></script>
 </body>
