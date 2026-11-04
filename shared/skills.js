@@ -237,5 +237,43 @@ var s=SK[key];if(!s)return;ensure();
 btn.style.setProperty("--sk",s.c);
 }
 try{if(document.head&&!document.getElementById('sfxCss')){var _s=document.createElement('style');_s.id='sfxCss';_s.textContent=css;document.head.appendChild(_s)}}catch(e){}
-window.LOTM_SKILLS={DMG:DMG,SK:SK,ORDER:ORDER,PASS:PASS,PATHNAME:PATHNAME,pathKey:pathKey,list:list,play:play,decorate:decorate,formula:formula,css:css,ensure:ensure};
+/* ---------- 7 последовательность: усиленные навыки ---------- */
+var SK7={
+divination:{name:"Предвидение",desc:"Уклонение на 1 ход. Следующий удар на 50% сильнее."},
+seer_bullet:{name:"Две пули",desc:"Два выстрела подряд, вместе около 1,6× урона."},
+boomerang:{name:"Бумажные клинки",desc:"Удар сильнее, а эхо через ход почти втрое мощнее."},
+acting:{name:"Мастер масок",desc:"Враг -40% защиты: следующий удар на 40% сильнее."},
+sailor_hit:{name:"Гроза Мореплавателя",desc:"Удар сильнее. 30% шанс оглушить врага на 1 ход."},
+sailor_wave:{name:"Прилив",desc:"Волна сильнее. Лечит 20% нанесённого урона."},
+sailor_drink:{name:"Колыбельная бездны",tag:"КД 3",desc:"Усыпляет врага на 2 хода. Откат короче."},
+sailor_pray:{name:"Буря над морем",desc:"Сила и Ловкость x2 на 2 хода."},
+hunter_shot:{name:"Зажигательная стрела",desc:"Точный выстрел и горение на 2 хода (5% HP врага за ход)."},
+hunter_dagger:{name:"Огненный шторм",desc:"Урон выше, цена 2% HP. Первый удар x2."},
+hunter_trap:{name:"Огненная ловушка",desc:"Оглушает врага на 2 хода и поджигает его."},
+hunter_boost:{name:"Раздразнить пламя",desc:"Враг промахивается чаще (-25%) 2 хода. Лечит 18% здоровья."}
+};
+var DMG7={
+seer_bullet:{base:8,s:[["int",50],["agi",20]],note:"Две пули по 80% урона, у каждой свой шанс крита"},
+boomerang:{base:10,s:[["str",45]],note:"Эхо через ход: 8 + 60% Силы"},
+sailor_hit:{base:14,s:[["str",50]],note:"30% шанс оглушить на 1 ход"},
+sailor_wave:{base:12,s:[["str",35],["con",35]],note:"Лечит 20% нанесённого урона"},
+sailor_pray:{eff:[["str","×2"],["agi","×2"]],note:"На 2 хода: усиливает удары и шанс крита"},
+hunter_shot:{base:12,s:[["agi",65],["str",20]],note:"30% шанс ударить в 1,5 раза сильнее · горение 2 хода"},
+hunter_dagger:{base:15,s:[["str",60]],note:"Первый удар ×2 · цена 2% текущих HP"},
+hunter_boost:{eff:[["con","18% макс. HP"]],note:"Лечение: 18% здоровья (мин. 5)"}
+};
+var BASE0={},DMG0={};
+function setSeq(sq){
+ sq=parseInt(sq)||9;var on=sq<=7;
+ Object.keys(SK7).forEach(function(k){
+  if(!BASE0[k])BASE0[k]={name:SK[k].name,desc:SK[k].desc,tag:SK[k].tag};
+  var o=on?Object.assign({},BASE0[k],SK7[k]):BASE0[k];
+  SK[k].name=o.name;SK[k].desc=o.desc;SK[k].tag=o.tag;
+ });
+ Object.keys(DMG7).forEach(function(k){
+  if(!(k in DMG0))DMG0[k]=DMG[k];
+  DMG[k]=on?DMG7[k]:DMG0[k];
+ });
+}
+window.LOTM_SKILLS={setSeq:setSeq,DMG:DMG,SK:SK,ORDER:ORDER,PASS:PASS,PATHNAME:PATHNAME,pathKey:pathKey,list:list,play:play,decorate:decorate,formula:formula,css:css,ensure:ensure};
 })();
