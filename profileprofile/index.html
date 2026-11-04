@@ -218,6 +218,15 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   background:var(--panel);backdrop-filter:blur(8px);
   animation:open .35s cubic-bezier(.2,.9,.3,1);
 }
+
+.ttActive{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px dashed rgba(215,183,117,.3);border-radius:12px;background:rgba(255,255,255,.02)}
+.ttL{font-size:12px;font-weight:700}
+.rlGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rlc{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 9px;border:1px dashed rgba(215,183,117,.3);border-radius:13px;background:rgba(255,255,255,.025);color:#6f7f96;font:inherit;cursor:pointer;transition:transform .12s,border-color .2s}
+.rlc:active{transform:scale(.95)}.rlc:hover{border-color:var(--gold)}
+.rlI{width:54px;height:54px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.04)}
+.rlN{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#aeb9c9;text-align:center}
+.rlE{font-size:10px;color:var(--muted)}
 .hidden{display:none!important}
 .bodyHeading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
 .bodyHeading h2{font-size:14px;font-weight:800}
@@ -625,6 +634,42 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
     <div id="skillsList"></div>
   </section>
 
+  <button type="button" class="sectionToggle" id="titlesToggle" aria-expanded="false" aria-controls="titlesBox" onclick="togglePanel('titlesBox','titlesToggle')">
+    <span class="sectionIcon">🎖</span>
+    <span class="sectionWords">
+      <span class="sectionTitle" style="display:block">Титулы</span>
+      <span class="sectionSub">Звания за достижения</span>
+    </span>
+    <span class="chevron">⌄</span>
+  </button>
+
+  <section id="titlesBox" class="sectionBody hidden">
+    <div class="bodyHeading">
+      <h2>Титулы</h2>
+      <span class="points">Открыто: 0</span>
+    </div>
+    <div class="ttActive"><span class="ttL">Активный титул</span><span class="rlE">— нет —</span></div>
+    <p class="note">Титулы будут выдаваться за достижения и редкие находки. Выбранный титул показывается рядом с именем.</p>
+  </section>
+
+  <button type="button" class="sectionToggle" id="relicsToggle" aria-expanded="false" aria-controls="relicsBox" onclick="togglePanel('relicsBox','relicsToggle')">
+    <span class="sectionIcon">🏺</span>
+    <span class="sectionWords">
+      <span class="sectionTitle" style="display:block">Реликвии</span>
+      <span class="sectionSub">Девять слотов для древних артефактов</span>
+    </span>
+    <span class="chevron">⌄</span>
+  </button>
+
+  <section id="relicsBox" class="sectionBody hidden">
+    <div class="bodyHeading">
+      <h2>Реликвии</h2>
+      <span class="points">0 / 9</span>
+    </div>
+    <div class="rlGrid"><button type="button" class="rlc" onclick="relicTap(this)" data-n="Венец"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 36L4 14l11 9 9-15 9 15 11-9-2 22z"/><path d="M8 42h32"/></svg></span><span class="rlN">Венец</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Амулет"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8c0 14 16 14 16 14S40 22 40 8"/><path d="M24 22v4"/><path d="M24 26l8 8-8 10-8-10z"/></svg></span><span class="rlN">Амулет</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Плащ"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6h16l8 34H8z"/><path d="M16 6c2 6 14 6 16 0"/><path d="M24 14v26"/></svg></span><span class="rlN">Плащ</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Перчатки"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 26V12a3 3 0 016 0v10V8a3 3 0 016 0v14V10a3 3 0 016 0v16l3-5a3 3 0 015 2l-6 16a10 10 0 01-10 6h-4a10 10 0 01-8-6z"/></svg></span><span class="rlN">Перчатки</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Лента судьбы"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6c-6 0-8 8 0 12l20 14c8 4 6 10 0 10"/><path d="M34 6c6 0 8 8 0 12L14 32c-8 4-6 10 0 10"/></svg></span><span class="rlN">Лента судьбы</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Кольцо"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="30" r="12"/><path d="M18 14l6-8 6 8-6 6z"/></svg></span><span class="rlN">Кольцо</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Знамя"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 44V6"/><path d="M10 8h28l-6 9 6 9H10"/></svg></span><span class="rlN">Знамя</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Ореол"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4v8M24 36v8M4 24h8M36 24h8M10 10l6 6M32 32l6 6M38 10l-6 6M16 32l-6 6"/><circle cx="24" cy="24" r="6"/></svg></span><span class="rlN">Ореол</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Личина"><span class="rlI"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16c8-6 28-6 36 0 0 12-6 20-18 20S6 28 6 16z"/><path d="M13 22c3 2 7 2 9 0M26 22c2 2 6 2 9 0"/></svg></span><span class="rlN">Личина</span><span class="rlE">— пусто —</span></button></div>
+    <p class="note" id="rlNote">Реликвии пока не найдены. Слоты откроются, когда в игре появятся первые реликвии.</p>
+  </section>
+
   <a class="settingsLink" id="settingsLink" href="../settings/index.html">
     <section class="settingsCard">
       <div class="settingsIcon">⚙️</div>
@@ -925,6 +970,12 @@ function togglePanel(panelId, buttonId) {
 
   panel.classList.toggle("hidden", !opening);
   button.setAttribute("aria-expanded", String(opening));
+  haptic("light");
+}
+
+function relicTap(b) {
+  const n = $("rlNote");
+  if (n) n.textContent = "Слот «" + (b.dataset.n || "") + "» пуст. Реликвия для него ещё не найдена.";
   haptic("light");
 }
 
