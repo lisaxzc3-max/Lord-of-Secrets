@@ -445,19 +445,31 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 @media(prefers-reduced-motion:reduce){.heroImg2{animation:none}}
 
 /* шкалы усвоения и безумия */
-.resourceRow.gz{margin-top:7px}
-.gz .resource{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;cursor:pointer;transition:transform .15s}
-.gz .resource.press{transform:scale(.97)}
-.gz .zn{font-size:9px;letter-spacing:.04em;margin-top:2px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gz .hintT{font-size:8px;opacity:.45;margin-top:5px}
-.bar.ab i{background:linear-gradient(90deg,#3b5f7a,#7fc2e0)}
-.bar.md{height:9px}
-.bar.md i{background:linear-gradient(90deg,#5b7a4a,#b9b04f 40%,#c06a35 70%,#a3262e)}
-.bar.md u{position:absolute;top:0;bottom:0;width:1px;background:#0009;z-index:2}
+.gzList{margin-top:8px;position:relative;z-index:1;display:flex;flex-direction:column;gap:6px}
+.gzRow{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.07);background:rgba(9,8,12,.38);border-radius:14px;padding:8px 10px 6px 8px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;cursor:pointer;transition:transform .15s}
+.gzRow.press{transform:scale(.98)}
+.gzIc{width:58px;height:58px;flex:none;object-fit:contain;filter:drop-shadow(0 0 8px rgba(0,0,0,.6));pointer-events:none}
+.gzIc.hot{animation:gzPulse 2.2s ease-in-out infinite}
+@keyframes gzPulse{0%,100%{filter:drop-shadow(0 0 6px #a3262e88)}50%{filter:drop-shadow(0 0 14px #ff4a3aaa)}}
+.gzMain{flex:1;min-width:0}
+.gzHead{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#e8dcc0}
+.gzHead b{letter-spacing:.06em}
+.gzHead span{font-size:12px;font-weight:800;color:#e8dcc0}
+.gzSub{font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gzBarW{position:relative;width:100%;aspect-ratio:1000/261;margin-top:-2px;pointer-events:none}
+.gzSlot{position:absolute;left:12.6%;width:74.8%;top:40%;height:21.5%;border-radius:3px;overflow:hidden;background:#120c0f}
+.gzFill{position:absolute;left:0;top:0;bottom:0;width:0;transition:width .6s ease;display:block}
+.gzFill.ab{background:linear-gradient(90deg,#2d5675,#6fb7dc 70%,#c8ecff)}
+.gzFill.md{background:linear-gradient(90deg,#5b7a4a,#b9b04f 35%,#c06a35 65%,#a3262e)}
+.gzSlot u{position:absolute;top:0;bottom:0;width:1px;background:#000a;z-index:2}
+.gzFr{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.gzHint{font-size:9px;opacity:.45;text-align:center}
 #gzSheet{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;background:rgba(3,2,5,.72)}
 #gzSheet.on{display:flex}
 #gzSheet .box{width:100%;max-height:82vh;overflow:auto;background:#17121c;border-top:1px solid #8a7a58;border-radius:18px 18px 0 0;padding:16px 16px 26px;animation:gzUp .25s ease}
 @keyframes gzUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+#gzSheet .hd{display:flex;align-items:center;gap:10px}
+#gzSheet .hd img{width:46px;height:46px;object-fit:contain}
 #gzSheet h3{margin:0 0 4px;font-size:16px;color:#e8dcc0}
 #gzSheet .sub{font-size:11px;color:var(--muted);margin-bottom:10px}
 #gzSheet p{font-size:12.5px;line-height:1.5;color:#cfc5d6;margin:8px 0}
@@ -533,19 +545,24 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
         </div>
       </div>
 
-      <div class="resourceRow gz">
-        <div class="resource" id="gzAb" data-g="ab">
-          <div class="resourceHead"><span>🧪 Усвоение</span><span id="abPct">—</span></div>
-          <div class="zn" id="abZn">—</div>
-          <div class="bar ab"><i id="abBar"></i></div>
-          <div class="hintT">зажми — описание</div>
+      <div class="gzList">
+        <div class="gzRow" id="gzAb" data-g="ab">
+          <img class="gzIc" id="abIc" src="../shared/art/gauge/abs.webp?v=1" alt="">
+          <div class="gzMain">
+            <div class="gzHead"><b>Усвоение</b><span id="abPct">—</span></div>
+            <div class="gzSub" id="abZn">—</div>
+            <div class="gzBarW"><div class="gzSlot"><i class="gzFill ab" id="abBar"></i><u style="left:25%"></u><u style="left:50%"></u><u style="left:75%"></u></div><img class="gzFr" src="../shared/art/gauge/frame.webp?v=1" alt=""></div>
+          </div>
         </div>
-        <div class="resource" id="gzMd" data-g="md">
-          <div class="resourceHead"><span>🌀 Безумие</span><span id="mdPct">—</span></div>
-          <div class="zn" id="mdZn">—</div>
-          <div class="bar md"><i id="mdBar"></i><u style="left:25%"></u><u style="left:50%"></u><u style="left:75%"></u></div>
-          <div class="hintT">зажми — описание</div>
+        <div class="gzRow" id="gzMd" data-g="md">
+          <img class="gzIc" id="mdIc" src="../shared/art/gauge/z0.webp?v=1" alt="">
+          <div class="gzMain">
+            <div class="gzHead"><b>Безумие</b><span id="mdPct">—</span></div>
+            <div class="gzSub" id="mdZn">—</div>
+            <div class="gzBarW"><div class="gzSlot"><i class="gzFill md" id="mdBar"></i><u id="mdT1" style="left:25%"></u><u id="mdT2" style="left:50%"></u><u id="mdT3" style="left:75%"></u></div><img class="gzFr" src="../shared/art/gauge/frame.webp?v=1" alt=""></div>
+          </div>
         </div>
+        <div class="gzHint">зажми шкалу, чтобы прочитать описание</div>
       </div>
 
       <div class="runes2">
@@ -1405,29 +1422,37 @@ function gzRender(d){
   try{
     var ab=Math.max(0,Math.min(100,Number(d.potion)||0)),sq=(d.sequence|0)||9,mx=sq<=8?200:100,md=Math.max(0,Math.min(mx,Number(d.madness)||0)),z=gzZone(md);
     GZ_STATE={ab:ab,md:md,mx:mx,sq:sq};
-    document.getElementById("abPct").textContent=gzFmt(ab)+"%";
-    document.getElementById("abBar").style.width=ab+"%";
+    var E=function(i){return document.getElementById(i)};
+    E("abPct").textContent=gzFmt(ab)+"%";
+    E("abBar").style.width=ab+"%";
     var mult=[1.2,.75,.5,.1,0][z];
-    document.getElementById("abZn").textContent=ab>=100?"Усвоено — можно пить зелье":"Скорость ×"+gzFmt(mult);
-    document.getElementById("mdPct").textContent=gzFmt(md)+(mx===200?" / 200":"%");
-    document.getElementById("mdBar").style.width=(md/mx*100)+"%";
-    document.getElementById("mdZn").textContent=GZ_MD[z].n;
-    var us=document.querySelectorAll("#gzMd .bar.md u");
-    if(mx===200){us[0].style.left="12.5%";us[1].style.left="25%";us[2].style.left="37.5%"}
-    else{us[0].style.left="25%";us[1].style.left="50%";us[2].style.left="75%"}
+    E("abZn").textContent=ab>=100?"Усвоено — можно пить зелье":"Скорость ×"+gzFmt(mult);
+    E("mdPct").textContent=gzFmt(md)+(mx===200?" / 200":"%");
+    E("mdBar").style.width=(md/mx*100)+"%";
+    E("mdZn").textContent=GZ_MD[z].n;
+    var ic=E("mdIc"),src="../shared/art/gauge/z"+z+".webp?v=1";
+    if(ic.getAttribute("src")!==src)ic.setAttribute("src",src);
+    ic.classList.toggle("hot",z>=3);
+    var pos=mx===200?[12.5,25,37.5]:[25,50,75];
+    ["mdT1","mdT2","mdT3"].forEach(function(id,k){E(id).style.left=pos[k]+"%"});
+    if(d.abs_gain&&d.abs_gain.length){
+      d.abs_gain.forEach(function(g,k){setTimeout(function(){showToast("Веха усвоения "+g.ms+"%: +"+g.pts+" оч. статов"+(g.ing?" и "+g.ing:""))},k*3000)});
+    }
   }catch(e){}
 }
 function gzOpen(kind){
   var S=GZ_STATE,h="",z=gzZone(S.md);
   if(kind==="ab"){
     var mult=[1.2,.75,.5,.1,0][z];
-    h='<h3>🧪 Усвоение зелья</h3><div class="sub">Сейчас '+gzFmt(S.ab)+'% · скорость ×'+gzFmt(mult)+'</div>'+
+    h='<div class="hd"><img src="../shared/art/gauge/abs.webp?v=1" alt=""><div><h3>Усвоение зелья</h3><div class="sub">Сейчас '+gzFmt(S.ab)+'% · скорость ×'+gzFmt(mult)+'</div></div></div>'+
     '<p>Показывает, насколько твоё тело и дух приняли силу выпитого зелья. Следующее зелье можно пить только при <b>100%</b>.</p>'+
     '<p><b>Что повышает:</b> победы над монстрами, ежедневные задания, подарки питомца.</p>'+
     '<p><b>Что мешает:</b> безумие. Чем оно выше, тем медленнее усвоение, а в «Бездне» оно стоит совсем. При ясном разуме (до 25) идёт на 20% быстрее.</p>'+
-    '<p>После выпитого зелья шкала сбрасывается: надо усвоить новую силу.</p>';
+    '<p><b>Вехи:</b> за каждую отметку даётся награда, один раз за зелье.</p>';
+    [[25,"+1 очко характеристик"],[50,"+2 очка и случайный ингредиент"],[75,"+3 очка характеристик"],[100,"+4 очка характеристик, можно пить зелье"]].forEach(function(m){h+='<div class="zr'+(S.ab>=m[0]?" cur":"")+'"><b>'+m[0]+'%</b> · '+m[1]+'</div>'});
+    h+='<p>После выпитого зелья шкала сбрасывается: надо усвоить новую силу.</p>';
   }else{
-    h='<h3>🌀 Безумие</h3><div class="sub">Сейчас '+gzFmt(S.md)+(S.mx===200?" из 200":"%")+' · '+GZ_MD[z].n+'</div>'+
+    h='<div class="hd"><img src="../shared/art/gauge/z'+z+'.webp?v=1" alt=""><div><h3>Безумие</h3><div class="sub">Сейчас '+gzFmt(S.md)+(S.mx===200?" из 200":"%")+' · '+GZ_MD[z].n+'</div></div></div>'+
     '<p>Цена за близость к Потусторонним силам. Это <b>штраф</b>: чем выше шкала, тем хуже ты бьёшь и медленнее усваиваешь зелье.</p>';
     GZ_MD.forEach(function(x,i){if(i===4&&S.mx<200)return;h+='<div class="zr'+(i===z?" cur":"")+'"><b>'+x.n+'</b> · '+x.r+'<small>'+x.e+'</small></div>'});
     h+='<p><b>Откуда берётся:</b> некоторые монстры и события, смерть в бою.</p>'+
