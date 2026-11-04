@@ -41,9 +41,7 @@ img{-webkit-user-drag:none;pointer-events:none;display:block}
 .pin.lock .pn{color:#a8a3b0}
 .pin.here:before{content:"";position:absolute;left:50%;top:40%;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:2px solid #ffd27acc;animation:pulse 1.6s ease-out infinite;pointer-events:none}
 @keyframes pulse{from{transform:scale(.4);opacity:1}to{transform:scale(1.5);opacity:0}}
-.fog{position:absolute;width:380px;height:380px;margin:-190px 0 0 -190px;pointer-events:none;z-index:4;background:url(img/fog.webp) 0 0/380px 380px;-webkit-mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);opacity:.96;animation:fogm 70s linear infinite}
-@keyframes fogm{to{background-position:380px 190px}}
-html[data-q="low"] .fog{animation:none}
+.fog{position:absolute;width:380px;height:380px;margin:-190px 0 0 -190px;pointer-events:none;z-index:4;opacity:.95}
 .ctl{position:absolute;right:8px;top:8px;z-index:20;display:flex;flex-direction:column;gap:6px}
 .ctl button{width:46px;height:46px}
 .ctl button img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px #000a)}
@@ -123,6 +121,6 @@ html[data-q="low"] .fog{animation:none}
 <script src="../shared/fast.js?v=b4"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js?v=a7"></script>
-<script src="trip.js?v=t1"></script>
+<script src="trip.js?v=t2"></script>
 </body>
 </html>
