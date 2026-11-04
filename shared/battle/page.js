@@ -336,6 +336,7 @@ async function load(){
   if(!initialized){try{profile=window.LOTM_FAST&&LOTM_FAST.get("profile")}catch(_){}}
   let cachedProf=!!profile;
   if(!profile)profile=await loadProfile();
+  try{LOTM_SKILLS.setSeq((profile.sequence|0)||9);skBuilt=""}catch(_){}
   PLAYER_PATH=profile.path||"";PLAYER_PK=LOTM_SKILLS.pathKey(profile.path_key||profile.path)||"seer";window.LOTM_STATS=profile;
   const pk=PLAYER_PK;
   B.revive();B.setHero(pk,profile.gender);
