@@ -77,7 +77,7 @@ html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;
  <div class="layer" id="fx"></div>
  <div id="red"></div><div id="vig"></div><div id="flash"></div>
  <div id="hud">
-  <div id="loc">Зал Безликих Свечей<b>Переход · Посл. 8</b></div>
+  <div id="loc">Зал Безликих Свечей<b id="locSeq">Переход · Посл. 8</b></div>
   <div id="tm"><b id="tmv">--:--</b><span>до конца обряда</span></div>
  </div>
  <div id="prog"></div>
@@ -88,7 +88,7 @@ html,body{margin:0;height:100%;background:#05030a;overflow:hidden;color:#efe6d6;
  <div id="end">
   <div class="k">Обряд завершён</div>
   <div class="av" id="endAv">𓂀</div>
-  <div class="k">Последовательность 8</div>
+  <div class="k" id="endK">Последовательность 8</div>
   <h1 id="endH">Новая ступень</h1>
   <p id="endP">Ты проснулся другим. Туман больше не кажется чужим.</p>
   <div class="chips"><span>+10 ко всем характеристикам</span><span>+50 к макс. здоровью</span><span>Безумие утихло</span></div>
@@ -343,6 +343,7 @@ async function finish(){
  if(!PAL[pk])pk=P.path;
  var nm=(d&&d.sequence_name)||PAL[pk].nm;
  if(d&&d.seq_done&&d.seq_done.name)nm=d.seq_done.name;
+ if(d&&d.seq_done&&d.seq_done.seq){var ek=$("endK");if(ek)ek.textContent="Последовательность "+d.seq_done.seq}
  $("endH").textContent=nm;
  var gnd=d&&d.gender==="female"?"f":"m";
  var im=new Image();im.onload=function(){$("endAv").replaceChildren(im)};im.src="../avatars/"+gnd+"_"+pk+"8.webp";
@@ -366,6 +367,7 @@ async function boot(){
   setTimeout(boot,3500);return;
  }
  var pk=String(d.path_key||"");P.path=PAL[pk]?pk:"seer";P.gender=d.gender||"male";applyPal();
+ try{var _tq=(Number(d.sequence)||9)>=9?8:7,_ls=$("locSeq");if(_ls)_ls.textContent="Переход · Посл. "+_tq}catch(e){}
  var left=Number(d.seq_left)||0;
  if(left>0){
   P.dur=Number(d.seq_dur)||left;P.end=Date.now()+left*1000;ls("lotm_seq_end",String(P.end));
