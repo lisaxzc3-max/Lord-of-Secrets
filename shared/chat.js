@@ -219,7 +219,7 @@ function sendBar(fn){
    STK.list().then(function(ids){sp.replaceChildren();if(!ids.length){sp.appendChild(el("div","chStkE","Стикеров пока нет"));return}
     ids.forEach(function(id){var b=el("button");b.type="button";var im=document.createElement("img");im.loading="lazy";im.alt="";b.appendChild(im);b.addEventListener("click",function(){sendStk(id)});sp.appendChild(b);STK.fill(im,id)})})}});
  function go(){var t=i.value.trim();if(!t||g.disabled)return;g.disabled=true;sfx("tap");
-  var rp=ctl.reply;fn(t,rp).then(function(ok){if(ok){i.value="";ctl.set(null)}}).then(function(){g.disabled=false;i.focus()},function(){g.disabled=false})}
+  var rp=ctl.reply;i.value="";fn(t,rp).then(function(ok){if(ok)ctl.set(null);else if(!i.value)i.value=t}).then(function(){g.disabled=false;i.focus()},function(){g.disabled=false})}
  g.addEventListener("click",go);i.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();go()}});
  ctl.set=function(m){ctl.reply=null;rb.classList.remove("on");rtx.replaceChildren();
   if(!m)return;var sm=STKRE.exec(String(m.txt||""));var q=sm?"🖼 Стикер":String(m.txt||"").slice(0,60);
