@@ -443,12 +443,36 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 .rune2 small{display:block;font-size:8px;letter-spacing:1px;color:#a79db4}
 .hero2 .quickStats.q2{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(prefers-reduced-motion:reduce){.heroImg2{animation:none}}
+
+/* шкалы усвоения и безумия */
+.resourceRow.gz{margin-top:7px}
+.gz .resource{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;cursor:pointer;transition:transform .15s}
+.gz .resource.press{transform:scale(.97)}
+.gz .zn{font-size:9px;letter-spacing:.04em;margin-top:2px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gz .hintT{font-size:8px;opacity:.45;margin-top:5px}
+.bar.ab i{background:linear-gradient(90deg,#3b5f7a,#7fc2e0)}
+.bar.md{height:9px}
+.bar.md i{background:linear-gradient(90deg,#5b7a4a,#b9b04f 40%,#c06a35 70%,#a3262e)}
+.bar.md u{position:absolute;top:0;bottom:0;width:1px;background:#0009;z-index:2}
+#gzSheet{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;background:rgba(3,2,5,.72)}
+#gzSheet.on{display:flex}
+#gzSheet .box{width:100%;max-height:82vh;overflow:auto;background:#17121c;border-top:1px solid #8a7a58;border-radius:18px 18px 0 0;padding:16px 16px 26px;animation:gzUp .25s ease}
+@keyframes gzUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+#gzSheet h3{margin:0 0 4px;font-size:16px;color:#e8dcc0}
+#gzSheet .sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+#gzSheet p{font-size:12.5px;line-height:1.5;color:#cfc5d6;margin:8px 0}
+#gzSheet .zr{border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;margin:6px 0;font-size:12px;color:#b8aec0}
+#gzSheet .zr b{color:#e8dcc0}
+#gzSheet .zr.cur{border-color:#c9a45a;background:rgba(201,164,90,.1)}
+#gzSheet .zr small{display:block;margin-top:3px;color:#9a90a2;font-size:11px}
+#gzSheet .cl{margin-top:12px;width:100%;padding:11px;border-radius:10px;border:1px solid #8a7a58;background:#241c2b;color:#e8dcc0;font-size:13px}
 </style>
 <script src="../shared/skills.js"></script>
 <script src="../shared/vip.js?v=a2"></script>
 <script src="../shared/fast.js?v=b4"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js?v=a7"></script>
+<div id="gzSheet"><div class="box" id="gzBox"></div></div>
 <script>sndMusic("calm")</script>
 </head>
 <body>
@@ -506,6 +530,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
           <div class="resourceHead"><span>✦ Опыт</span><span id="expPercent">—</span></div>
           <div class="resourceValue" id="exp">—</div>
           <div class="bar exp"><i id="expbar"></i></div>
+        </div>
+      </div>
+
+      <div class="resourceRow gz">
+        <div class="resource" id="gzAb" data-g="ab">
+          <div class="resourceHead"><span>🧪 Усвоение</span><span id="abPct">—</span></div>
+          <div class="zn" id="abZn">—</div>
+          <div class="bar ab"><i id="abBar"></i></div>
+          <div class="hintT">зажми — описание</div>
+        </div>
+        <div class="resource" id="gzMd" data-g="md">
+          <div class="resourceHead"><span>🌀 Безумие</span><span id="mdPct">—</span></div>
+          <div class="zn" id="mdZn">—</div>
+          <div class="bar md"><i id="mdBar"></i><u style="left:25%"></u><u style="left:50%"></u><u style="left:75%"></u></div>
+          <div class="hintT">зажми — описание</div>
         </div>
       </div>
 
@@ -1350,7 +1389,73 @@ async function loadProfile() {
   applyProfile(data, false);
 }
 
+
+/* ===== шкалы усвоения и безумия ===== */
+var GZ_MD=[
+ {n:"Ясность",r:"0–25",e:"Без штрафов. Усвоение идёт на 20% быстрее."},
+ {n:"Шёпот",r:"25–50",e:"Усвоение −25%. В бою голоса иногда сбивают удар (5%)."},
+ {n:"Помутнение",r:"50–75",e:"Усвоение вдвое медленнее. Урон −10%, удар срывается с шансом 10%."},
+ {n:"Одержимость",r:"75–100",e:"Усвоение почти стоит (−90%). Урон −20%, удар срывается с шансом 20%."},
+ {n:"Бездна",r:"100+",e:"Усвоение остановлено. Урон −30%, удар срывается с шансом 30%. Смерть в бою особенно тяжела."}
+];
+var GZ_STATE={ab:0,md:0,mx:100,sq:9};
+function gzZone(m){return m<25?0:m<50?1:m<75?2:m<=100?3:4}
+function gzFmt(v){v=Math.round(v*10)/10;return String(v).replace(".",",")}
+function gzRender(d){
+  try{
+    var ab=Math.max(0,Math.min(100,Number(d.potion)||0)),sq=(d.sequence|0)||9,mx=sq<=8?200:100,md=Math.max(0,Math.min(mx,Number(d.madness)||0)),z=gzZone(md);
+    GZ_STATE={ab:ab,md:md,mx:mx,sq:sq};
+    document.getElementById("abPct").textContent=gzFmt(ab)+"%";
+    document.getElementById("abBar").style.width=ab+"%";
+    var mult=[1.2,.75,.5,.1,0][z];
+    document.getElementById("abZn").textContent=ab>=100?"Усвоено — можно пить зелье":"Скорость ×"+gzFmt(mult);
+    document.getElementById("mdPct").textContent=gzFmt(md)+(mx===200?" / 200":"%");
+    document.getElementById("mdBar").style.width=(md/mx*100)+"%";
+    document.getElementById("mdZn").textContent=GZ_MD[z].n;
+    var us=document.querySelectorAll("#gzMd .bar.md u");
+    if(mx===200){us[0].style.left="12.5%";us[1].style.left="25%";us[2].style.left="37.5%"}
+    else{us[0].style.left="25%";us[1].style.left="50%";us[2].style.left="75%"}
+  }catch(e){}
+}
+function gzOpen(kind){
+  var S=GZ_STATE,h="",z=gzZone(S.md);
+  if(kind==="ab"){
+    var mult=[1.2,.75,.5,.1,0][z];
+    h='<h3>🧪 Усвоение зелья</h3><div class="sub">Сейчас '+gzFmt(S.ab)+'% · скорость ×'+gzFmt(mult)+'</div>'+
+    '<p>Показывает, насколько твоё тело и дух приняли силу выпитого зелья. Следующее зелье можно пить только при <b>100%</b>.</p>'+
+    '<p><b>Что повышает:</b> победы над монстрами, ежедневные задания, подарки питомца.</p>'+
+    '<p><b>Что мешает:</b> безумие. Чем оно выше, тем медленнее усвоение, а в «Бездне» оно стоит совсем. При ясном разуме (до 25) идёт на 20% быстрее.</p>'+
+    '<p>После выпитого зелья шкала сбрасывается: надо усвоить новую силу.</p>';
+  }else{
+    h='<h3>🌀 Безумие</h3><div class="sub">Сейчас '+gzFmt(S.md)+(S.mx===200?" из 200":"%")+' · '+GZ_MD[z].n+'</div>'+
+    '<p>Цена за близость к Потусторонним силам. Это <b>штраф</b>: чем выше шкала, тем хуже ты бьёшь и медленнее усваиваешь зелье.</p>';
+    GZ_MD.forEach(function(x,i){if(i===4&&S.mx<200)return;h+='<div class="zr'+(i===z?" cur":"")+'"><b>'+x.n+'</b> · '+x.r+'<small>'+x.e+'</small></div>'});
+    h+='<p><b>Откуда берётся:</b> некоторые монстры и события, смерть в бою.</p>'+
+    '<p><b>Как снизить:</b> безумие само спадает на 1 за 10 минут, пока ты не в бою. Быстрее помогут клиника и успокаивающая настойка.</p>'+
+    '<p>Время перехода на новую последовательность от безумия не зависит: всегда 10 минут.</p>';
+  }
+  h+='<button class="cl" type="button" id="gzClose">Закрыть</button>';
+  document.getElementById("gzBox").innerHTML=h;
+  document.getElementById("gzSheet").classList.add("on");
+  document.getElementById("gzClose").onclick=gzClose;
+  try{if(window.snd)snd("open")}catch(e){}
+}
+function gzClose(){document.getElementById("gzSheet").classList.remove("on")}
+(function(){
+  var sh=document.getElementById("gzSheet");
+  sh.addEventListener("click",function(e){if(e.target===sh)gzClose()});
+  ["gzAb","gzMd"].forEach(function(id){
+    var el=document.getElementById(id),t=null,x0=0,y0=0,fired=false;
+    function cancel(){clearTimeout(t);t=null;el.classList.remove("press")}
+    el.addEventListener("pointerdown",function(e){fired=false;x0=e.clientX;y0=e.clientY;el.classList.add("press");
+      t=setTimeout(function(){fired=true;el.classList.remove("press");try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}gzOpen(el.getAttribute("data-g"))},450)});
+    el.addEventListener("pointermove",function(e){if(t&&(Math.abs(e.clientX-x0)>10||Math.abs(e.clientY-y0)>10))cancel()});
+    ["pointerup","pointerleave","pointercancel"].forEach(function(ev){el.addEventListener(ev,cancel)});
+    el.addEventListener("contextmenu",function(e){e.preventDefault()});
+  });
+})();
 function applyProfile(data, cached) {
+  try{gzRender(data)}catch(e){}
   setText("nick", data.nickname || "Без имени");
   if (window.VIP) { if (data.vip) $("nick").innerHTML = VIP.n(data.nickname || "Без имени", data.vip, true); VIP.frame($("portrait"), data.vip); }
 
