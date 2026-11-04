@@ -287,6 +287,7 @@ function msgRow(m,i,box){
  if(!mine&&String(m.ru||"")===String(S.me)&&m.rn)bub.classList.add("toMe");
  if(!mine){
   var nm=el("div","chNm");if(window.VIP&&m.v){var nb=el("div");nb.innerHTML=VIP.n(m.nick,m.v);nm.appendChild(nb)}else nm.textContent=m.nick;nm.appendChild(el("span",null,"ур."+m.lvl));
+  if(m.ti&&window.LOTM_TITLES){var tc=LOTM_TITLES.el(m.ti,"sm");if(tc)nm.insertBefore(tc,nm.firstChild)}
   var go=function(){if(window.PCard)PCard.open(String(m.uid),m.nick);else openThread(String(m.uid),m.nick)};
   nm.addEventListener("click",go);av.addEventListener("click",go);bub.appendChild(nm);
  }

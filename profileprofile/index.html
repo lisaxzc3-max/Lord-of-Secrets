@@ -218,6 +218,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   background:var(--panel);backdrop-filter:blur(8px);
   animation:open .35s cubic-bezier(.2,.9,.3,1);
 }
+
+.ttActive{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px dashed rgba(215,183,117,.3);border-radius:12px;background:rgba(255,255,255,.02)}
+.ttL{font-size:12px;font-weight:700}
+.ttRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;padding:6px 8px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.02)}
+.ttRow.lock .ttChip{filter:grayscale(1) brightness(.55)}
+.ttInfo{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px}.ttD{font-size:9.5px;color:var(--muted)}
+.ttBtn{padding:7px 11px;border-radius:9px;border:1px solid rgba(215,183,117,.5);background:rgba(215,183,117,.14);color:var(--gold);font:700 11px system-ui}.ttBtn:disabled{opacity:.45}
+#ttNick{min-height:0;margin-top:3px}
+.rlGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rlc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 2px 8px;border:0;background:none;color:#6f7f96;font:inherit;cursor:pointer;transition:transform .12s}
+.rlc:active{transform:scale(.95)}
+.rlF{position:relative;width:100%;aspect-ratio:1;background:url(../shared/art/relic/slot0.webp) center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center}
+.rlF img{width:54%;height:54%;object-fit:contain;opacity:.85}
+.rlN{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#aeb9c9;text-align:center}
+.rlE{font-size:10px;color:var(--muted)}
 .hidden{display:none!important}
 .bodyHeading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
 .bodyHeading h2{font-size:14px;font-weight:800}
@@ -481,6 +496,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </style>
 <script src="../shared/skills.js?v=s9"></script>
 <script src="../shared/vip.js?v=a2"></script>
+<script src="../shared/titles.js?v=1"></script>
 <script src="../shared/fast.js?v=b4"></script>
 <script src="../shared/auth.js"></script>
 <script src="../shared/sound.js?v=a9"></script>
@@ -518,7 +534,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
       <img class="pl2bg" src="../shared/art/profile/plaque.webp?v=1" alt="" draggable="false">
       <div class="pl2in">
         <div class="portraitWrap"><div class="portrait" id="portrait"><span>𓂀</span></div></div>
-        <div class="heroName" id="nick">Загрузка…</div>
+        <div class="heroName" id="nick">Загрузка…</div><div id="ttNick"></div>
       </div>
     </div>
 
@@ -623,6 +639,43 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
       <span class="points" id="skillsPath">—</span>
     </div>
     <div id="skillsList"></div>
+  </section>
+
+  <button type="button" class="sectionToggle" id="titlesToggle" aria-expanded="false" aria-controls="titlesBox" onclick="togglePanel('titlesBox','titlesToggle')">
+    <span class="sectionIcon">🎖</span>
+    <span class="sectionWords">
+      <span class="sectionTitle" style="display:block">Титулы</span>
+      <span class="sectionSub">Звания за достижения</span>
+    </span>
+    <span class="chevron">⌄</span>
+  </button>
+
+  <section id="titlesBox" class="sectionBody hidden">
+    <div class="bodyHeading">
+      <h2>Титулы</h2>
+      <span class="points" id="ttCnt">Открыто: 0</span>
+    </div>
+    <div class="ttActive"><span class="ttL">Активный титул</span><span id="ttCur"><span class="rlE">— нет —</span></span></div>
+    <div id="ttList"></div>
+    <p class="note">Титул показывается рядом с ником в профиле и в чате. Новые титулы будут выдаваться за достижения.</p>
+  </section>
+
+  <button type="button" class="sectionToggle" id="relicsToggle" aria-expanded="false" aria-controls="relicsBox" onclick="togglePanel('relicsBox','relicsToggle')">
+    <span class="sectionIcon">🏺</span>
+    <span class="sectionWords">
+      <span class="sectionTitle" style="display:block">Реликвии</span>
+      <span class="sectionSub">Девять слотов для древних артефактов</span>
+    </span>
+    <span class="chevron">⌄</span>
+  </button>
+
+  <section id="relicsBox" class="sectionBody hidden">
+    <div class="bodyHeading">
+      <h2>Реликвии</h2>
+      <span class="points">0 / 9</span>
+    </div>
+    <div class="rlGrid"><button type="button" class="rlc" onclick="relicTap(this)" data-n="Венец"><span class="rlF"><img src="../shared/art/relic/ico0.webp" alt="" loading="lazy"></span><span class="rlN">Венец</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Амулет"><span class="rlF"><img src="../shared/art/relic/ico1.webp" alt="" loading="lazy"></span><span class="rlN">Амулет</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Плащ"><span class="rlF"><img src="../shared/art/relic/ico2.webp" alt="" loading="lazy"></span><span class="rlN">Плащ</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Перчатки"><span class="rlF"><img src="../shared/art/relic/ico3.webp" alt="" loading="lazy"></span><span class="rlN">Перчатки</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Лента судьбы"><span class="rlF"><img src="../shared/art/relic/ico4.webp" alt="" loading="lazy"></span><span class="rlN">Лента судьбы</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Кольцо"><span class="rlF"><img src="../shared/art/relic/ico5.webp" alt="" loading="lazy"></span><span class="rlN">Кольцо</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Знамя"><span class="rlF"><img src="../shared/art/relic/ico6.webp" alt="" loading="lazy"></span><span class="rlN">Знамя</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Ореол"><span class="rlF"><img src="../shared/art/relic/ico7.webp" alt="" loading="lazy"></span><span class="rlN">Ореол</span><span class="rlE">— пусто —</span></button><button type="button" class="rlc" onclick="relicTap(this)" data-n="Личина"><span class="rlF"><img src="../shared/art/relic/ico8.webp" alt="" loading="lazy"></span><span class="rlN">Личина</span><span class="rlE">— пусто —</span></button></div>
+    <p class="note" id="rlNote">Реликвии пока не найдены. Слоты откроются, когда в игре появятся первые реликвии.</p>
   </section>
 
   <a class="settingsLink" id="settingsLink" href="../settings/index.html">
@@ -925,6 +978,52 @@ function togglePanel(panelId, buttonId) {
 
   panel.classList.toggle("hidden", !opening);
   button.setAttribute("aria-expanded", String(opening));
+  haptic("light");
+}
+
+
+let TT = { owned: [], cur: "" };
+function ttRender() {
+  const T = window.LOTM_TITLES; if (!T) return;
+  const nk = $("ttNick"); if (nk) nk.innerHTML = TT.cur ? T.html(TT.cur) : "";
+  const cu = $("ttCur"); if (cu) cu.innerHTML = TT.cur ? T.html(TT.cur) : '<span class="rlE">— нет —</span>';
+  const cn = $("ttCnt"); if (cn) cn.textContent = "Открыто: " + TT.owned.length;
+  const box = $("ttList"); if (!box) return;
+  box.innerHTML = "";
+  if (!TT.owned.length) { box.innerHTML = '<p class="note" style="text-align:center">Титулов пока нет.</p>'; return; }
+  T.list.filter(t => TT.owned.indexOf(t.id) >= 0).forEach(t => {
+    const has = TT.owned.indexOf(t.id) >= 0, on = TT.cur === t.id;
+    const row = document.createElement("div"); row.className = "ttRow" + (has ? "" : " lock");
+    row.innerHTML = '<div class="ttInfo">' + T.html(t.id) + '<span class="ttD">' + (has ? "" : "🔒 ") + t.d + "</span></div>";
+    if (has) {
+      const b = document.createElement("button"); b.type = "button"; b.className = "ttBtn";
+      b.textContent = on ? "Снять" : "Надеть";
+      b.onclick = () => ttSet(on ? "" : t.id, b);
+      row.appendChild(b);
+    }
+    box.appendChild(row);
+  });
+}
+async function ttLoad() {
+  try {
+    if (!ACTION_URL) await ensure();
+    const r = await fetchApi(ACTION_URL, { action: "title_list" });
+    if (r && r.ok) { TT.owned = r.owned || []; TT.cur = r.cur || ""; ttRender(); }
+  } catch (e) {}
+}
+async function ttSet(id, btn) {
+  try {
+    btn.disabled = true;
+    const r = await fetchApi(ACTION_URL, { action: "title_set", id: id });
+    if (r && r.ok) { TT.cur = r.cur || ""; haptic("light"); }
+  } catch (e) {}
+  ttRender();
+}
+setTimeout(ttLoad, 600);
+
+function relicTap(b) {
+  const n = $("rlNote");
+  if (n) n.textContent = "Слот «" + (b.dataset.n || "") + "» пуст. Реликвия для него ещё не найдена.";
   haptic("light");
 }
 
