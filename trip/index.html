@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru" data-nosndbtn data-nochat>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07060c">
+<title>Карта похода — Повелитель Тайн</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--ink:#07060c;--gold:#e8d3a0;--bronze:#8a7a58;--line:#3a2f44;--vio:#a98fd0;--sa:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;background:var(--ink);color:#d8cfb8;font:14px/1.4 Inter,system-ui,Arial,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:none;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+img{-webkit-user-drag:none;pointer-events:none;display:block}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+.top{position:relative;z-index:30;display:flex;align-items:center;gap:8px;padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px;background:linear-gradient(#07060cf2,#07060ccc 70%,#07060c00)}
+.back{flex:0 0 auto;color:#cdbf9f;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#120c16cc;font-size:12px}
+.ttl{flex:1;min-width:0;text-align:center}
+.ttl small{display:block;font-size:9px;letter-spacing:.28em;color:var(--bronze);text-transform:uppercase}
+.ttl b{display:block;font:400 17px Philosopher,Georgia,serif;letter-spacing:.1em;color:#e8dcc0;text-shadow:0 0 12px #a3262e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb{flex:0 0 auto;width:38px;height:38px}
+.tb img{width:100%;height:100%;object-fit:contain}
+.tb:active{transform:scale(.92)}
+#vp{position:relative;flex:1;overflow:hidden;touch-action:none;background:radial-gradient(120% 90% at 50% 50%,#14101d,#05040a 75%);cursor:grab}
+#vp:active{cursor:grabbing}
+#layer{position:absolute;inset:0;transition:opacity .22s}
+#layer.out{opacity:0}
+#layer.in{animation:lin .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes lin{from{opacity:0;transform:scale(1.14)}to{opacity:1;transform:none}}
+#world{position:absolute;left:0;top:0;width:1086px;height:1448px;transform-origin:0 0;will-change:transform}
+#bg{position:absolute;inset:0;width:100%;height:100%;-webkit-mask-image:linear-gradient(#0000,#000 3%,#000 97%,#0000);mask-image:linear-gradient(#0000,#000 3%,#000 97%,#0000)}
+.pin{position:absolute;width:46px;transform:translate(-50%,-100%) scale(var(--inv,1));transform-origin:50% 100%;pointer-events:auto;z-index:5;transition:opacity .25s}
+.pin .pf{width:100%;filter:drop-shadow(0 3px 5px #000c)}
+.pin .pe{position:absolute;left:19%;top:15%;width:62%;height:50%;object-fit:contain}
+.pin .pn{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;font:700 10px/1 Philosopher,Georgia,serif;letter-spacing:.05em;color:#f0e2bd;background:#0b0710d9;border:1px solid #5a4a3a;border-radius:8px;padding:3px 7px;text-shadow:0 1px 2px #000}
+.pin.sel{z-index:9;width:56px}
+.pin.sel .pn{display:none!important}
+.pin.sel .pf{filter:drop-shadow(0 0 10px #ffd27a) drop-shadow(0 0 22px #ffb84a99)}
+.pin.lock .pe{filter:grayscale(1) brightness(.45);opacity:.0}
+.pin.lock .pn{color:#a8a3b0}
+.pin.here:before{content:"";position:absolute;left:50%;top:40%;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:2px solid #ffd27acc;animation:pulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes pulse{from{transform:scale(.4);opacity:1}to{transform:scale(1.5);opacity:0}}
+.fog{position:absolute;width:380px;height:380px;margin:-190px 0 0 -190px;pointer-events:none;z-index:4;background:url(img/fog.webp) 0 0/380px 380px;-webkit-mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);mask-image:radial-gradient(closest-side,#000 45%,#0000 100%);opacity:.96;animation:fogm 70s linear infinite}
+@keyframes fogm{to{background-position:380px 190px}}
+html[data-q="low"] .fog{animation:none}
+.ctl{position:absolute;right:8px;top:8px;z-index:20;display:flex;flex-direction:column;gap:6px}
+.ctl button{width:46px;height:46px}
+.ctl button img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px #000a)}
+.ctl button:active{transform:scale(.9)}
+#compass img{transition:transform .4s}
+.crumb{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:20;display:none}
+.crumb.on{display:block}
+.crumb button{padding:8px 14px;border-radius:14px;border:1px solid #8a7a58;background:linear-gradient(#2a1636ee,#120a1cee);color:#ecd9a8;font:700 12px Philosopher,Georgia,serif;letter-spacing:.08em;box-shadow:0 4px 14px #000a}
+.hint{position:absolute;left:50%;bottom:calc(14px + var(--sa));transform:translateX(-50%);z-index:19;max-width:86%;text-align:center;font-size:12px;color:#d8cfb8;background:#0b0710dd;border:1px solid #3a2f44;border-radius:12px;padding:8px 12px;transition:opacity .5s;pointer-events:none}
+.hint.off{opacity:0}
+#sheet{position:absolute;left:0;right:0;bottom:0;z-index:25;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 8px calc(10px + var(--sa));transform:translateY(115%);transition:transform .32s cubic-bezier(.2,.9,.3,1);pointer-events:none}
+#sheet.on{transform:none}
+#sheet>*{pointer-events:auto}
+.card{position:relative;width:min(100%,440px);aspect-ratio:1760/874;background:url(img/card.webp) center/100% 100% no-repeat;filter:drop-shadow(0 8px 18px #000c)}
+.card .rb{position:absolute;left:24%;right:24%;top:9.5%;height:15%;display:flex;align-items:center;justify-content:center;text-align:center;font:700 15px Philosopher,Georgia,serif;letter-spacing:.06em;color:#f2dfb0;text-shadow:0 1px 3px #000,0 0 10px #a3262e;white-space:nowrap}
+.card .bd{position:absolute;left:10%;right:10%;top:29%;bottom:26%;overflow:hidden}
+.card .bd .mt{font-size:11px;color:#c9a8e0;letter-spacing:.04em;margin-bottom:3px}
+.card .bd .ds{font-size:12.5px;line-height:1.35;color:#d8cfb8}
+.card .pl{position:absolute;left:30%;right:30%;bottom:7%;height:14%;display:flex;align-items:center;justify-content:center;font-size:10.5px;letter-spacing:.06em;color:#e8c9d8;white-space:nowrap}
+.enter{position:relative;width:min(66%,300px);aspect-ratio:640/126;background:url(img/btn.webp) center/100% 100% no-repeat;font:700 17px Philosopher,Georgia,serif;letter-spacing:.14em;color:#fff2d0;text-shadow:0 1px 3px #000,0 0 10px #a3262e;filter:drop-shadow(0 4px 10px #000b)}
+.enter:active{transform:scale(.97)}
+.enter.off{background-image:url(img/btn_off.webp);color:#b6adbd;text-shadow:0 1px 2px #000;filter:none}
+.enter.sub{width:min(54%,250px);font-size:13px;letter-spacing:.08em}
+#list{position:absolute;inset:0;z-index:40;background:#07060cf2;display:none;flex-direction:column;padding:calc(8px + env(safe-area-inset-top,0px)) 12px calc(12px + var(--sa))}
+#list.on{display:flex}
+.lh{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.lh input{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid #5a4a3a;background:#140d1a;color:#eadfc2;padding:0 12px;font-size:15px;outline:none;user-select:text;-webkit-user-select:text}
+.lh input:focus{border-color:#a98fd0}
+.lh button{width:42px;height:42px;border-radius:12px;border:1px solid #5a4a3a;background:#140d1a;color:#cdbf9f;font-size:18px}
+.rows{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 10px;margin-bottom:8px;border-radius:14px;border:1px solid #3a2f44;background:linear-gradient(160deg,#1c1226,#0f0a16)}
+.row:active{transform:scale(.985)}
+.row img{width:50px;height:50px;object-fit:contain;flex:0 0 auto}
+.row .t b{display:block;font:700 14px Philosopher,Georgia,serif;letter-spacing:.06em;color:#ecd9a8}
+.row .t small{display:block;font-size:11px;color:#9c93a8}
+.row .t i{font-style:normal;font-size:10px;color:#c9a8e0}
+.empty{text-align:center;color:#8f8798;padding:30px 0}
+.noway{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#07060c;color:#cdbf9f;text-align:center;padding:30px}
+.pin .pe{display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;filter:drop-shadow(0 1px 2px #000)}
+.pin .pn{display:block}
+.pin.sel .pn{display:none!important}
+.pin.lock .pe{opacity:.55;filter:grayscale(1)}
+.vit{position:relative;z-index:29;display:none;align-items:center;justify-content:center;gap:14px;margin:-2px 12px 0;padding:4px 12px;border-radius:12px;border:1px solid #3a2f44;background:#0b0710cc;font-size:12px;color:#d8cfb8}
+.vit.on{display:flex}
+.vit i{font-style:normal;color:#c9a8e0}
+</style>
+</head>
+<body>
+<div id="app">
+ <div class="top">
+  <a class="back" id="back" href="../index.html">← Назад</a>
+  <div class="ttl"><small id="ttS">Земли за воротами</small><b id="ttB">Карта похода</b></div>
+  <button class="tb" id="bList" aria-label="Список локаций"><img src="img/b_list.webp" alt=""></button>
+ </div>
+ <div class="vit" id="vit"><span>❤ <b id="vHp">—</b></span><span>🌀 <b id="vMad">—</b>%</span><i id="vLv"></i></div>
+ <div id="vp">
+  <div id="layer"><div id="world"><img id="bg" alt="" draggable="false"></div></div>
+  <div class="crumb" id="crumb"><button id="toOver" type="button">← Весь край</button></div>
+  <div class="ctl">
+   <button id="zin" aria-label="Приблизить"><img src="img/b_zin.webp" alt=""></button>
+   <button id="zout" aria-label="Отдалить"><img src="img/b_zout.webp" alt=""></button>
+   <button id="compass" aria-label="Сбросить вид"><img src="img/b_compass.webp" alt=""></button>
+   <button id="locate" aria-label="Последняя локация"><img src="img/b_locate.webp" alt=""></button>
+  </div>
+  <div class="hint" id="hint">Нажми на локацию, приблизь карту пальцами или выбери точку</div>
+  <div id="sheet">
+   <div class="card"><div class="rb" id="sName"></div><div class="bd"><div class="mt" id="sMeta"></div><div class="ds" id="sDesc"></div></div><div class="pl" id="sTag"></div></div>
+   <button class="enter" id="sGo" type="button">Отправиться</button>
+   <button class="enter sub" id="sGo2" type="button" style="display:none">Карта локации</button>
+  </div>
+ </div>
+ <div id="list">
+  <div class="lh"><div style="flex:1;font:700 16px Philosopher,Georgia,serif;letter-spacing:.1em;color:#ecd9a8">Локации</div><button id="lx" aria-label="Закрыть">✕</button></div>
+  <div class="rows" id="rows"></div>
+ </div>
+</div>
+<script src="../shared/fast.js?v=b4"></script>
+<script src="../shared/auth.js"></script>
+<script src="../shared/sound.js?v=a7"></script>
+<script src="trip.js?v=t1"></script>
+</body>
+</html>
