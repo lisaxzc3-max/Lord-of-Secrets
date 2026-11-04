@@ -62,31 +62,44 @@ input{width:100%;background:#0a060d;border:1px solid var(--line);border-radius:1
 .rr{font:700 14px Philosopher,Georgia,serif;color:var(--gold)}
 .empty{text-align:center;color:var(--muted);padding:16px 8px;font-style:italic;font-size:12px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);z-index:90;background:#1a0f20f0;border:1px solid var(--crim);color:#eadfc4;padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;max-width:90%;text-align:center;box-shadow:0 0 24px #a3262e66}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* сцена боя: модели героев */
+.astage{position:relative;height:384px;border-radius:20px;border:1px solid #5a2a3a;overflow:hidden;margin-bottom:12px;box-shadow:0 0 34px #7a1a2a55,inset 0 0 60px #000;background:linear-gradient(180deg,#05030acc 0%,#05030a33 45%,#05030acc 100%),url(../shared/art/place_arena.jpg) center 70%/cover no-repeat}
+.aground{position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(180deg,transparent,#0008 60%,#000b);pointer-events:none}
+.apls{position:absolute;left:8px;right:8px;top:8px;display:flex;gap:8px;z-index:6}
+.apl{flex:1;min-width:0;padding:7px 9px 6px;border-radius:12px;border:1px solid #5a4a64;background:linear-gradient(160deg,#1a1120ee,#0c0810f2);transition:box-shadow .3s,border-color .3s}
+.apl.foe{text-align:right;border-color:#7a2a34}.apl.me{border-color:#5a3a7a}
+.apl.turn{border-color:#ffd98a;box-shadow:0 0 18px #ffd98a66}
+.apl .nm{font:400 14px Philosopher,Georgia,serif;color:#eadfc4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apl .lv{font-size:10px;color:var(--muted);letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apl .hp{margin:5px 0 2px}
+.apl.foe .fxs{justify-content:flex-end}.apl.me .fxs{justify-content:flex-start}
+.au{position:absolute;bottom:12px;width:50%;height:232px;display:flex;align-items:flex-end;justify-content:center;z-index:3;will-change:transform}
+.au.me{left:-3%}.au.foe{right:-3%}
+.au .ash{position:absolute;left:22%;right:22%;bottom:-6px;height:16px;border-radius:50%;background:radial-gradient(ellipse,#000c,transparent 70%)}
+.au img.asp{position:relative;height:100%;width:auto;max-width:none;object-fit:contain;filter:drop-shadow(0 6px 10px #000a);transition:filter .5s,transform .7s}
+.au.foe img.asp{transform:scaleX(-1)}
+.au.dead img.asp{filter:grayscale(1) brightness(.5)}
+.au.me.dead img.asp{transform:rotate(-78deg) translate(8%,34%)}
+.au.foe.dead img.asp{transform:scaleX(-1) rotate(-78deg) translate(8%,34%)}
+.au.win:after{content:"";position:absolute;inset:10% 20%;border-radius:50%;background:radial-gradient(circle,#ffd98a44,transparent 70%);z-index:-1;animation:wg 2s ease-in-out infinite alternate}
+@keyframes wg{to{opacity:.4;transform:scale(1.15)}}
+.afx{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
+.afs{position:absolute;background-repeat:no-repeat;transform:translate(-50%,-50%);filter:drop-shadow(0 0 8px #fff8)}
+.aorb{position:absolute;width:22px;height:22px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff,var(--oc) 55%,transparent 72%);box-shadow:0 0 18px var(--oc)}
+.aaura{position:absolute;width:150px;height:150px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid var(--oc);box-shadow:0 0 30px var(--oc),inset 0 0 30px var(--oc);opacity:0}
+.au .flt{top:30px}
+.astage.shk{animation:shk .35s}@keyframes shk{20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-3px,1px)}}
+.turnb{margin:8px 0 4px}
 /* бой */
-.stage{position:relative;border-radius:20px;border:1px solid #5a2a3a;overflow:hidden;background:radial-gradient(ellipse at 50% 0,#3a0e1a,#0a060c 70%);padding:12px 10px 14px;margin-bottom:12px;box-shadow:0 0 34px #7a1a2a55,inset 0 0 60px #000}
-.stage:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,#ffffff05 0 2px,transparent 2px 36px);pointer-events:none}
-.fighters{display:flex;gap:6px;align-items:flex-start;position:relative}
-.fgt{flex:1;text-align:center;position:relative}
-.fgt .pic{position:relative;width:104px;height:104px;margin:0 auto;border-radius:18px;overflow:hidden;border:2px solid var(--bronze);background:#050306;box-shadow:0 0 20px #0009}
-.fgt.foe .pic{border-color:#8a2a34}.fgt.me .pic{border-color:#6a4a8a}
-.fgt .pic img{width:100%;height:100%;object-fit:cover;display:block}
-.fgt.foe .pic img{transform:scaleX(-1)}
-.fgt.turn .pic{box-shadow:0 0 26px #ffd98a88;border-color:#ffd98a}
-.fgt .nm{margin-top:6px;font:400 14px Philosopher,Georgia,serif;color:#eadfc4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fgt .lv{font-size:10px;color:var(--muted);letter-spacing:.1em}
 .hp{height:10px;border-radius:6px;background:#000a;border:1px solid #3a2a3a;overflow:hidden;margin:6px 4px 2px;position:relative}
 .hp i{position:relative;z-index:1;display:block;height:100%;width:100%;background:linear-gradient(90deg,#6a1218,#d4343f);box-shadow:0 0 8px #d4343f;transition:width .6s}
 .hp i.lag{z-index:0;position:absolute;left:0;top:0;background:#ffd98a88;box-shadow:none;transition:width 1.3s .3s}
 .hpt{font-size:11px;color:#c8bcd0;font-variant-numeric:tabular-nums}
 .fxs{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:4px;min-height:18px}
 .fx{font-size:9px;padding:1px 6px;border-radius:999px;border:1px solid;letter-spacing:.04em;animation:cin .4s}
-.vs{flex:0 0 38px;align-self:center;font:400 20px Philosopher,Georgia,serif;color:var(--crimb);text-shadow:0 0 14px #d4343f}
-.hit{animation:hit .5s}@keyframes hit{0%{transform:translateX(0)}20%{transform:translateX(-9px) rotate(-3deg);filter:brightness(2) saturate(2) hue-rotate(-20deg)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}100%{transform:none}}
-.heal{animation:heal .8s}@keyframes heal{40%{filter:brightness(1.6) hue-rotate(80deg);box-shadow:0 0 30px #6fd69a}}
-.dodge{animation:dg .5s}@keyframes dg{30%{transform:translateX(16px);opacity:.4}100%{transform:none}}
 .flt{position:absolute;left:50%;top:20px;transform:translateX(-50%);font:700 24px Philosopher,Georgia,serif;pointer-events:none;z-index:5;animation:flt 1.3s ease-out forwards;text-shadow:0 0 10px #000,0 2px 0 #000}
 @keyframes flt{from{opacity:1;transform:translate(-50%,0) scale(.8)}20%{transform:translate(-50%,-12px) scale(1.25)}to{opacity:0;transform:translate(-50%,-60px) scale(1)}}
-.slash{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(115deg,transparent 42%,#fff 49%,#ff6a78 51%,transparent 58%);opacity:0;animation:sl .45s ease-out}@keyframes sl{0%{opacity:0;transform:translateX(-40%)}30%{opacity:1}100%{opacity:0;transform:translateX(40%)}}
 .turnb{position:relative;margin:12px 0 4px;text-align:center}
 .ring{width:64px;height:64px;margin:0 auto;position:relative}
 .ring svg{width:64px;height:64px;transform:rotate(-90deg)}
@@ -185,8 +198,10 @@ function setFight(f){
 let lastSig="",lastView="";
 function render(){
  const el=$("app");if(!S)return;
- const vk=F?"f"+F.id:"l"+tab;el.classList.toggle("noan",vk===lastView);lastView=vk;
- if(F){el.innerHTML=fightHtml();bindFight();startTimer();return}
+ const vk=F?"f"+F.id:"l"+tab;el.classList.toggle("noan",vk===lastView);lastView=vk;if(!F)sceneId="";
+ if(F){
+  if(sceneId!==F.id||!$("astage")){el.innerHTML=fightHtml();scInit();fightPanels();bindFight();startTimer();return}
+  fightPanels();bindFight();startTimer();return}
  el.innerHTML=lobbyHtml();bindLobby();
 }
 const hero='<div class="hero"><svg viewBox="0 0 360 170" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="hs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0610"/><stop offset="1" stop-color="#4a1424"/></linearGradient><radialGradient id="hf" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#ffcf7a"/><stop offset=".5" stop-color="#d4542a"/><stop offset="1" stop-color="#5a1218" stop-opacity="0"/></radialGradient></defs><rect width="360" height="170" fill="url(#hs)"/><circle cx="180" cy="40" r="62" fill="#cdbf9f" opacity=".07"/><circle cx="180" cy="40" r="22" fill="#cdbf9f" opacity=".85"/><path d="M0 170V95Q30 70 60 95V120H100V80Q130 52 160 80V170ZM200 170V80Q230 52 260 80V120H300V95Q330 70 360 95V170Z" fill="#07040a" stroke="#2a1420"/><path d="M60 95Q80 78 100 95M160 80Q180 62 200 80M260 80Q280 62 300 95" fill="none" stroke="#2a1420"/><rect x="0" y="140" width="360" height="30" fill="#0c0508"/><ellipse cx="180" cy="150" rx="120" ry="14" fill="#3a1018"/><path d="M110 150h140" stroke="#8a2a34" stroke-width="1" stroke-dasharray="4 4"/><g><rect x="38" y="104" width="4" height="30" fill="#2a2030"/><path class="fl" d="M40 90q-8 10 0 18q8-8 0-18z" fill="url(#hf)"/><circle cx="40" cy="100" r="22" fill="#ff8a3a" opacity=".12"/></g><g><rect x="318" y="104" width="4" height="30" fill="#2a2030"/><path class="fl" d="M320 90q-8 10 0 18q8-8 0-18z" fill="url(#hf)" style="animation-delay:.1s"/><circle cx="320" cy="100" r="22" fill="#ff8a3a" opacity=".12"/></g><path d="M140 150l-10 -22M220 150l10 -22" stroke="#6a5a48" stroke-width="3"/><path d="M127 128l8 -8M233 128l-8 -8" stroke="#aab" stroke-width="2"/></svg><div class="ttl"><b>АРЕНА ТЕНЕЙ</b><small>Здесь решает не сила, а воля</small></div></div>';
@@ -225,25 +240,46 @@ function fxChips(p){
  if(x.act)o.push(["Ослаблен","#b8a0d0"]);if(x.miss)o.push(["Провокация","#d4343f"]);if(x.echo)o.push(["Эхо кинжала","#f1e6c8"]);if(x.stun)o.push(["Не может ходить ×"+x.stun,"#ffd98a"]);
  return o.map(c=>'<span class="fx" style="color:'+c[1]+';border-color:'+c[1]+'">'+c[0]+'</span>').join("");
 }
-function fgt(p,cls,turn){
+function plateInner(p){
  const pc=Math.max(0,p.hp/p.mhp*100);
- return '<div class="fgt '+cls+(turn?" turn":"")+'" id="f_'+cls+'"><div class="pic'+VIP.f(p.v)+'"><img src="'+avSrc(p.g,p.pk,p.sq)+'" alt=""></div><div class="nm">'+VIP.n(p.n,p.v,true)+'</div><div class="lv">'+esc(PATHN[p.pk]||"")+' · ур. '+p.lv+'</div><div class="hp"><i class="lag" style="width:'+pc+'%"></i><i style="width:'+pc+'%"></i></div><div class="hpt">'+p.hp+' / '+p.mhp+'</div><div class="fxs">'+fxChips(p)+'</div></div>';
+ return '<div class="nm">'+VIP.n(p.n,p.v,true)+'</div><div class="lv">'+esc(PATHN[p.pk]||"")+' · ур. '+p.lv+'</div><div class="hp"><i class="lag" style="width:'+pc+'%"></i><i style="width:'+pc+'%"></i></div><div class="hpt"><span class="hv">'+p.hp+'</span> / '+p.mhp+'</div><div class="fxs">'+fxChips(p)+'</div>';
+}
+const HFB="../shared/battle/frames/",HFN={idle:4,atk:4,hit:2};
+const hkey=p=>(p.g==="f"?"f":"m")+"_"+(p.pk||"seer");
+const hfu=(k,a,i)=>HFB+k+"_"+a+"_"+i+".webp?v=f2";
+function sceneHtml(f){
+ const unit=(c,p)=>'<div class="au '+c+'" id="u_'+c+'"><div class="ash"></div><img class="asp" id="sp_'+c+'" alt="" draggable="false" src="'+hfu(hkey(p),"idle",0)+'"></div>';
+ return '<div class="astage" id="astage" data-fid="'+esc(f.id)+'"><div class="apls"><div class="apl me" id="pl_me">'+plateInner(f.me)+'</div><div class="apl foe" id="pl_foe">'+plateInner(f.foe)+'</div></div><div class="aground"></div>'+unit("me",f.me)+unit("foe",f.foe)+'<div class="afx" id="afx"></div></div>';
 }
 function fightHtml(){
- const f=F,my=f.turn==="me"&&f.st==="on";
- let h='<div class="stage"><div class="fighters">'+fgt(f.me,"me",f.turn==="me"&&f.st==="on")+'<div class="vs">VS</div>'+fgt(f.foe,"foe",f.turn==="foe"&&f.st==="on")+'</div>';
- h+='<div class="turnb"><div class="ring" id="ring"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="28"/><circle class="fg" id="rfg" cx="32" cy="32" r="28" stroke-dasharray="175.9" stroke-dashoffset="0"/></svg><b id="rt">'+f.left+'</b></div><div class="tl '+(my?"my":"foe")+'" id="tl">'+(f.st!=="on"?"Бой окончен":my?"Твой ход":"Ход соперника — "+esc(f.foe.n))+'</div></div></div>';
- h+='<div class="acts '+(my?"":"off")+'" id="acts"><button class="act" data-a="hit" style="grid-column:1/-1">'+ai("hit")+'<span><b>Удар</b><small>Обычная атака, без перезарядки</small></span></button>';
- f.sk.forEach((s,i)=>{const cd=f.me.cd[String(i+1)]|0;h+='<button class="act sk" data-a="s'+(i+1)+'" '+(cd>0?"disabled":"")+'><em class="ei">'+esc(s[3]||"✦")+'</em><span><b>'+esc(s[0])+'</b><small>'+esc(s[1])+'</small></span>'+(cd>0?'<span class="cdn">'+cd+'</span>':"")+'</button>'});
- h+='</div><div style="display:flex;justify-content:flex-end;margin:8px 0"><button class="btn sm" id="flee">Сдаться</button></div>';
- h+='<div class="card" style="padding:10px"><h3>Летопись боя · ход '+f.n+'</h3><div class="logbox" id="lb">'+f.log.map(l=>'<div class="'+l.s+'"><span>'+l.n+'</span>'+esc(l.x)+'</div>').join("")+'</div></div>';
+ const f=F;
+ let h=sceneHtml(f);
+ h+='<div class="turnb"><div class="ring" id="ring"><svg viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="28"/><circle class="fg" id="rfg" cx="32" cy="32" r="28" stroke-dasharray="175.9" stroke-dashoffset="0"/></svg><b id="rt">'+f.left+'</b></div><div class="tl" id="tl"></div></div>';
+ h+='<div id="actsBox"></div>';
+ h+='<div style="display:flex;justify-content:flex-end;margin:8px 0"><button class="btn sm" id="flee">Сдаться</button></div>';
+ h+='<div class="card" style="padding:10px"><h3 id="lbh"></h3><div class="logbox" id="lb"></div></div>';
  return h;
+}
+function actsHtml(){
+ const f=F,my=f.turn==="me"&&f.st==="on";
+ let h='<div class="acts '+(my?"":"off")+'" id="acts"><button class="act" data-a="hit" style="grid-column:1/-1">'+ai("hit")+'<span><b>Удар</b><small>Обычная атака, без перезарядки</small></span></button>';
+ f.sk.forEach((s,i)=>{const cd=f.me.cd[String(i+1)]|0;h+='<button class="act sk" data-a="s'+(i+1)+'" '+(cd>0?"disabled":"")+'><em class="ei">'+esc(s[3]||"✦")+'</em><span><b>'+esc(s[0])+'</b><small>'+esc(s[1])+'</small></span>'+(cd>0?'<span class="cdn">'+cd+'</span>':'')+'</button>'});
+ return h+'</div>';
+}
+function fightPanels(){ /* всё, кроме самой сцены: ход, кнопки, летопись */
+ const f=F,my=f.turn==="me"&&f.st==="on";
+ const tl=$("tl");if(tl){tl.className="tl "+(my?"my":"foe");tl.textContent=f.st!=="on"?"Бой окончен":my?"Твой ход":"Ход соперника — "+f.foe.n}
+ const ab=$("actsBox");if(ab)ab.innerHTML=actsHtml();
+ const lh=document.querySelector("#lbh");if(lh)lh.textContent="Летопись боя · ход "+f.n;
+ const lb=$("lb");if(lb){lb.innerHTML=f.log.map(l=>'<div class="'+l.s+'"><span>'+l.n+'</span>'+esc(l.x)+'</div>').join("");lb.scrollTop=lb.scrollHeight}
+ const a=$("pl_me"),b=$("pl_foe");
+ if(a)a.classList.toggle("turn",f.turn==="me"&&f.st==="on");if(b)b.classList.toggle("turn",f.turn==="foe"&&f.st==="on");
+ ["me","foe"].forEach(c=>{const fx=document.querySelector("#pl_"+c+" .fxs");if(fx)fx.innerHTML=fxChips(f[c])});
 }
 function bindFight(){
  document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a));
  const fl=$("flee");if(fl)fl.onclick=()=>{if(confirm("Сдаться и потерять очки рейтинга?"))surrender()};
- const lb=$("lb");if(lb)lb.scrollTop=lb.scrollHeight;
-}
+ }
 async function act(a){
  if(!F||F.turn!=="me"||F.st!=="on")return;
  sfx(a==="hit"?"tap":"rune");
@@ -251,25 +287,122 @@ async function act(a){
 }
 async function surrender(){const d=await call({action:"arena_surrender"},"deny");if(d&&d.fight){setFight(d.fight);render()}}
 /* ---------- эффекты ---------- */
-function floatTxt(id,txt,col){const e=$(id);if(!e)return;const s=document.createElement("div");s.className="flt";s.textContent=txt;s.style.color=col;e.appendChild(s);setTimeout(()=>s.remove(),1400)}
-function anim(id,c){const e=$(id);if(!e)return;const p=e.querySelector(".pic");if(!p)return;p.classList.remove("hit","heal","dodge");void p.offsetWidth;p.classList.add(c)}
+/* ---------- сцена: анимации ---------- */
+const FXD={hunter_0:[7,186,127],hunter_1:[8,196,133],hunter_2:[6,239,117],hunter_3:[6,230,111],sailor_0:[6,234,127],sailor_1:[8,185,133],sailor_2:[7,257,111],sailor_3:[7,243,117],seer_0:[6,197,104],seer_1:[6,169,115],seer_2:[6,175,105],seer_3:[6,210,127]};
+const OC={seer:"#e8dcc0",sailor:"#6ab4ff",hunter:"#ff8a3a"};
+/* типы навыков: [тип, лист эффекта, на себя?, звук] для обычного удара и 4 навыков */
+const SKT={
+ basic:["melee",2,0,"bslash"],
+ seer:[["buff",1,1,"bcards"],["shot",0,0,"bcards"],["shot",0,0,"bcards"],["spell",3,0,"bcast"]],
+ sailor:[["melee",1,0,"bthunder"],["shot",0,0,"bzap"],["spell",3,0,"bcast"],["buff",3,1,"bbuff"]],
+ hunter:[["shot",0,0,"bfire"],["melee",1,0,"bfirehit"],["spell",3,0,"bcast"],["buff",3,1,"bbuff"]]};
+const SKN={seer:["Гадание|Предвидение","Воздушная пуля|Две пули","Бумажный кинжал|Бумажные клинки","Актёрство|Мастер масок"],sailor:["Удар шторма|Гроза Мореплавателя","Морская волна|Прилив","Колыбельная глубин|Колыбельная бездны","Ярость шторма|Буря над морем"],hunter:["Меткий выстрел|Зажигательная стрела","Поджог|Огненный шторм","Ловушка|Огненная ловушка","Провокация|Раздразнить пламя"]};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const SC={me:null,foe:null};let animQ=Promise.resolve(),sceneId="";
+function scInit(){
+ ["me","foe"].forEach(c=>{
+  const p=F[c],k=hkey(p);
+  if(SC[c]&&SC[c].t)clearInterval(SC[c].t);
+  const o={c,k,pk:p.pk,img:$("sp_"+c),el:$("u_"+c),busy:0,i:0,t:0};
+  for(const a in HFN)for(let i=0;i<HFN[a];i++){const im=new Image();im.src=hfu(k,a,i)}
+  if(!reduce)o.t=setInterval(()=>{if(o.busy||o.dead)return;o.i=(o.i+1)%6;o.img.src=hfu(k,"idle",[0,1,2,3,2,1][o.i])},230);
+  SC[c]=o;
+ });
+ sceneId=F.id;
+ if(F.st==="end")scEnd(true);
+}
+function scEnd(now){
+ const w=F.win;["me","foe"].forEach(c=>{const o=SC[c];if(!o)return;o.dead=c!==w;o.el.classList.toggle("dead",c!==w);o.el.classList.toggle("win",c===w);if(c!==w){o.img.src=hfu(o.k,"hit",1)}})
+}
+async function fr(o,a,n,ms){o.busy=1;for(let i=0;i<n;i++){o.img.src=hfu(o.k,a,i);await sleep(ms)}}
+function toIdle(o){o.busy=0;o.img.src=hfu(o.k,"idle",0)}
+function stageW(){const e=$("astage");return e?e.clientWidth:360}
+function ctr(c){const e=$("u_"+c),s=$("astage");if(!e||!s)return{x:100,y:150};const r=e.getBoundingClientRect(),q=s.getBoundingClientRect();return{x:r.left-q.left+r.width/2,y:r.top-q.top+r.height*.52}}
+function fxSheet(pk,idx,pos,size){
+ const d=FXD[pk+"_"+idx];if(!d||reduce)return Promise.resolve();
+ const w=Math.round(stageW()*size),h=Math.round(d[2]*w/d[1]),e=document.createElement("div");
+ e.className="afs";e.style.cssText="left:"+pos.x+"px;top:"+pos.y+"px;width:"+w+"px;height:"+h+"px;background-image:url(../shared/battle/fx/"+pk+"_"+idx+".webp?v=f2);background-size:"+d[0]*100+"% 100%;background-position:0 0";
+ $("afx").appendChild(e);
+ return new Promise(res=>{let i=0;const t=setInterval(()=>{i++;if(i>=d[0]){clearInterval(t);e.remove();res();return}e.style.backgroundPosition=(i/(d[0]-1)*100)+"% 0"},70)});
+}
+function orb(pk,from,to,ms){
+ if(reduce)return sleep(ms);
+ const e=document.createElement("div");e.className="aorb";e.style.cssText="--oc:"+(OC[pk]||"#fff")+";left:"+from.x+"px;top:"+from.y+"px";$("afx").appendChild(e);
+ const a=e.animate([{left:from.x+"px",top:from.y+"px",opacity:1},{left:to.x+"px",top:to.y+"px",opacity:1}],{duration:ms,easing:"ease-in"});
+ return new Promise(r=>{a.onfinish=()=>{e.remove();r()};a.oncancel=()=>{e.remove();r()}});
+}
+function aura(pk,pos){
+ if(reduce)return;const e=document.createElement("div");e.className="aaura";e.style.cssText="--oc:"+(OC[pk]||"#fff")+";left:"+pos.x+"px;top:"+pos.y+"px";$("afx").appendChild(e);
+ const a=e.animate([{opacity:0,transform:"translate(-50%,-50%) scale(.4)"},{opacity:.9,transform:"translate(-50%,-50%) scale(1)"},{opacity:0,transform:"translate(-50%,-50%) scale(1.5)"}],{duration:800});a.onfinish=()=>e.remove();
+}
+function floatAt(c,txt,col){const e=$("u_"+c);if(!e)return;const s=document.createElement("div");s.className="flt";s.textContent=txt;s.style.color=col;e.appendChild(s);setTimeout(()=>s.remove(),1400)}
+function shake(){const e=$("astage");if(!e||reduce)return;e.classList.remove("shk");void e.offsetWidth;e.classList.add("shk")}
+async function react(c,dodge){
+ const o=SC[c];if(!o)return;
+ if(dodge){floatAt(c,"промах","#cdbf9f");sfx("dodge");o.busy=1;const dx=c==="me"?-1:1;
+  const a=o.el.animate([{transform:"none"},{transform:"translateX("+(dx*34)+"px)",opacity:.5},{transform:"none"}],{duration:420});await a.finished.catch(()=>{});o.busy=0;return}
+ o.busy=1;o.img.src=hfu(o.k,"hit",0);
+ if(!reduce){const dx=c==="me"?-1:1;o.el.animate([{transform:"none"},{transform:"translateX("+(dx*16)+"px)"},{transform:"none"}],{duration:320});o.img.animate([{filter:"drop-shadow(0 6px 10px #000a)"},{filter:"brightness(2.2) saturate(1.8) drop-shadow(0 0 12px #ff4a5a)"},{filter:"drop-shadow(0 6px 10px #000a)"}],{duration:380})}
+ await sleep(150);o.img.src=hfu(o.k,"hit",1);await sleep(170);o.busy=0;toIdle(o);
+}
+function parseEv(e,a,b){
+ /* какой навык: ищем «название» в тексте записи */
+ const m=/«([^»]+)»/.exec(e.x);if(!m)return null;
+ const actor=e.s,p=(actor==="me"?b.me:b.foe);let t=SKT.basic,idx=-1;
+ if(m[1]!=="Удар"){const names=SKN[p.pk]||[];idx=names.findIndex(n=>n.split("|").includes(m[1]));if(idx>=0)t=SKT[p.pk][idx];else return null}
+ return {actor,target:actor==="me"?"foe":"me",t,idx,pk:p.pk,dodge:/ускользает/.test(e.x),crit:/КРИТ/.test(e.x),dmg:/−\d+/.test(e.x)&&!/ускользает/.test(e.x)};
+}
+async function playEv(ev){
+ const A=SC[ev.actor],T=SC[ev.target];if(!A||!T)return;
+ const [type,fi,self,snd]=ev.t,W=stageW(),dir=ev.actor==="me"?1:-1;
+ sfx(snd);
+ const aP=ctr(ev.actor),tP=ctr(ev.target);
+ if(type==="buff"){
+  A.busy=1;A.img.src=hfu(A.k,"atk",1);aura(ev.pk,aP);await fxSheet(ev.pk,fi,aP,.38);toIdle(A);return}
+ if(type==="melee"){
+  A.busy=1;const dist=Math.abs(tP.x-aP.x)*.55;
+  if(!reduce)A.el.animate([{transform:"none"},{transform:"translateX("+dir*dist+"px)"}],{duration:200,fill:"forwards",easing:"ease-out"});
+  const frP=fr(A,"atk",4,80);await sleep(170);
+  const hitP=fxSheet(ev.pk,fi,tP,.34);if(ev.crit)shake();
+  await Promise.all([frP,react(ev.target,ev.dodge)]);
+  if(!reduce)A.el.animate([{transform:"translateX("+dir*dist+"px)"},{transform:"none"}],{duration:220,fill:"forwards"});
+  await hitP;toIdle(A);return}
+ /* shot / spell */
+ A.busy=1;await fr(A,"atk",3,85);
+ if(type==="shot"){const from={x:aP.x+dir*W*.12,y:aP.y-14};await orb(ev.pk,from,tP,260)}
+ const hp=fxSheet(ev.pk,fi,tP,type==="spell"?.42:.34);
+ if(ev.crit)shake();
+ await Promise.all([react(ev.target,ev.dodge),(async()=>{await sleep(120);toIdle(A)})()]);
+ await hp;
+}
+async function playLog(a,b){
+ /* новые записи летописи: после последней записи старого состояния */
+ let nl=b.log;
+ if(a.log.length){const last=a.log[a.log.length-1];let j=-1;for(let i=b.log.length-1;i>=0;i--){const q=b.log[i];if(q.n===last.n&&q.s===last.s&&q.x===last.x){j=i;break}}
+  nl=j>=0?b.log.slice(j+1):b.log.filter(q=>q.n>=a.n)}
+ const txt=nl.map(l=>l.x).join(" ");
+ let shown=0;
+ for(const e of nl){
+  if(e.s!=="me"&&e.s!=="foe"){continue}
+  const ev=parseEv(e,a,b);
+  if(ev){await playEv(ev);shown++;continue}
+  /* прочее: горение, эхо, оглушение — короткая реакция */
+  if(/горит/.test(e.x)){const c=e.x.indexOf(b.me.n)===0?"me":"foe";await react(c,false);sfx("bad")}
+  else if(/эхо кинжала/.test(e.x)){await react(e.s==="me"?"foe":"me",false)}
+ }
+ /* итоговые числа и полоски здоровья */
+ ["me","foe"].forEach(c=>{
+  const d=b[c].hp-a[c].hp;
+  if(d<0)floatAt(c,String(d),"#ff6a78");else if(d>0){floatAt(c,"+"+d,"#7fe0a0");sfx("heal")}
+  const pl=$("pl_"+c);if(pl){const pc=Math.max(0,b[c].hp/b[c].mhp*100),is=pl.querySelectorAll(".hp i");is.forEach(i=>i.style.width=pc+"%");const hv=pl.querySelector(".hv");if(hv)hv.textContent=b[c].hp}
+ });
+ if(/КРИТ/.test(txt))sfx("crit");
+ if(b.st==="end")setTimeout(scEnd,250);
+ else if(b.turn==="me"&&a.turn!=="me")setTimeout(()=>sfx("event"),200);
+}
 function fxDiff(a,b){
  if(a.n===b.n&&a.st===b.st&&a.log.length===b.log.length)return;
- const k=Math.max(1,b.log.length-a.log.length),newL=b.log.slice(-k);
- const set=(id,old,nw)=>{
-  const d=nw.hp-old.hp;
-  setTimeout(()=>{
-   if(d<0){anim(id,"hit");floatTxt(id,String(d),"#ff6a78");const e=$(id),sl=document.createElement("div");sl.className="slash";e&&e.querySelector(".pic").appendChild(sl);setTimeout(()=>sl.remove(),500)}
-   else if(d>0){anim(id,"heal");floatTxt(id,"+"+d,"#7fe0a0");sfx("heal")}
-  },30);
- };
- set("f_me",a.me,b.me);set("f_foe",a.foe,b.foe);
- const txt=newL.map(l=>l.x).join(" ");
- const dmgMe=b.me.hp<a.me.hp,dmgFoe=b.foe.hp<a.foe.hp;
- if(/КРИТ/.test(txt))sfx("crit");else if(dmgMe||dmgFoe)sfx(dmgMe?"hurt":"hit");
- newL.forEach(l=>{if(/ускользает/.test(l.x)){const id="f_"+(l.s==="me"?"foe":"me");sfx("dodge");setTimeout(()=>{anim(id,"dodge");floatTxt(id,"промах","#cdbf9f")},40)}});
- if(/кровью/.test(txt))sfx("bad");
- if(b.turn==="me"&&a.turn!=="me"&&b.st==="on")setTimeout(()=>sfx("event"),300);
+ animQ=animQ.then(()=>playLog(a,b)).catch(()=>{});
 }
 function startTimer(){
  clearInterval(tmr);if(!F||F.st!=="on")return;
@@ -301,7 +434,7 @@ function showResult(){
  sfx(w?"win":"lose");setTimeout(()=>sfx(w?"bell":"whisper"),900);
  const d=document.createElement("div");d.className="res "+(w?"win":"lose");d.id="res";
  const dr=F.dr==null?"":((F.dr>0?"+":"")+F.dr);
- d.innerHTML='<div class="av"><img src="'+avSrc(F.me.g,F.me.pk,F.me.sq)+'" style="'+(w?"":"filter:grayscale(1) brightness(.6)")+'"></div><h2>'+(w?"ПОБЕДА":"ПОРАЖЕНИЕ")+'</h2><div class="muted" style="margin-bottom:8px">'+esc({hp:w?"Соперник повержен":"Ты повержен",timeout:w?"Соперник не успел сделать ход":"Ты не успел сделать ход",flee:w?"Соперник сдался":"Ты сдался"}[F.why]||"")+'</div><div class="d" style="color:'+(w?"#ffd98a":"#e87a82")+'">'+dr+' <span style="font-size:16px">рейтинга</span></div><div class="muted">Теперь: '+(F.rt!=null?F.rt:"—")+(F.gain?' · +'+F.gain+' ₤':"")+'</div><button class="btn main" style="margin-top:22px;padding:12px 30px">В Зал</button>';
+ d.innerHTML='<div style="height:190px;margin-bottom:10px"><img src="'+hfu(hkey(F.me),w?"atk":"hit",w?2:1)+'" style="height:100%;width:auto;'+(w?"filter:drop-shadow(0 0 20px #ffd98a88)":"filter:grayscale(1) brightness(.6)")+'"></div><h2>'+(w?"ПОБЕДА":"ПОРАЖЕНИЕ")+'</h2><div class="muted" style="margin-bottom:8px">'+esc({hp:w?"Соперник повержен":"Ты повержен",timeout:w?"Соперник не успел сделать ход":"Ты не успел сделать ход",flee:w?"Соперник сдался":"Ты сдался"}[F.why]||"")+'</div><div class="d" style="color:'+(w?"#ffd98a":"#e87a82")+'">'+dr+' <span style="font-size:16px">рейтинга</span></div><div class="muted">Теперь: '+(F.rt!=null?F.rt:"—")+(F.gain?' · +'+F.gain+' ₤':"")+'</div><button class="btn main" style="margin-top:22px;padding:12px 30px">В Зал</button>';
  d.querySelector("button").onclick=async()=>{sfx("open");d.remove();await call({action:"arena_ack"});F=null;prevF=null;loadState(true)};
  document.body.appendChild(d);
 }
