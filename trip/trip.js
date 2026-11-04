@@ -17,22 +17,26 @@ const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
 const LOC={
  lake:{n:"Озёра · Топи",e:"🐸",img:"lake",min:1,lv:"1–6",sk:1,boss:"Змей, Водяной",url:"../lake/index.html",lab:[170,900],
   ds:"Жабы, пиявки, щуки, кикиморы и Змей, что просыпается в глубине.",fog:null,
-  reg:[[0,560],[470,640],[470,1140],[0,1140]]},
+  reg:[[0,790],[470,800],[470,1140],[0,1140]]},
  forest:{n:"Лес · Чаща",e:"🌲",img:"forest",min:5,lv:"5–10",sk:2,boss:"Кицунэ",url:"../forest/index.html",lab:[840,820],
   ds:"Споры, паутина и шёпот. Где-то здесь бродит Кицунэ.",fog:[840,800],
   reg:[[580,500],[1086,430],[1086,1140],[600,1140]]},
  cemetery:{n:"Кладбище Тингена",e:"🪦",img:"cemetery",min:10,lv:"10–15",sk:3,boss:"Некромант",url:"../cemetery/index.html",lab:[300,330],
   ds:"Туман, склепы и неупокоенные. Здесь ночует Некромант.",fog:[290,320],
-  reg:[[0,60],[520,150],[560,540],[0,540]]},
+  reg:[[0,60],[520,150],[540,410],[0,410]]},
+ mines:{n:"Шахты Холодного Железа",e:"⛏",img:"mines",min:20,seq:7,lv:"20–30",sk:5,boss:"Хозяин шахты",url:"../mines/index.html",lab:[230,600],
+  ds:"Безумные шахтёры, паровые големы и призраки смены. В глубине сидит Хозяин шахты. Вход с 20 уровня и 7 последовательности.",fog:[230,600],
+  reg:[[0,410],[480,420],[470,790],[0,790]]},
  ruins:{n:"Руины Фаркарда",e:"🏛",img:"ruins",min:15,lv:"15–20",sk:4,boss:"Верховный жрец",url:"../ruins/index.html",lab:[825,345],
   ds:"Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.",fog:[840,330],
   reg:[[620,0],[1086,0],[1086,470],[610,540]]}
 };
 /* точки: k -> {n,e,d,m,ds,url,p:{сцена:[x,y]}} ; main=true: точка входа локации */
 const PL={
- lake:{n:"Озёра · Топи",e:"🐸",d:"lake",main:1,p:{over:[170,900],lake:[560,985]}},
+ lake:{n:"Озёра · Топи",e:"🐸",d:"lake",main:1,p:{over:[165,880],lake:[560,985]}},
  forest:{n:"Лес · Чаща",e:"🌲",d:"forest",main:1,p:{over:[850,810],forest:[560,1010]}},
  cemetery:{n:"Кладбище Тингена",e:"🪦",d:"cemetery",main:1,p:{over:[300,330],cemetery:[520,800]}},
+ mines:{n:"Шахты Холодного Железа",e:"⛏",d:"mines",main:1,p:{over:[250,600],mines:[440,1230]}},
  ruins:{n:"Руины Фаркарда",e:"🏛",d:"ruins",main:1,p:{over:[825,345],ruins:[560,1100]}},
  boss:{n:"Логово Кальветуа",e:"💀",boss:1,m:"Босс недели",ds:"Тёмная башня на краю мира. Раз в неделю здесь открывается бой с боссом недели, а в рейтинге ждут лучшие.",url:"../boss/index.html",p:{over:[543,150]}},
  lair_lake:{n:"Омут Змея",e:"💀",d:"lake",lair:"lake",p:{lake:[790,250]}},
@@ -40,14 +44,16 @@ const PL={
  lair_forest:{n:"Логово Кицунэ",e:"💀",d:"forest",lair:"forest",p:{forest:[570,150]}},
  lair_cemetery:{n:"Мавзолей Некроманта",e:"💀",d:"cemetery",lair:"cemetery",p:{cemetery:[800,120]}},
  chapel_cemetery:{n:"Часовня",e:"⛪",d:"cemetery",lair:"cemetery",sh:"Часовня со сломанным шпилем. Свечи в ней горят сами.",p:{cemetery:[250,340]}},
+ lair_mines:{n:"Забой Хозяина",e:"💀",d:"mines",lair:"mines",p:{mines:[700,240]}},
+ office_mines:{n:"Контора бригады",e:"🏚",d:"mines",lair:"mines",sh:"Контора бригады с тёплым окном. Журналы смен здесь так и не закрыли.",p:{mines:[920,580]}},
  lair_ruins:{n:"Подземелье жреца",e:"💀",d:"ruins",lair:"ruins",p:{ruins:[690,730]}},
  altar_ruins:{n:"Алтарный зал",e:"🔥",d:"ruins",lair:"ruins",sh:"Алтарный зал с багровым тлением в трещинах пола.",p:{ruins:[700,290]}}
 };
-const REG_ORDER=["ruins","cemetery","forest","lake"];
+const REG_ORDER=["ruins","cemetery","mines","forest","lake"];
 
 /* ---------- состояние ---------- */
 const vp=$("vp"),layer=$("layer"),world=$("world"),bg=$("bg");
-const S={scene:"over",s:1,tx:0,ty:0,min:1,max:4,sel:null,busy:false,lv:1};
+const S={scene:"over",s:1,tx:0,ty:0,min:1,max:4,sel:null,busy:false,lv:1,seq:9};
 const hr=new Date().getHours();
 const OVER=(hr>=22||hr<6)?"night":"over";
 const sceneImg=n=>IMG+(n==="over"?OVER:LOC[n].img)+".webp";
@@ -96,7 +102,9 @@ function flyTo(x,y,s,ms,up){
 
 /* ---------- доступ по уровню ---------- */
 function minOf(k){const P=PL[k];if(!P)return 0;const L=LOC[P.main?k:(P.lair||P.d)];return L?L.min:0}
-function locked(k){return minOf(k)>S.lv}
+function isLk(L){return !!(L&&(L.min>S.lv||(L.seq&&S.seq>L.seq)))}
+function lkTxt(L){const a=[];if(L.min>S.lv)a.push(L.min+" уровня");if(L.seq&&S.seq>L.seq)a.push(L.seq+" последовательности");return a.join(" и ")}
+function locked(k){const P=PL[k];if(!P)return false;return isLk(LOC[P.main?k:(P.lair||P.d)])}
 
 /* ---------- сцены ---------- */
 function pinFrame(k,sel){
@@ -123,7 +131,7 @@ function build(name){
  bg.src=sceneImg(name);
  const add=(el,x,y)=>{el.style.left=x+"px";el.style.top=y+"px";world.appendChild(el)};
  Object.keys(PL).forEach(k=>{const pos=PL[k].p[name];if(pos)add(pinEl(k),pos[0],pos[1])});
- if(name==="over")Object.keys(LOC).forEach(k=>{const L=LOC[k];if(L.fog&&L.min>S.lv){const f=document.createElement("img");f.className="fog";f.src=IMG+"fog.webp";f.alt="";f.draggable=false;f.dataset.f=k;add(f,L.fog[0],L.fog[1])}});
+ if(name==="over")Object.keys(LOC).forEach(k=>{const L=LOC[k];if(L.fog&&isLk(L)){const f=document.createElement("img");f.className="fog";f.src=IMG+"fog.webp";f.alt="";f.draggable=false;f.dataset.f=k;add(f,L.fog[0],L.fog[1])}});
  $("ttS").textContent=name==="over"?"Земли за воротами":"Поход";
  $("ttB").textContent=name==="over"?"Карта похода":LOC[name].n;
  $("crumb").classList.toggle("on",name!=="over");
@@ -149,7 +157,7 @@ $("tutBh").addEventListener("click",()=>{tutHide=true;tutUpdate()});
 function refreshLocks(){
  world.querySelectorAll(".pin").forEach(b=>setPinState(b,b.dataset.k));
  if(S.scene==="over"){
-  world.querySelectorAll(".fog").forEach(f=>{if(LOC[f.dataset.f].min<=S.lv)f.remove()});
+  world.querySelectorAll(".fog").forEach(f=>{if(!isLk(LOC[f.dataset.f]))f.remove()});
  }
  if(S.sel)select(S.sel,false);
 }
@@ -187,7 +195,7 @@ function select(k,fly){
  S.sel=k;
  const b=world.querySelector('.pin[data-k="'+k+'"]');
  if(b){b.classList.add("sel");setPinState(b,k)}
- const L=locOf(k),lock=!!(L&&L.min>S.lv);
+ const L=locOf(k),lock=isLk(L);
  let meta,ds,tag,go="🔍 Исследовать",goOff=false,go2=false;
  if(P.boss){
   meta=EV.boss?"Босс недели открыт":"Босс недели";ds=P.ds;tag="Край света";go=EV.boss?"⚔ К боссу недели":"Локация и рейтинг";
@@ -198,7 +206,7 @@ function select(k,fly){
  }else{
   meta="Босс: "+L.boss;ds="Здесь обитает "+L.boss+". Слабым в одиночку тут делать нечего.";tag=L.n;
  }
- if(lock&&!P.boss){go="🔒 С "+L.min+" уровня";goOff=true}
+ if(lock&&!P.boss){go="🔒 С "+lkTxt(L);goOff=true}
  $("sName").textContent=P.n;$("sMeta").textContent=meta;$("sDesc").textContent=ds;$("sTag").textContent=tag;
  const g=$("sGo");g.classList.toggle("off",goOff);g.textContent=go;g.disabled=goOff;
  const g2=$("sGo2");g2.style.display=go2?"":"none";g2.textContent="Карта локации";
@@ -310,14 +318,14 @@ $("locate").addEventListener("click",()=>{
 /* ---------- список ---------- */
 function renderList(){
  const box=$("rows");box.replaceChildren();
- ["lake","forest","cemetery","ruins"].concat(["boss"]).forEach(k=>{
-  const P=PL[k],L=P.boss?null:LOC[k],lock=L&&L.min>S.lv;
+ ["lake","forest","cemetery","mines","ruins"].concat(["boss"]).forEach(k=>{
+  const P=PL[k],L=P.boss?null:LOC[k],lock=isLk(L);
   const r=document.createElement("button");r.type="button";r.className="row";
   r.innerHTML='<span class="em" style="font-size:30px;width:50px;text-align:center;flex:0 0 auto"></span><span class="t"><b></b><small></small><i></i></span>';
   r.querySelector(".em").textContent=lock?"🔒":P.e;
   r.querySelector("b").textContent=P.n;
   r.querySelector("small").textContent=L?("Ур. "+L.lv+" · Босс: "+L.boss):"Босс недели · рейтинг";
-  r.querySelector("i").textContent=lock?"Откроется с "+L.min+" уровня":(L?"Доступно":"Раз в неделю");
+  r.querySelector("i").textContent=lock?"Откроется с "+lkTxt(L):(L?"Доступно":"Раз в неделю");
   r.addEventListener("click",()=>{closeList();sfx("open");if(S.scene!=="over")goScene("over",k,true);else select(k,true)});
   box.appendChild(r);
  });
@@ -333,7 +341,7 @@ function setProfile(d){
  const lv=Math.max(1,parseInt(d.level)||1);
  tutSet(d.tut);
  if(d.hp!=null&&d.max_hp!=null){$("vHp").textContent=d.hp+"/"+d.max_hp;$("vMad").textContent=Math.round(Number(d.madness)||0);$("vLv").textContent="Ур. "+lv;$("vit").classList.add("on")}
- if(lv!==S.lv){S.lv=lv;refreshLocks()}
+ {const sq=parseInt(d.sequence);const ns=isNaN(sq)?S.seq:sq;if(lv!==S.lv||ns!==S.seq){S.lv=lv;S.seq=ns;refreshLocks()}}
 }
 function unwrap(d){for(let i=0;i<3;i++){if(d&&d.result&&typeof d.result==="object")d=d.result;else break}return d}
 async function loadProfile(){

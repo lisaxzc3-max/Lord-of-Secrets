@@ -1,8 +1,8 @@
 /* Повелитель Тайн — автобой на локациях (для посвящённых). Кнопка под «Исследовать». */
 (function(){
 "use strict";
-var LOCS={forest:"Лес",lake:"Озеро",cemetery:"Кладбище",ruins:"Руины"};
-var loc=(location.pathname.match(/\/(forest|lake|cemetery|ruins)\//)||[])[1];
+var LOCS={forest:"Лес",lake:"Озеро",cemetery:"Кладбище",ruins:"Руины",mines:"Шахты"};
+var loc=(location.pathname.match(/\/(forest|lake|cemetery|ruins|mines)\//)||[])[1];
 var TRIP=/\/trip\//.test(location.pathname);
 if(!loc&&!TRIP)return;
 if(TRIP)loc=window.__abLoc||null;

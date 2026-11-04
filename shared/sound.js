@@ -203,6 +203,22 @@ cmwail:function(t){osc("sawtooth",520,t,1.6,0.14,{to:880,vib:7,vibd:30,wet:0.8,a
 cmnecro:function(t){[38,45,50,53].forEach(function(m,i){osc("sawtooth",N(m),t+i*0.1,1.8,0.09,{wet:0.8,attack:0.2,vib:4})});osc("sine",N(26),t,2,0.4,{wet:0.5});noise(t,1.6,0.1,"bandpass",400,1600,2,{attack:0.5,wet:0.6})},
 };
 for(var _k4 in CM)SFX[_k4]=CM[_k4];
+/* ===== шахты: звуки монстров и событий ===== */
+var MN={
+mnpick:function(t){osc("square",2200,t,0.06,0.1,{to:1400});noise(t,0.05,0.25,"highpass",3000,7000);osc("sine",N(48),t,0.3,0.15,{wet:0.5})},
+mnskitter:function(t){for(var i=0;i<10;i++)noise(t+i*0.045+Math.random()*0.03,0.03,0.26,"highpass",2200+Math.random()*2500,6500,2);osc("sine",N(60),t,0.5,0.08,{wet:0.5})},
+mnsteam:function(t){noise(t,0.9,0.3,"highpass",2500,6000,0.8,{attack:0.05,wet:0.3});osc("sine",N(30),t,0.6,0.1,{wet:0.4})},
+mnglow:function(t){osc("sine",N(70),t,1.4,0.12,{to:N(76),vib:6,vibd:6,wet:0.9,attack:0.3});osc("triangle",N(82),t+0.1,1.2,0.06,{wet:0.9,attack:0.3})},
+mnwhistle:function(t){osc("sine",1700,t,0.5,0.14,{to:2100,vib:9,vibd:20,wet:0.7,attack:0.05});osc("sine",1710,t+0.02,0.5,0.08,{to:2110,wet:0.7})},
+mnrumble:function(t){osc("sine",N(24),t,1.2,0.4,{to:N(21),wet:0.5});noise(t,1.1,0.3,"lowpass",300,80,0.8,{attack:0.05});for(var i=0;i<6;i++)noise(t+0.3+Math.random()*0.8,0.05,0.14,"highpass",1500,4000,1)},
+mnlamp:function(t){noise(t,0.5,0.18,"bandpass",600,1800,1.5,{attack:0.1});osc("sawtooth",N(50),t,0.4,0.08,{to:N(60),wet:0.6})},
+mnrail:function(t){for(var i=0;i<8;i++){osc("square",N(52),t+i*0.09,0.04,0.1,{to:N(48)});noise(t+i*0.09,0.03,0.18,"bandpass",1800,900,2)}osc("sine",N(36),t,0.8,0.1,{wet:0.5})},
+mnmaw:function(t){osc("sawtooth",60,t,1,0.3,{to:40,vib:18,vibd:16,wet:0.4,attack:0.05});noise(t,0.8,0.25,"lowpass",600,150,0.8,{attack:0.05});for(var i=0;i<4;i++)noise(t+0.15*i,0.04,0.2,"highpass",2000,5000,1)},
+mnbell:function(t){osc("sine",N(36),t,3,0.35,{wet:0.95});osc("sine",N(36)*2.76,t,2,0.1,{wet:0.9});noise(t,0.05,0.3,"lowpass",900,300);osc("square",N(60),t,0.2,0.1,{to:N(57),wet:0.6})},
+mnclang:function(t){osc("square",N(62),t,0.25,0.16,{to:N(60),wet:0.6});osc("sine",N(86),t,0.8,0.12,{wet:0.8});noise(t,0.03,0.3,"highpass",2000,6000)}
+};
+for(var _k6 in MN)SFX[_k6]=MN[_k6];
+
 /* ===== Кальветуа: морской бог ===== */
 var KV={
 kvroar:function(t){osc("sawtooth",62,t,1.6,0.34,{to:34,vib:9,vibd:10,wet:0.5,attack:0.12});osc("square",93,t+0.05,1.3,0.12,{to:48,vib:14,vibd:9});noise(t,1.5,0.26,"lowpass",900,120,0.9,{attack:0.1,wet:0.4});noise(t+0.2,1.2,0.1,"bandpass",300,1400,2,{attack:0.5,wet:0.6})},
@@ -295,6 +311,7 @@ quests:{root:39,scale:[0,2,3,7,8,12],pad:[[0,7,12],[-4,3,8],[-3,4,9]],bpm:30,bel
 garden:{root:36,scale:[0,1,3,7,8,12],pad:[[0,7,12],[-2,5,9],[1,8,13]],bpm:24,bell:0.25,heart:0.15,whisp:0.3,dis:0.2,wind:1,water:1,drum:0,vol:0.9},
 cemetery:{root:33,scale:[0,1,3,5,6,8],pad:[[0,6,12],[-4,3,8],[1,8,13]],bpm:20,bell:0.3,heart:0.4,whisp:0.45,dis:0.45,wind:1,water:0,drum:0,vol:1},
 ruins:{root:31,scale:[0,1,4,5,7,8],pad:[[0,7,12],[-5,2,7],[1,8,13]],bpm:22,bell:0.35,heart:0.3,whisp:0.3,dis:0.5,wind:1,water:0,drum:0.15,vol:1},
+mines:{root:30,scale:[0,2,3,7,8,10],pad:[[0,7,12],[-5,3,7],[-2,5,10]],bpm:24,bell:0.22,heart:0.2,whisp:0.2,dis:0.35,wind:0,water:1,drum:0.3,vol:1},
 battle:{root:33,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,8]],bpm:78,bell:0.1,heart:0,whisp:0,dis:0.3,wind:0,water:0,drum:1,vol:1},
 kalvetua:{root:27,scale:[0,1,3,6,7,10],pad:[[0,6],[-2,5],[1,7],[-3,4]],bpm:74,bell:0.16,heart:0.2,whisp:0.2,dis:0.45,wind:1,water:1,drum:2,vol:1.1},
 boss:{root:29,scale:[0,1,3,6,7,10],pad:[[0,6],[1,7],[-1,5]],bpm:96,bell:0.1,heart:0,whisp:0,dis:0.5,wind:0,water:0,drum:2,vol:1.1},

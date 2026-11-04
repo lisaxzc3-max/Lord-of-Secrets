@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#03101a">
+<title>Шахты · Сражение</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="../../shared/battle/page.css?v=p9f">
+<script src="../../shared/fast.js?v=b4"></script>
+<script src="../../shared/skills.js"></script>
+<script src="../../shared/auth.js"></script>
+<script src="../../shared/sound.js?v=a8"></script>
+<script src="../../shared/battle/bscene.js?v=f5"></script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* Настройки локации. Весь остальной код боя общий: shared/battle/page.js */
+window.BATTLE_CFG={
+ title:"Шахты",
+ back:"← Шахты",
+ backDefeat:"← В шахту",
+ bg:"bt/bg_mines.webp",
+ bgPos:"50% 100%",
+ mist:"#9cc8d826",
+ p2glow:"#ff7a3acc",
+ shield:"#9fd8f0cc",
+ explore:"explore_mines",
+ enemyDefault:"Шахтёр-безумец",
+ mobDefault:"miner",
+ intro:"Из темноты штрека выходит противник.",
+ win:"Эхо стихает в штольне. Среди породы остаётся награда.",
+ note:"Шахта помнит каждого, кто спускался сюда.",
+ back_hint:"Вернись в шахту",
+ enter:n=>"Из темноты штрека выходит противник: "+n+".",
+ boss:{msg:"В самом глубоком забое гудит паровая машина. Хозяин шахты стоит у рычагов и не оборачивается: он знает, что смена ещё не закончена.",icon:"⛏",color:"#5fd8ff",banner:n=>"БОСС: ХОЗЯИН ШАХТЫ"},
+ chips:{sleep:["hero","😵 Оцепенение"],weak:["hero","🔻 Слабость ×{n}"],poison:["hero","☠ Урон со временем ×{n}"],web:["hero","🪝 Крюки: урон −50%"],dark:["hero","🌑 Тьма ×{n}"],shield:["foe","🛡 Щит"]},
+ sleepIcon:"😵",
+ mob:{"Шахтёр-безумец":"miner","Пещерная крыса":"cavrat","Паровой голем":"steamgolem","Светящийся червь":"glowworm","Призрак бригадира":"foreman","Железный гаргант":"gargant","Лампоносец":"lampman","Тень в вагонетке":"cartshade","Рудный пожиратель":"devourer","Хозяин шахты":"mineboss"},
+ p2:{mineboss:"mineboss2"},
+ role:{"Шахтёр-безумец":"Безумец","Пещерная крыса":"Тварь","Паровой голем":"Механизм","Светящийся червь":"Тварь глубин","Призрак бригадира":"Призрак","Железный гаргант":"Механизм","Лампоносец":"Одержимый","Тень в вагонетке":"Тень","Рудный пожиратель":"Тварь глубин","Хозяин шахты":"Босс"},
+ mobsnd:{"Шахтёр-безумец":"mnpick","Пещерная крыса":"mnskitter","Паровой голем":"mnsteam","Светящийся червь":"mnglow","Призрак бригадира":"mnwhistle","Железный гаргант":"mnrumble","Лампоносец":"mnlamp","Тень в вагонетке":"mnrail","Рудный пожиратель":"mnmaw","Хозяин шахты":"mnbell"},
+ skipRx:/спит|усып|оглуш|пропуска|не может действ|скован|обездвиж|в ловушке/i,
+ castRx:/Безумный хохот|Писк: стая|Нагнетает пар|вспыхивает ослепляющим|Свисток смены|Растворяется в штольне|наращивает броню|поднимает раскалённую|гасит весь свет|Вагонетка разгоняется|Крюки впиваются|грызёт породу|Сигнал тревоги|перегревается|Регенерация/,
+ castColor:txt=>/пар|котёл|перегрев/i.test(txt)?"#e6f0f5":/свет|лампу|ослеп|гасит/i.test(txt)?"#ffd27a":/Сигнал|броню|порода/i.test(txt)?"#b8c8d4":"#7fe8ff",
+ bossFx:function(text,X){const {st,B,banner,snd,$,P2}=X;
+  if(st.dark>0&&!/ослеплён|тьма:/.test(text||""))st.dark--;
+  if(!text)return{heavy:0};
+  let heavy=0;
+  const E=$("enemyFrame");
+  const setsShield=/наращивает броню|Писк: стая|Сигнал тревоги|грызёт породу|перегревается|порода \(/.test(text);
+  if(/ПЕРЕГРЕВ ШАХТЫ/.test(text)){B.flash("#ff7a3a");banner("ПЕРЕГРЕВ ШАХТЫ","#ff7a3a");B.shake(2);snd("phase");X.phase2()}
+  if(/Безумный хохот/.test(text)){B.aura("foe","#ff6a5a",900);banner("БЕЗУМИЕ","#ff6a5a")}
+  if(/Кирка в полную силу|Тяжёлый замах|Динамит/.test(text))heavy=Math.max(heavy,/полную|Динамит/.test(text)?2:1);
+  if(/кровотечение/.test(text))B.aura("hero","#ff5a5a",800);
+  if(/Прыжок из темноты|Таран вагонетки|Рывок на крюках|Кулак-таран|Ударная волна|Тектонический/.test(text))heavy=Math.max(heavy,/Таран|Кулак|Тектонический/.test(text)?2:1);
+  if(/крыса утащила|штраф \d+ £/.test(text))B.floatNum("hero","−£","miss");
+  if(/Нагнетает пар/.test(text)){B.aura("foe","#e6f0f5",900);banner("ДАВЛЕНИЕ","#e6f0f5")}
+  if(/Манометр в красной зоне/.test(text)){B.aura("foe","#ff8a5a",1000);banner("КОТЁЛ НА ПРЕДЕЛЕ","#ff8a5a")}
+  if(/ВЗРЫВ КОТЛА/.test(text)){B.flash("#ffd9a0");heavy=2;B.shake(2)}
+  if(/сбил давление/.test(text))banner("ДАВЛЕНИЕ СБИТО","#9fe8ff");
+  if(/Ослепляющее|ослепляющим светом|ослеплён|гасит весь свет|тьма:/.test(text)){st.dark=2;B.flash("#d8f4ff");banner("ТЬМА","#9fd8f0")}
+  if(/в темноте — промах/.test(text))B.floatNum("foe","Мимо","miss");
+  if(/Кислотный плевок|кислота/.test(text)){st.poison=3;B.aura("hero","#7dff7a",800)}
+  if(/ожог|горишь|Вспышка лампы|Масляный дождь|Оплавленная/.test(text)){st.poison=2;B.aura("hero","#ff8a3a",800)}
+  if(/Поднимает раскалённую|поднимает раскалённую/.test(text)){B.aura("foe","#ffd27a",1000);banner("ЛАМПА","#ffd27a")}
+  if(/Свисток смены/.test(text)){B.aura("hero","#b8a8ff",900);banner("СВИСТОК","#b8a8ff");st.weak=2}
+  if(/Штраф|Приказ: работать/.test(text))B.aura("hero","#b66cff",800);
+  if(/Наращивает броню|наращивает броню/.test(text)){st.shield=1;B.aura("foe","#b8c8d4",900);banner("БРОНЯ","#b8c8d4")}
+  if(/Сигнал тревоги/.test(text)){st.shield=1;B.aura("foe","#ff5a5a",1000);banner("ТРЕВОГА","#ff5a5a")}
+  if(/перегревается/.test(text)){st.shield=1;B.aura("foe","#ff7a3a",1000);banner("ПЕРЕГРЕВ","#ff7a3a")}
+  if(/Писк: стая/.test(text)){st.shield=1;B.aura("foe","#c8a890",900);banner("СТАЯ","#c8a890")}
+  if(/грызёт породу/.test(text)){st.shield=1;B.aura("foe","#a8a090",900)}
+  if(/Крюки впиваются/.test(text)){st.web=2;B.aura("hero","#c8a890",900);banner("КРЮКИ","#c8a890")}
+  if(/Холод тени/.test(text))B.aura("hero","#9fd8f0",800);
+  if(/Присасывание|Пасть пожирателя|Высасывание жил/.test(text)||/💚\+/.test(text))B.aura("foe","#7be3a0",900);
+  if(/Регенерация/.test(text))B.aura("foe","#7be3a0",700);
+  if(/Вагонетка разгоняется/.test(text)){banner("РАЗГОН","#9fd8f0")}
+  E.classList.toggle("burrow",/Вагонетка разгоняется/.test(text));
+  E.classList.toggle("fadeOut",/Растворяется в штольне/.test(text));
+  if(/урон −25%/.test(text))st.weak=2;
+  if(/увернулся/.test(text))B.floatNum("foe","Мимо","miss");
+  if(!setsShield&&st.shield>0&&/Удар|Кулак|Таран|Рывок|Прыжок|Вспышка|Взрыв|ВЗРЫВ|Выброс|Топот|Волна|волна|Обрушение|Тектонический|кирк/.test(text))st.shield=0;
+  return{heavy};
+ }
+};
+</script>
+<script src="../../shared/tutfight.js?v=3"></script>
+<script src="../../shared/drops.js?v=1"></script>
+<script src="../../shared/battle/page.js?v=p13"></script>
+<script src="../../shared/enemyinfo.js?v=i3"></script>
+<script src="../../shared/icons.js?v=i1"></script>
+</body>
+</html>
