@@ -1832,18 +1832,20 @@ const FOG_ART = {
   "Подвеска Оловянного Ока": '<path d="M5 4c1 8 4 11 7 11s6-3 7-11"/><circle cx="12" cy="17.500" r="3"/><circle cx="12" cy="17.500" r="1" fill="currentColor"/>',
   "Перстень Забытых Имён": '<circle cx="12" cy="14" r="6"/><path d="M9 6l3-3 3 3-3 3z"/><path d="M8 14a4 4 0 0 1 4-4" stroke-opacity=".5"/>'
 };
-const SET_NAMES = { novice: "Новичок", fog: "Реликвии Серого Тумана" };
-const SET_INFO = { novice: [7, "+10 Сила, Вын, Дух"], fog: [7, "+3 ко всем характеристикам"] };
+const SET_NAMES = { novice: "Новичок", fog: "Реликвии Серого Тумана", hunter: "Клыки Охотника", bastion: "Бастион Стража" };
+const SET_INFO = { novice: [7, "+10 Сила, Вын, Дух"], fog: [7, "+3 ко всем характеристикам"], hunter: [7, "+5 Сила, +3 Урон"], bastion: [7, "+6 Вын, +3 Дух"] };
 const GEAR_ART = { head: 1, face: 1, body: 1, weapon: 1, legs: 1, necklace: 1, ring: 1 };
-function gearImg(slot) {
-  return '<img src="./shared/art/gear/' + slot + '.webp?v=1" alt="" draggable="false" loading="lazy">';
+const GEAR_SETART = { hunter: 1, bastion: 1 };
+function gearImg(slot, set) {
+  const d = GEAR_SETART[set] ? set + "/" : "";
+  return '<img src="./shared/art/gear/' + d + slot + '.webp?v=' + (d ? "2" : "1") + '" alt="" draggable="false" loading="lazy">';
 }
 function bagIcon(el, item, fallback) {
   el.classList.remove("gearIc", "gearFog");
   if (item && !item.quest && !item.vip_days && GEAR_ART[item.slot]) {
     el.classList.add("gearIc");
     if (item.set === "fog") el.classList.add("gearFog");
-    el.innerHTML = gearImg(item.slot); return;
+    el.innerHTML = gearImg(item.slot, item.set); return;
   }
   const art = item && item.set === "fog" ? FOG_ART[item.name] : null;
   if (!art) { el.textContent = fallback; return; }
