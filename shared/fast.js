@@ -88,7 +88,7 @@ function pend(b){
 /* --- ссылка «назад» из места города/похода ведёт на нужную вкладку главной (а не всегда в Зал) --- */
 (function(){
  var BASE="";try{var u=document.currentScript.src;BASE=u.slice(0,u.indexOf("shared/fast.js"))}catch(e){}if(!BASE)return;
- var CITY="top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins";
+ var CITY="top arena market bureau clan fortune home pets farm lab pier clinic boulevard bank",TRAVEL="forest lake cemetery ruins mines";
  function tabFor(){var seg=location.href.slice(BASE.length).split("/")[0];return(" "+CITY+" ").indexOf(" "+seg+" ")>=0?"city":((" "+TRAVEL+" ").indexOf(" "+seg+" ")>=0?"travel":"")}
  document.addEventListener("click",function(e){
   var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
@@ -167,7 +167,7 @@ if(of){
    fire();
   }).then(ok,function(e){bad(mkErr(read,e))});
  };
- var RIDA=/^(explore_(lake|forest|cemetery|ruins)|battle|event_choice|attack)$/;
+ var RIDA=/^(explore_(lake|forest|cemetery|ruins|mines)|battle|event_choice|attack)$/;
  window.fetch=function(u,o){
   var url=typeof u==="string"?u:(u&&u.url)||"";
   if(url.indexOf("new-webhook")<0)return of.apply(this,arguments);

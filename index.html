@@ -95,10 +95,11 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .bBtn.ghost{background:#0c2634;color:#cfe8f0;border-color:#3d6a7c;font-weight:700}
 .bBtn:disabled{opacity:.55}
 /* арты локаций как фон карточек */
-#travel .loc.lake,#travel .loc.forest,#travel .loc.cemetery,#travel .loc.ruins{background-size:cover;background-position:center}
+#travel .loc.lake,#travel .loc.forest,#travel .loc.cemetery,#travel .loc.ruins,#travel .loc.mines{background-size:cover;background-position:center}
 #travel .loc.lake{background-image:linear-gradient(90deg,#050d12e0 0%,#050d1299 40%,#050d121a 100%),url(./shared/art/loc_lake.jpg)}
 #travel .loc.forest{background-image:linear-gradient(90deg,#060d08e0 0%,#060d0899 40%,#060d081a 100%),url(./shared/art/loc_forest.jpg)}
 #travel .loc.cemetery{background-image:linear-gradient(90deg,#070910e0 0%,#07091099 40%,#0709101a 100%),url(./shared/art/loc_cemetery.jpg)}
+#travel .loc.mines{background-image:linear-gradient(90deg,#060a10e0 0%,#060a1099 40%,#060a101a 100%),url(./shared/art/loc_mines.jpg)}
 #travel .loc.ruins{background-image:linear-gradient(90deg,#120804e0 0%,#12080499 40%,#1208041a 100%),url(./shared/art/loc_ruins.jpg)}
 .loc .locArt{margin:8px 0 8px 8px;border-radius:12px;border:1px solid #ffffff33;box-shadow:0 4px 14px #000a;height:auto;min-height:96px}
 .bossLoc .locArt{min-height:176px;margin:8px 0 8px 8px}
@@ -271,6 +272,7 @@ small{opacity:.6;font-size:10px;white-space:pre-wrap}
 .loc.forest{border-color:#4f8a5c;background:linear-gradient(145deg,#143a24,#0a160e)}
 .loc.cemetery{border-color:#5a6d8f;background:linear-gradient(145deg,#1b2436,#0a0d14)}.loc.cemetery:hover{box-shadow:0 0 22px #8fb4e855}
 .loc.ruins{border-color:#9a5a3a;background:linear-gradient(145deg,#3a1a10,#120806)}.loc.ruins:hover{box-shadow:0 0 22px #ff8a3a55}
+.loc.mines{border-color:#5a7a9a;background:linear-gradient(145deg,#142230,#080c12)}.loc.mines:hover{box-shadow:0 0 22px #6fb4ff55}
 .loc:active{transform:scale(.98)}
 .loc:hover{box-shadow:0 0 22px #7fd0dc44}.loc.forest:hover{box-shadow:0 0 22px #7fc58e44}
 .loc:after{content:"";position:absolute;top:0;left:-60%;width:30%;height:100%;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:sweep 5s ease-in-out infinite}
@@ -1077,7 +1079,7 @@ var tips=["Тинген никогда не спит. Если слышишь ш
 var i=Math.floor(Math.random()*tips.length),el=$("tipTxt");
 if(el){el.textContent=tips[i];setInterval(function(){if(document.hidden)return;el.style.opacity=0;setTimeout(function(){i=(i+1)%tips.length;el.textContent=tips[i];el.style.opacity=1},400)},7000)}
 var k="";try{k=localStorage.getItem("lotm_last_loc")||""}catch(_){}
-var tx=$("ctaTx");if(tx)tx.textContent=k==="forest"?"В поход: Лес · Чаща":k==="cemetery"?"В поход: Кладбище Тингена":k==="ruins"?"В поход: Руины Фаркарда":k==="lake"?"В поход: Озёра · Топи":"Отправиться в поход";
+var tx=$("ctaTx");if(tx)tx.textContent=k==="forest"?"В поход: Лес · Чаща":k==="cemetery"?"В поход: Кладбище Тингена":k==="mines"?"В поход: Шахты Холодного Железа":k==="ruins"?"В поход: Руины Фаркарда":k==="lake"?"В поход: Озёра · Топи":"Отправиться в поход";
 })();
 })();
 </script>
@@ -1301,6 +1303,7 @@ async function loadProfile() {
     if (!(window.VIP && data.vip)) byId("nick").textContent = data.nickname || "Без имени";
     if (window.VIP) VIP.frame(byId("hudAv"), data.vip);
     try { setHudAvatar(data); } catch (e) {}
+    window.__seqN = (data.sequence|0) || 9;
     byId("lvl").textContent = data.level ?? "—";
     byId("hp").textContent = hp + "/" + maxHp;
     byId("hp2").textContent = hp + "/" + maxHp;
@@ -1469,6 +1472,7 @@ function goLast() {
   if (k === "forest") openForest();
   else if (k === "cemetery") openCemetery();
   else if (k === "ruins") openRuins();
+  else if (k === "mines") openMines();
   else if (k === "lake") openLake();
   else openTripMap();
 }
@@ -1481,6 +1485,11 @@ function openLake() {
 function openCemetery() {
   rememberLoc("cemetery");
   location.href = buildPageUrl("./cemetery/index.html");
+}
+
+function openMines() {
+  rememberLoc("mines");
+  location.href = buildPageUrl("./mines/index.html");
 }
 
 function openRuins() {
@@ -1519,20 +1528,24 @@ const TV_LOCS=[
  {id:"lake",reg:"Топи",name:"Озёра · Топи",art:"./lake/img/boss_s.webp?v=1",desc:"Жабы, пиявки, щуки, кикиморы и Змей, что просыпается в глубине.",lv:"1–6",sk:1,boss:"Змей, Водяной",go:"openLake"},
  {id:"forest",min:5,reg:"Лес",name:"Лес · Чаща",art:"./forest/img/boss_s.webp?v=1",desc:"Споры, паутина и шёпот. Где-то здесь бродит Кицунэ.",lv:"5–10",sk:2,boss:"Кицунэ",go:"openForest"},
  {id:"cemetery",min:10,reg:"Кладбище",name:"Кладбище Тингена",art:"./cemetery/img/boss_s.webp?v=1",desc:"Туман, склепы и неупокоенные. Здесь ночует Некромант.",lv:"10–15",sk:3,boss:"Некромант",go:"openCemetery"},
- {id:"ruins",min:15,reg:"Руины",name:"Руины Фаркарда",art:"./ruins/img/boss_s.webp?v=1",desc:"Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.",lv:"15–20",sk:4,boss:"Верховный жрец",go:"openRuins"}
+ {id:"ruins",min:15,reg:"Руины",name:"Руины Фаркарда",art:"./ruins/img/boss_s.webp?v=1",desc:"Фанатики, горгульи и пепел. Под алтарём ждёт Верховный жрец.",lv:"15–20",sk:4,boss:"Верховный жрец",go:"openRuins"},
+ {id:"mines",min:20,seq:7,reg:"Шахты",name:"Шахты Холодного Железа",art:"./mines/img/boss_s.webp?v=1",desc:"Безумные шахтёры, паровые големы и призраки смены. В глубине ждёт Хозяин шахты.",lv:"20–30",sk:5,boss:"Хозяин шахты",go:"openMines"}
 ];
 let tvSel=0,tvReg="";
 function tvLv(){return parseInt((byId('lvl')||{}).textContent)||1}
+window.__seqN=window.__seqN||9;
+function tvLk(l){return !!(l.soon||(l.min||0)>tvLv()||(l.seq&&window.__seqN>l.seq))}
+function tvLkT(l){var a=[];if((l.min||0)>tvLv())a.push(l.min+" уровня");if(l.seq&&window.__seqN>l.seq)a.push(l.seq+" последовательности");return a.join(" и ")}
 function tvList(){return TV_LOCS.filter(l=>!tvReg||l.reg===tvReg)}
 function tvRender(){
  const L=tvList(),rail=byId("tvRail");if(!rail)return;
  if(tvSel>=L.length)tvSel=0;
  const regs=[...new Set(TV_LOCS.map(l=>l.reg))],ch=byId("tvChips");
  ch.innerHTML=TV_LOCS.length>6?['Все'].concat(regs).map(r=>'<button type="button" class="'+((r==="Все"?"":r)===tvReg?"on":"")+'" data-r="'+(r==="Все"?"":r)+'">'+r+'</button>').join(""):"";
- rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+((l.soon||(l.min||0)>tvLv())?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
+ rail.innerHTML=L.map((l,i)=>'<button type="button" class="tvT'+(tvLk(l)?" lock":"")+(i===tvSel?" on":"")+'" data-i="'+i+'"><span class="tvA" style="background-image:url('+l.art+')"></span><span class="tvN">'+l.name+'</span></button>').join("");
  byId("tvDots").innerHTML=L.length>1?L.map((_,i)=>'<i class="'+(i===tvSel?"on":"")+'"></i>').join(""):"";
  const l=L[tvSel];if(!l)return;
- byId("tvDet").innerHTML='<div class="row"><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+((l.soon||(l.min||0)>tvLv())?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":((l.min||0)>tvLv()?"🔒 С "+l.min+" уровня":"Отправиться"))+'</button>';
+ byId("tvDet").innerHTML='<div class="row"><div class="info"><h4>'+l.name+'</h4><p>'+l.desc+'</p><div class="tags"><i>Ур. '+l.lv+'</i><i>'+"💀".repeat(l.sk)+'</i><i class="boss">Босс: '+l.boss+'</i></div></div></div><button type="button" class="tvGo" '+(tvLk(l)?"disabled":"")+' data-go="'+l.go+'">'+(l.soon?"Скоро":(tvLk(l)?"🔒 С "+tvLkT(l):"Отправиться"))+'</button>';
 }
 function tvPick(i,noScroll){
  tvSel=i;try{snd("tap")}catch(_){}
