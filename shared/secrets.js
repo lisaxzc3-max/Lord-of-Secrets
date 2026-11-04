@@ -20,7 +20,8 @@ function found(id,h,t){
  var o=load(),n=0;for(var k in o)n++;
  if(!o[id]){o[id]=1;save(o);n++;toast("Секрет найден · "+n+"/"+Object.keys(ALL).length,t);try{window.snd&&window.snd("open")}catch(e){}}
  else toast(h,t)}
-function overlay(id,ms,txt){var e=document.getElementById(id);if(!e){e=document.createElement("div");e.id=id;if(txt)e.textContent=txt;document.body.appendChild(e)}
+var EYE='<svg viewBox="0 0 100 60" width="150" height="90" fill="none" stroke="#e2c27a" stroke-width="3" stroke-linecap="round"><path d="M4 30C20 8 80 8 96 30C80 52 20 52 4 30Z"/><circle cx="50" cy="30" r="12" fill="#8a5cff55"/><circle cx="50" cy="30" r="5" fill="#e2c27a"/><path d="M50 4V-2M24 10L20 4M76 10L80 4" /></svg>';
+function overlay(id,ms,txt){var e=document.getElementById(id);if(!e){e=document.createElement("div");e.id=id;if(txt)e.innerHTML=EYE;document.body.appendChild(e)}
  void e.offsetWidth;e.classList.add("on");setTimeout(function(){e.classList.remove("on")},ms)}
 var WH=["Кто-то зовёт тебя по имени, которого ты не называл.","За туманом кто-то считает твои шаги.","Серая дымка шепчет: «Не оборачивайся».","Тот, Кто Над Туманом, листает твою страницу.","Слышишь? Это тикают часы, которых нет.","Ты не первый, кто сюда заходит. И не последний.","Не всякая тайна хочет быть раскрытой."];
 function rnd(a){return a[Math.floor(Math.random()*a.length)]}
