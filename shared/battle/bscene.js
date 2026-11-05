@@ -19,6 +19,11 @@ function wapi(el,kf,opt){
   try{opt=opt||{};opt.duration=(opt.duration||300)/SPD;var a=el.animate(kf,opt);a.onfinish=res;a.oncancel=res}catch(e){res()}
  });
 }
+/* кат-сцена ульты (пока только Провидец, женский герой) */
+function ultCutLoad(){return new Promise(function(r){
+ if(window.LOTM_ULTCUT)return r(window.LOTM_ULTCUT);
+ var e=document.createElement("script");e.src=BASE+"ult/ultcut.js?v=u1";e.onload=function(){r(window.LOTM_ULTCUT||null)};e.onerror=function(){r(null)};document.head.appendChild(e);
+})}
 var cache={};
 function pre(url,dec){if(cache[url])return cache[url];var i=new Image();i.src=url;cache[url]=i;if(dec&&i.decode)i.decode().catch(function(){});return i}
 
@@ -106,6 +111,7 @@ function setHero(path,gender){
  /* остальные позы и эффекты подгружаем чуть позже, чтобы бой открылся быстрее */
  var hk=S.hk,pk=S.pk,later=function(){if(!FR[hk])["dash","cast","buff"].forEach(function(p){pre(BASE+"heroes/"+hk+"_"+p+".webp"+V)});for(var i=0;i<4;i++)pre(BASE+"fx/"+pk+"_"+i+".webp"+V)};
  if(window.requestIdleCallback)requestIdleCallback(later,{timeout:1500});else setTimeout(later,700);
+ if(S.hk==="f_seer"&&!lowQ()){var ul=function(){ultCutLoad().then(function(u){try{u&&u.preload()}catch(e){}})};if(window.requestIdleCallback)requestIdleCallback(ul,{timeout:4000});else setTimeout(ul,2500)}
  setPose("idle",true);
 }
 function setPose(p,keep){
@@ -305,7 +311,9 @@ async function act(skill,o){
  var pk=(window.LOTM_SKILLS&&LOTM_SKILLS.SK[skill]&&LOTM_SKILLS.SK[skill].path)||S.pk;
  if(!FM[pk+"_0"])pk=S.pk;
  var impact=function(){try{o.impact&&o.impact()}catch(e){}if(isUlt){shake(2);screenFlash(COL[S.pk]||"#fff")}};
- await ultBanner(skill,isUlt?"Откровение · "+ULTT[S.pk]:null);
+ var cut=false;
+ if(isUlt&&S.hk==="f_seer"&&!lowQ()){try{var uc=await ultCutLoad();if(uc)cut=await uc.play({snd:snd,title:ULTT[S.pk]})}catch(e){}}
+ if(!cut)await ultBanner(skill,isUlt?"Откровение · "+ULTT[S.pk]:null);
  var fb=foeBase(),fm=foeMid();
  if(A.t==="melee"){
   setPose("dash");snd("bdash");
