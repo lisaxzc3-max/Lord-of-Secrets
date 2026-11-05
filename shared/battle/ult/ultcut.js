@@ -5,16 +5,22 @@
 if(window.LOTM_ULTCUT)return;
 var SRC=(document.currentScript&&document.currentScript.src)||"";
 var BASE=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"")+"f_seer/";
-var VER="?v=u1";
-var KEYS=["a01","a02","a03","a04","a05","a06","a07","a08","a09","a10","a11","a12","a13","a14","a15","a16",
- "c07","c08","c09","c10","c11","c12","c13","c14","c15","c16","c17","c18","c19","b24","b25","b26","b27","b28","b29","b30"];
-var FW=540,FH=960,TOTAL=5200;
-/* время (мс), когда кадр виден полностью; между соседними идёт плавное смешивание */
-var TL=[[0,"a01"],[260,"a02"],[520,"a03"],[760,"a04"],[960,"a05"],
+var VER="?v=u2";
+var FW=540,FH=960,TOTAL=5200,NI=3;
+/* опорные кадры: [время мс, ключ]; между кадрами одного клипа лежат промежуточные (посчитаны по потоку движения) */
+var BASE_TL=[[0,"a01"],[260,"a02"],[520,"a03"],[760,"a04"],[960,"a05"],
  [1180,"c07"],[1290,"c08"],[1400,"c09"],[1510,"c10"],[1620,"c11"],[1740,"c12"],[1860,"c13"],[1980,"c14"],[2100,"c15"],[2210,"c16"],[2320,"c17"],[2430,"c18"],[2540,"c19"],
  [2860,"a07"],[3000,"a08"],[3120,"a09"],[3240,"a10"],[3360,"a11"],[3480,"a12"],
  [3620,"a13"],[3740,"a14"],[3860,"a15"],[3980,"a16"],
  [4080,"b24"],[4170,"b25"],[4260,"b26"],[4350,"b27"],[4440,"b28"],[4530,"b29"],[4620,"b30"]];
+/* пары, между которыми есть промежуточные кадры */
+var FLOW={a01:1,a02:1,a03:1,a04:1,c07:1,c08:1,c09:1,c10:1,c11:1,c12:1,c13:1,c14:1,c15:1,c16:1,c17:1,c18:1,a07:1,a08:1,a09:1,a10:1,a11:1,a12:1,a13:1,a14:1,a15:1,b24:1,b25:1,b26:1,b27:1,b28:1,b29:1};
+var TL=[];
+BASE_TL.forEach(function(r,i){
+ TL.push(r);var nx=BASE_TL[i+1];
+ if(nx&&FLOW[r[1]])for(var j=1;j<=NI;j++)TL.push([r[0]+(nx[0]-r[0])*j/(NI+1),r[1]+"_"+j]);
+});
+var KEYS=TL.map(function(r){return r[1]});
 /* камера: [t, масштаб, центр x, центр y (доли кадра), поворот°] */
 var CAM=[[0,1.04,.5,.46,0],[600,1.22,.5,.36,0],[960,2.35,.5,.21,0],[1180,1.0,.5,.5,0],[2540,1.14,.5,.5,0],
  [2600,2.35,.5,.21,0],[3100,1.06,.5,.46,0],[3300,1.12,.5,.5,-1.6],[3480,1.18,.5,.5,1.2],[3620,1.2,.52,.5,0],[3980,1.36,.56,.52,0],[4620,1.0,.5,.5,0],[5000,1.5,.5,.5,0]];
@@ -32,15 +38,12 @@ function interp(arr,t,col){
  for(var i=1;i<arr.length;i++){if(t<=arr[i][0]){var a=arr[i-1],b=arr[i],k=ease((t-a[0])/(b[0]-a[0]));return a[col]+(b[col]-a[col])*k}}
  return arr[arr.length-1][col];
 }
+/* кадры хранятся сжатыми (Blob), в память-картинку разворачиваются по ходу сцены, иначе на телефоне не хватит памяти */
 function load(){
  if(loading)return loading;
  var out={};
  loading=Promise.all(KEYS.map(function(k){
-  return new Promise(function(res){
-   var i=new Image();i.onload=function(){
-    (window.createImageBitmap?createImageBitmap(i).then(function(b){out[k]=b},function(){out[k]=i}):Promise.resolve(out[k]=i)).then(res);
-   };i.onerror=function(){res()};i.src=BASE+k+".webp"+VER;
-  });
+  return fetch(BASE+k+".webp"+VER).then(function(r){return r.ok?r.blob():null}).then(function(b){if(b)out[k]=b}).catch(function(){});
  })).then(function(){BM=out;return out});
  return loading;
 }
@@ -78,7 +81,12 @@ function play(o){
  playing=true;css();
  return Promise.race([load(),new Promise(function(r){setTimeout(r,3200)})]).then(function(){
   if(!BM||KEYS.some(function(k){return!BM[k]})){playing=false;return false}
-  return new Promise(function(done){
+  var ORD=KEYS,DEC={},DONE={},last=null;
+  function dec(k){if(DEC[k]||!BM[k])return;DEC[k]=createImageBitmap(BM[k]).then(function(b){DONE[k]=b;return b},function(){DEC[k]=null})}
+  function pump(i){for(var j=i;j<=i+9&&j<ORD.length;j++)dec(ORD[j]);for(var q=0;q<i-3;q++){var kk=ORD[q];if(DONE[kk]){try{DONE[kk].close&&DONE[kk].close()}catch(e){}delete DONE[kk]}}}
+  function get(k){return DONE[k]||null}
+  pump(0);
+  return Promise.all(ORD.slice(0,8).map(function(k){return DEC[k]})).then(function(){return new Promise(function(done){
    var snd=o.snd||function(){};
    var root=document.createElement("div");root.className="ucS";
    var cv=document.createElement("canvas");root.appendChild(cv);
@@ -110,8 +118,10 @@ function play(o){
     if(skipped)t=Math.max(t,4560+(now-skipped));
     if(t>=TOTAL){finish();return}
     var u=0;for(;u<TL.length-1&&t>=TL[u+1][0];u++);
-    var A=BM[TL[u][1]],B=u<TL.length-1?BM[TL[u+1][1]]:null;
-    var mix=B?ease((t-TL[u][0])/(TL[u+1][0]-TL[u][0])):0;
+    pump(u);
+    var A=get(TL[u][1])||last,B=u<TL.length-1?get(TL[u+1][1]):null;
+    if(A)last=A;
+    var mix=B?Math.min(1,Math.max(0,(t-TL[u][0])/(TL[u+1][0]-TL[u][0]))):0;
     var S=interp(CAM,t,1),cx=interp(CAM,t,2),cy=interp(CAM,t,3),rot=interp(CAM,t,4);
     /* дрожь при броске и вспышке */
     var sh=0;if(t>3700&&t<3900)sh=(3900-t)/200*5;if(t>4560)sh=Math.max(sh,6*Math.min(1,(t-4560)/160));
@@ -121,7 +131,7 @@ function play(o){
     var px=Math.min(Math.max(cx,hw),1-hw),py=Math.min(Math.max(cy+jy,hh),1-hh);
     c.setTransform(1,0,0,1,0,0);c.fillStyle="#000";c.fillRect(0,0,CW,CH);
     c.save();c.translate(CW/2+(Math.random()-.5)*sh*dpr,CH/2+(Math.random()-.5)*sh*dpr);c.rotate(rot*Math.PI/180);c.scale(S*cover,S*cover);c.translate(-px*FW,-py*FH);
-    c.globalAlpha=1;c.drawImage(A,0,0,FW,FH);
+    c.globalAlpha=1;if(A)c.drawImage(A,0,0,FW,FH);
     if(B&&mix>0){c.globalAlpha=mix;c.drawImage(B,0,0,FW,FH);c.globalAlpha=1}
     /* карты-частицы, они в системе кадра */
     P.forEach(function(p){
@@ -170,7 +180,7 @@ function play(o){
    }
    root.addEventListener("pointerdown",function(){if(!skipped&&t0&&performance.now()-t0>600)skipped=performance.now()});
    requestAnimationFrame(function(){root.classList.add("on");raf=requestAnimationFrame(frame)});
-  });
+  })});
  });
 }
 window.LOTM_ULTCUT={preload:load,play:play,total:TOTAL};
