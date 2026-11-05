@@ -22,7 +22,7 @@ function wapi(el,kf,opt){
 /* кат-сцена ульты (пока только Провидец, женский герой) */
 function ultCutLoad(){return new Promise(function(r){
  if(window.LOTM_ULTCUT)return r(window.LOTM_ULTCUT);
- var e=document.createElement("script");e.src=BASE+"ult/ultcut.js?v=u3";e.onload=function(){r(window.LOTM_ULTCUT||null)};e.onerror=function(){r(null)};document.head.appendChild(e);
+ var e=document.createElement("script");e.src=BASE+"ult/ultcut.js?v=u4";e.onload=function(){r(window.LOTM_ULTCUT||null)};e.onerror=function(){r(null)};document.head.appendChild(e);
 })}
 var cache={};
 function pre(url,dec){if(cache[url])return cache[url];var i=new Image();i.src=url;cache[url]=i;if(dec&&i.decode)i.decode().catch(function(){});return i}

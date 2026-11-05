@@ -4,7 +4,7 @@
 "use strict";
 if(window.LOTM_ULTCUT)return;
 var SRC=(document.currentScript&&document.currentScript.src)||"";
-var URL0=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"")+"seer_f.mp4?v=u3";
+var URL0=SRC.replace(/[^\/]*$/,"").replace(/\?.*$/,"")+"seer_f.mp4?v=u4";
 var TOTAL=5.2;
 /* звуки по времени ролика, секунды */
 var SND=[[0.05,"bcast"],[1.12,"bbuff"],[2.95,"bdash"],[4.2,"bcards"],[4.42,"bcards"],[4.9,"hit"]];
